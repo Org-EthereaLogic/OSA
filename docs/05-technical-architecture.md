@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - The product must be offline-first for critical workflows.
 - The assistant may answer only from approved local content and app data.
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
-- The repository now contains an app shell with tab navigation, design tokens, connectivity state modeling, and empty module scaffolding for `Domain`, `Persistence`, `Retrieval`, `Assistant`, and `Networking`. No SwiftData models or service implementations exist yet.
+- The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, and structured scaffolding for `Domain`, `Persistence`, `Retrieval`, `Assistant`, and `Networking`. No SwiftData models or service implementations exist yet.
 
 ## Assumptions
 
@@ -238,4 +238,3 @@ Recommendation:
 1. Confirm minimum iOS target and supported device matrix.
 2. Prototype SwiftData plus a sidecar search index before writing feature UI.
 3. Build the repository and service protocols before any feature-specific persistence code.
-

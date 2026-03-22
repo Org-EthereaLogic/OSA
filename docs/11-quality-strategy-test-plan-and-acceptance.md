@@ -6,7 +6,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 ## Confirmed Facts
 
 - Offline reliability, grounding quality, and safety boundaries are first-order quality concerns.
-- The repository contains a scaffolded app shell (Milestone 1 Phase 1 complete); no test target exists yet. This plan defines the test strategy for all remaining implementation milestones.
+- The repository contains a scaffolded app shell (Milestone 1 Phase 1 complete) plus initial unit-test and UI-test target scaffolding. This plan defines the test strategy for substantive implementation coverage.
 - The app must behave correctly across offline, degraded, and online transition states.
 
 ## Assumptions
@@ -179,4 +179,3 @@ Minimum device coverage should include:
 1. Create a prompt regression suite before Ask implementation starts.
 2. Build migration and import interruption tests early; they are easy to defer and expensive to fix late.
 3. Tie each milestone in the roadmap to a subset of these acceptance criteria.
-

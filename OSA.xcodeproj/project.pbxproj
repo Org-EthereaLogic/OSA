@@ -7,54 +7,86 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06840E2C2B19B3000F633AC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 721E6C42321F318BD7DA79CB /* Assets.xcassets */; };
-		36F786C7EA78799AF4EDD9D1 /* AskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1298E803D919B172132885E0 /* AskView.swift */; };
-		40D1706E188158AD56BB79AB /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B10EBB6B683F0D5E859DEE6 /* LibraryView.swift */; };
-		4BCBF625FBA78151A51B8473 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A114F5B33A9735BF715A8E /* AppTab.swift */; };
-		60B7B3A2E4C9CBF2BFB85B3A /* ConnectivityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B03F5F3142695548C83E234 /* ConnectivityBadge.swift */; };
-		69E08158CE98AA311F9CD9D2 /* QuickCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B144E51F820B9C566F84E2 /* QuickCardsView.swift */; };
-		7CDE1741C32091BC282E25D7 /* OSAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54EDF45EEB3B6FDD9ED54738 /* OSAApp.swift */; };
-		82D999EA5A78B8310F73CB81 /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6B73C719F1862A9136C9BC /* NotesView.swift */; };
-		86CD5B7AEAC64C37C96D98C7 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B019E251B64A87F475BFEA8 /* DesignTokens.swift */; };
-		C9050845EE37E82361D0FAD0 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A51073D57A42C5A271CFEDB /* InventoryView.swift */; };
-		D132541C3311E58FD0B3E0AD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F29088DE6C8864D50D5D7 /* SettingsView.swift */; };
-		D1F085D9D2059B56CD29130C /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE52FB8A807778D002C2040D /* AppTabView.swift */; };
-		ED9AA686B462BC8CCB1781D0 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBECF01FE89694397FBE7163 /* HomeView.swift */; };
-		F7261626922F93FDB3D1360A /* ChecklistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1BDA9530E296896D9174EE /* ChecklistsView.swift */; };
+		120E79774EE8C620795E4B8D /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A99F4A55437149223B58396 /* AppModelContainer.swift */; };
+		14F7BA5ED338E025821DBD29 /* InventoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */; };
+		231C7460D764471E5C688F9C /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B98E8F7945F61FD91A2955E /* Spacing.swift */; };
+		304F425A79B2339D267D69DF /* LibraryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA84A6F15F7732CFE355C00 /* LibraryScreen.swift */; };
+		3F540962175E4728D4CF49E2 /* OSAAppLaunchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3850E2241360E349F24B9585 /* OSAAppLaunchUITests.swift */; };
+		405CE39F1743A1E2FACA1B80 /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90C875FE52B156BEC585CBC /* AppTabView.swift */; };
+		47628196BB2DF48F4BC9E6B5 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22675AEFAC8EF498F3FF0B05 /* Typography.swift */; };
+		60ED2026F0DA57100D02A42B /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */; };
+		649D0E6BBA1AA7782BD4E79F /* ColorTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B612DA9C5D9B8F10DFEB3 /* ColorTokens.swift */; };
+		7808AE641DE908499FF5077C /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0D49E567D03F81A7CB91AD /* AppTab.swift */; };
+		7BF80CD1DC1C3B5F0FC2357B /* OSAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4828F8523D509C79EB962 /* OSAApp.swift */; };
+		9C08F682D11A7E9D3AAE5F70 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B55A37D12A93A850C5113 /* CornerRadius.swift */; };
+		B28261588294442EF8EF4FA8 /* ConnectivityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */; };
+		C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D21F90F253B86041E540 /* AskScreen.swift */; };
+		C5DB8C542A346F98BD27C88D /* QuickCardsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */; };
+		D59FA988185030CC5A95CDED /* ChecklistsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87963E80C62EE235D4223E44 /* ChecklistsScreen.swift */; };
+		E8CCAC2F6746258D45B38E9E /* OSAAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */; };
+		E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33066DD014133D5714E64A75 /* HomeScreen.swift */; };
+		EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */; };
+		EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120A3CA2CA5A63B7033881B /* NotesScreen.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A6656D5D39325CDF9133704C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2326AD98FC8C2FB7E03860C2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0690F4F35353710137430F72;
+			remoteInfo = OSA;
+		};
+		CE1D95CEB66DE94BC50C2F51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2326AD98FC8C2FB7E03860C2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0690F4F35353710137430F72;
+			remoteInfo = OSA;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		0A51073D57A42C5A271CFEDB /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
-		0C1BDA9530E296896D9174EE /* ChecklistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistsView.swift; sourceTree = "<group>"; };
-		0C1F29088DE6C8864D50D5D7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		1298E803D919B172132885E0 /* AskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskView.swift; sourceTree = "<group>"; };
-		2A6B73C719F1862A9136C9BC /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
+		132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAAppSmokeTests.swift; sourceTree = "<group>"; };
+		1E3B55A37D12A93A850C5113 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
+		2120A3CA2CA5A63B7033881B /* NotesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesScreen.swift; sourceTree = "<group>"; };
+		22675AEFAC8EF498F3FF0B05 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		33066DD014133D5714E64A75 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		3850E2241360E349F24B9585 /* OSAAppLaunchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAAppLaunchUITests.swift; sourceTree = "<group>"; };
 		4209562822D8C58597DF8571 /* OSA.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = OSA.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		48B144E51F820B9C566F84E2 /* QuickCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardsView.swift; sourceTree = "<group>"; };
-		54EDF45EEB3B6FDD9ED54738 /* OSAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAApp.swift; sourceTree = "<group>"; };
-		5B03F5F3142695548C83E234 /* ConnectivityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityBadge.swift; sourceTree = "<group>"; };
-		721E6C42321F318BD7DA79CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7B019E251B64A87F475BFEA8 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
-		9B10EBB6B683F0D5E859DEE6 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
-		A0A114F5B33A9735BF715A8E /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
-		AE52FB8A807778D002C2040D /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
-		DBECF01FE89694397FBE7163 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		56782FE4D605E30B90B98FE7 /* OSATests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSATests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D11D21F90F253B86041E540 /* AskScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskScreen.swift; sourceTree = "<group>"; };
+		87963E80C62EE235D4223E44 /* ChecklistsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistsScreen.swift; sourceTree = "<group>"; };
+		8A99F4A55437149223B58396 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
+		8B98E8F7945F61FD91A2955E /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
+		9A8B612DA9C5D9B8F10DFEB3 /* ColorTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTokens.swift; sourceTree = "<group>"; };
+		A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
+		A9F4828F8523D509C79EB962 /* OSAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAApp.swift; sourceTree = "<group>"; };
+		B90C875FE52B156BEC585CBC /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
+		D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryScreen.swift; sourceTree = "<group>"; };
+		E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityBadge.swift; sourceTree = "<group>"; };
+		EBA84A6F15F7732CFE355C00 /* LibraryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScreen.swift; sourceTree = "<group>"; };
+		FD0D49E567D03F81A7CB91AD /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		08649D87554DB7AE13FB7D52 /* Resources */ = {
+		0413FE60D4B9EE0C41BD6C05 /* Connectivity */ = {
 			isa = PBXGroup;
 			children = (
-				66109EAD5FB5781BBCF9D0F5 /* Preview Content */,
-				721E6C42321F318BD7DA79CB /* Assets.xcassets */,
+				A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */,
 			);
-			path = Resources;
+			path = Connectivity;
 			sourceTree = "<group>";
 		};
 		121FAE7F770883FA9FB313F1 = {
 			isa = PBXGroup;
 			children = (
 				149F7594B294B87DC2A74350 /* OSA */,
+				D03BFB433C1F62BEBE736A3F /* OSATests */,
+				D0BAA061C12D3FFC32DFA8FD /* OSAUITests */,
 				5A9939D028026BCD452523FB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,7 +94,6 @@
 		127CBC9280D89FA45D26CEFE /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				A761A217858B1EF6DB8227E5 /* Models */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -76,17 +107,27 @@
 				9D9BEBD87B2005B6A13933ED /* Features */,
 				7B6F26F60593E5108EB96AEE /* Networking */,
 				74F1AE25A770D5B6C72C3EAF /* Persistence */,
-				08649D87554DB7AE13FB7D52 /* Resources */,
 				CDDBE1430ECF0FCF65F725C4 /* Retrieval */,
 				CA144C566B71A5F57ECD4167 /* Shared */,
 			);
 			path = OSA;
 			sourceTree = "<group>";
 		};
+		30DC1E29CE9B6A96D0EFDE88 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				9A8B612DA9C5D9B8F10DFEB3 /* ColorTokens.swift */,
+				1E3B55A37D12A93A850C5113 /* CornerRadius.swift */,
+				8B98E8F7945F61FD91A2955E /* Spacing.swift */,
+				22675AEFAC8EF498F3FF0B05 /* Typography.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		376EE5FD5C50456349750BAF /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				DBECF01FE89694397FBE7163 /* HomeView.swift */,
+				33066DD014133D5714E64A75 /* HomeScreen.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -94,7 +135,7 @@
 		39B7BEA1809D555BB1D823AA /* Inventory */ = {
 			isa = PBXGroup;
 			children = (
-				0A51073D57A42C5A271CFEDB /* InventoryView.swift */,
+				DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -103,15 +144,18 @@
 			isa = PBXGroup;
 			children = (
 				4209562822D8C58597DF8571 /* OSA.app */,
+				56782FE4D605E30B90B98FE7 /* OSATests.xctest */,
+				D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		66109EAD5FB5781BBCF9D0F5 /* Preview Content */ = {
+		632BED72C5C732A064993240 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */,
 			);
-			path = "Preview Content";
+			path = Components;
 			sourceTree = "<group>";
 		};
 		74F1AE25A770D5B6C72C3EAF /* Persistence */ = {
@@ -131,7 +175,7 @@
 		8681B9D28C5BEFC8886D344A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				0C1F29088DE6C8864D50D5D7 /* SettingsView.swift */,
+				A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -139,7 +183,7 @@
 		95612CF2B91A7E010DB87829 /* QuickCards */ = {
 			isa = PBXGroup;
 			children = (
-				48B144E51F820B9C566F84E2 /* QuickCardsView.swift */,
+				FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */,
 			);
 			path = QuickCards;
 			sourceTree = "<group>";
@@ -169,31 +213,34 @@
 		A6E018A46F91E4EC7E23490B /* Checklists */ = {
 			isa = PBXGroup;
 			children = (
-				0C1BDA9530E296896D9174EE /* ChecklistsView.swift */,
+				87963E80C62EE235D4223E44 /* ChecklistsScreen.swift */,
 			);
 			path = Checklists;
-			sourceTree = "<group>";
-		};
-		A761A217858B1EF6DB8227E5 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		AAEE1BEBCDC481DD65CDB113 /* Notes */ = {
 			isa = PBXGroup;
 			children = (
-				2A6B73C719F1862A9136C9BC /* NotesView.swift */,
+				2120A3CA2CA5A63B7033881B /* NotesScreen.swift */,
 			);
 			path = Notes;
+			sourceTree = "<group>";
+		};
+		B2D8DFD9DEE0CE6EE2BB14C7 /* Bootstrap */ = {
+			isa = PBXGroup;
+			children = (
+				8A99F4A55437149223B58396 /* AppModelContainer.swift */,
+				A9F4828F8523D509C79EB962 /* OSAApp.swift */,
+			);
+			path = Bootstrap;
 			sourceTree = "<group>";
 		};
 		CA144C566B71A5F57ECD4167 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				5B03F5F3142695548C83E234 /* ConnectivityBadge.swift */,
-				7B019E251B64A87F475BFEA8 /* DesignTokens.swift */,
+				632BED72C5C732A064993240 /* Components */,
+				30DC1E29CE9B6A96D0EFDE88 /* DesignSystem */,
+				D87967712A16E7CC7B02D522 /* Support */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -201,9 +248,8 @@
 		CBE14E9CF51E2906EFECC008 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				A0A114F5B33A9735BF715A8E /* AppTab.swift */,
-				AE52FB8A807778D002C2040D /* AppTabView.swift */,
-				54EDF45EEB3B6FDD9ED54738 /* OSAApp.swift */,
+				B2D8DFD9DEE0CE6EE2BB14C7 /* Bootstrap */,
+				D54A381D50E542E18849616E /* Navigation */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -215,18 +261,51 @@
 			path = Retrieval;
 			sourceTree = "<group>";
 		};
+		D03BFB433C1F62BEBE736A3F /* OSATests */ = {
+			isa = PBXGroup;
+			children = (
+				132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */,
+			);
+			path = OSATests;
+			sourceTree = "<group>";
+		};
+		D0BAA061C12D3FFC32DFA8FD /* OSAUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3850E2241360E349F24B9585 /* OSAAppLaunchUITests.swift */,
+			);
+			path = OSAUITests;
+			sourceTree = "<group>";
+		};
 		D1697B3B22CFD4EFA68D8567 /* Ask */ = {
 			isa = PBXGroup;
 			children = (
-				1298E803D919B172132885E0 /* AskView.swift */,
+				7D11D21F90F253B86041E540 /* AskScreen.swift */,
 			);
 			path = Ask;
+			sourceTree = "<group>";
+		};
+		D54A381D50E542E18849616E /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				FD0D49E567D03F81A7CB91AD /* AppTab.swift */,
+				B90C875FE52B156BEC585CBC /* AppTabView.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		D87967712A16E7CC7B02D522 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				0413FE60D4B9EE0C41BD6C05 /* Connectivity */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 		EFC13DA25DFC151355655B99 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				9B10EBB6B683F0D5E859DEE6 /* LibraryView.swift */,
+				EBA84A6F15F7732CFE355C00 /* LibraryScreen.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -239,7 +318,6 @@
 			buildConfigurationList = 556D0BF66EED942CBC3B740F /* Build configuration list for PBXNativeTarget "OSA" */;
 			buildPhases = (
 				F351BE7F822F829D206A08F5 /* Sources */,
-				246BAEDA40CF43C15B18A937 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -252,6 +330,42 @@
 			productReference = 4209562822D8C58597DF8571 /* OSA.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6411E2E8DA2B10AE6B4AF3D9 /* OSAUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20ECF901917DF4825EDAB83E /* Build configuration list for PBXNativeTarget "OSAUITests" */;
+			buildPhases = (
+				DDBFEE98B70CDD6B93A7EC0E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				21A1A6B90C40630DF6ECA3B8 /* PBXTargetDependency */,
+			);
+			name = OSAUITests;
+			packageProductDependencies = (
+			);
+			productName = OSAUITests;
+			productReference = D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FF164E542637D74E531CF57A /* OSATests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78CB9F70C0EF0770A718EF9C /* Build configuration list for PBXNativeTarget "OSATests" */;
+			buildPhases = (
+				9961B09B28383494CB51A511 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				69F62D9D821336D6CC1F46B0 /* PBXTargetDependency */,
+			);
+			name = OSATests;
+			packageProductDependencies = (
+			);
+			productName = OSATests;
+			productReference = 56782FE4D605E30B90B98FE7 /* OSATests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -262,6 +376,13 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					0690F4F35353710137430F72 = {
+						DevelopmentTeam = "";
+					};
+					6411E2E8DA2B10AE6B4AF3D9 = {
+						DevelopmentTeam = "";
+						TestTargetID = 0690F4F35353710137430F72;
+					};
+					FF164E542637D74E531CF57A = {
 						DevelopmentTeam = "";
 					};
 				};
@@ -281,43 +402,68 @@
 			projectRoot = "";
 			targets = (
 				0690F4F35353710137430F72 /* OSA */,
+				FF164E542637D74E531CF57A /* OSATests */,
+				6411E2E8DA2B10AE6B4AF3D9 /* OSAUITests */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		246BAEDA40CF43C15B18A937 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* Begin PBXSourcesBuildPhase section */
+		9961B09B28383494CB51A511 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06840E2C2B19B3000F633AC2 /* Assets.xcassets in Resources */,
+				E8CCAC2F6746258D45B38E9E /* OSAAppSmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
+		DDBFEE98B70CDD6B93A7EC0E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F540962175E4728D4CF49E2 /* OSAAppLaunchUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F351BE7F822F829D206A08F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BCBF625FBA78151A51B8473 /* AppTab.swift in Sources */,
-				D1F085D9D2059B56CD29130C /* AppTabView.swift in Sources */,
-				36F786C7EA78799AF4EDD9D1 /* AskView.swift in Sources */,
-				F7261626922F93FDB3D1360A /* ChecklistsView.swift in Sources */,
-				60B7B3A2E4C9CBF2BFB85B3A /* ConnectivityBadge.swift in Sources */,
-				86CD5B7AEAC64C37C96D98C7 /* DesignTokens.swift in Sources */,
-				ED9AA686B462BC8CCB1781D0 /* HomeView.swift in Sources */,
-				C9050845EE37E82361D0FAD0 /* InventoryView.swift in Sources */,
-				40D1706E188158AD56BB79AB /* LibraryView.swift in Sources */,
-				82D999EA5A78B8310F73CB81 /* NotesView.swift in Sources */,
-				7CDE1741C32091BC282E25D7 /* OSAApp.swift in Sources */,
-				69E08158CE98AA311F9CD9D2 /* QuickCardsView.swift in Sources */,
-				D132541C3311E58FD0B3E0AD /* SettingsView.swift in Sources */,
+				120E79774EE8C620795E4B8D /* AppModelContainer.swift in Sources */,
+				7808AE641DE908499FF5077C /* AppTab.swift in Sources */,
+				405CE39F1743A1E2FACA1B80 /* AppTabView.swift in Sources */,
+				C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */,
+				D59FA988185030CC5A95CDED /* ChecklistsScreen.swift in Sources */,
+				649D0E6BBA1AA7782BD4E79F /* ColorTokens.swift in Sources */,
+				B28261588294442EF8EF4FA8 /* ConnectivityBadge.swift in Sources */,
+				60ED2026F0DA57100D02A42B /* ConnectivityState.swift in Sources */,
+				9C08F682D11A7E9D3AAE5F70 /* CornerRadius.swift in Sources */,
+				E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */,
+				14F7BA5ED338E025821DBD29 /* InventoryScreen.swift in Sources */,
+				304F425A79B2339D267D69DF /* LibraryScreen.swift in Sources */,
+				EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */,
+				7BF80CD1DC1C3B5F0FC2357B /* OSAApp.swift in Sources */,
+				C5DB8C542A346F98BD27C88D /* QuickCardsScreen.swift in Sources */,
+				EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */,
+				231C7460D764471E5C688F9C /* Spacing.swift in Sources */,
+				47628196BB2DF48F4BC9E6B5 /* Typography.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		21A1A6B90C40630DF6ECA3B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0690F4F35353710137430F72 /* OSA */;
+			targetProxy = A6656D5D39325CDF9133704C /* PBXContainerItemProxy */;
+		};
+		69F62D9D821336D6CC1F46B0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0690F4F35353710137430F72 /* OSA */;
+			targetProxy = CE1D95CEB66DE94BC50C2F51 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0D852D5C732326F8536D68AD /* Debug */ = {
@@ -343,6 +489,38 @@
 			};
 			name = Debug;
 		};
+		3CB69225B1C68A2E0FFA5887 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.etherealogic.OSAUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OSA;
+			};
+			name = Release;
+		};
+		4836C74A5EB2255021AF5F31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.etherealogic.OSAUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OSA;
+			};
+			name = Debug;
+		};
 		6C681EC7B3B9C98FB03D068C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -365,6 +543,38 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		729277CDC2C9A6838BE25DA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.etherealogic.OSATests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSA.app/OSA";
+			};
+			name = Release;
+		};
+		7F991B6C9E66792EF0F0D0E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.etherealogic.OSATests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSA.app/OSA";
+			};
+			name = Debug;
 		};
 		B0E745B074864572B0148771 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -496,6 +706,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		20ECF901917DF4825EDAB83E /* Build configuration list for PBXNativeTarget "OSAUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4836C74A5EB2255021AF5F31 /* Debug */,
+				3CB69225B1C68A2E0FFA5887 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		3CDE3C8B155438E4FACD43E9 /* Build configuration list for PBXProject "OSA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -510,6 +729,15 @@
 			buildConfigurations = (
 				0D852D5C732326F8536D68AD /* Debug */,
 				6C681EC7B3B9C98FB03D068C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		78CB9F70C0EF0770A718EF9C /* Build configuration list for PBXNativeTarget "OSATests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F991B6C9E66792EF0F0D0E2 /* Debug */,
+				729277CDC2C9A6838BE25DA1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

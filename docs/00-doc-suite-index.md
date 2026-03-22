@@ -1,7 +1,7 @@
 # OSA SDLC Document Suite Index
 
-Status: Initial draft complete, verification and cross-link pass complete.  
-Primary audience: solo developer or very small iOS team.  
+Status: Initial draft complete, verification and cross-link pass complete.
+Primary audience: solo developer or very small iOS team.
 Related docs: [Problem Brief](./01-problem-brief.md), [PRD](./02-prd.md), [Technical Architecture](./05-technical-architecture.md), [Risk Register](./risk-register.md)
 
 ## Purpose Of This Suite
@@ -10,9 +10,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Confirmed Facts
 
-- The repository contains the SDLC documentation suite, an Xcode project, and a navigation shell with 13 Swift source files across `OSA/App/`, `OSA/Features/`, and `OSA/Shared/`.
-- Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design tokens, and connectivity state modeling are in the codebase.
-- Empty scaffolding exists for `OSA/Domain/Models/`, `OSA/Persistence/`, `OSA/Retrieval/`, `OSA/Assistant/`, and `OSA/Networking/` — no SwiftData models or business logic implemented yet.
+- The repository contains the SDLC documentation suite, an Xcode project, a reorganized navigation shell, and explicit workspace maps across `OSA/App/`, `OSA/Features/`, `OSA/Shared/`, `OSA/Domain/`, `OSA/Persistence/`, `OSA/Retrieval/`, `OSA/Assistant/`, and `OSA/Networking/`.
+- Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design-system scaffolding, and connectivity state modeling are in the codebase.
+- Structured scaffolding now exists for `OSA/Domain/{Common,Content,Inventory,Checklists,Notes,Assistant,Settings}`, `OSA/Persistence/{SwiftData,SeedImport,SearchIndex,Migrations}`, `OSA/Retrieval/{Querying,Ranking,Chunking,Citations}`, `OSA/Assistant/{Policy,Orchestration,ModelAdapters,Formatting}`, and `OSA/Networking/{Clients,ImportPipeline,Refresh,DTOs}`. No SwiftData models or business logic implementations exist yet.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -59,8 +59,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 11. [Quality Strategy, Test Plan, And Acceptance](./11-quality-strategy-test-plan-and-acceptance.md)
 12. [Release Readiness And App Store Plan](./12-release-readiness-and-app-store-plan.md)
 13. [Task 03 SwiftData Schema Enhanced Prompt](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
-14. ADRs in [docs/adr](./adr/)
-15. [Risk Register](./risk-register.md)
+14. [Milestone 1 Phase 2 Persistence, Seed Import, And Tests Enhanced Prompt](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+15. ADRs in [docs/adr](./adr/)
+16. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -80,6 +81,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [11-quality-strategy-test-plan-and-acceptance.md](./11-quality-strategy-test-plan-and-acceptance.md) | Test strategy, offline and transition test matrices, and acceptance criteria. | Initial draft complete |
 | [12-release-readiness-and-app-store-plan.md](./12-release-readiness-and-app-store-plan.md) | Launch checklist, TestFlight plan, store disclosures, and post-launch maintenance. | Initial draft complete |
 | [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Ready for execution |
+| [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Ready for execution |
 | [ADR-0001-offline-first-local-first.md](./adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](./adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
