@@ -1,5 +1,23 @@
 # Runtime logs
 logs/
 
+# Xcode
+build/
+DerivedData/
+*.xcuserdata
+*.xcworkspace/xcuserdata/
+xcuserdata/
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+
+# CocoaPods (if ever used)
+Pods/
+
 # Ignore insiders AI rules
 .github/instructions/codacy.instructions.md

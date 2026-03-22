@@ -28,8 +28,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Open Questions Summary
 
-1. What is the minimum supported iOS version and device range for first release?
-2. Is Foundation Models availability required for launch, or is extractive non-generative fallback acceptable on older hardware?
+1. ~~What is the minimum supported iOS version and device range for first release?~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+2. ~~Is Foundation Models availability required for launch, or is extractive non-generative fallback acceptable on older hardware?~~ **Resolved:** Foundation Models where available, extractive fallback on unsupported hardware. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
 3. Which trusted domains and publishers are approved for online knowledge import at launch?
 4. Should offline maps be in scope for v1, or should "local notes/maps/forest reference" start as text, images, and links only?
 5. Is personal backup/export needed in the first release, or should all user data remain single-device only for v1?
@@ -41,6 +41,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - [ADR-0003](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md): Online knowledge is usable by the assistant only after local persistence, attribution, normalization, and indexing.
 - Architecture recommendation: prefer SwiftData for primary local persistence with repository boundaries that preserve an exit path to Core Data if needed.
 - Retrieval recommendation: start with deterministic keyword and metadata ranking plus chunked local citations; defer embeddings until the corpus and evaluation data justify them.
+- [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md): iOS 18.0 minimum target; Foundation Models for generation where available, extractive fallback otherwise; no bundled third-party LLM in v1.
 
 ## Reading Order
 
@@ -79,6 +80,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [ADR-0001-offline-first-local-first.md](./adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](./adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
+| [ADR-0004-ios18-minimum-target-with-foundation-models.md](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md) | Records the iOS 18 minimum target and Foundation Models with extractive fallback decision. | Accepted |
 | [risk-register.md](./risk-register.md) | Consolidated product and delivery risks with mitigation ownership. | Initial draft complete |
 | [sdlc_doc_suite_prompt.md](./sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
 
