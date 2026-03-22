@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [MVP Scope Roadmap](./03-mvp-scope-roadmap.md)
 - OSA is intended to be an offline-first iPhone preparedness handbook app with optional online capabilities.
 - Core product elements include curated handbook content, quick cards, checklists, inventory, personal notes, and a local Ask assistant.
 - The assistant is bounded: it must answer only from approved local content and app data.
-- The repo currently has no implementation, so this brief sets the product baseline rather than documenting an existing build.
+- The repo now contains a scaffolded Xcode project with navigation shell and design tokens (Milestone 1 Phase 1 complete); this brief sets the product baseline for all remaining implementation work.
 
 ## Assumptions
 
@@ -103,6 +103,6 @@ OSA should feel like a calm, dependable preparedness handbook that lives on the 
 ## Next-Step Recommendations
 
 1. Confirm whether the first release targets only a private audience or public App Store distribution.
-2. Resolve the minimum supported iPhone and iOS baseline before feature scaffolding.
+2. ~~Resolve the minimum supported iPhone and iOS baseline before feature scaffolding.~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
 3. Start seed-content planning immediately; this product will only be as strong as its local corpus.
 

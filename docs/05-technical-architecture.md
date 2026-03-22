@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - The product must be offline-first for critical workflows.
 - The assistant may answer only from approved local content and app data.
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
-- The repository does not yet define an app architecture, package graph, or persistence choice.
+- The repository now contains an app shell with tab navigation, design tokens, connectivity state modeling, and empty module scaffolding for `Domain`, `Persistence`, `Retrieval`, `Assistant`, and `Networking`. No SwiftData models or service implementations exist yet.
 
 ## Assumptions
 
@@ -24,7 +24,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 
 ## Open Questions
 
-- Is iOS 18 an acceptable minimum for first release?
+- ~~Is iOS 18 an acceptable minimum for first release?~~ **Resolved:** iOS 18.0 is the minimum target. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
 - Does the product need offline vector similarity in v1, or is deterministic retrieval enough once the seed corpus is written?
 - Should imported source review be fully user-driven, or can curated background refresh auto-approve some publisher content packs?
 

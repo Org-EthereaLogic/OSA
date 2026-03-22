@@ -5,7 +5,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 ## Confirmed Facts
 
-- The project is early and the repo does not yet contain app code.
+- The project has completed Milestone 1 Phase 1: the repo contains an Xcode project with navigation shell, design tokens, and empty module scaffolding. Persistence and business logic implementation begin next.
 - AI capability, content safety, and offline reliability are core product risks rather than secondary concerns.
 
 ## Assumptions
@@ -37,7 +37,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 | R8 | Scope creep pulls in mapping, sync, attachments, or complex AI too early. | Delivery | High | High | Hold MVP to curated handbook, local Ask, inventory, checklists, notes, and controlled online import only. | Product | Open |
 | R9 | Trusted-source policy is too loose, allowing poor-quality or unsafe imports. | Trust | Medium | High | Start with allowlist and trust tiers, require approval for imports, and preserve provenance metadata. | Product/Content | Open |
 | R10 | Privacy expectations are violated if prompts or personal notes ever leave device unexpectedly. | Privacy | Low | High | Keep logs local, avoid remote prompt processing in v1, and publish clear disclosures. | Engineering/Product | Open |
-| R11 | Unsupported or ambiguous minimum OS decision causes rework in architecture and testing. | Planning | Medium | Medium | Resolve minimum OS early and align AI strategy, storage APIs, and device coverage to it. | Product/Engineering | Open |
+| R11 | Unsupported or ambiguous minimum OS decision causes rework in architecture and testing. | Planning | Medium | Medium | iOS 18.0 minimum target adopted. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). | Product/Engineering | Mitigated |
 | R12 | Insufficient seed content quality makes retrieval look worse than the model or index actually are. | Content | Medium | High | Write structured, reviewable content with consistent taxonomy and chunk boundaries before evaluating Ask quality. | Content/Product | Open |
 
 ## Done Means

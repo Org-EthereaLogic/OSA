@@ -10,8 +10,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Confirmed Facts
 
-- The repository currently contains a minimal `README.md` and an existing prompt file at [docs/sdlc_doc_suite_prompt.md](./sdlc_doc_suite_prompt.md).
-- No iOS project structure or shipped app code is present yet.
+- The repository contains the SDLC documentation suite, an Xcode project, and a navigation shell with 13 Swift source files across `OSA/App/`, `OSA/Features/`, and `OSA/Shared/`.
+- Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design tokens, and connectivity state modeling are in the codebase.
+- Empty scaffolding exists for `OSA/Domain/Models/`, `OSA/Persistence/`, `OSA/Retrieval/`, `OSA/Assistant/`, and `OSA/Networking/` — no SwiftData models or business logic implemented yet.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -57,8 +58,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 10. [Security, Privacy, And Safety](./10-security-privacy-and-safety.md)
 11. [Quality Strategy, Test Plan, And Acceptance](./11-quality-strategy-test-plan-and-acceptance.md)
 12. [Release Readiness And App Store Plan](./12-release-readiness-and-app-store-plan.md)
-13. ADRs in [docs/adr](./adr/)
-14. [Risk Register](./risk-register.md)
+13. [Task 03 SwiftData Schema Enhanced Prompt](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+14. ADRs in [docs/adr](./adr/)
+15. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -77,6 +79,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [10-security-privacy-and-safety.md](./10-security-privacy-and-safety.md) | On-device privacy posture, network assumptions, and safety controls. | Initial draft complete |
 | [11-quality-strategy-test-plan-and-acceptance.md](./11-quality-strategy-test-plan-and-acceptance.md) | Test strategy, offline and transition test matrices, and acceptance criteria. | Initial draft complete |
 | [12-release-readiness-and-app-store-plan.md](./12-release-readiness-and-app-store-plan.md) | Launch checklist, TestFlight plan, store disclosures, and post-launch maintenance. | Initial draft complete |
+| [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Ready for execution |
 | [ADR-0001-offline-first-local-first.md](./adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](./adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
@@ -87,7 +90,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: medium; the repo has no app code yet, so several technical choices remain recommendations rather than confirmed implementation facts.
+- Architecture confidence: medium; Milestone 1 Phase 1 is complete (app shell, navigation, design tokens). Core architectural choices (SwiftData, layered modules, extractive fallback) remain recommendations until persistence and retrieval are implemented in Milestone 1 Phase 2.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
 - Highest uncertainty areas: device support matrix, trusted-source policy, content review workflow ownership, and backup/export scope.
 
@@ -100,6 +103,6 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Next-Step Recommendations
 
-1. Resolve the minimum OS and AI capability support matrix before creating the Xcode project.
+1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
 2. Approve an initial trusted web source allowlist before implementing online knowledge refresh.
 3. Convert the handbook chapter map and templates into seed content files after the first app skeleton exists.

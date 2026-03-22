@@ -23,7 +23,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 ## Open Questions
 
-- Should Checklists or Quick Cards get a permanent tab slot in v1?
+- ~~Should Checklists or Quick Cards get a permanent tab slot in v1?~~ **Resolved by implementation:** neither gets a permanent tab slot. Both live in the `More` section of the tab bar alongside Notes and Settings, consistent with the 4-primary-tab navigation pattern.
 - Should first launch offer a guided setup for family contacts and core kits, or skip directly into content?
 - How much customization should Home allow before launch?
 

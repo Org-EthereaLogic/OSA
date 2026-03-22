@@ -11,7 +11,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 ## Assumptions
 
-- The codebase will start from a blank iOS app skeleton.
+- The codebase started from a blank iOS app skeleton; the app shell and navigation are now in place (Milestone 1 Phase 1 complete).
 - Seed content authoring and technical implementation will need to progress in parallel.
 - v1 can ship without cloud backup, cross-device sync, or advanced mapping.
 
@@ -92,9 +92,11 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 ## Milestone-Based Roadmap
 
-### Milestone 1: Foundation
+### Milestone 1: Foundation _(Phase 1 complete; Phase 2 in progress)_
 
 - Create app shell, data model scaffolding, seed manifest, and first chapter import.
+- Phase 1 complete: app shell, tab navigation, design tokens, and module scaffolding are committed.
+- Phase 2 next: SwiftData schema, repository protocols, seed content import.
 - Exit criteria: app cold-starts offline and browses seed content.
 
 ### Milestone 2: Core Organizer

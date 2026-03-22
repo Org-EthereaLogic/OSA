@@ -6,7 +6,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 ## Confirmed Facts
 
 - Offline reliability, grounding quality, and safety boundaries are first-order quality concerns.
-- The repository is pre-implementation, so this plan defines the initial test strategy.
+- The repository contains a scaffolded app shell (Milestone 1 Phase 1 complete); no test target exists yet. This plan defines the test strategy for all remaining implementation milestones.
 - The app must behave correctly across offline, degraded, and online transition states.
 
 ## Assumptions
