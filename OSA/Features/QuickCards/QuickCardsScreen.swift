@@ -1,28 +1,89 @@
 import SwiftUI
 
 struct QuickCardsScreen: View {
-    var body: some View {
-        ScrollView {
-            VStack(spacing: Spacing.lg) {
-                VStack(spacing: Spacing.md) {
-                    Image(systemName: "bolt.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.orange)
-                    Text("Quick Cards")
-                        .font(.cardTitle)
-                    Text("High-priority actionable cards optimized for one-handed reading under stress.")
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.top, Spacing.xxxl)
-                .padding(.horizontal, Spacing.xxl)
+    @Environment(\.quickCardRepository) private var repository
+    @State private var cards: [QuickCard] = []
+    @State private var loadFailed = false
 
-                Text("Quick cards will appear here once seed content is imported.")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+    var body: some View {
+        Group {
+            if loadFailed {
+                ContentUnavailableView(
+                    "Unable to Load",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("Quick cards could not be loaded. Try restarting the app.")
+                )
+            } else if cards.isEmpty {
+                ContentUnavailableView(
+                    "No Quick Cards Yet",
+                    systemImage: "bolt.slash",
+                    description: Text("Quick cards will appear here once seed content is imported.")
+                )
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: Spacing.md) {
+                        ForEach(cards) { card in
+                            NavigationLink {
+                                QuickCardDetailView(card: card)
+                            } label: {
+                                QuickCardRow(card: card)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.horizontal, Spacing.lg)
+                    .padding(.vertical, Spacing.md)
+                }
             }
         }
         .navigationTitle("Quick Cards")
+        .task { loadCards() }
+    }
+
+    private func loadCards() {
+        do {
+            cards = try repository?.listQuickCards() ?? []
+        } catch {
+            loadFailed = true
+        }
+    }
+}
+
+// MARK: - Quick Card Row
+
+private struct QuickCardRow: View {
+    let card: QuickCard
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            HStack {
+                Text(card.category)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .textCase(.uppercase)
+                    .foregroundStyle(.orange)
+
+                Spacer()
+
+                if card.lastReviewedAt != nil {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.blue)
+                }
+            }
+
+            Text(card.title)
+                .font(.cardTitle)
+                .foregroundStyle(.primary)
+
+            Text(card.summary)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .lineLimit(3)
+        }
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.osaSecondaryBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
     }
 }
 

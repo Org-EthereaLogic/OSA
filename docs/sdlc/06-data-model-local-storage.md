@@ -332,7 +332,7 @@ Caches/
 
 ## Next-Step Recommendations
 
-1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** First editorial-content slice (chapters, sections, quick cards) implemented with SwiftData models, domain value types, repository protocols, and seed import.
+1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** First editorial-content slice (chapters, sections, quick cards) implemented with SwiftData models, domain value types, repository protocols, and seed import. The browsing UI layer (`OSA/Features/Library`, `OSA/Features/QuickCards`) now reads from this model through repository protocol injection, completing the first user-visible offline reading surface.
 2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`.
 3. Decide whether attachments and map assets belong in v1 before freezing the first schema version.
 

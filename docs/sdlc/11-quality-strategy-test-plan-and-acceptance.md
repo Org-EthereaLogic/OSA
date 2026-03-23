@@ -6,7 +6,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 ## Confirmed Facts
 
 - Offline reliability, grounding quality, and safety boundaries are first-order quality concerns.
-- The repository contains a scaffolded app shell (Milestone 1 Phase 1 complete), the first editorial-content persistence slice (Milestone 1 Phase 2), and unit-test and UI-test target scaffolding. Focused repository-contract tests for handbook chapters, sections, and quick cards now exist in `OSATests/SeedContentRepositoryTests.swift`.
+- The repository contains a scaffolded app shell (Milestone 1 Phase 1), the first editorial-content persistence slice (Milestone 1 Phase 2), and offline-first browsing UI for handbook chapters and quick cards (Milestone 1 Phase 3). Unit-test and UI-test target scaffolding are in place. Focused repository-contract tests for handbook chapters, sections, and quick cards exist in `OSATests/SeedContentRepositoryTests.swift`. The browsing UI surfaces (`LibraryScreen`, `QuickCardsScreen`, `ChapterDetailView`, `QuickCardDetailView`) consume repository protocols through SwiftUI environment injection.
 - The app must behave correctly across offline, degraded, and online transition states.
 
 ## Assumptions

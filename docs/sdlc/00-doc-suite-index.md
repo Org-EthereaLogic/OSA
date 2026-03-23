@@ -83,7 +83,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [12-release-readiness-and-app-store-plan.md](./12-release-readiness-and-app-store-plan.md) | Launch checklist, TestFlight plan, store disclosures, and post-launch maintenance. | Initial draft complete |
 | [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](../prompt/enhanced/13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Executed — first editorial-content slice implemented |
 | [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
-| [15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) | Implementation task prompt for Milestone 1 exit criteria: handbook and quick-card browsing UI. | Pending execution |
+| [15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) | Implementation task prompt for Milestone 1 exit criteria: handbook and quick-card browsing UI. | Executed — handbook and quick-card browsing UI landed |
 | [ADR-0001-offline-first-local-first.md](../adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](../adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
@@ -94,7 +94,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: medium-high; Milestone 1 Phase 1 is complete and Milestone 1 Phase 2 persistence foundation work now exists for seeded editorial content. Retrieval, assistant orchestration, and broader user-data persistence still remain to be implemented.
+- Architecture confidence: medium-high; Milestone 1 is complete through Phase 3 (app shell, persistence, seed import, and offline-first browsing UI for handbook and quick cards). Retrieval, assistant orchestration, and broader user-data persistence still remain to be implemented.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
 - Highest uncertainty areas: content review workflow ownership and details of the broader content corpus for MVP.
 

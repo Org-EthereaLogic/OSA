@@ -1,16 +1,75 @@
 import SwiftUI
 
 struct LibraryScreen: View {
+    @Environment(\.handbookRepository) private var repository
+    @State private var chapters: [HandbookChapterSummary] = []
+    @State private var loadFailed = false
+
     var body: some View {
-        List {
-            Section {
-                Text("Handbook chapters will appear here once seed content is imported.")
-                    .foregroundStyle(.secondary)
-            } header: {
-                Label("Chapters", systemImage: "book.fill")
+        Group {
+            if loadFailed {
+                ContentUnavailableView(
+                    "Unable to Load",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("Handbook content could not be loaded. Try restarting the app.")
+                )
+            } else if chapters.isEmpty {
+                ContentUnavailableView(
+                    "No Chapters Yet",
+                    systemImage: "book.closed",
+                    description: Text("Handbook chapters will appear here once seed content is imported.")
+                )
+            } else {
+                List(chapters) { chapter in
+                    NavigationLink {
+                        ChapterDetailView(slug: chapter.slug)
+                    } label: {
+                        ChapterRow(chapter: chapter)
+                    }
+                }
             }
         }
         .navigationTitle("Library")
+        .task { loadChapters() }
+    }
+
+    private func loadChapters() {
+        do {
+            chapters = try repository?.listChapters() ?? []
+        } catch {
+            loadFailed = true
+        }
+    }
+}
+
+private struct ChapterRow: View {
+    let chapter: HandbookChapterSummary
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text(chapter.title)
+                .font(.headline)
+
+            Text(chapter.summary)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+
+            HStack(spacing: Spacing.sm) {
+                if chapter.isSeeded {
+                    Label("Curated", systemImage: "checkmark.seal.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.blue)
+                }
+
+                if let reviewed = chapter.lastReviewedAt {
+                    Label(reviewed.formatted(date: .abbreviated, time: .omitted), systemImage: "clock")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+        }
+        .padding(.vertical, Spacing.xs)
     }
 }
 

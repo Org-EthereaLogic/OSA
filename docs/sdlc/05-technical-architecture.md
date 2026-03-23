@@ -236,5 +236,5 @@ Recommendation:
 ## Next-Step Recommendations
 
 1. ~~Confirm minimum iOS target and supported device matrix.~~ **Resolved:** iOS 18.0. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
-2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Partial:** SwiftData schema and repository protocols are implemented for editorial content (chapters, sections, quick cards). Sidecar search index remains future work.
+2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Partial:** SwiftData schema, repository protocols, and offline-first browsing UI for handbook chapters and quick cards are implemented. Repository protocols are injected into feature views via SwiftUI `EnvironmentValues`, keeping the feature layer free of SwiftData imports. Sidecar search index and retrieval ranking remain future work.
 3. ~~Build the repository and service protocols before any feature-specific persistence code.~~ **Done for editorial content:** `HandbookRepository`, `QuickCardRepository`, `SeedContentRepository` protocols and `SwiftDataContentRepository` implementation are in place. User-data repositories (inventory, checklists, notes) remain.
