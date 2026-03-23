@@ -29,20 +29,20 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Open Questions Summary
 
-1. ~~What is the minimum supported iOS version and device range for first release?~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
-2. ~~Is Foundation Models availability required for launch, or is extractive non-generative fallback acceptable on older hardware?~~ **Resolved:** Foundation Models where available, extractive fallback on unsupported hardware. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
-3. Which trusted domains and publishers are approved for online knowledge import at launch?
-4. Should offline maps be in scope for v1, or should "local notes/maps/forest reference" start as text, images, and links only?
-5. Is personal backup/export needed in the first release, or should all user data remain single-device only for v1?
+1. ~~What is the minimum supported iOS version and device range for first release?~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+2. ~~Is Foundation Models availability required for launch, or is extractive non-generative fallback acceptable on older hardware?~~ **Resolved:** Foundation Models where available, extractive fallback on unsupported hardware. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+3. ~~Which trusted domains and publishers are approved for online knowledge import at launch?~~ **Resolved:** A three-tier trusted-source allowlist has been defined with 15 PNW-focused survival and preparedness sources. Tier 1–2 sources auto-approve; Tier 3 and user-added sources are flagged for review.
+4. ~~Should offline maps be in scope for v1, or should "local notes/maps/forest reference" start as text, images, and links only?~~ **Resolved:** Include PNW-focused map references (USGS topoView, Forest Service R6, PNTA) plus one or two US-wide sources. v1 scope is text, images, and links to map resources — not embedded map tile data.
+5. ~~Is personal backup/export needed in the first release, or should all user data remain single-device only for v1?~~ **Resolved:** Single-device only for v1. No backup, sync, or export.
 
 ## Decision Log Summary
 
-- [ADR-0001](./adr/ADR-0001-offline-first-local-first.md): Critical workflows must function without connectivity.
-- [ADR-0002](./adr/ADR-0002-grounded-assistant-only.md): The assistant is not a general chatbot and only answers from approved local sources and app data.
-- [ADR-0003](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md): Online knowledge is usable by the assistant only after local persistence, attribution, normalization, and indexing.
+- [ADR-0001](../adr/ADR-0001-offline-first-local-first.md): Critical workflows must function without connectivity.
+- [ADR-0002](../adr/ADR-0002-grounded-assistant-only.md): The assistant is not a general chatbot and only answers from approved local sources and app data.
+- [ADR-0003](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md): Online knowledge is usable by the assistant only after local persistence, attribution, normalization, and indexing.
 - Architecture recommendation: prefer SwiftData for primary local persistence with repository boundaries that preserve an exit path to Core Data if needed.
 - Retrieval recommendation: start with deterministic keyword and metadata ranking plus chunked local citations; defer embeddings until the corpus and evaluation data justify them.
-- [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md): iOS 18.0 minimum target; Foundation Models for generation where available, extractive fallback otherwise; no bundled third-party LLM in v1.
+- [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md): iOS 18.0 minimum target; Foundation Models for generation where available, extractive fallback otherwise; no bundled third-party LLM in v1.
 
 ## Reading Order
 
@@ -58,10 +58,11 @@ This suite defines the initial product, architecture, data, safety, quality, and
 10. [Security, Privacy, And Safety](./10-security-privacy-and-safety.md)
 11. [Quality Strategy, Test Plan, And Acceptance](./11-quality-strategy-test-plan-and-acceptance.md)
 12. [Release Readiness And App Store Plan](./12-release-readiness-and-app-store-plan.md)
-13. [Task 03 SwiftData Schema Enhanced Prompt](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
-14. [Milestone 1 Phase 2 Persistence, Seed Import, And Tests Enhanced Prompt](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
-15. ADRs in [docs/adr](./adr/)
-16. [Risk Register](./risk-register.md)
+13. [Task 03 SwiftData Schema Enhanced Prompt](../prompt/enhanced/13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+14. [Milestone 1 Phase 2 Persistence, Seed Import, And Tests Enhanced Prompt](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+15. [Milestone 1 Exit Criteria — Handbook And Quick Card Browsing UI Enhanced Prompt](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+16. ADRs in [docs/adr](../adr/)
+17. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -80,31 +81,32 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [10-security-privacy-and-safety.md](./10-security-privacy-and-safety.md) | On-device privacy posture, network assumptions, and safety controls. | Initial draft complete |
 | [11-quality-strategy-test-plan-and-acceptance.md](./11-quality-strategy-test-plan-and-acceptance.md) | Test strategy, offline and transition test matrices, and acceptance criteria. | Initial draft complete |
 | [12-release-readiness-and-app-store-plan.md](./12-release-readiness-and-app-store-plan.md) | Launch checklist, TestFlight plan, store disclosures, and post-launch maintenance. | Initial draft complete |
-| [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Executed — first editorial-content slice implemented |
-| [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
-| [ADR-0001-offline-first-local-first.md](./adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
-| [ADR-0002-grounded-assistant-only.md](./adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
-| [ADR-0003-online-knowledge-refresh-with-local-persistence.md](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
-| [ADR-0004-ios18-minimum-target-with-foundation-models.md](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md) | Records the iOS 18 minimum target and Foundation Models with extractive fallback decision. | Accepted |
+| [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](../prompt/enhanced/13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Executed — first editorial-content slice implemented |
+| [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
+| [15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) | Implementation task prompt for Milestone 1 exit criteria: handbook and quick-card browsing UI. | Pending execution |
+| [ADR-0001-offline-first-local-first.md](../adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
+| [ADR-0002-grounded-assistant-only.md](../adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
+| [ADR-0003-online-knowledge-refresh-with-local-persistence.md](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
+| [ADR-0004-ios18-minimum-target-with-foundation-models.md](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md) | Records the iOS 18 minimum target and Foundation Models with extractive fallback decision. | Accepted |
 | [risk-register.md](./risk-register.md) | Consolidated product and delivery risks with mitigation ownership. | Initial draft complete |
-| [sdlc_doc_suite_prompt.md](./sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
+| [sdlc_doc_suite_prompt.md](../prompt/enhanced/sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
 
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
 - Architecture confidence: medium-high; Milestone 1 Phase 1 is complete and Milestone 1 Phase 2 persistence foundation work now exists for seeded editorial content. Retrieval, assistant orchestration, and broader user-data persistence still remain to be implemented.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
-- Highest uncertainty areas: device support matrix, trusted-source policy, content review workflow ownership, and backup/export scope.
+- Highest uncertainty areas: content review workflow ownership and details of the broader content corpus for MVP.
 
 ## Done Means
 
-- Every required file exists under `/docs` with project-specific initial content.
+- Every required file exists under `docs/sdlc/` with project-specific initial content.
 - Cross-links are present between related documents.
 - Decisions that materially shape implementation are captured in ADRs and summarized here.
 - Open questions are consolidated here so they can be answered before coding begins.
 
 ## Next-Step Recommendations
 
-1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
-2. Approve an initial trusted web source allowlist before implementing online knowledge refresh.
+1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
+2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.

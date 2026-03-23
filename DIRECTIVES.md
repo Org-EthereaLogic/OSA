@@ -18,14 +18,14 @@ The following files are mandatory:
 - `CLAUDE.md`
 - `CONSTITUTION.md`
 - `DIRECTIVES.md`
-- `docs/00-doc-suite-index.md`
-- `docs/02-prd.md`
-- `docs/03-mvp-scope-roadmap.md`
-- `docs/05-technical-architecture.md`
-- `docs/06-data-model-local-storage.md`
-- `docs/08-ai-assistant-retrieval-and-guardrails.md`
-- `docs/10-security-privacy-and-safety.md`
-- `docs/11-quality-strategy-test-plan-and-acceptance.md`
+- `docs/sdlc/00-doc-suite-index.md`
+- `docs/sdlc/02-prd.md`
+- `docs/sdlc/03-mvp-scope-roadmap.md`
+- `docs/sdlc/05-technical-architecture.md`
+- `docs/sdlc/06-data-model-local-storage.md`
+- `docs/sdlc/08-ai-assistant-retrieval-and-guardrails.md`
+- `docs/sdlc/10-security-privacy-and-safety.md`
+- `docs/sdlc/11-quality-strategy-test-plan-and-acceptance.md`
 - accepted ADRs under `docs/adr/`
 
 ### CRIT-002. Core Offline Flows Must Not Depend on Connectivity

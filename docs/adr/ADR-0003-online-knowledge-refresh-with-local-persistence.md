@@ -2,7 +2,7 @@
 
 Status: Accepted  
 Date: 2026-03-21  
-Related docs: [Technical Architecture](../05-technical-architecture.md), [Data Model](../06-data-model-local-storage.md), [Sync And Refresh](../07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](../08-ai-assistant-retrieval-and-guardrails.md)
+Related docs: [Technical Architecture](../sdlc/05-technical-architecture.md), [Data Model](../sdlc/06-data-model-local-storage.md), [Sync And Refresh](../sdlc/07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](../sdlc/08-ai-assistant-retrieval-and-guardrails.md)
 
 ## Confirmed Facts
 

@@ -48,8 +48,10 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Retrieval/` | Local search, chunking, ranking, and citation packaging |
 | `OSA/Networking/` | Trusted-source search, download, normalization, and refresh logic |
 | `OSA/Shared/` | Reusable UI and cross-cutting helpers |
-| `docs/` | Canonical SDLC, product, architecture, quality, safety, and release docs |
+| `docs/` | Documentation root — see `docs/README.md` for navigation |
+| `docs/sdlc/` | Canonical SDLC, product, architecture, quality, safety, and release docs |
 | `docs/adr/` | Accepted architecture decisions |
+| `docs/prompt/` | Enhanced task prompts and prompt-working areas |
 
 ## Reading Order
 
@@ -58,12 +60,12 @@ Start here before making architectural or policy claims:
 1. `CONSTITUTION.md`
 2. `DIRECTIVES.md`
 3. `AGENTS.md`
-4. `docs/00-doc-suite-index.md`
-5. `docs/05-technical-architecture.md`
-6. `docs/06-data-model-local-storage.md`
-7. `docs/08-ai-assistant-retrieval-and-guardrails.md`
-8. `docs/10-security-privacy-and-safety.md`
-9. `docs/11-quality-strategy-test-plan-and-acceptance.md`
+4. `docs/sdlc/00-doc-suite-index.md`
+5. `docs/sdlc/05-technical-architecture.md`
+6. `docs/sdlc/06-data-model-local-storage.md`
+7. `docs/sdlc/08-ai-assistant-retrieval-and-guardrails.md`
+8. `docs/sdlc/10-security-privacy-and-safety.md`
+9. `docs/sdlc/11-quality-strategy-test-plan-and-acceptance.md`
 
 ## Notes
 

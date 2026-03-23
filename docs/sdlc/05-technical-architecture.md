@@ -1,7 +1,7 @@
 # Technical Architecture
 
 Status: Initial draft complete.  
-Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [ADR-0001](./adr/ADR-0001-offline-first-local-first.md), [ADR-0002](./adr/ADR-0002-grounded-assistant-only.md), [ADR-0003](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
+Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [ADR-0001](../adr/ADR-0001-offline-first-local-first.md), [ADR-0002](../adr/ADR-0002-grounded-assistant-only.md), [ADR-0003](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
 
 ## Confirmed Facts
 
@@ -24,9 +24,9 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 
 ## Open Questions
 
-- ~~Is iOS 18 an acceptable minimum for first release?~~ **Resolved:** iOS 18.0 is the minimum target. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
-- Does the product need offline vector similarity in v1, or is deterministic retrieval enough once the seed corpus is written?
-- Should imported source review be fully user-driven, or can curated background refresh auto-approve some publisher content packs?
+- ~~Is iOS 18 an acceptable minimum for first release?~~ **Resolved:** iOS 18.0 is the minimum target. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+- ~~Does the product need offline vector similarity in v1, or is deterministic retrieval enough once the seed corpus is written?~~ **Resolved:** Start with deterministic keyword + metadata ranking; defer embeddings until retrieval gaps emerge.
+- ~~Should imported source review be fully user-driven, or can curated background refresh auto-approve some publisher content packs?~~ **Resolved:** Auto-approve curated publisher content packs from Tier 1–2 trusted sources; flag user-added content from unapproved sources for review.
 
 ## Architecture Overview
 
@@ -235,6 +235,6 @@ Recommendation:
 
 ## Next-Step Recommendations
 
-1. ~~Confirm minimum iOS target and supported device matrix.~~ **Resolved:** iOS 18.0. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+1. ~~Confirm minimum iOS target and supported device matrix.~~ **Resolved:** iOS 18.0. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
 2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Partial:** SwiftData schema and repository protocols are implemented for editorial content (chapters, sections, quick cards). Sidecar search index remains future work.
 3. ~~Build the repository and service protocols before any feature-specific persistence code.~~ **Done for editorial content:** `HandbookRepository`, `QuickCardRepository`, `SeedContentRepository` protocols and `SwiftDataContentRepository` implementation are in place. User-data repositories (inventory, checklists, notes) remain.

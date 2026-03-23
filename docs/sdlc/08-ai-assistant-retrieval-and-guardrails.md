@@ -1,7 +1,7 @@
 # AI Assistant Retrieval And Guardrails
 
 Status: Initial draft complete.  
-Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-architecture.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [Security And Privacy](./10-security-privacy-and-safety.md), [ADR-0002](./adr/ADR-0002-grounded-assistant-only.md), [ADR-0003](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
+Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-architecture.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [Security And Privacy](./10-security-privacy-and-safety.md), [ADR-0002](../adr/ADR-0002-grounded-assistant-only.md), [ADR-0003](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
 
 ## Confirmed Facts
 
@@ -209,4 +209,3 @@ Recommendation: do not block the entire app or Ask feature when generative capab
 1. Convert the allowed and disallowed task lists into policy tests before coding the assistant UI.
 2. Decide whether personal notes are in Ask scope by default or opt-in.
 3. Build the retrieval layer before evaluating answer-generation quality.
-

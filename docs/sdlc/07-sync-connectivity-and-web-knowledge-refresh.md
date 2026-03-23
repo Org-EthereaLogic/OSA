@@ -1,7 +1,7 @@
 # Sync, Connectivity, And Web Knowledge Refresh
 
 Status: Initial draft complete.  
-Related docs: [Technical Architecture](./05-technical-architecture.md), [Data Model](./06-data-model-local-storage.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [Security And Privacy](./10-security-privacy-and-safety.md), [ADR-0001](./adr/ADR-0001-offline-first-local-first.md), [ADR-0003](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
+Related docs: [Technical Architecture](./05-technical-architecture.md), [Data Model](./06-data-model-local-storage.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [Security And Privacy](./10-security-privacy-and-safety.md), [ADR-0001](../adr/ADR-0001-offline-first-local-first.md), [ADR-0003](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md)
 
 ## Confirmed Facts
 
@@ -218,7 +218,6 @@ sequenceDiagram
 
 ## Next-Step Recommendations
 
-1. Define the first trusted-source allowlist and trust tiers.
+1. ~~Define the first trusted-source allowlist and trust tiers.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused survival and preparedness sources. Tier 1–2 auto-approve; Tier 3 and user-added flagged for review.
 2. Add `PendingOperation` and source freshness fields to the first persistence schema.
 3. Prototype the import pipeline with one text-based source before supporting more complex formats.
-

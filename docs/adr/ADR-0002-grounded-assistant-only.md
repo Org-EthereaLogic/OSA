@@ -2,7 +2,7 @@
 
 Status: Accepted  
 Date: 2026-03-21  
-Related docs: [PRD](../02-prd.md), [Technical Architecture](../05-technical-architecture.md), [AI Assistant](../08-ai-assistant-retrieval-and-guardrails.md), [Security And Privacy](../10-security-privacy-and-safety.md)
+Related docs: [PRD](../sdlc/02-prd.md), [Technical Architecture](../sdlc/05-technical-architecture.md), [AI Assistant](../sdlc/08-ai-assistant-retrieval-and-guardrails.md), [Security And Privacy](../sdlc/10-security-privacy-and-safety.md)
 
 ## Confirmed Facts
 

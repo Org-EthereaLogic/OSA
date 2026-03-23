@@ -26,7 +26,7 @@ Use `Plan -> Act -> Verify -> Report` for every substantive task.
 ### Plan
 
 - Identify the task contract, scope boundaries, user flows affected, and acceptance criteria.
-- Read the governing docs plus the relevant `docs/*.md` and ADRs before editing.
+- Read the governing docs plus the relevant `docs/sdlc/*.md` files and ADRs before editing.
 - Confirm whether the change touches offline behavior, assistant scope, privacy, persistence, import, or seed content.
 
 ### Act
@@ -57,29 +57,29 @@ Read these before making architecture, persistence, retrieval, assistant-policy,
 - `CONSTITUTION.md`
 - `DIRECTIVES.md`
 - `AGENTS.md`
-- `docs/00-doc-suite-index.md`
-- `docs/02-prd.md`
-- `docs/03-mvp-scope-roadmap.md`
-- `docs/05-technical-architecture.md`
-- `docs/06-data-model-local-storage.md`
-- `docs/08-ai-assistant-retrieval-and-guardrails.md`
-- `docs/10-security-privacy-and-safety.md`
-- `docs/11-quality-strategy-test-plan-and-acceptance.md`
+- `docs/sdlc/00-doc-suite-index.md`
+- `docs/sdlc/02-prd.md`
+- `docs/sdlc/03-mvp-scope-roadmap.md`
+- `docs/sdlc/05-technical-architecture.md`
+- `docs/sdlc/06-data-model-local-storage.md`
+- `docs/sdlc/08-ai-assistant-retrieval-and-guardrails.md`
+- `docs/sdlc/10-security-privacy-and-safety.md`
+- `docs/sdlc/11-quality-strategy-test-plan-and-acceptance.md`
 - the relevant ADRs in `docs/adr/`
 - the task prompt, issue, or user brief being executed
 
 Also read these when the task depends on them:
 
-- `docs/04-information-architecture-and-ux-flows.md` for navigation or UX changes
-- `docs/07-sync-connectivity-and-web-knowledge-refresh.md` for import or online behavior
-- `docs/09-content-model-editorial-guidelines.md` for seed-content or editorial changes
-- `docs/12-release-readiness-and-app-store-plan.md` for distribution, privacy disclosure, or launch readiness changes
+- `docs/sdlc/04-information-architecture-and-ux-flows.md` for navigation or UX changes
+- `docs/sdlc/07-sync-connectivity-and-web-knowledge-refresh.md` for import or online behavior
+- `docs/sdlc/09-content-model-editorial-guidelines.md` for seed-content or editorial changes
+- `docs/sdlc/12-release-readiness-and-app-store-plan.md` for distribution, privacy disclosure, or launch readiness changes
 
 ## Source Precedence
 
 Use sources in this order:
 
-1. Relevant `docs/*.md` files and accepted ADRs in this repository
+1. Relevant `docs/sdlc/*.md` files and accepted ADRs in this repository
 2. Root governance docs
 3. Current code reality in this repository
 4. The active task prompt or issue

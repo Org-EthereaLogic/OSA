@@ -2,7 +2,7 @@
 
 Status: Accepted  
 Date: 2026-03-21  
-Related docs: [Problem Brief](../01-problem-brief.md), [PRD](../02-prd.md), [Technical Architecture](../05-technical-architecture.md), [Sync And Refresh](../07-sync-connectivity-and-web-knowledge-refresh.md)
+Related docs: [Problem Brief](../sdlc/01-problem-brief.md), [PRD](../sdlc/02-prd.md), [Technical Architecture](../sdlc/05-technical-architecture.md), [Sync And Refresh](../sdlc/07-sync-connectivity-and-web-knowledge-refresh.md)
 
 ## Confirmed Facts
 

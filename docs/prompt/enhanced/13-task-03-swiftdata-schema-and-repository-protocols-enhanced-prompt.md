@@ -12,11 +12,11 @@
 - Security/compliance rules: `.codacy/codacy.yaml` (Codacy configuration at `.codacy/`)
 - Security/compliance rules: `snyk_rules.instructions.md`
 - Project context: `README.md`
-- Project context: `docs/03-mvp-scope-roadmap.md`
-- Project context: `docs/05-technical-architecture.md`
-- Project context: `docs/06-data-model-local-storage.md`
-- Project context: `docs/10-security-privacy-and-safety.md`
-- Project context: `docs/11-quality-strategy-test-plan-and-acceptance.md`
+- Project context: `docs/sdlc/03-mvp-scope-roadmap.md`
+- Project context: `docs/sdlc/05-technical-architecture.md`
+- Project context: `docs/sdlc/06-data-model-local-storage.md`
+- Project context: `docs/sdlc/10-security-privacy-and-safety.md`
+- Project context: `docs/sdlc/11-quality-strategy-test-plan-and-acceptance.md`
 - Build manifest: `project.yml`
 - Codebase reality: `OSA/App/*.swift`, `OSA/Features/**/*.swift`, and empty `OSA/Domain`, `OSA/Persistence`, `OSA/Assistant`, `OSA/Networking`, `OSA/Retrieval`
 
@@ -72,7 +72,7 @@ The architecture docs also constrain the shape of the solution:
 
 ### Phase 1: Define The Minimal Foundation Slice
 
-1. Derive the implementation scope from `docs/03-mvp-scope-roadmap.md`, `docs/05-technical-architecture.md`, and `docs/06-data-model-local-storage.md`, then freeze the first schema slice before writing code.
+1. Derive the implementation scope from `docs/sdlc/03-mvp-scope-roadmap.md`, `docs/sdlc/05-technical-architecture.md`, and `docs/sdlc/06-data-model-local-storage.md`, then freeze the first schema slice before writing code.
    *Success signal: the agent explicitly lists the entities included in Task 3 and the entities deferred to later milestones.*
 
 2. Keep Task 3 focused on the foundation records needed for seed-content import and browsing readiness.

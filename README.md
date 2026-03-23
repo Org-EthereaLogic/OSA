@@ -6,7 +6,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 
 Use sources in this order when making product, architecture, or policy claims:
 
-1. `docs/*.md` and accepted ADRs under `docs/adr/`
+1. `docs/sdlc/*.md` and accepted ADRs under `docs/adr/`
 2. Root governance docs: `CONSTITUTION.md`, `DIRECTIVES.md`, `AGENTS.md`, `CLAUDE.md`
 3. Current code reality under `OSA/`, `OSATests/`, and `OSAUITests/`
 4. Task prompts or issue briefs being executed

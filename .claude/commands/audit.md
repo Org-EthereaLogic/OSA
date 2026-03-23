@@ -9,7 +9,7 @@ Comprehensive project audit against documentation and architectural constraints.
 - Identify the project's current state and constraints
 
 ### Phase 2: Architecture Compliance
-- Verify module boundaries match `docs/05-technical-architecture.md`
+- Verify module boundaries match `docs/sdlc/05-technical-architecture.md`
 - Check ADR compliance (offline-first, grounded assistant, local persistence)
 - Verify no prohibited patterns (network calls in offline paths, ungrounded AI responses)
 

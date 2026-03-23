@@ -10,8 +10,8 @@
 
 - Source prompt: `/Prompt_Enhancement Next Steps` followed by `Milestone 1 Phase 2: Implement the repository protocols in Domain and the SwiftData schema in Persistence. Seed Data: Filling the SeedManifest.json and implementing the SeedImport logic. Focused Tests: Building substantive tests against the repository contracts.`
 - Project operating rules: `AGENTS.md`, `DIRECTIVES.md`, `CLAUDE.md`, `CONSTITUTION.md`
-- Security/compliance rules: `.github/instructions/codacy.instructions.md`, `snyk_rules.instructions.md`, `docs/10-security-privacy-and-safety.md`
-- Project context: `README.md`, `docs/00-doc-suite-index.md`, `docs/02-prd.md`, `docs/03-mvp-scope-roadmap.md`, `docs/05-technical-architecture.md`, `docs/06-data-model-local-storage.md`, `docs/07-sync-connectivity-and-web-knowledge-refresh.md`, `docs/09-content-model-editorial-guidelines.md`, `docs/11-quality-strategy-test-plan-and-acceptance.md`
+- Security/compliance rules: `.github/instructions/codacy.instructions.md`, `snyk_rules.instructions.md`, `docs/sdlc/10-security-privacy-and-safety.md`
+- Project context: `README.md`, `docs/sdlc/00-doc-suite-index.md`, `docs/sdlc/02-prd.md`, `docs/sdlc/03-mvp-scope-roadmap.md`, `docs/sdlc/05-technical-architecture.md`, `docs/sdlc/06-data-model-local-storage.md`, `docs/sdlc/07-sync-connectivity-and-web-knowledge-refresh.md`, `docs/sdlc/09-content-model-editorial-guidelines.md`, `docs/sdlc/11-quality-strategy-test-plan-and-acceptance.md`
 - ADRs: `docs/adr/ADR-0001-offline-first-local-first.md`, `docs/adr/ADR-0002-grounded-assistant-only.md`, `docs/adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md`, `docs/adr/ADR-0004-ios18-minimum-target-with-foundation-models.md`
 - Build and test manifests: `project.yml`, `OSATests/README.md`
 - Codebase reality: `OSA/Domain/`, `OSA/Persistence/`, and `OSATests/` scaffolds are present; `project.yml` already defines the `OSATests` unit-test target.
@@ -63,7 +63,7 @@ This phase must respect a few hard constraints:
 2. Inspect `project.yml`, `OSA/Domain/`, `OSA/Persistence/`, `OSA/Resources/SeedContent/`, and `OSATests/` before choosing file paths.
    *Success signal: the agent can name the exact files it will add or edit and can state that `OSATests` already exists.*
 
-3. Re-read the Milestone 1 constraints from `docs/03-mvp-scope-roadmap.md`, `docs/05-technical-architecture.md`, and `docs/06-data-model-local-storage.md` immediately before implementation.
+3. Re-read the Milestone 1 constraints from `docs/sdlc/03-mvp-scope-roadmap.md`, `docs/sdlc/05-technical-architecture.md`, and `docs/sdlc/06-data-model-local-storage.md` immediately before implementation.
    *Success signal: the chosen entity slice and repository boundaries match the docs without speculative expansion.*
 
 4. Identify the seed-content shape already present under `OSA/Resources/SeedContent/` and decide whether `SeedManifest.json` should be filled in-place or created if currently absent.
@@ -110,7 +110,7 @@ This phase must respect a few hard constraints:
 ### Phase 3: Implement SwiftData Models And Mappings
 
 1. Add SwiftData `@Model` types under `OSA/Persistence/SwiftData/` for the same editorial slice.
-   *Success signal: relationships, delete rules, indexing-related fields, and metadata fields align with `docs/06-data-model-local-storage.md` and do not mix mutable user state into seeded editorial records.*
+   *Success signal: relationships, delete rules, indexing-related fields, and metadata fields align with `docs/sdlc/06-data-model-local-storage.md` and do not mix mutable user state into seeded editorial records.*
 
 2. Add mapping code between persistence models and domain models.
    *Success signal: repository implementations can translate persistence records into domain-facing values without any `SwiftData` symbol leaking into `OSA/Domain` or future feature code.*

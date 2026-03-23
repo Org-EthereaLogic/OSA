@@ -1,7 +1,7 @@
 # Security, Privacy, And Safety
 
 Status: Initial draft complete.  
-Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [Quality Strategy](./11-quality-strategy-test-plan-and-acceptance.md), [ADR-0002](./adr/ADR-0002-grounded-assistant-only.md)
+Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync And Refresh](./07-sync-connectivity-and-web-knowledge-refresh.md), [AI Assistant](./08-ai-assistant-retrieval-and-guardrails.md), [Quality Strategy](./11-quality-strategy-test-plan-and-acceptance.md), [ADR-0002](../adr/ADR-0002-grounded-assistant-only.md)
 
 ## Confirmed Facts
 
@@ -163,4 +163,3 @@ Final App Store disclosures must be validated against the actual shipped build.
 1. Make a firm decision on whether any third-party networking service is acceptable in v1.
 2. Add a user-facing privacy summary screen or onboarding explanation early.
 3. Treat any future remote AI dependency as a separate product-phase decision.
-

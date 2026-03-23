@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-03-21
-Related docs: [Technical Architecture](../05-technical-architecture.md), [AI Assistant](../08-ai-assistant-retrieval-and-guardrails.md), [ADR-0002](./ADR-0002-grounded-assistant-only.md)
+Related docs: [Technical Architecture](../sdlc/05-technical-architecture.md), [AI Assistant](../sdlc/08-ai-assistant-retrieval-and-guardrails.md), [ADR-0002](./ADR-0002-grounded-assistant-only.md)
 
 ## Confirmed Facts
 

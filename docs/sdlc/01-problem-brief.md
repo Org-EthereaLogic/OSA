@@ -103,6 +103,5 @@ OSA should feel like a calm, dependable preparedness handbook that lives on the 
 ## Next-Step Recommendations
 
 1. Confirm whether the first release targets only a private audience or public App Store distribution.
-2. ~~Resolve the minimum supported iPhone and iOS baseline before feature scaffolding.~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+2. ~~Resolve the minimum supported iPhone and iOS baseline before feature scaffolding.~~ **Resolved:** iOS 18.0 minimum. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
 3. Start seed-content planning immediately; this product will only be as strong as its local corpus.
-

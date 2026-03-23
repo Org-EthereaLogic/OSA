@@ -7,8 +7,8 @@ git ls-files
 ## Read
 @CLAUDE.md
 @README.md
-@docs/00-doc-suite-index.md
-@docs/05-technical-architecture.md
+@docs/sdlc/00-doc-suite-index.md
+@docs/sdlc/05-technical-architecture.md
 
 ## Summarize
 
