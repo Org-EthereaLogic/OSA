@@ -1,18 +1,35 @@
+import Foundation
 import SwiftData
 
 enum AppModelContainer {
-    static func makeShared() -> ModelContainer {
-        let schema = Schema([])
+    static func makeShared(bundle: Bundle = .main) -> ModelContainer {
+        let schema = Schema([
+            PersistedHandbookChapter.self,
+            PersistedHandbookSection.self,
+            PersistedQuickCard.self,
+            PersistedSeedContentState.self
+        ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false
         )
 
         do {
-            return try ModelContainer(
+            let modelContainer = try ModelContainer(
                 for: schema,
                 configurations: [modelConfiguration]
             )
+
+            let dependencies = AppDependencies.live(modelContainer: modelContainer)
+            let loader = try SeedContentLoader.bundled(in: bundle)
+            let importer = SeedContentImporter(
+                loader: loader,
+                repository: dependencies.seedContentRepository
+            )
+
+            _ = try importer.importBundledContentIfNeeded()
+
+            return modelContainer
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

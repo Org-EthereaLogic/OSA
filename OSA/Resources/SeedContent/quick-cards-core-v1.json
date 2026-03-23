@@ -1,0 +1,43 @@
+{
+  "quickCards": [
+    {
+      "id": "22222222-2222-2222-2222-222222222221",
+      "title": "First Hour Power Outage Check",
+      "slug": "first-hour-power-outage-check",
+      "category": "power-outage",
+      "summary": "Stabilize light, refrigeration, charging, and household communication in the first hour.",
+      "bodyMarkdown": "1. Confirm everyone is safe and account for anyone who needs power-dependent equipment.\n2. Switch to battery lighting and keep open flames out of routine indoor use.\n3. Keep the refrigerator and freezer closed while you estimate outage length.\n4. Charge essential devices from the safest available power source and conserve battery.",
+      "priority": 100,
+      "relatedSectionIDs": [
+        "11111111-1111-1111-1111-111111111112",
+        "11111111-1111-1111-1111-111111111113"
+      ],
+      "tags": [
+        "power",
+        "lighting",
+        "communications"
+      ],
+      "lastReviewedAt": "2026-03-22T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "title": "Water Rotation Check",
+      "slug": "water-rotation-check",
+      "category": "water",
+      "summary": "Keep stored water easy to trust, easy to reach, and easy to rotate.",
+      "bodyMarkdown": "1. Check containers for leaks, cloudiness, or broken seals.\n2. Move the oldest dated containers to the front of storage.\n3. Refill or replace any container that no longer matches your labeling or rotation plan.\n4. Keep treatment notes and rotation dates written where the household can find them quickly.",
+      "priority": 80,
+      "relatedSectionIDs": [
+        "11111111-1111-1111-1111-111111111112"
+      ],
+      "tags": [
+        "water",
+        "storage",
+        "rotation"
+      ],
+      "lastReviewedAt": "2026-03-22T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    }
+  ]
+}

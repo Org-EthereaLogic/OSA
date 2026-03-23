@@ -92,11 +92,11 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 ## Milestone-Based Roadmap
 
-### Milestone 1: Foundation _(Phase 1 complete; Phase 2 in progress)_
+### Milestone 1: Foundation _(Phase 1 complete; Phase 2 persistence foundation landed)_
 
 - Create app shell, data model scaffolding, seed manifest, and first chapter import.
 - Phase 1 complete: app shell, tab navigation, design tokens, and module scaffolding are committed.
-- Phase 2 next: SwiftData schema, repository protocols, seed content import.
+- Phase 2 landed: SwiftData schema for the first editorial-content slice, repository protocols, bundled seed content import, and focused repository tests.
 - Exit criteria: app cold-starts offline and browses seed content.
 
 ### Milestone 2: Core Organizer
@@ -152,4 +152,3 @@ flowchart TD
 1. Turn Milestones 1 and 2 into the first implementation backlog.
 2. Freeze one supported source format for the initial import prototype.
 3. Avoid starting Ask generation work before retrieval and citations are demonstrably correct.
-

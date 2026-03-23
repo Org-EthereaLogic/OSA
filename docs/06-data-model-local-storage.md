@@ -8,6 +8,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - Core functionality must work fully offline from locally stored content and user data.
 - Imported web knowledge must become locally available for future offline use.
 - The product requires local handbook content, quick cards, checklists, inventory, notes, citations, AI sessions, and settings.
+- The first editorial-content persistence slice is now implemented: SwiftData models for `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
 
 ## Assumptions
 
@@ -331,7 +332,7 @@ Caches/
 
 ## Next-Step Recommendations
 
-1. Convert this model into SwiftData schemas and repository protocols before feature UI.
-2. Create versioned seed content manifests alongside the future Xcode project.
+1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** First editorial-content slice (chapters, sections, quick cards) implemented with SwiftData models, domain value types, repository protocols, and seed import.
+2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`.
 3. Decide whether attachments and map assets belong in v1 before freezing the first schema version.
 

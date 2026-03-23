@@ -12,7 +12,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 - The repository contains the SDLC documentation suite, an Xcode project, a reorganized navigation shell, and explicit workspace maps across `OSA/App/`, `OSA/Features/`, `OSA/Shared/`, `OSA/Domain/`, `OSA/Persistence/`, `OSA/Retrieval/`, `OSA/Assistant/`, and `OSA/Networking/`.
 - Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design-system scaffolding, and connectivity state modeling are in the codebase.
-- Structured scaffolding now exists for `OSA/Domain/{Common,Content,Inventory,Checklists,Notes,Assistant,Settings}`, `OSA/Persistence/{SwiftData,SeedImport,SearchIndex,Migrations}`, `OSA/Retrieval/{Querying,Ranking,Chunking,Citations}`, `OSA/Assistant/{Policy,Orchestration,ModelAdapters,Formatting}`, and `OSA/Networking/{Clients,ImportPipeline,Refresh,DTOs}`. No SwiftData models or business logic implementations exist yet.
+- Milestone 1 Phase 2 now has an implemented editorial-content persistence foundation: domain-facing content models and repository protocols, SwiftData models and mappings, bundled seed import, and focused repository tests for handbook chapters, sections, and quick cards.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -80,8 +80,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [10-security-privacy-and-safety.md](./10-security-privacy-and-safety.md) | On-device privacy posture, network assumptions, and safety controls. | Initial draft complete |
 | [11-quality-strategy-test-plan-and-acceptance.md](./11-quality-strategy-test-plan-and-acceptance.md) | Test strategy, offline and transition test matrices, and acceptance criteria. | Initial draft complete |
 | [12-release-readiness-and-app-store-plan.md](./12-release-readiness-and-app-store-plan.md) | Launch checklist, TestFlight plan, store disclosures, and post-launch maintenance. | Initial draft complete |
-| [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Ready for execution |
-| [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Ready for execution |
+| [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](./13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Executed — first editorial-content slice implemented |
+| [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](./14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
 | [ADR-0001-offline-first-local-first.md](./adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](./adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](./adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
@@ -92,7 +92,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: medium; Milestone 1 Phase 1 is complete (app shell, navigation, design tokens). Core architectural choices (SwiftData, layered modules, extractive fallback) remain recommendations until persistence and retrieval are implemented in Milestone 1 Phase 2.
+- Architecture confidence: medium-high; Milestone 1 Phase 1 is complete and Milestone 1 Phase 2 persistence foundation work now exists for seeded editorial content. Retrieval, assistant orchestration, and broader user-data persistence still remain to be implemented.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
 - Highest uncertainty areas: device support matrix, trusted-source policy, content review workflow ownership, and backup/export scope.
 
@@ -107,4 +107,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
 2. Approve an initial trusted web source allowlist before implementing online knowledge refresh.
-3. Convert the handbook chapter map and templates into seed content files after the first app skeleton exists.
+3. Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.

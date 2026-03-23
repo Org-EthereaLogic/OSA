@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - The product must be offline-first for critical workflows.
 - The assistant may answer only from approved local content and app data.
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
-- The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, and structured scaffolding for `Domain`, `Persistence`, `Retrieval`, `Assistant`, and `Networking`. No SwiftData models or service implementations exist yet.
+- The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, domain-facing repository contracts for editorial content, SwiftData models for handbook chapters, sections, and quick cards, and bundled seed-import wiring for the first offline content slice.
 
 ## Assumptions
 
@@ -235,6 +235,6 @@ Recommendation:
 
 ## Next-Step Recommendations
 
-1. Confirm minimum iOS target and supported device matrix.
-2. Prototype SwiftData plus a sidecar search index before writing feature UI.
-3. Build the repository and service protocols before any feature-specific persistence code.
+1. ~~Confirm minimum iOS target and supported device matrix.~~ **Resolved:** iOS 18.0. See [ADR-0004](./adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
+2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Partial:** SwiftData schema and repository protocols are implemented for editorial content (chapters, sections, quick cards). Sidecar search index remains future work.
+3. ~~Build the repository and service protocols before any feature-specific persistence code.~~ **Done for editorial content:** `HandbookRepository`, `QuickCardRepository`, `SeedContentRepository` protocols and `SwiftDataContentRepository` implementation are in place. User-data repositories (inventory, checklists, notes) remain.

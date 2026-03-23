@@ -5,7 +5,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 ## Confirmed Facts
 
-- The project has completed Milestone 1 Phase 1: the repo contains an Xcode project with navigation shell, design tokens, and empty module scaffolding. Persistence and business logic implementation begin next.
+- The project has completed Milestone 1 Phase 1 and now includes the first editorial-content persistence slice for handbook chapters, sections, quick cards, and bundled seed import. Broader business logic, retrieval, and user-data persistence are still pending.
 - AI capability, content safety, and offline reliability are core product risks rather than secondary concerns.
 
 ## Assumptions
