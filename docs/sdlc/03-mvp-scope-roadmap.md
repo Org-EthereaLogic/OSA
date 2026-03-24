@@ -113,8 +113,15 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 ### Milestone 3: Grounded Ask _(In Progress)_
 
 - Retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.
-- Phase 1 complete: domain-facing retrieval and citation models, `RetrievalService`/`SensitivityClassifier`/`CapabilityDetector` protocols, `LocalRetrievalService` pipeline (normalize → classify → search FTS5 → re-rank → cite → assemble), `SensitivityPolicy` for blocked/sensitive topic enforcement, `DeviceCapabilityDetector` (extractive-only default), `EvidenceRanker` with deterministic heuristics, retrieval-backed Ask UI with answer/citation/refusal states, and 23 focused tests.
-- Remaining: Foundation Models generation adapter (M3P3), prompt shaping and safety guardrails (M3P5).
+
+#### Phase breakdown
+
+- **M3P1 — Retrieval pipeline, sensitivity policy, citation packaging, capability detection** _(Complete)_: domain-facing retrieval and citation models, `RetrievalService`/`SensitivityClassifier`/`CapabilityDetector` protocols, `LocalRetrievalService` pipeline (normalize → classify → search FTS5 → re-rank → cite → assemble), `SensitivityPolicy` for blocked/sensitive topic enforcement, `DeviceCapabilityDetector` (extractive-only default), `EvidenceRanker` with deterministic heuristics, and 23 focused tests.
+- **M3P2 — Citation packaging and evidence assembly** _(Complete)_: `CitationReference` model, evidence bundle packaging from retrieval results, structured evidence for both generative and extractive paths.
+- **M3P3 — Capability detection and model adapter** _(Not Started)_: Foundation Models generation adapter, real device capability detection, model adapter protocol with appropriate outputs per capability path.
+- **M3P4 — Ask UI — bounded assistant interface with citations** _(Complete)_: retrieval-backed Ask UI with answer/citation/refusal states, scoped question input, inline citations, and capability-mode communication.
+- **M3P5 — Assistant policy, prompt shaping, and safety guardrails** _(Not Started)_: prompt shaping for scope filtering and safety classification, safety guardrail enforcement, logging boundary checks, and safety regression test suite.
+
 - Exit criteria: Ask answers only from local evidence and refuses unsupported prompts.
 
 ### Milestone 4: Online Enrichment

@@ -5,7 +5,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 ## Confirmed Facts
 
-- The project has completed Milestone 1 Phase 1 and now includes the first editorial-content persistence slice for handbook chapters, sections, quick cards, and bundled seed import. Broader business logic, retrieval, and user-data persistence are still pending.
+- The project has completed Milestones 1 and 2, plus Milestone 3 Phase 1. Editorial-content persistence, user-data CRUD (inventory, checklists, notes), FTS5 search, and the grounded retrieval pipeline with sensitivity policy and extractive answer assembly are all implemented and tested. Remaining M3 work: Foundation Models generation adapter (M3P3) and prompt shaping with safety guardrails (M3P5).
 - AI capability, content safety, and offline reliability are core product risks rather than secondary concerns.
 
 ## Assumptions
@@ -27,18 +27,18 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 | ID | Risk Description | Category | Likelihood | Impact | Mitigation | Owner | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R1 | Foundation Models unavailable or underperforming on target devices, weakening Ask quality. | Platform | Medium | High | Build extractive fallback, capability checks, and device matrix testing before feature lock. | Engineering | Open |
+| R1 | Foundation Models unavailable or underperforming on target devices, weakening Ask quality. | Platform | Medium | High | Extractive fallback and `DeviceCapabilityDetector` implemented in M3P1. Remaining: Foundation Models generation adapter (M3P3) and real-device matrix testing. | Engineering | Partially Mitigated |
 | R2 | Hallucinations or weak grounding produce unsafe or misleading answers. | AI Safety | Medium | High | Enforce local-evidence-only retrieval, mandatory citations, refusal paths, and adversarial safety tests. | Engineering | Open |
 | R3 | Imported knowledge becomes stale and answers remain technically grounded but outdated. | Content Freshness | High | High | Track freshness metadata, shorter stale windows for sensitive topics, and visible stale indicators. | Product/Content | Open |
 | R4 | Content safety drift expands assistant behavior into tactical, medical, or foraging advice. | Product Safety | Medium | High | Lock scope in ADRs, review prompts/policies, and add regression tests for blocked categories. | Product/Engineering | Open |
 | R5 | On-device storage growth from imported knowledge, raw artifacts, and search indexes degrades performance. | Storage | Medium | Medium | Set source-size limits, prune temp files, dedupe by hash, and monitor database/index growth. | Engineering | Open |
-| R6 | Schema and seed-content migrations become brittle as the corpus grows. | Data | Medium | High | Version schemas, keep stable IDs, separate seed from user data, and test upgrade paths in CI. | Engineering | Open |
+| R6 | Schema and seed-content migrations become brittle as the corpus grows. | Data | Medium | High | Seed-content versioning and stable-ID import implemented. User-data schema stable across M1–M2. Comprehensive migration testing deferred to M5 (Hardening). | Engineering | Partially Mitigated |
 | R7 | Background refresh is unreliable across iOS conditions and produces confusing partial state. | Platform | Medium | Medium | Keep refresh resumable, atomic on commit, user-visible in status, and safe under Low Power Mode. | Engineering | Open |
 | R8 | Scope creep pulls in mapping, sync, attachments, or complex AI too early. | Delivery | High | High | Hold MVP to curated handbook, local Ask, inventory, checklists, notes, and controlled online import only. | Product | Open |
 | R9 | Trusted-source policy is too loose, allowing poor-quality or unsafe imports. | Trust | Medium | High | Start with allowlist and trust tiers, require approval for imports, and preserve provenance metadata. | Product/Content | Open |
 | R10 | Privacy expectations are violated if prompts or personal notes ever leave device unexpectedly. | Privacy | Low | High | Keep logs local, avoid remote prompt processing in v1, and publish clear disclosures. | Engineering/Product | Open |
 | R11 | Unsupported or ambiguous minimum OS decision causes rework in architecture and testing. | Planning | Medium | Medium | iOS 18.0 minimum target adopted. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). | Product/Engineering | Mitigated |
-| R12 | Insufficient seed content quality makes retrieval look worse than the model or index actually are. | Content | Medium | High | Write structured, reviewable content with consistent taxonomy and chunk boundaries before evaluating Ask quality. | Content/Product | Open |
+| R12 | Insufficient seed content quality makes retrieval look worse than the model or index actually are. | Content | Medium | High | Initial seed packs (handbook, quick cards, checklist templates) are bundled and indexed. Breadth and quality expansion ongoing — see "Expand seed content packs" task. | Content/Product | In Progress |
 
 ## Done Means
 

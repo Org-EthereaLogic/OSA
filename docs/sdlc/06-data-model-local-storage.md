@@ -239,7 +239,7 @@ Required metadata for imported knowledge:
 - `publisherDomain` optional
 - `generatedAt`
 
-### AISession
+### AISession _(deferred to M3P3 — Foundation Models integration)_
 
 - `id`
 - `startedAt`
@@ -248,7 +248,9 @@ Required metadata for imported knowledge:
 - `scope` such as handbook-only or handbook-plus-user-data
 - `lastAnswerStatus`
 
-### AIMessage
+Current M3P1 implementation does not persist conversation history. Session and message models will be implemented alongside the Foundation Models generation adapter.
+
+### AIMessage _(deferred to M3P3)_
 
 - `id`
 - `sessionID`
@@ -258,7 +260,7 @@ Required metadata for imported knowledge:
 - `createdAt`
 - `blockedReason` optional
 
-### AppSetting
+### AppSetting _(deferred to M4 — Online Enrichment)_
 
 - `id`
 - `key`
@@ -268,7 +270,7 @@ Required metadata for imported knowledge:
 - `numberValue` optional
 - `updatedAt`
 
-### PendingOperation
+### PendingOperation _(deferred to M4 — Online Enrichment)_
 
 - `id`
 - `operationType`

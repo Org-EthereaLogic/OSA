@@ -131,12 +131,16 @@ Prompt inputs should include:
 
 ## Model Abstraction Layer
 
-Recommended interface:
+**Current implementation (M3P1):**
 
-- `detectCapabilities()`
-- `generateGroundedAnswer(evidence, policy, style)`
-- `composeExtractiveAnswer(evidence, style)`
-- `classifySensitivity(query)` optionally local heuristic first
+- `CapabilityDetector.detectAnswerMode() -> AnswerMode` — returns `.extractive`, `.generative`, or `.unavailable` based on device capability.
+- `SensitivityClassifier.classify(query: String) -> SensitivityResult` — local heuristic classification of blocked and sensitive-static-only topics.
+- `LocalRetrievalService` assembles extractive answers internally from ranked evidence and citation packaging.
+
+**Future (M3P3+):**
+
+- `generateGroundedAnswer(evidence, policy, style)` — Foundation Models generation adapter for grounded synthesis on supported devices.
+- `composeExtractiveAnswer(evidence, style)` — currently folded into `LocalRetrievalService.assembleAnswer()`, to be extracted as a standalone protocol method.
 
 This keeps UI and retrieval logic independent of the underlying model choice.
 
