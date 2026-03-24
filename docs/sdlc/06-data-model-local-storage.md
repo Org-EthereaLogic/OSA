@@ -9,6 +9,8 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - Imported web knowledge must become locally available for future offline use.
 - The product requires local handbook content, quick cards, checklists, inventory, notes, citations, AI sessions, and settings.
 - The first editorial-content persistence slice is now implemented: SwiftData models for `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
+- User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
+- A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types.
 
 ## Assumptions
 
@@ -332,7 +334,7 @@ Caches/
 
 ## Next-Step Recommendations
 
-1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** First editorial-content slice (chapters, sections, quick cards) implemented with SwiftData models, domain value types, repository protocols, and seed import. The browsing UI layer (`OSA/Features/Library`, `OSA/Features/QuickCards`) now reads from this model through repository protocol injection, completing the first user-visible offline reading surface.
-2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`.
+1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** All core entity schemas are implemented — editorial content (chapters, sections, quick cards) and user data (inventory, checklists, notes) — with SwiftData models, domain value types, repository protocols, and environment-key DI. Feature UI layers read from these models through protocol injection.
+2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`, extended to include checklist template seed data.
 3. Decide whether attachments and map assets belong in v1 before freezing the first schema version.
 

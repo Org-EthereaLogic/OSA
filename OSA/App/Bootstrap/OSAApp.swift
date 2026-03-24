@@ -17,6 +17,10 @@ struct OSAApp: App {
             AppTabView()
                 .environment(\.handbookRepository, dependencies.handbookRepository)
                 .environment(\.quickCardRepository, dependencies.quickCardRepository)
+                .environment(\.inventoryRepository, dependencies.inventoryRepository)
+                .environment(\.checklistRepository, dependencies.checklistRepository)
+                .environment(\.noteRepository, dependencies.noteRepository)
+                .environment(\.searchService, dependencies.searchService)
         }
         .modelContainer(sharedModelContainer)
     }

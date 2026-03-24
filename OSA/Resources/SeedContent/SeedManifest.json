@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentPackVersion": "0.1.0",
-  "generatedAt": "2026-03-22T00:00:00Z",
+  "contentPackVersion": "0.2.0",
+  "generatedAt": "2026-03-23T00:00:00Z",
   "packs": [
     {
       "identifier": "handbook-foundations",
@@ -17,6 +17,14 @@
       "version": "2026.03.22.1",
       "fileName": "quick-cards-core-v1.json",
       "recordCount": 2,
+      "contentHash": null
+    },
+    {
+      "identifier": "checklist-templates-core",
+      "kind": "checklist-templates",
+      "version": "2026.03.23.1",
+      "fileName": "checklist-templates-core-v1.json",
+      "recordCount": 5,
       "contentHash": null
     }
   ]

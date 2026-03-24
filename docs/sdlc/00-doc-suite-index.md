@@ -13,6 +13,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - The repository contains the SDLC documentation suite, an Xcode project, a reorganized navigation shell, and explicit workspace maps across `OSA/App/`, `OSA/Features/`, `OSA/Shared/`, `OSA/Domain/`, `OSA/Persistence/`, `OSA/Retrieval/`, `OSA/Assistant/`, and `OSA/Networking/`.
 - Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design-system scaffolding, and connectivity state modeling are in the codebase.
 - Milestone 1 Phase 2 now has an implemented editorial-content persistence foundation: domain-facing content models and repository protocols, SwiftData models and mappings, bundled seed import, and focused repository tests for handbook chapters, sections, and quick cards.
+- Milestone 2 (Core Organizer) implementation is substantially complete: domain models, repository protocols, SwiftData persistence, environment-key DI, and CRUD UI for Inventory, Checklists, and Notes are implemented. A sidecar SQLite FTS5 search index (`SearchIndexStore`) and `LocalSearchService` are wired, with Library search results UI. Repository-contract tests cover inventory, checklists, notes, and the search index.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -94,9 +95,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: medium-high; Milestone 1 is complete through Phase 3 (app shell, persistence, seed import, and offline-first browsing UI for handbook and quick cards). Retrieval, assistant orchestration, and broader user-data persistence still remain to be implemented.
+- Architecture confidence: high; Milestone 1 is complete and Milestone 2 (Core Organizer) is substantially complete — inventory, checklists, notes CRUD plus local FTS5 search are implemented with domain models, repository protocols, SwiftData persistence, and environment-key DI. Retrieval pipeline and assistant orchestration (Milestone 3) remain to be implemented.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
-- Highest uncertainty areas: content review workflow ownership and details of the broader content corpus for MVP.
+- Highest uncertainty areas: retrieval ranking quality and assistant orchestration integration.
 
 ## Done Means
 
@@ -110,3 +111,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
 2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.
+4. Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.

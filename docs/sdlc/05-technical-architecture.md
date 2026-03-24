@@ -9,6 +9,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - The assistant may answer only from approved local content and app data.
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
 - The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, domain-facing repository contracts for editorial content, SwiftData models for handbook chapters, sections, and quick cards, and bundled seed-import wiring for the first offline content slice.
+- Milestone 2 user-data domains are implemented: `InventoryRepository`, `ChecklistRepository`, `NoteRepository`, and `SearchService` protocols with SwiftData and SQLite FTS5 implementations. All repositories are injected via SwiftUI `EnvironmentValues`. A sidecar `SearchIndexStore` provides keyword search across all content types using BM25 ranking.
 
 ## Assumptions
 
@@ -236,5 +237,5 @@ Recommendation:
 ## Next-Step Recommendations
 
 1. ~~Confirm minimum iOS target and supported device matrix.~~ **Resolved:** iOS 18.0. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md).
-2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Partial:** SwiftData schema, repository protocols, and offline-first browsing UI for handbook chapters and quick cards are implemented. Repository protocols are injected into feature views via SwiftUI `EnvironmentValues`, keeping the feature layer free of SwiftData imports. Sidecar search index and retrieval ranking remain future work.
-3. ~~Build the repository and service protocols before any feature-specific persistence code.~~ **Done for editorial content:** `HandbookRepository`, `QuickCardRepository`, `SeedContentRepository` protocols and `SwiftDataContentRepository` implementation are in place. User-data repositories (inventory, checklists, notes) remain.
+2. ~~Prototype SwiftData plus a sidecar search index before writing feature UI.~~ **Done:** SwiftData schema and repository protocols are implemented for all content types. A sidecar SQLite FTS5 search index (`SearchIndexStore` in `OSA/Persistence/SearchIndex/`) provides BM25-ranked keyword search across handbook sections, quick cards, inventory, checklists, and notes. `LocalSearchService` wires indexing and query. Library search results UI is connected.
+3. ~~Build the repository and service protocols before any feature-specific persistence code.~~ **Done:** `HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`, `InventoryRepository`, `ChecklistRepository`, `NoteRepository`, and `SearchService` protocols are defined with corresponding SwiftData and SQLite implementations. All repositories are injected via SwiftUI `EnvironmentValues`.

@@ -3,6 +3,7 @@ import Foundation
 enum SeedContentPackKind: String, Codable, Equatable, Sendable {
     case handbookChapters = "handbook-chapters"
     case quickCards = "quick-cards"
+    case checklistTemplates = "checklist-templates"
 }
 
 struct SeedContentPackDescriptor: Equatable, Sendable {
@@ -25,6 +26,7 @@ struct SeedContentBundle: Equatable, Sendable {
     let manifest: SeedContentManifest
     let chapters: [HandbookChapter]
     let quickCards: [QuickCard]
+    let checklistTemplates: [ChecklistTemplate]
 }
 
 struct SeedContentVersionState: Equatable, Sendable {
@@ -45,4 +47,5 @@ struct SeedImportOutcome: Equatable, Sendable {
     let chapterCount: Int
     let sectionCount: Int
     let quickCardCount: Int
+    let checklistTemplateCount: Int
 }

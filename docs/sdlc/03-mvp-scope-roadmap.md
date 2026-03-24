@@ -81,10 +81,10 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 ## Implementation Sequencing
 
-1. Project skeleton, navigation shell, and design tokens.
-2. Persistence layer, seed-content import, and repository protocols.
-3. Handbook and quick-card browsing plus local search.
-4. Inventory, checklists, and notes.
+1. ~~Project skeleton, navigation shell, and design tokens.~~ **Done.**
+2. ~~Persistence layer, seed-content import, and repository protocols.~~ **Done.**
+3. ~~Handbook and quick-card browsing plus local search.~~ **Done.**
+4. ~~Inventory, checklists, and notes.~~ **Done:** domain models, repository protocols, SwiftData persistence, CRUD UI, and FTS5 search index implemented.
 5. Retrieval pipeline and Ask with extractive fallback.
 6. Foundation Models integration on supported devices.
 7. Trusted-source search, import, normalization, and local persistence.
@@ -100,9 +100,14 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - Phase 3 complete: offline-first handbook chapter browsing (Library) and quick-card browsing UI, with chapter detail, section reading, quick-card detail, provenance metadata, and empty/error states.
 - Exit criteria met: app cold-starts offline and browses seed content from the local repository layer.
 
-### Milestone 2: Core Organizer
+### Milestone 2: Core Organizer _(In Progress)_
 
 - Inventory, notes, checklists, and local search.
+- Domain models, repository protocols, SwiftData persistence, and environment-key DI are implemented for all three user-data domains.
+- SQLite FTS5 sidecar search index (`SearchIndexStore`) and `LocalSearchService` are wired with Library search results UI.
+- CRUD UI implemented: Inventory (list, detail, form with category/expiry/reorder), Checklists (list, template detail, run view with item completion, run history, create), Notes (list, detail, markdown editor).
+- Checklist seed data import via `SeedContentLoader` and `SeedManifest.json` extended for checklist templates.
+- Repository-contract tests cover inventory, checklists, notes, and the search index.
 - Exit criteria: all local CRUD features work offline and persist correctly across relaunch.
 
 ### Milestone 3: Grounded Ask

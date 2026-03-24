@@ -7,7 +7,13 @@ enum AppModelContainer {
             PersistedHandbookChapter.self,
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
-            PersistedSeedContentState.self
+            PersistedSeedContentState.self,
+            PersistedInventoryItem.self,
+            PersistedChecklistTemplate.self,
+            PersistedChecklistTemplateItem.self,
+            PersistedChecklistRun.self,
+            PersistedChecklistRunItem.self,
+            PersistedNoteRecord.self
         ])
         let modelConfiguration = ModelConfiguration(
             schema: schema,

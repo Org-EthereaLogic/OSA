@@ -4,6 +4,7 @@ struct LibraryScreen: View {
     @Environment(\.handbookRepository) private var repository
     @State private var chapters: [HandbookChapterSummary] = []
     @State private var loadFailed = false
+    @State private var searchText = ""
 
     var body: some View {
         Group {
@@ -30,6 +31,12 @@ struct LibraryScreen: View {
             }
         }
         .navigationTitle("Library")
+        .searchable(text: $searchText, prompt: "Search all content")
+        .overlay {
+            if !searchText.isEmpty {
+                SearchResultsView(query: searchText)
+            }
+        }
         .task { loadChapters() }
     }
 

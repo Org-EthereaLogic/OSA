@@ -1,0 +1,108 @@
+{
+  "templates": [
+    {
+      "id": "33333333-3333-3333-3333-333333333301",
+      "title": "72-Hour Emergency Kit Check",
+      "slug": "72-hour-emergency-kit-check",
+      "category": "go-bag",
+      "description": "Verify your household 72-hour emergency kit is complete, current, and accessible.",
+      "estimatedMinutes": 30,
+      "tags": ["go-bag", "kit", "evacuation", "essentials"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333311", "text": "Water: 1 gallon per person per day for 3 days", "detail": "Check containers for leaks and expiration dates.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333312", "text": "Food: 3-day supply of non-perishable items", "detail": "Include a manual can opener if needed.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333313", "text": "Flashlight and extra batteries", "detail": null, "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333314", "text": "First aid kit", "detail": "Check expiration on medications and ointments.", "sortOrder": 400, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333315", "text": "Battery-powered or hand-crank radio", "detail": "NOAA Weather Radio preferred.", "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333316", "text": "Phone charger (battery bank or solar)", "detail": null, "sortOrder": 600, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333317", "text": "Whistle to signal for help", "detail": null, "sortOrder": 700, "isOptional": false, "riskLevel": "low" },
+        { "id": "33333333-3333-3333-3333-333333333318", "text": "Dust masks and plastic sheeting", "detail": "For sheltering in place during air quality events.", "sortOrder": 800, "isOptional": true, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333319", "text": "Copies of important documents in waterproof bag", "detail": "ID, insurance, medical records, emergency contacts.", "sortOrder": 900, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-33333333331a", "text": "Cash in small bills", "detail": "ATMs and card readers may be down.", "sortOrder": 1000, "isOptional": false, "riskLevel": "medium" }
+      ]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333302",
+      "title": "Home Power Outage Preparation",
+      "slug": "home-power-outage-preparation",
+      "category": "power-outage",
+      "description": "Pre-storm or pre-outage readiness checklist for your household.",
+      "estimatedMinutes": 20,
+      "tags": ["power", "storm", "home", "preparation"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333321", "text": "Charge all phones, tablets, and battery banks", "detail": null, "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333322", "text": "Fill bathtubs and large containers with water", "detail": "For flushing toilets if water pumps lose power.", "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333323", "text": "Set refrigerator and freezer to coldest setting", "detail": "Keeps food safe longer if power goes out.", "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333324", "text": "Locate flashlights and lanterns", "detail": "Place one in each occupied room.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333325", "text": "Check propane or fuel for backup heating", "detail": "Never use outdoor heaters or grills indoors.", "sortOrder": 500, "isOptional": true, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333326", "text": "Unplug sensitive electronics", "detail": "Prevents damage from power surges when restored.", "sortOrder": 600, "isOptional": false, "riskLevel": "low" },
+        { "id": "33333333-3333-3333-3333-333333333327", "text": "Review household meeting point and check-in plan", "detail": null, "sortOrder": 700, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333328", "text": "Verify weather radio has fresh batteries", "detail": null, "sortOrder": 800, "isOptional": false, "riskLevel": "medium" }
+      ]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333303",
+      "title": "Quarterly Supply Rotation",
+      "slug": "quarterly-supply-rotation",
+      "category": "maintenance",
+      "description": "Rotate stored food, water, batteries, and medications every 90 days.",
+      "estimatedMinutes": 45,
+      "tags": ["maintenance", "rotation", "expiry", "supplies"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333331", "text": "Check water storage dates and rotate oldest containers", "detail": "Replace water stored longer than 6 months.", "sortOrder": 100, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333332", "text": "Inspect canned food for damage or bulging", "detail": "Discard any suspect cans safely.", "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333333", "text": "Replace expired medications and first aid supplies", "detail": null, "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333334", "text": "Test all flashlights and replace batteries", "detail": null, "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333335", "text": "Test battery banks and solar chargers", "detail": "Charge fully and verify output.", "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333336", "text": "Check fuel levels for generator or camp stove", "detail": null, "sortOrder": 600, "isOptional": true, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333337", "text": "Update inventory list with current quantities and dates", "detail": "Use the Inventory tab in this app.", "sortOrder": 700, "isOptional": false, "riskLevel": "low" }
+      ]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333304",
+      "title": "Family Communication Plan Review",
+      "slug": "family-communication-plan-review",
+      "category": "planning",
+      "description": "Review and update your household emergency communication and meeting plan.",
+      "estimatedMinutes": 25,
+      "tags": ["family", "communication", "contacts", "meeting-point"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333341", "text": "Verify all household members have emergency contact list", "detail": "Include out-of-area contact person.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333342", "text": "Review primary and secondary meeting locations", "detail": "One near home, one outside neighborhood.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333343", "text": "Practice texting as primary communication method", "detail": "Texts often get through when calls cannot.", "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333344", "text": "Confirm school and workplace emergency procedures", "detail": null, "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333345", "text": "Review pet evacuation plan", "detail": "Identify pet-friendly shelters nearby.", "sortOrder": 500, "isOptional": true, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333346", "text": "Update ICE contacts on all household phones", "detail": "In Case of Emergency contacts should be current.", "sortOrder": 600, "isOptional": false, "riskLevel": "medium" }
+      ]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333305",
+      "title": "Vehicle Emergency Kit Check",
+      "slug": "vehicle-emergency-kit-check",
+      "category": "vehicle",
+      "description": "Verify your vehicle emergency kit is stocked and accessible.",
+      "estimatedMinutes": 15,
+      "tags": ["vehicle", "car", "kit", "travel"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333351", "text": "Jumper cables or portable jump starter", "detail": null, "sortOrder": 100, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333352", "text": "Reflective triangles or flares", "detail": null, "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333353", "text": "Blanket and warm clothing layer", "detail": "Critical for cold-weather breakdowns.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333354", "text": "Water bottles (at least 1 liter)", "detail": "Replace seasonally to prevent freezing or heat damage.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333355", "text": "Basic first aid kit", "detail": null, "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333356", "text": "Flashlight with extra batteries", "detail": null, "sortOrder": 600, "isOptional": false, "riskLevel": "low" },
+        { "id": "33333333-3333-3333-3333-333333333357", "text": "Phone charging cable and car adapter", "detail": null, "sortOrder": 700, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333358", "text": "Paper map of local area", "detail": "GPS may not be available in remote areas.", "sortOrder": 800, "isOptional": true, "riskLevel": "low" }
+      ]
+    }
+  ]
+}

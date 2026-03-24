@@ -64,7 +64,8 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
                 versionState: currentState,
                 chapterCount: bundle.chapters.count,
                 sectionCount: bundle.chapters.reduce(into: 0) { $0 += $1.sections.count },
-                quickCardCount: bundle.quickCards.count
+                quickCardCount: bundle.quickCards.count,
+                checklistTemplateCount: bundle.checklistTemplates.count
             )
         }
 
@@ -126,6 +127,45 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
             modelContext.delete(quickCardRecord)
         }
 
+        // Upsert checklist templates
+        let existingTemplates = try modelContext.fetch(FetchDescriptor<PersistedChecklistTemplate>())
+        let existingTemplatesByID = Dictionary(uniqueKeysWithValues: existingTemplates.map { ($0.id, $0) })
+        var incomingTemplateIDs = Set<UUID>()
+
+        for template in bundle.checklistTemplates {
+            incomingTemplateIDs.insert(template.id)
+
+            let templateRecord = existingTemplatesByID[template.id] ?? {
+                let newRecord = PersistedChecklistTemplate(from: template)
+                modelContext.insert(newRecord)
+                return newRecord
+            }()
+
+            templateRecord.update(from: template)
+
+            let existingItemsByID = Dictionary(uniqueKeysWithValues: templateRecord.items.map { ($0.id, $0) })
+            var incomingItemIDs = Set<UUID>()
+
+            for item in template.items {
+                incomingItemIDs.insert(item.id)
+
+                if let existingItem = existingItemsByID[item.id] {
+                    existingItem.update(from: item, template: templateRecord)
+                } else {
+                    let newItem = PersistedChecklistTemplateItem(from: item, template: templateRecord)
+                    modelContext.insert(newItem)
+                }
+            }
+
+            for existingItem in Array(templateRecord.items) where !incomingItemIDs.contains(existingItem.id) {
+                modelContext.delete(existingItem)
+            }
+        }
+
+        for templateRecord in existingTemplates where !incomingTemplateIDs.contains(templateRecord.id) {
+            modelContext.delete(templateRecord)
+        }
+
         let updatedState = SeedContentVersionState(
             schemaVersion: bundle.manifest.schemaVersion,
             contentPackVersion: bundle.manifest.contentPackVersion,
@@ -153,7 +193,8 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
             versionState: updatedState,
             chapterCount: bundle.chapters.count,
             sectionCount: bundle.chapters.reduce(into: 0) { $0 += $1.sections.count },
-            quickCardCount: bundle.quickCards.count
+            quickCardCount: bundle.quickCards.count,
+            checklistTemplateCount: bundle.checklistTemplates.count
         )
     }
 

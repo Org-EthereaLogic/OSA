@@ -31,6 +31,7 @@ struct SeedContentLoader {
         let manifest = try loadManifest()
         var chapters: [HandbookChapter] = []
         var quickCards: [QuickCard] = []
+        var checklistTemplates: [ChecklistTemplate] = []
 
         for pack in manifest.packs {
             switch pack.kind {
@@ -50,6 +51,14 @@ struct SeedContentLoader {
                     fileName: pack.fileName
                 )
                 quickCards.append(contentsOf: packQuickCards)
+            case .checklistTemplates:
+                let packTemplates = try loadChecklistTemplatePack(named: pack.fileName)
+                try validateRecordCount(
+                    expected: pack.recordCount,
+                    actual: packTemplates.count,
+                    fileName: pack.fileName
+                )
+                checklistTemplates.append(contentsOf: packTemplates)
             }
         }
 
@@ -66,7 +75,8 @@ struct SeedContentLoader {
         return SeedContentBundle(
             manifest: manifest,
             chapters: chapters.sorted(by: chapterSort),
-            quickCards: quickCards.sorted(by: quickCardSort)
+            quickCards: quickCards.sorted(by: quickCardSort),
+            checklistTemplates: checklistTemplates.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
         )
     }
 
@@ -99,6 +109,16 @@ struct SeedContentLoader {
 
         let pack = try decoder.decode(QuickCardSeedPackFile.self, from: Data(contentsOf: fileURL))
         return pack.quickCards.map(\.toDomain)
+    }
+
+    private func loadChecklistTemplatePack(named fileName: String) throws -> [ChecklistTemplate] {
+        let fileURL = directoryURL.appendingPathComponent(fileName)
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            throw SeedContentLoaderError.missingPackFile(fileName)
+        }
+
+        let pack = try decoder.decode(ChecklistTemplateSeedPackFile.self, from: Data(contentsOf: fileURL))
+        return pack.templates.map(\.toDomain)
     }
 
     private func validateRecordCount(expected: Int, actual: Int, fileName: String) throws {
@@ -236,6 +256,61 @@ private struct HandbookSectionFile: Decodable {
             chunkGroupID: chunkGroupID,
             version: version,
             lastReviewedAt: lastReviewedAt
+        )
+    }
+}
+
+private struct ChecklistTemplateSeedPackFile: Decodable {
+    let templates: [ChecklistTemplateFile]
+}
+
+private struct ChecklistTemplateFile: Decodable {
+    let id: UUID
+    let title: String
+    let slug: String
+    let category: String
+    let description: String
+    let estimatedMinutes: Int
+    let tags: [String]
+    let sourceType: ChecklistSourceType
+    let lastReviewedAt: Date?
+    let items: [ChecklistTemplateItemFile]
+
+    var toDomain: ChecklistTemplate {
+        ChecklistTemplate(
+            id: id,
+            title: title,
+            slug: slug,
+            category: category,
+            description: description,
+            estimatedMinutes: estimatedMinutes,
+            tags: tags,
+            sourceType: sourceType,
+            lastReviewedAt: lastReviewedAt,
+            items: items.enumerated().map { index, item in
+                item.toDomain(templateID: id, defaultSortOrder: (index + 1) * 100)
+            }
+        )
+    }
+}
+
+private struct ChecklistTemplateItemFile: Decodable {
+    let id: UUID
+    let text: String
+    let detail: String?
+    let sortOrder: Int?
+    let isOptional: Bool
+    let riskLevel: String?
+
+    func toDomain(templateID: UUID, defaultSortOrder: Int) -> ChecklistTemplateItem {
+        ChecklistTemplateItem(
+            id: id,
+            templateID: templateID,
+            text: text,
+            detail: detail,
+            sortOrder: sortOrder ?? defaultSortOrder,
+            isOptional: isOptional,
+            riskLevel: riskLevel
         )
     }
 }
