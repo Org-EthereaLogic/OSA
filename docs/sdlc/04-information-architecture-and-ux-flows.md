@@ -8,6 +8,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 - The UX must work under both ordinary planning use and stress-state emergency use.
 - Core functionality must remain useful offline.
 - Required top-level screens are Home, Library, Ask, Inventory, Checklists, Quick Cards, Personal Notes, and Settings.
+- All top-level screens are now implemented with SwiftUI feature surfaces backed by repository and retrieval protocols through environment injection. The navigation shell uses 4 primary tabs (Home, Library, Ask, Inventory) plus a More section (Checklists, Quick Cards, Notes, Settings).
 
 ## Assumptions
 
@@ -238,7 +239,7 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 ## Next-Step Recommendations
 
-1. Convert these flows into low-fidelity wireframes before writing UI code.
-2. Decide which destinations get permanent tab presence versus Home or overflow access.
+1. ~~Convert these flows into low-fidelity wireframes before writing UI code.~~ **Done:** All core screens are implemented as SwiftUI views.
+2. ~~Decide which destinations get permanent tab presence versus Home or overflow access.~~ **Resolved by implementation:** 4 primary tabs (Home, Library, Ask, Inventory) plus a More section for Checklists, Quick Cards, Notes, and Settings.
 3. Prototype the Quick Cards large-type presentation early; it is central to the product identity.
 

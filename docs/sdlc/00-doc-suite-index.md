@@ -65,7 +65,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 15. [Milestone 1 Exit Criteria — Handbook And Quick Card Browsing UI Enhanced Prompt](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 16. [Milestone 3 Phase 1 — Grounded Ask Retrieval Pipeline Enhanced Prompt](../prompt/enhanced/16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 17. ADRs in [docs/adr](../adr/)
-17. [Risk Register](./risk-register.md)
+18. [Risk Register](./risk-register.md)
 
 ## File List
 

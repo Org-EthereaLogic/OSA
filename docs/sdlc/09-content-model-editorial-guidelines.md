@@ -162,7 +162,7 @@ Recommended v1 workflow:
 
 ## Next-Step Recommendations
 
-1. Author one complete sample chapter, one quick card, and one checklist template to validate the format.
-2. Define trust tiers and review SLAs for imported content before enabling broad source import.
+1. ~~Author one complete sample chapter, one quick card, and one checklist template to validate the format.~~ **Done:** Seed content files exist for all three — `handbook-foundations-v1.json`, `quick-cards-core-v1.json`, and `checklist-templates-core-v1.json` — in `OSA/Resources/SeedContent/`.
+2. ~~Define trust tiers and review SLAs for imported content before enabling broad source import.~~ **Resolved:** Three-tier trusted-source allowlist defined with 15 PNW-focused sources. Tier 1–2 auto-approve; Tier 3 and user-added flagged for review.
 3. Build content lint checks once the source file format is chosen.
 
