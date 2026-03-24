@@ -164,6 +164,6 @@ flowchart TD
 
 ## Next-Step Recommendations
 
-1. Turn Milestones 1 and 2 into the first implementation backlog.
+1. ~~Turn Milestones 1 and 2 into the first implementation backlog.~~ **Done:** Milestones 1 and 2 are complete. Milestone 3 is in progress.
 2. Freeze one supported source format for the initial import prototype.
-3. Avoid starting Ask generation work before retrieval and citations are demonstrably correct.
+3. ~~Avoid starting Ask generation work before retrieval and citations are demonstrably correct.~~ **Done:** M3P1 retrieval pipeline with citations is implemented and tested. M3P3 (Foundation Models generation adapter) is the next implementation step.

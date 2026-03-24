@@ -64,8 +64,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 14. [Milestone 1 Phase 2 Persistence, Seed Import, And Tests Enhanced Prompt](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 15. [Milestone 1 Exit Criteria — Handbook And Quick Card Browsing UI Enhanced Prompt](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 16. [Milestone 3 Phase 1 — Grounded Ask Retrieval Pipeline Enhanced Prompt](../prompt/enhanced/16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
-17. ADRs in [docs/adr](../adr/)
-18. [Risk Register](./risk-register.md)
+17. [Milestone 3 Phase 3 — Capability Detection And Model Adapter Enhanced Prompt](../prompt/enhanced/17-milestone-3-capability-detection-and-model-adapter-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+18. ADRs in [docs/adr](../adr/)
+19. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -88,6 +89,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
 | [15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) | Implementation task prompt for Milestone 1 exit criteria: handbook and quick-card browsing UI. | Executed — handbook and quick-card browsing UI landed |
 | [16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md](../prompt/enhanced/16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md) | Implementation task prompt for Milestone 3 Phase 1: grounded Ask retrieval pipeline. | Executed — retrieval pipeline, sensitivity policy, citations, capability detection, and bounded Ask UI landed |
+| [17-milestone-3-capability-detection-and-model-adapter-enhanced-prompt.md](../prompt/enhanced/17-milestone-3-capability-detection-and-model-adapter-enhanced-prompt.md) | Implementation task prompt for Milestone 3 Phase 3: capability detection and model adapter. | Authored — ready for execution |
 | [ADR-0001-offline-first-local-first.md](../adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](../adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
@@ -114,4 +116,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
 2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.
-4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **In progress:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI) is implemented. Remaining: Foundation Models generation adapter (M3P3), prompt shaping and safety guardrails (M3P5).
+4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **In progress:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI) is implemented. M3P3 enhanced prompt (capability detection and model adapter) is authored and ready for execution. Remaining: M3P3 implementation, prompt shaping and safety guardrails (M3P5).

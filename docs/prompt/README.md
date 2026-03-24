@@ -6,6 +6,7 @@ Prompt source material and prompt-working areas.
 
 | Path | Purpose |
 | --- | --- |
+| `doc/` | Reference materials on prompt engineering practices and techniques |
 | `draft/` | In-progress or experimental prompt work not yet ready for reuse |
 | `enhanced/` | Curated prompt rewrites, implementation task prompts, and prompt-derived artifacts |
 
