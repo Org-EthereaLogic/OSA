@@ -21,6 +21,7 @@ struct OSAApp: App {
                 .environment(\.checklistRepository, dependencies.checklistRepository)
                 .environment(\.noteRepository, dependencies.noteRepository)
                 .environment(\.searchService, dependencies.searchService)
+                .environment(\.retrievalService, dependencies.retrievalService)
         }
         .modelContainer(sharedModelContainer)
     }

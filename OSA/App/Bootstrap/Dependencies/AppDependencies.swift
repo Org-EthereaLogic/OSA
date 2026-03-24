@@ -8,6 +8,7 @@ struct AppDependencies {
     let checklistRepository: any ChecklistRepository
     let noteRepository: any NoteRepository
     let searchService: (any SearchService)?
+    let retrievalService: (any RetrievalService)?
 
     static func live(modelContainer: ModelContainer) -> AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
@@ -16,6 +17,14 @@ struct AppDependencies {
         let noteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let searchService = try? LocalSearchService.makeDefault()
 
+        let retrievalService: (any RetrievalService)? = searchService.map { search in
+            LocalRetrievalService(
+                searchService: search,
+                sensitivityClassifier: SensitivityPolicy(),
+                capabilityDetector: DeviceCapabilityDetector()
+            )
+        }
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -23,7 +32,8 @@ struct AppDependencies {
             inventoryRepository: inventoryRepository,
             checklistRepository: checklistRepository,
             noteRepository: noteRepository,
-            searchService: searchService
+            searchService: searchService,
+            retrievalService: retrievalService
         )
     }
 }

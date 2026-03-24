@@ -206,6 +206,6 @@ Recommendation: do not block the entire app or Ask feature when generative capab
 
 ## Next-Step Recommendations
 
-1. Convert the allowed and disallowed task lists into policy tests before coding the assistant UI.
+1. ~~Convert the allowed and disallowed task lists into policy tests before coding the assistant UI.~~ **Done:** `SensitivityPolicy` implements blocked-category detection (hunting, foraging, medical dosage) and sensitive-static-only classification (first aid, emergency hazards). `SensitivityPolicyTests` covers all branches.
 2. Decide whether personal notes are in Ask scope by default or opt-in.
-3. Build the retrieval layer before evaluating answer-generation quality.
+3. ~~Build the retrieval layer before evaluating answer-generation quality.~~ **Done:** `LocalRetrievalService` implements the full retrieval flow: normalize → classify sensitivity → search FTS5 → re-rank → check sufficiency → package citations → determine confidence → assemble extractive answer. Foundation Models generation adapter is stubbed for future integration.

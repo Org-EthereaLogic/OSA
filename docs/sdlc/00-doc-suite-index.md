@@ -14,6 +14,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - Milestone 1 Phase 1 is complete: app shell, tab navigation (4 primary tabs + More section), design-system scaffolding, and connectivity state modeling are in the codebase.
 - Milestone 1 Phase 2 now has an implemented editorial-content persistence foundation: domain-facing content models and repository protocols, SwiftData models and mappings, bundled seed import, and focused repository tests for handbook chapters, sections, and quick cards.
 - Milestone 2 (Core Organizer) implementation is substantially complete: domain models, repository protocols, SwiftData persistence, environment-key DI, and CRUD UI for Inventory, Checklists, and Notes are implemented. A sidecar SQLite FTS5 search index (`SearchIndexStore`) and `LocalSearchService` are wired, with Library search results UI. Repository-contract tests cover inventory, checklists, notes, and the search index.
+- Milestone 3 Phase 1 (Grounded Ask retrieval pipeline) is implemented: domain-facing retrieval and citation models (`EvidenceItem`, `CitationReference`, `RetrievalOutcome`, `AnswerMode`, `ConfidenceLevel`, `RefusalReason`), `RetrievalService`, `SensitivityClassifier`, and `CapabilityDetector` protocols, `LocalRetrievalService` pipeline (normalize → classify → search → rank → cite → assemble), `SensitivityPolicy` for blocked/sensitive topic enforcement, `DeviceCapabilityDetector` (extractive-only default), deterministic `EvidenceRanker`, and a retrieval-backed Ask UI with answer/citation/refusal states. Focused tests cover normalization, sensitivity, ranking, and end-to-end retrieval.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -62,7 +63,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 13. [Task 03 SwiftData Schema Enhanced Prompt](../prompt/enhanced/13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 14. [Milestone 1 Phase 2 Persistence, Seed Import, And Tests Enhanced Prompt](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
 15. [Milestone 1 Exit Criteria — Handbook And Quick Card Browsing UI Enhanced Prompt](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
-16. ADRs in [docs/adr](../adr/)
+16. [Milestone 3 Phase 1 — Grounded Ask Retrieval Pipeline Enhanced Prompt](../prompt/enhanced/16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md) _(implementation task prompt, not an SDLC living document)_
+17. ADRs in [docs/adr](../adr/)
 17. [Risk Register](./risk-register.md)
 
 ## File List
@@ -85,6 +87,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md](../prompt/enhanced/13-task-03-swiftdata-schema-and-repository-protocols-enhanced-prompt.md) | Implementation task prompt for SwiftData schema and repository protocols (Milestone 1 Phase 2). | Executed — first editorial-content slice implemented |
 | [14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md](../prompt/enhanced/14-milestone-1-phase-2-persistence-seed-import-and-tests-enhanced-prompt.md) | Expanded implementation task prompt for Milestone 1 Phase 2 persistence, bundled seed import, and repository-contract tests. | Executed — persistence, seed import, and repository tests landed |
 | [15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md](../prompt/enhanced/15-milestone-1-exit-criteria-handbook-and-quick-card-browsing-ui-enhanced-prompt.md) | Implementation task prompt for Milestone 1 exit criteria: handbook and quick-card browsing UI. | Executed — handbook and quick-card browsing UI landed |
+| [16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md](../prompt/enhanced/16-milestone-3-grounded-ask-retrieval-pipeline-enhanced-prompt.md) | Implementation task prompt for Milestone 3 Phase 1: grounded Ask retrieval pipeline. | Executed — retrieval pipeline, sensitivity policy, citations, capability detection, and bounded Ask UI landed |
 | [ADR-0001-offline-first-local-first.md](../adr/ADR-0001-offline-first-local-first.md) | Records the offline-first local-first decision. | Initial draft complete |
 | [ADR-0002-grounded-assistant-only.md](../adr/ADR-0002-grounded-assistant-only.md) | Records the grounded assistant-only decision. | Initial draft complete |
 | [ADR-0003-online-knowledge-refresh-with-local-persistence.md](../adr/ADR-0003-online-knowledge-refresh-with-local-persistence.md) | Records the online retrieval plus local persistence decision. | Initial draft complete |
@@ -95,9 +98,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 ## Current Suite Status
 
 - Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: high; Milestone 1 is complete and Milestone 2 (Core Organizer) is substantially complete — inventory, checklists, notes CRUD plus local FTS5 search are implemented with domain models, repository protocols, SwiftData persistence, and environment-key DI. Retrieval pipeline and assistant orchestration (Milestone 3) remain to be implemented.
+- Architecture confidence: high; Milestones 1–2 are complete and Milestone 3 Phase 1 (retrieval pipeline, sensitivity policy, capability detection, citation packaging, and bounded Ask UI) is implemented. Remaining M3 work: Foundation Models generation adapter, prompt shaping, and safety regression tests.
 - Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
-- Highest uncertainty areas: retrieval ranking quality and assistant orchestration integration.
+- Highest uncertainty areas: Foundation Models integration quality and retrieval ranking tuning with real corpus data.
 
 ## Done Means
 
@@ -111,4 +114,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 1. ~~Resolve the minimum OS and AI capability support matrix before creating the Xcode project.~~ **Resolved:** iOS 18.0 minimum, Foundation Models with extractive fallback. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). Xcode project scaffolded.
 2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.
-4. Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.
+4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **In progress:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI) is implemented. Remaining: Foundation Models generation adapter (M3P3), prompt shaping and safety guardrails (M3P5).

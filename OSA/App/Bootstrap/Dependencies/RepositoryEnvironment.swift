@@ -24,6 +24,10 @@ private struct SearchServiceKey: EnvironmentKey {
     static let defaultValue: (any SearchService)? = nil
 }
 
+private struct RetrievalServiceKey: EnvironmentKey {
+    static let defaultValue: (any RetrievalService)? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -53,5 +57,10 @@ extension EnvironmentValues {
     var searchService: (any SearchService)? {
         get { self[SearchServiceKey.self] }
         set { self[SearchServiceKey.self] = newValue }
+    }
+
+    var retrievalService: (any RetrievalService)? {
+        get { self[RetrievalServiceKey.self] }
+        set { self[RetrievalServiceKey.self] = newValue }
     }
 }

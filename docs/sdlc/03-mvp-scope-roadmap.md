@@ -85,7 +85,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 2. ~~Persistence layer, seed-content import, and repository protocols.~~ **Done.**
 3. ~~Handbook and quick-card browsing plus local search.~~ **Done.**
 4. ~~Inventory, checklists, and notes.~~ **Done:** domain models, repository protocols, SwiftData persistence, CRUD UI, and FTS5 search index implemented.
-5. Retrieval pipeline and Ask with extractive fallback.
+5. ~~Retrieval pipeline and Ask with extractive fallback.~~ **Done:** retrieval pipeline, sensitivity policy, citation packaging, capability detection, extractive answer assembly, and bounded Ask UI implemented.
 6. Foundation Models integration on supported devices.
 7. Trusted-source search, import, normalization, and local persistence.
 8. Hardening, migration tests, and release preparation.
@@ -100,7 +100,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - Phase 3 complete: offline-first handbook chapter browsing (Library) and quick-card browsing UI, with chapter detail, section reading, quick-card detail, provenance metadata, and empty/error states.
 - Exit criteria met: app cold-starts offline and browses seed content from the local repository layer.
 
-### Milestone 2: Core Organizer _(In Progress)_
+### Milestone 2: Core Organizer _(Complete)_
 
 - Inventory, notes, checklists, and local search.
 - Domain models, repository protocols, SwiftData persistence, and environment-key DI are implemented for all three user-data domains.
@@ -108,11 +108,13 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - CRUD UI implemented: Inventory (list, detail, form with category/expiry/reorder), Checklists (list, template detail, run view with item completion, run history, create), Notes (list, detail, markdown editor).
 - Checklist seed data import via `SeedContentLoader` and `SeedManifest.json` extended for checklist templates.
 - Repository-contract tests cover inventory, checklists, notes, and the search index.
-- Exit criteria: all local CRUD features work offline and persist correctly across relaunch.
+- Exit criteria met: all local CRUD features work offline and persist correctly across relaunch.
 
-### Milestone 3: Grounded Ask
+### Milestone 3: Grounded Ask _(In Progress)_
 
 - Retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.
+- Phase 1 complete: domain-facing retrieval and citation models, `RetrievalService`/`SensitivityClassifier`/`CapabilityDetector` protocols, `LocalRetrievalService` pipeline (normalize → classify → search FTS5 → re-rank → cite → assemble), `SensitivityPolicy` for blocked/sensitive topic enforcement, `DeviceCapabilityDetector` (extractive-only default), `EvidenceRanker` with deterministic heuristics, retrieval-backed Ask UI with answer/citation/refusal states, and 23 focused tests.
+- Remaining: Foundation Models generation adapter (M3P3), prompt shaping and safety guardrails (M3P5).
 - Exit criteria: Ask answers only from local evidence and refuses unsupported prompts.
 
 ### Milestone 4: Online Enrichment

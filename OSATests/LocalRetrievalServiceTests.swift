@@ -1,0 +1,163 @@
+import XCTest
+@testable import OSA
+
+final class LocalRetrievalServiceTests: XCTestCase {
+    private func makeService(
+        searchResults: [SearchResult] = [],
+        sensitivity: SensitivityResult = .allowed,
+        answerMode: AnswerMode = .extractiveOnly
+    ) -> LocalRetrievalService {
+        LocalRetrievalService(
+            searchService: StubSearchService(results: searchResults),
+            sensitivityClassifier: StubClassifier(result: sensitivity),
+            capabilityDetector: StubCapabilityDetector(mode: answerMode)
+        )
+    }
+
+    func testEmptyQueryReturnsRefusal() throws {
+        let service = makeService()
+        let outcome = try service.retrieve(query: "", scopes: nil)
+
+        if case .refused(.emptyQuery) = outcome {
+            // pass
+        } else {
+            XCTFail("Expected emptyQuery refusal, got \(outcome)")
+        }
+    }
+
+    func testBlockedSensitiveQueryReturnsRefusal() throws {
+        let service = makeService(
+            sensitivity: .blocked(reason: "Hunting is blocked")
+        )
+        let outcome = try service.retrieve(query: "how to hunt deer", scopes: nil)
+
+        if case .refused(.blockedSensitiveScope(let reason)) = outcome {
+            XCTAssertTrue(reason.contains("Hunting"))
+        } else {
+            XCTFail("Expected blockedSensitiveScope refusal, got \(outcome)")
+        }
+    }
+
+    func testNoResultsReturnsInsufficientEvidence() throws {
+        let service = makeService(searchResults: [])
+        let outcome = try service.retrieve(query: "water storage", scopes: nil)
+
+        if case .refused(.insufficientEvidence) = outcome {
+            // pass
+        } else {
+            XCTFail("Expected insufficientEvidence refusal, got \(outcome)")
+        }
+    }
+
+    func testSuccessfulRetrievalReturnsAnswer() throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .handbookSection, title: "Water Storage", snippet: "Store one gallon per person", score: 5.0, tags: []),
+            SearchResult(id: UUID(), kind: .quickCard, title: "Water Emergency", snippet: "Quick water tips", score: 4.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try service.retrieve(query: "water storage", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertFalse(result.evidence.isEmpty)
+            XCTAssertFalse(result.citations.isEmpty)
+            XCTAssertEqual(result.citations.count, result.evidence.count)
+            XCTAssertFalse(result.answerText.isEmpty)
+        } else {
+            XCTFail("Expected answered outcome, got \(outcome)")
+        }
+    }
+
+    func testHighConfidenceWithMultipleApprovedSources() throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .handbookSection, title: "A", snippet: "Snippet A", score: 5.0, tags: []),
+            SearchResult(id: UUID(), kind: .handbookSection, title: "B", snippet: "Snippet B", score: 4.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try service.retrieve(query: "shelter", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.confidence, .groundedHigh)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testMediumConfidenceWithSingleSource() throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .noteRecord, title: "My Note", snippet: "Personal info", score: 3.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try service.retrieve(query: "personal note", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.confidence, .groundedMedium)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testSensitiveStaticOnlyRestrictsScopes() throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .handbookSection, title: "First Aid", snippet: "CPR steps", score: 5.0, tags: []),
+        ]
+        let service = makeService(
+            searchResults: results,
+            sensitivity: .sensitiveStaticOnly(reason: "First aid is sensitive")
+        )
+        let outcome = try service.retrieve(query: "cpr steps", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            // Should still return answer from handbook (allowed for sensitive-static-only)
+            XCTAssertFalse(result.evidence.isEmpty)
+        } else {
+            XCTFail("Expected answered outcome for sensitive-static-only")
+        }
+    }
+
+    func testCitationsHaveStableIDs() throws {
+        let fixedID = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
+        let results = [
+            SearchResult(id: fixedID, kind: .handbookSection, title: "Water", snippet: "Info", score: 5.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try service.retrieve(query: "water", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.citations.first?.id, fixedID)
+            XCTAssertEqual(result.citations.first?.kind, .handbookSection)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+}
+
+// MARK: - Test Doubles
+
+private struct StubSearchService: SearchService {
+    let results: [SearchResult]
+
+    func search(query: String, scopes: Set<SearchResultKind>?, limit: Int) throws -> [SearchResult] {
+        if let scopes {
+            return results.filter { scopes.contains($0.kind) }
+        }
+        return results
+    }
+
+    func indexAllContent() throws {}
+    func indexInventoryItem(_ item: InventoryItem) throws {}
+    func indexChecklistTemplate(_ template: ChecklistTemplate) throws {}
+    func indexNote(_ note: NoteRecord) throws {}
+    func indexHandbookSection(_ section: HandbookSection, chapterTitle: String) throws {}
+    func indexQuickCard(_ card: QuickCard) throws {}
+    func removeFromIndex(id: UUID) throws {}
+}
+
+private struct StubClassifier: SensitivityClassifier {
+    let result: SensitivityResult
+    func classify(_ query: String) -> SensitivityResult { result }
+}
+
+private struct StubCapabilityDetector: CapabilityDetector {
+    let mode: AnswerMode
+    func detectAnswerMode() -> AnswerMode { mode }
+}
