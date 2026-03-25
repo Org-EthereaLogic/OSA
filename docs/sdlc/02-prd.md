@@ -105,7 +105,7 @@ OSA is a local-first preparedness handbook and organizer. It combines curated of
 - Open from Home with minimal taps.
 - Provide links to deeper handbook sections.
 
-### Personal Notes
+### Notes
 
 - Create and edit notes offline.
 - Tag and optionally link notes to handbook sections or inventory items.

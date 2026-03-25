@@ -27,5 +27,5 @@ Documentation map for the OSA repository.
 
 - Directory location outranks filename numbering when deciding whether a document is canonical.
 - Prompt assets should not override `docs/sdlc/` or `docs/adr/`.
-- Use `report/` for dated evidence artifacts and release/readiness reporting rather than mixing them into `docs/`.
+- When created, use `report/` for dated evidence artifacts and release/readiness reporting rather than mixing them into `docs/`.
 - Update this navigation layer when files move, split, or change role.

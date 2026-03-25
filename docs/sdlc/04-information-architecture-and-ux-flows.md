@@ -7,7 +7,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 - The UX must work under both ordinary planning use and stress-state emergency use.
 - Core functionality must remain useful offline.
-- Required top-level screens are Home, Library, Ask, Inventory, Checklists, Quick Cards, Personal Notes, and Settings.
+- Required top-level screens are Home, Library, Ask, Inventory, Checklists, Quick Cards, Notes, and Settings.
 - All top-level screens are now implemented with SwiftUI feature surfaces backed by repository and retrieval protocols through environment injection. The navigation shell uses 4 primary tabs (Home, Library, Ask, Inventory) plus a More section (Checklists, Quick Cards, Notes, Settings).
 
 ## Assumptions
@@ -32,7 +32,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 Recommended root model:
 
-- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, and a root overflow surface or route list for `Checklists`, `Quick Cards`, `Personal Notes`, and `Settings`.
+- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, and a root overflow surface or route list for `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
 - Home acts as the launch screen and emergency-first dashboard.
 - Global search entry from Home, Library, and Ask.
 - A persistent offline/online status indicator in the navigation chrome or Home header.
@@ -67,7 +67,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 
 - High-priority large-type cards optimized for one-handed reading and low-light or stress use.
 
-### Personal Notes
+### Notes
 
 - User-created notes and local references, optionally linked to handbook topics or inventory items.
 
@@ -206,7 +206,7 @@ Under stress, the app should bias toward direct card opening and simple checklis
 - category chips
 - large-text action format
 
-### Personal Notes
+### Notes
 
 - searchable notes list
 - rich text or markdown-lite editor

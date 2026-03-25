@@ -63,7 +63,7 @@ flowchart TD
 - `Home`: emergency-first dashboard, pinned quick cards, offline state, recent activity.
 - `Library`: handbook chapter browsing, local search entry, citations into source material.
 - `Ask`: grounded local assistant with clear scope boundaries and citations.
-- `Inventory`, `Checklists`, `Quick Cards`, `Personal Notes`, `Settings`: first-class product areas.
+- `Inventory`, `Checklists`, `Quick Cards`, `Notes`, `Settings`: first-class product areas.
 
 ### Application Services
 
@@ -84,13 +84,13 @@ flowchart TD
 
 Recommended module or target boundaries even if v1 starts in a single app target:
 
-- `AppShell`: app lifecycle, dependency container, navigation shell.
+- `App` (conceptually `AppShell`): app lifecycle, dependency container, navigation shell.
 - `Features/*`: feature-specific UI and view models.
 - `Domain`: models, use cases, repository protocols, policy interfaces.
 - `Persistence`: SwiftData models, migrations, repository implementations.
-- `Retrieval`: chunking, indexing, query construction, ranking.
-- `Assistant`: prompt policies (`Policy/`), prompt shaping (`PromptShaping/`), model adapters (`ModelAdapters/`), answer formatting, orchestration.
-- `Networking`: source clients, import pipeline, background tasks.
+- `Retrieval`: query normalization, ranking. Chunking and Citations subdirs are stubs for future work.
+- `Assistant`: prompt policies (`Policy/`), prompt shaping (`PromptShaping/`), model adapters (`ModelAdapters/`). Orchestration and Formatting subdirs are stubs for future work.
+- `Networking`: scaffolded for M4 (source clients, import pipeline, background tasks). Not yet implemented.
 - `Shared`: logging, capability checks, feature flags, utilities.
 
 The boundary matters more than the literal number of Xcode targets; a single target with clean folders and protocols is acceptable for v1.

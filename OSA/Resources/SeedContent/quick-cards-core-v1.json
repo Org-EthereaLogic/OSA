@@ -10,7 +10,8 @@
       "priority": 100,
       "relatedSectionIDs": [
         "11111111-1111-1111-1111-111111111112",
-        "11111111-1111-1111-1111-111111111113"
+        "11111111-1111-1111-1111-111111111113",
+        "aabbcc04-0002-0000-0000-000000000001"
       ],
       "tags": [
         "power",
@@ -29,7 +30,8 @@
       "bodyMarkdown": "1. Check containers for leaks, cloudiness, or broken seals.\n2. Move the oldest dated containers to the front of storage.\n3. Refill or replace any container that no longer matches your labeling or rotation plan.\n4. Keep treatment notes and rotation dates written where the household can find them quickly.",
       "priority": 80,
       "relatedSectionIDs": [
-        "11111111-1111-1111-1111-111111111112"
+        "11111111-1111-1111-1111-111111111112",
+        "aabbcc02-0002-0000-0000-000000000001"
       ],
       "tags": [
         "water",
@@ -37,6 +39,246 @@
         "rotation"
       ],
       "lastReviewedAt": "2026-03-22T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd01-0000-0000-0000-000000000001",
+      "title": "Boil Water Advisory Steps",
+      "slug": "boil-water-advisory-steps",
+      "category": "water",
+      "summary": "Purify tap water safely when a boil-water advisory is active.",
+      "bodyMarkdown": "1. Fill clean containers with water before supply pressure drops.\n2. Bring water to a rolling boil for at least one minute.\n3. Let boiled water cool completely before transferring to storage containers.\n4. Use only boiled or bottled water for drinking, cooking, brushing teeth, and pet bowls.\n5. Do not assume tap water is safe until the advisory is officially lifted by your utility.",
+      "priority": 95,
+      "relatedSectionIDs": [
+        "aabbcc02-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "water",
+        "purification",
+        "advisory",
+        "urgent"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd02-0000-0000-0000-000000000001",
+      "title": "Gas Leak Response",
+      "slug": "gas-leak-response",
+      "category": "utilities",
+      "summary": "Get out safely when you smell gas or hear hissing near a gas line.",
+      "bodyMarkdown": "1. Do not turn on or off any electrical switches or appliances.\n2. Do not use phones or electronics inside the building.\n3. Leave the building immediately and take everyone with you.\n4. Move to a safe distance upwind of the building.\n5. Call your gas utility or 911 from outside.\n6. Do not re-enter until emergency services have cleared the building.",
+      "priority": 100,
+      "relatedSectionIDs": [
+        "aabbcc09-0002-0000-0000-000000000001"
+      ],
+      "tags": [
+        "gas",
+        "utilities",
+        "safety",
+        "urgent"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd03-0000-0000-0000-000000000001",
+      "title": "Go-Bag Grab List",
+      "slug": "go-bag-grab-list",
+      "category": "go-bag",
+      "summary": "Grab essentials in the right order when told to evacuate.",
+      "bodyMarkdown": "1. Grab your packed go-bag first.\n2. Take your phone, charger, wallet, ID, and keys.\n3. Collect daily medications not already in the go-bag.\n4. Gather important documents if not already packed.\n5. Secure pet carrier and pet supplies.\n6. Put on a weather-appropriate outer layer.\n7. Do one final check for family members and pets before leaving.",
+      "priority": 90,
+      "relatedSectionIDs": [
+        "aabbcc08-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "go-bag",
+        "evacuation",
+        "essentials"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd04-0000-0000-0000-000000000001",
+      "title": "Family Meeting Point Reminder",
+      "slug": "family-meeting-point-reminder",
+      "category": "planning",
+      "summary": "Confirm your household knows where to gather if separated.",
+      "bodyMarkdown": "1. Review your primary meeting point near your home (front yard, mailbox, or end of driveway).\n2. Review your secondary meeting point outside the neighborhood for evacuations.\n3. Confirm every household member can name both locations from memory.\n4. Agree on a communication plan: text first — texts often get through when calls do not.\n5. Update meeting points any time you move or a location becomes inaccessible.",
+      "priority": 85,
+      "relatedSectionIDs": [
+        "aabbcc01-0002-0000-0000-000000000001"
+      ],
+      "tags": [
+        "family",
+        "meeting-point",
+        "communication"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd05-0000-0000-0000-000000000001",
+      "title": "Earthquake Drop-Cover-Hold",
+      "slug": "earthquake-drop-cover-hold",
+      "category": "emergency",
+      "summary": "Protect yourself the moment earthquake shaking starts.",
+      "bodyMarkdown": "1. DROP to your hands and knees immediately.\n2. Take COVER under a sturdy desk or table and protect your head and neck.\n3. HOLD ON to your shelter until the shaking stops completely.\n4. Stay away from windows, heavy furniture, and exterior walls.\n5. If outdoors, move to an open area away from buildings and power lines.\n6. Do not run outside during shaking.\n7. After shaking stops, check for injuries and hazards before moving.",
+      "priority": 100,
+      "relatedSectionIDs": [
+        "11111111-1111-1111-1111-111111111112"
+      ],
+      "tags": [
+        "earthquake",
+        "emergency",
+        "safety",
+        "urgent"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd06-0000-0000-0000-000000000001",
+      "title": "Severe Weather Shelter Steps",
+      "slug": "severe-weather-shelter-steps",
+      "category": "emergency",
+      "summary": "Get to safe shelter fast when a severe weather warning is issued.",
+      "bodyMarkdown": "1. Move to the lowest interior room with no windows.\n2. Choose a basement, interior closet, or bathroom on the lowest floor.\n3. Bring your phone, shoes, and a flashlight.\n4. Cover yourself with a mattress or heavy blankets for protection from debris.\n5. Stay sheltered until the warning expires or an all-clear is given.\n6. Monitor NOAA weather radio or local alerts for updates.",
+      "priority": 95,
+      "relatedSectionIDs": [
+        "aabbcc06-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "weather",
+        "tornado",
+        "shelter",
+        "urgent"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd07-0000-0000-0000-000000000001",
+      "title": "Refrigerator Food Safety Timer",
+      "slug": "refrigerator-food-safety-timer",
+      "category": "food",
+      "summary": "Know when to keep and when to discard food during a power outage.",
+      "bodyMarkdown": "1. Keep the refrigerator and freezer doors closed — do not open to check.\n2. A closed refrigerator keeps food safe for about 4 hours.\n3. A full freezer holds temperature for about 48 hours; half full lasts about 24 hours.\n4. Each door opening shortens the safe window significantly.\n5. Discard any perishables above 40\u00b0F (4\u00b0C) after 4 hours without power.\n6. When in doubt, throw it out.",
+      "priority": 80,
+      "relatedSectionIDs": [
+        "aabbcc03-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "food",
+        "refrigeration",
+        "power-outage",
+        "safety"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd08-0000-0000-0000-000000000001",
+      "title": "Home Medication Check",
+      "slug": "home-medication-check",
+      "category": "medications",
+      "summary": "Verify your household has enough medication supply and nothing is expired.",
+      "bodyMarkdown": "1. Confirm at least a 7-day supply of each daily prescription.\n2. Check expiration dates and replace anything expired.\n3. Store medications in a cool, dry place away from direct sunlight.\n4. Keep a written list of all medications, dosages, and prescribing doctors.\n5. Add refill dates to your calendar before you run low.",
+      "priority": 75,
+      "relatedSectionIDs": [
+        "aabbcc07-0002-0000-0000-000000000001"
+      ],
+      "tags": [
+        "medications",
+        "prescriptions",
+        "health",
+        "maintenance"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd09-0000-0000-0000-000000000001",
+      "title": "Smoke And CO Detector Check",
+      "slug": "smoke-co-detector-check",
+      "category": "fire-safety",
+      "summary": "Test and maintain every smoke and carbon monoxide detector in your home.",
+      "bodyMarkdown": "1. Press the test button on each smoke and CO detector and confirm it sounds.\n2. Replace batteries at least once a year or when the low-battery chirp starts.\n3. Replace the entire detector unit every 10 years.\n4. Install detectors on every level of the home, inside bedrooms, and outside sleeping areas.\n5. Never disable a detector because of nuisance alarms — relocate it instead.",
+      "priority": 70,
+      "relatedSectionIDs": [
+        "aabbcc0a-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "fire-safety",
+        "smoke-detector",
+        "carbon-monoxide",
+        "maintenance"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd0a-0000-0000-0000-000000000001",
+      "title": "Vehicle Breakdown Safety Steps",
+      "slug": "vehicle-breakdown-safety-steps",
+      "category": "vehicle",
+      "summary": "Stay safe when your vehicle breaks down on or near a roadway.",
+      "bodyMarkdown": "1. Pull as far off the road as safely possible.\n2. Turn on hazard lights immediately.\n3. Set out reflective triangles or flares if you have them.\n4. Stay inside the vehicle if on a highway — it is safer than standing outside.\n5. Call roadside assistance or 911 if you are in danger.\n6. If you must exit, do so from the side away from traffic.\n7. Wear a high-visibility vest if available.",
+      "priority": 65,
+      "relatedSectionIDs": [
+        "11111111-1111-1111-1111-111111111113"
+      ],
+      "tags": [
+        "vehicle",
+        "breakdown",
+        "roadside",
+        "safety"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd0b-0000-0000-0000-000000000001",
+      "title": "Utility Shutoff Quick Reference",
+      "slug": "utility-shutoff-quick-reference",
+      "category": "utilities",
+      "summary": "Know where your water, gas, and electrical shutoffs are before you need them.",
+      "bodyMarkdown": "1. Locate your water main shutoff — usually near the street or where supply enters the house.\n2. Locate your gas shutoff at the meter and keep a wrench nearby.\n3. Locate your electrical main breaker — usually in a garage, basement, or utility room.\n4. Label each shutoff clearly so anyone in the household can find it.\n5. Show all household members where each shutoff is located.\n6. Only shut off gas if you smell a leak or are told to by authorities — call the utility company to turn it back on.",
+      "priority": 85,
+      "relatedSectionIDs": [
+        "aabbcc09-0002-0000-0000-000000000001"
+      ],
+      "tags": [
+        "utilities",
+        "shutoff",
+        "gas",
+        "water",
+        "electrical"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd0c-0000-0000-0000-000000000001",
+      "title": "Winter Storm Home Preparation",
+      "slug": "winter-storm-home-preparation",
+      "category": "warmth",
+      "summary": "Prepare your home before a winter storm arrives to stay warm and safe.",
+      "bodyMarkdown": "1. Choose one room to keep warm and close off unused rooms to conserve heat.\n2. Gather blankets, sleeping bags, and warm clothing layers in that room.\n3. Fill bathtubs and large containers with water in case pipes freeze.\n4. Charge all devices and battery banks fully.\n5. Stock easy-to-eat food that does not require cooking.\n6. Bring pets indoors.\n7. Confirm you have a battery-powered or hand-crank radio for weather updates.",
+      "priority": 80,
+      "relatedSectionIDs": [
+        "aabbcc06-0001-0000-0000-000000000001",
+        "aabbcc06-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "winter",
+        "storm",
+        "warmth",
+        "preparation"
+      ],
+      "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
     }
   ]

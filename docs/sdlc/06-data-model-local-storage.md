@@ -64,6 +64,7 @@ erDiagram
     KnowledgeChunk ||--o{ CitationRecord : cited_by
     AISession ||--o{ AIMessage : contains
     AppSetting ||--o{ PendingOperation : configures
+    %% Note: AISession, AIMessage, AppSetting, and PendingOperation are planned but not yet implemented.
 ```
 
 ## Entity Schemas
@@ -239,7 +240,7 @@ Required metadata for imported knowledge:
 - `publisherDomain` optional
 - `generatedAt`
 
-### AISession _(deferred to M3P3 — Foundation Models integration)_
+### AISession _(deferred beyond M3)_
 
 - `id`
 - `startedAt`
@@ -248,9 +249,9 @@ Required metadata for imported knowledge:
 - `scope` such as handbook-only or handbook-plus-user-data
 - `lastAnswerStatus`
 
-Current M3P1 implementation does not persist conversation history. Session and message models will be implemented alongside the Foundation Models generation adapter.
+The current implementation does not persist conversation history. Session and message models are deferred to a future milestone.
 
-### AIMessage _(deferred to M3P3)_
+### AIMessage _(deferred beyond M3)_
 
 - `id`
 - `sessionID`

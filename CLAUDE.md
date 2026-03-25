@@ -45,8 +45,8 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries |
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
-| `OSA/Retrieval/` | Local search, chunking, ranking, and citation packaging |
-| `OSA/Networking/` | Trusted-source search, download, normalization, and refresh logic |
+| `OSA/Retrieval/` | Local retrieval pipeline, query normalization, and evidence ranking (Chunking and Citations subdirs are stubs) |
+| `OSA/Networking/` | Scaffolded for M4 online enrichment (stub-only, not yet implemented) |
 | `OSA/Shared/` | Reusable UI and cross-cutting helpers |
 | `docs/` | Documentation root — see `docs/README.md` for navigation |
 | `docs/sdlc/` | Canonical SDLC, product, architecture, quality, safety, and release docs |

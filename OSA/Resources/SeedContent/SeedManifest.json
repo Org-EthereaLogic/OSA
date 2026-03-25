@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "contentPackVersion": "0.2.0",
-  "generatedAt": "2026-03-23T00:00:00Z",
+  "contentPackVersion": "0.3.0",
+  "generatedAt": "2026-03-25T00:00:00Z",
   "packs": [
     {
       "identifier": "handbook-foundations",
       "kind": "handbook-chapters",
-      "version": "2026.03.22.1",
+      "version": "2026.03.25.1",
       "fileName": "handbook-foundations-v1.json",
-      "recordCount": 1,
+      "recordCount": 11,
       "contentHash": null
     },
     {
       "identifier": "quick-cards-core",
       "kind": "quick-cards",
-      "version": "2026.03.22.1",
+      "version": "2026.03.25.1",
       "fileName": "quick-cards-core-v1.json",
-      "recordCount": 2,
+      "recordCount": 14,
       "contentHash": null
     },
     {

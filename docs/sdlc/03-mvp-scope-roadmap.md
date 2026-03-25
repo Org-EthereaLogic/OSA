@@ -32,7 +32,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 ### Included
 
 - native iPhone app shell
-- Home, Library, Ask, Inventory, Checklists, Quick Cards, Personal Notes, Settings
+- Home, Library, Ask, Inventory, Checklists, Quick Cards, Notes, Settings
 - curated seed handbook chapters in all initial domains
 - offline local search across handbook and user data
 - offline inventory CRUD
@@ -143,7 +143,7 @@ flowchart TD
     A --> D[Retrieval Pipeline]
     E[User Data Schema] --> F[Inventory]
     E --> G[Checklists]
-    E --> H[Personal Notes]
+    E --> H[Notes]
     C --> D
     B --> D
     F --> D
