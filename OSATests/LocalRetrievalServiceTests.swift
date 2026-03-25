@@ -131,6 +131,42 @@ final class LocalRetrievalServiceTests: XCTestCase {
             XCTFail("Expected answered outcome")
         }
     }
+
+    func testRetrievalScopesExcludeNotesWhenPersonalNotesAreDisabled() async throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .noteRecord, title: "My Water Note", snippet: "Private note", score: 6.0, tags: []),
+            SearchResult(id: UUID(), kind: .handbookSection, title: "Water Storage", snippet: "Store one gallon per person.", score: 5.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: false)
+
+        let outcome = try await service.retrieve(query: "water", scopes: scopes)
+
+        if case .answered(let result) = outcome {
+            XCTAssertTrue(result.evidence.contains(where: { $0.kind == .handbookSection }))
+            XCTAssertFalse(result.evidence.contains(where: { $0.kind == .noteRecord }))
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testRetrievalScopesIncludeNotesWhenPersonalNotesAreEnabled() async throws {
+        let noteID = UUID(uuidString: "99999999-9999-9999-9999-999999999999")!
+        let results = [
+            SearchResult(id: noteID, kind: .noteRecord, title: "Family Water Plan", snippet: "Stored in the garage cabinet.", score: 5.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: true)
+
+        let outcome = try await service.retrieve(query: "where is our stored water", scopes: scopes)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.evidence.first?.id, noteID)
+            XCTAssertEqual(result.evidence.first?.kind, .noteRecord)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
 }
 
 // MARK: - Test Doubles

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "contentPackVersion": "0.3.0",
+  "contentPackVersion": "0.3.1",
   "generatedAt": "2026-03-25T00:00:00Z",
   "packs": [
     {
       "identifier": "handbook-foundations",
       "kind": "handbook-chapters",
-      "version": "2026.03.25.1",
+      "version": "2026.03.25.2",
       "fileName": "handbook-foundations-v1.json",
       "recordCount": 11,
-      "contentHash": null
+      "contentHash": "20d4e6fffaeb534f6627c0febe28504fc523afc5937b3967fe8dd7dab02f8e17"
     },
     {
       "identifier": "quick-cards-core",
@@ -17,7 +17,7 @@
       "version": "2026.03.25.1",
       "fileName": "quick-cards-core-v1.json",
       "recordCount": 14,
-      "contentHash": null
+      "contentHash": "04e6fd220f02c1df7d5a734f696d0d82fa7416a08c63b41822bca46b4e1e422c"
     },
     {
       "identifier": "checklist-templates-core",
@@ -25,7 +25,7 @@
       "version": "2026.03.23.1",
       "fileName": "checklist-templates-core-v1.json",
       "recordCount": 5,
-      "contentHash": null
+      "contentHash": "187242f93822eccffef69fe6f4fb62f5489c5443386e53b99dc8635cd6bb236a"
     }
   ]
 }

@@ -25,7 +25,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [MVP Scope Roadmap](./03-m
 ## Open Questions
 
 - What minimum content depth is required per chapter for MVP?
-- Are personal notes in Ask scope by default or opt-in?
+- ~~Are personal notes in Ask scope by default or opt-in?~~ **Resolved:** Opt-in, default false. Controlled by `AskScopeSettings` (`@AppStorage`-backed) and surfaced as a toggle in both AskScreen and SettingsScreen.
 - Is future device backup or export important enough to influence v1 settings and disclosures?
 
 ## Product Summary

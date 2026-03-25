@@ -38,7 +38,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 | R9 | Trusted-source policy is too loose, allowing poor-quality or unsafe imports. | Trust | Medium | High | Start with allowlist and trust tiers, require approval for imports, and preserve provenance metadata. | Product/Content | Open |
 | R10 | Privacy expectations are violated if prompts or personal notes ever leave device unexpectedly. | Privacy | Low | High | Keep logs local, avoid remote prompt processing in v1, and publish clear disclosures. | Engineering/Product | Open |
 | R11 | Unsupported or ambiguous minimum OS decision causes rework in architecture and testing. | Planning | Medium | Medium | iOS 18.0 minimum target adopted. See [ADR-0004](../adr/ADR-0004-ios18-minimum-target-with-foundation-models.md). | Product/Engineering | Mitigated |
-| R12 | Insufficient seed content quality makes retrieval look worse than the model or index actually are. | Content | Medium | High | Initial seed packs (handbook, quick cards, checklist templates) are bundled and indexed. Breadth and quality expansion ongoing — see "Expand seed content packs" task. | Content/Product | In Progress |
+| R12 | Insufficient seed content quality makes retrieval look worse than the model or index actually are. | Content | Medium | High | Seed corpus expanded: 11 handbook chapters with 35 sections, 14 quick cards, 5 checklist templates. Content hashes populated in SeedManifest.json v0.3.1. Two planned chapters (Local Notes/Maps, Archery/Longbow) deferred. | Content/Product | Substantially Mitigated |
 
 ## Done Means
 

@@ -7,6 +7,7 @@ struct AppDependencies {
     let inventoryRepository: any InventoryRepository
     let checklistRepository: any ChecklistRepository
     let noteRepository: any NoteRepository
+    let capabilityDetector: any CapabilityDetector
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
 
@@ -38,6 +39,7 @@ struct AppDependencies {
             inventoryRepository: inventoryRepository,
             checklistRepository: checklistRepository,
             noteRepository: noteRepository,
+            capabilityDetector: capabilityDetector,
             searchService: searchService,
             retrievalService: retrievalService
         )

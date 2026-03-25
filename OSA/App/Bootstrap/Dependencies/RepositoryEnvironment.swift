@@ -24,6 +24,10 @@ private struct SearchServiceKey: EnvironmentKey {
     static let defaultValue: (any SearchService)? = nil
 }
 
+private struct CapabilityDetectorKey: EnvironmentKey {
+    static let defaultValue: (any CapabilityDetector)? = nil
+}
+
 private struct RetrievalServiceKey: EnvironmentKey {
     static let defaultValue: (any RetrievalService)? = nil
 }
@@ -57,6 +61,11 @@ extension EnvironmentValues {
     var searchService: (any SearchService)? {
         get { self[SearchServiceKey.self] }
         set { self[SearchServiceKey.self] = newValue }
+    }
+
+    var capabilityDetector: (any CapabilityDetector)? {
+        get { self[CapabilityDetectorKey.self] }
+        set { self[CapabilityDetectorKey.self] = newValue }
     }
 
     var retrievalService: (any RetrievalService)? {

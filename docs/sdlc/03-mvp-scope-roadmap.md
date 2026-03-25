@@ -124,6 +124,14 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 - Exit criteria met: Ask answers only from local evidence and refuses unsupported prompts. Prompt shaping enforces grounding, citations, scope, and safety. Safety regression tests cover adversarial prompt variants.
 
+#### M3 Polish sprint _(Complete)_
+
+- HomeScreen wired to live repositories (quick cards, active checklists, inventory reminders, recent notes from real data).
+- SettingsScreen shows real capability detection via `capabilityDetector` environment key.
+- AskScreen has `navigationDestination` routing to `QuickCardRouteView` and `HandbookSectionDetailView`.
+- `AskScopeSettings` (`@AppStorage`-backed) controls personal-notes-in-Ask toggle across AskScreen and SettingsScreen.
+- Seed corpus expanded: 11 handbook chapters with 35 sections, 14 quick cards, content hashes populated in SeedManifest.json v0.3.1.
+
 ### Milestone 4: Online Enrichment
 
 - Trusted-source discovery, user approval, import pipeline, local indexing, and offline reuse of imported knowledge.

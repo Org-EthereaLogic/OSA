@@ -29,6 +29,22 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
         return try modelContext.fetch(descriptor).first?.toDomain()
     }
 
+    func chapter(id: UUID) throws -> HandbookChapter? {
+        let descriptor = FetchDescriptor<PersistedHandbookChapter>(
+            predicate: #Predicate { $0.id == id }
+        )
+
+        return try modelContext.fetch(descriptor).first?.toDomain()
+    }
+
+    func section(id: UUID) throws -> HandbookSection? {
+        let descriptor = FetchDescriptor<PersistedHandbookSection>(
+            predicate: #Predicate { $0.id == id }
+        )
+
+        return try modelContext.fetch(descriptor).first?.toDomain()
+    }
+
     func listQuickCards() throws -> [QuickCard] {
         var descriptor = FetchDescriptor<PersistedQuickCard>(
             sortBy: [
@@ -44,6 +60,14 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
     func quickCard(slug: String) throws -> QuickCard? {
         let descriptor = FetchDescriptor<PersistedQuickCard>(
             predicate: #Predicate { $0.slug == slug }
+        )
+
+        return try modelContext.fetch(descriptor).first?.toDomain()
+    }
+
+    func quickCard(id: UUID) throws -> QuickCard? {
+        let descriptor = FetchDescriptor<PersistedQuickCard>(
+            predicate: #Predicate { $0.id == id }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()

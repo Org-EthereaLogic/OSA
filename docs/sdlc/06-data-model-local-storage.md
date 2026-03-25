@@ -261,7 +261,17 @@ The current implementation does not persist conversation history. Session and me
 - `createdAt`
 - `blockedReason` optional
 
+### AskScopeSettings _(live — M3 Polish)_
+
+Lightweight settings layer using `@AppStorage` (not SwiftData). Lives in `OSA/Domain/Settings/AskScopeSettings.swift`.
+
+- `includePersonalNotes`: Bool, default `false`, key `settings.ask.includePersonalNotes`
+- Controls the `RetrievalScope` set passed to the retrieval pipeline
+- Surfaced as a toggle in both AskScreen and SettingsScreen
+
 ### AppSetting _(deferred to M4 — Online Enrichment)_
+
+The more general SwiftData-backed settings entity remains deferred. `AskScopeSettings` above covers the one live setting using `@AppStorage`.
 
 - `id`
 - `key`

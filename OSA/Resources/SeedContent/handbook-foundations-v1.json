@@ -11,9 +11,9 @@
         "planning",
         "offline-first"
       ],
-      "version": 1,
+      "version": 2,
       "isSeeded": true,
-      "lastReviewedAt": "2026-03-22T00:00:00Z",
+      "lastReviewedAt": "2026-03-25T00:00:00Z",
       "sections": [
         {
           "id": "11111111-1111-1111-1111-111111111112",
@@ -50,6 +50,42 @@
           "chunkGroupID": "preparedness-foundations-layering",
           "version": 1,
           "lastReviewedAt": "2026-03-22T00:00:00Z"
+        },
+        {
+          "id": "11111111-1111-1111-1111-111111111114",
+          "chapterID": "11111111-1111-1111-1111-111111111111",
+          "parentSectionID": null,
+          "heading": "Keep A One-Page Household Reference",
+          "bodyMarkdown": "In a stressful hour, the best plan is often the shortest one you can still read quickly.\n\n- Keep one page with household contacts, meeting points, medication reminders, and the location of your most important supplies.\n- Store printed copies in a kitchen drawer, a go-bag, and the glove box.\n- Use the same names for rooms, bins, and kits that your household actually uses so nobody has to translate under stress.\n- Update the page whenever a phone number, address, or medication changes.",
+          "plainText": "In a stressful hour, the best plan is often the shortest one you can still read quickly. Keep one page with household contacts, meeting points, medication reminders, and the location of your most important supplies. Store printed copies in a kitchen drawer, a go-bag, and the glove box. Use the same names for rooms, bins, and kits that your household actually uses so nobody has to translate under stress. Update the page whenever a phone number, address, or medication changes.",
+          "sortOrder": 300,
+          "tags": [
+            "documentation",
+            "family-plan",
+            "offline-reference"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "preparedness-foundations-one-page-reference",
+          "version": 1,
+          "lastReviewedAt": "2026-03-25T00:00:00Z"
+        },
+        {
+          "id": "11111111-1111-1111-1111-111111111115",
+          "chapterID": "11111111-1111-1111-1111-111111111111",
+          "parentSectionID": null,
+          "heading": "Use Short Review Cycles Instead Of Big Overhauls",
+          "bodyMarkdown": "Preparedness stays usable when maintenance is small, predictable, and easy to repeat.\n\n- Pick one short review window each month to check water dates, batteries, flashlights, medications, and kit locations.\n- Replace used items immediately instead of waiting for a full yearly reset.\n- Walk the household through one simple scenario at a time, such as a power outage or evacuation pickup.\n- Write down any confusion you notice and turn it into a checklist, label, or note before the next review.",
+          "plainText": "Preparedness stays usable when maintenance is small, predictable, and easy to repeat. Pick one short review window each month to check water dates, batteries, flashlights, medications, and kit locations. Replace used items immediately instead of waiting for a full yearly reset. Walk the household through one simple scenario at a time, such as a power outage or evacuation pickup. Write down any confusion you notice and turn it into a checklist, label, or note before the next review.",
+          "sortOrder": 400,
+          "tags": [
+            "maintenance",
+            "review",
+            "checklists"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "preparedness-foundations-review-cycle",
+          "version": 1,
+          "lastReviewedAt": "2026-03-25T00:00:00Z"
         }
       ]
     },
@@ -60,9 +96,9 @@
       "summary": "Household communication plans, meeting points, and emergency contact organization.",
       "sortOrder": 200,
       "tags": ["family", "communication", "contacts", "planning"],
-      "version": 1,
+      "version": 2,
       "isSeeded": true,
-      "lastReviewedAt": "2026-03-24T00:00:00Z",
+      "lastReviewedAt": "2026-03-25T00:00:00Z",
       "sections": [
         {
           "id": "aabbcc01-0001-0000-0000-000000000001",
@@ -311,6 +347,42 @@
           "chunkGroupID": "cooking-indoor-risks",
           "version": 1,
           "lastReviewedAt": "2026-03-24T00:00:00Z"
+        },
+        {
+          "id": "aabbcc05-0003-0000-0000-000000000001",
+          "chapterID": "aabbcc05-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Plan No-Cook And Low-Water Meals First",
+          "bodyMarkdown": "When power is limited, the safest meal is often the one that needs the least heat, fuel, and cleanup.\n\n- Keep shelf-stable foods that can be eaten cold or warmed briefly, such as canned soups, tuna, nut butter, crackers, and ready-to-eat cereal.\n- Use refrigerated food early while it is still safely cold, and move to pantry food as the outage continues.\n- Avoid meals that require long simmer times or large amounts of dishwashing water.\n- Keep a manual can opener, simple utensils, and trash bags with your emergency food supplies.",
+          "plainText": "When power is limited, the safest meal is often the one that needs the least heat, fuel, and cleanup. Keep shelf-stable foods that can be eaten cold or warmed briefly, such as canned soups, tuna, nut butter, crackers, and ready-to-eat cereal. Use refrigerated food early while it is still safely cold, and move to pantry food as the outage continues. Avoid meals that require long simmer times or large amounts of dishwashing water. Keep a manual can opener, simple utensils, and trash bags with your emergency food supplies.",
+          "sortOrder": 300,
+          "tags": [
+            "cooking",
+            "food",
+            "low-water"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "cooking-no-cook-meals",
+          "version": 1,
+          "lastReviewedAt": "2026-03-25T00:00:00Z"
+        },
+        {
+          "id": "aabbcc05-0004-0000-0000-000000000001",
+          "chapterID": "aabbcc05-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Handle Fuel, Fire, And Ventilation Deliberately",
+          "bodyMarkdown": "Fuel mistakes during an outage create fast-moving fire and carbon monoxide hazards.\n\n- Store spare propane, butane, charcoal, and liquid fuels outside living areas and away from ignition sources.\n- Let stoves, grills, and lanterns cool fully before refueling or moving them.\n- Keep a working smoke alarm and carbon monoxide alarm in the home before you rely on any combustion appliance.\n- If conditions are windy, wet, or crowded, choose no-cook meals instead of forcing a flame-based setup.",
+          "plainText": "Fuel mistakes during an outage create fast-moving fire and carbon monoxide hazards. Store spare propane, butane, charcoal, and liquid fuels outside living areas and away from ignition sources. Let stoves, grills, and lanterns cool fully before refueling or moving them. Keep a working smoke alarm and carbon monoxide alarm in the home before you rely on any combustion appliance. If conditions are windy, wet, or crowded, choose no-cook meals instead of forcing a flame-based setup.",
+          "sortOrder": 400,
+          "tags": [
+            "fuel",
+            "fire-safety",
+            "carbon-monoxide"
+          ],
+          "safetyLevel": "sensitive-static-only",
+          "chunkGroupID": "cooking-fuel-ventilation-boundaries",
+          "version": 1,
+          "lastReviewedAt": "2026-03-25T00:00:00Z"
         }
       ]
     },

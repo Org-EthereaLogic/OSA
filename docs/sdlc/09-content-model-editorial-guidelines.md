@@ -150,9 +150,9 @@ Recommended v1 workflow:
 | First Aid, Hygiene, And Medications | Basics, storage, hygiene, kit organization, recordkeeping. | Static-only handling for sensitive subtopics. |
 | Go-Bags | Purpose-based bag planning, maintenance, family variants. | Strong checklist integration. |
 | Home Supplies, Utilities, And Tools | Household readiness items, shutoff awareness notes, safe tool reference. | Avoid risky step-by-step utility intervention unless reviewed. |
-| Local Notes, Maps, And Forest Reference | Place-based notes, routes, landmarks, lawful local references. | v1 may begin as text and image references instead of full maps. |
+| Local Notes, Maps, And Forest Reference | Place-based notes, routes, landmarks, lawful local references. | v1 may begin as text and image references instead of full maps. _(Not yet seeded — deferred.)_ |
 | Fire And Lighting | Safe lighting, batteries, lantern basics, fire safety boundaries. | Strong quick-card candidate. |
-| Archery / Longbow | Safety, inspection, maintenance, storage, inventory, range habits, practice logs, lawful reference notes. | No tactical, hunting, or combat content. |
+| Archery / Longbow | Safety, inspection, maintenance, storage, inventory, range habits, practice logs, lawful reference notes. | No tactical, hunting, or combat content. _(Not yet seeded — deferred.)_ |
 
 ## Done Means
 

@@ -1,9 +1,12 @@
+import CryptoKit
 import Foundation
 
 enum SeedContentLoaderError: Error, Equatable {
     case missingSeedContentDirectory
     case missingManifest
     case missingPackFile(String)
+    case missingContentHash(fileName: String)
+    case contentHashMismatch(expected: String, actual: String, fileName: String)
     case recordCountMismatch(expected: Int, actual: Int, fileName: String)
     case missingReferencedSection(quickCardID: UUID, sectionID: UUID)
 }
@@ -34,9 +37,16 @@ struct SeedContentLoader {
         var checklistTemplates: [ChecklistTemplate] = []
 
         for pack in manifest.packs {
+            let packData = try loadPackData(named: pack.fileName)
+            try validateContentHash(
+                expected: pack.contentHash,
+                data: packData,
+                fileName: pack.fileName
+            )
+
             switch pack.kind {
             case .handbookChapters:
-                let packChapters = try loadHandbookPack(named: pack.fileName)
+                let packChapters = try decodeHandbookPack(from: packData)
                 try validateRecordCount(
                     expected: pack.recordCount,
                     actual: packChapters.count,
@@ -44,7 +54,7 @@ struct SeedContentLoader {
                 )
                 chapters.append(contentsOf: packChapters)
             case .quickCards:
-                let packQuickCards = try loadQuickCardPack(named: pack.fileName)
+                let packQuickCards = try decodeQuickCardPack(from: packData)
                 try validateRecordCount(
                     expected: pack.recordCount,
                     actual: packQuickCards.count,
@@ -52,7 +62,7 @@ struct SeedContentLoader {
                 )
                 quickCards.append(contentsOf: packQuickCards)
             case .checklistTemplates:
-                let packTemplates = try loadChecklistTemplatePack(named: pack.fileName)
+                let packTemplates = try decodeChecklistTemplatePack(from: packData)
                 try validateRecordCount(
                     expected: pack.recordCount,
                     actual: packTemplates.count,
@@ -91,34 +101,43 @@ struct SeedContentLoader {
         return manifestFile.toDomain()
     }
 
-    private func loadHandbookPack(named fileName: String) throws -> [HandbookChapter] {
+    private func loadPackData(named fileName: String) throws -> Data {
         let fileURL = directoryURL.appendingPathComponent(fileName)
         guard FileManager.default.fileExists(atPath: fileURL.path) else {
             throw SeedContentLoaderError.missingPackFile(fileName)
         }
 
-        let pack = try decoder.decode(HandbookSeedPackFile.self, from: Data(contentsOf: fileURL))
+        return try Data(contentsOf: fileURL)
+    }
+
+    private func decodeHandbookPack(from data: Data) throws -> [HandbookChapter] {
+        let pack = try decoder.decode(HandbookSeedPackFile.self, from: data)
         return pack.chapters.map(\.toDomain)
     }
 
-    private func loadQuickCardPack(named fileName: String) throws -> [QuickCard] {
-        let fileURL = directoryURL.appendingPathComponent(fileName)
-        guard FileManager.default.fileExists(atPath: fileURL.path) else {
-            throw SeedContentLoaderError.missingPackFile(fileName)
-        }
-
-        let pack = try decoder.decode(QuickCardSeedPackFile.self, from: Data(contentsOf: fileURL))
+    private func decodeQuickCardPack(from data: Data) throws -> [QuickCard] {
+        let pack = try decoder.decode(QuickCardSeedPackFile.self, from: data)
         return pack.quickCards.map(\.toDomain)
     }
 
-    private func loadChecklistTemplatePack(named fileName: String) throws -> [ChecklistTemplate] {
-        let fileURL = directoryURL.appendingPathComponent(fileName)
-        guard FileManager.default.fileExists(atPath: fileURL.path) else {
-            throw SeedContentLoaderError.missingPackFile(fileName)
+    private func decodeChecklistTemplatePack(from data: Data) throws -> [ChecklistTemplate] {
+        let pack = try decoder.decode(ChecklistTemplateSeedPackFile.self, from: data)
+        return pack.templates.map(\.toDomain)
+    }
+
+    private func validateContentHash(expected: String?, data: Data, fileName: String) throws {
+        guard let expected, !expected.isEmpty else {
+            throw SeedContentLoaderError.missingContentHash(fileName: fileName)
         }
 
-        let pack = try decoder.decode(ChecklistTemplateSeedPackFile.self, from: Data(contentsOf: fileURL))
-        return pack.templates.map(\.toDomain)
+        let actual = sha256Hex(for: data)
+        guard actual.caseInsensitiveCompare(expected) == .orderedSame else {
+            throw SeedContentLoaderError.contentHashMismatch(
+                expected: expected,
+                actual: actual,
+                fileName: fileName
+            )
+        }
     }
 
     private func validateRecordCount(expected: Int, actual: Int, fileName: String) throws {
@@ -135,6 +154,10 @@ struct SeedContentLoader {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return decoder
+    }
+
+    private func sha256Hex(for data: Data) -> String {
+        SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
     private func chapterSort(lhs: HandbookChapter, rhs: HandbookChapter) -> Bool {

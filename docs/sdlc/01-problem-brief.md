@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [MVP Scope Roadmap](./03-mvp-scope-roadmap.md)
 - OSA is intended to be an offline-first iPhone preparedness handbook app with optional online capabilities.
 - Core product elements include curated handbook content, quick cards, checklists, inventory, personal notes, and a local Ask assistant.
 - The assistant is bounded: it must answer only from approved local content and app data.
-- The repo contains a complete Milestone 1 (Foundation), Milestone 2 (Core Organizer), and Milestone 3 Phase 1 (Grounded Ask retrieval pipeline) implementation. All core product surfaces — handbook browsing, quick cards, inventory, checklists, notes, local search, and bounded Ask with citations — are implemented and tested. This brief sets the product baseline for remaining implementation work.
+- The repo contains complete Milestone 1 (Foundation), Milestone 2 (Core Organizer), and Milestone 3 (Grounded Ask) implementations including a polish sprint. All core product surfaces — handbook browsing, quick cards, inventory, checklists, notes, local search, and bounded Ask with citations — are implemented, wired to live repositories, and tested. Home shows live data, Settings reflects real capability detection, and Ask routes to content via navigation destinations. This brief sets the product baseline for remaining implementation work.
 
 ## Assumptions
 

@@ -44,7 +44,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 ### Home
 
 - Launch surface.
-- Shows offline status, pinned quick cards, most important checklists, recent notes, and inventory reminders.
+- Shows offline status, top quick cards from the local repository, most important checklists, recent notes, and inventory reminders.
 - Contains the fastest route to emergency quick cards.
 
 ### Library
@@ -53,7 +53,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 
 ### Ask
 
-- Bounded local assistant with citation-focused results, capability state, and optional online search offer when local evidence is insufficient and connectivity exists.
+- Bounded local assistant with citation-focused results, capability state, and navigation routing to source content. Optional online search offer planned for M4.
 
 ### Inventory
 
@@ -169,11 +169,10 @@ Under stress, the app should bias toward direct card opening and simple checklis
 ### Home
 
 - top header with app state and offline badge
-- emergency quick-card block
-- search bar
-- section for active checklist runs
-- section for inventory reminders
-- recent notes and recently viewed content
+- emergency quick-card block (loaded from quick-card repository)
+- section for active checklist runs (loaded from checklist repository)
+- section for inventory reminders (loaded from inventory repository, filtered by expiry)
+- recent notes (loaded from notes repository)
 
 ### Library
 
@@ -214,10 +213,10 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 ### Settings
 
-- Ask scope settings
-- model capability status
-- source trust and refresh settings
-- storage and privacy section
+- Ask scope settings (personal notes toggle via `AskScopeSettings`)
+- model capability status (live from `DeviceCapabilityDetector`)
+- source trust and refresh settings _(not yet implemented — M4)_
+- storage and privacy section _(not yet implemented — M4/M5)_
 
 ## Major UI States
 

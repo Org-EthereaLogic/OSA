@@ -1,3 +1,4 @@
+import CryptoKit
 import SwiftData
 import XCTest
 @testable import OSA
@@ -99,6 +100,29 @@ final class SeedContentRepositoryTests: XCTestCase {
         XCTAssertEqual(versionState.appliedAt, Self.appliedAt)
     }
 
+    func testSeedContentLoaderRejectsMismatchedContentHash() throws {
+        let fixtures = try SeedContentFixtures()
+        defer { fixtures.cleanup() }
+
+        try fixtures.overwriteManifest(
+            handbookHash: "deadbeef",
+            quickCardHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.quickCardPack)
+        )
+
+        XCTAssertThrowsError(
+            try SeedContentLoader(directoryURL: fixtures.directoryURL).loadBundle()
+        ) { error in
+            XCTAssertEqual(
+                error as? SeedContentLoaderError,
+                .contentHashMismatch(
+                    expected: "deadbeef",
+                    actual: SeedContentFixtures.sha256Hex(SeedContentFixtures.handbookPack),
+                    fileName: "handbook-foundations-v1.json"
+                )
+            )
+        }
+    }
+
     private func makeInMemoryContainer() throws -> ModelContainer {
         let schema = Schema([
             PersistedHandbookChapter.self,
@@ -122,9 +146,12 @@ private struct SeedContentFixtures {
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
 
-        try write("SeedManifest.json", contents: Self.manifest)
         try write("handbook-foundations-v1.json", contents: Self.handbookPack)
         try write("quick-cards-core-v1.json", contents: Self.quickCardPack)
+        try overwriteManifest(
+            handbookHash: Self.sha256Hex(Self.handbookPack),
+            quickCardHash: Self.sha256Hex(Self.quickCardPack)
+        )
     }
 
     func cleanup() {
@@ -139,7 +166,22 @@ private struct SeedContentFixtures {
         )
     }
 
-    private static let manifest = """
+    func overwriteManifest(handbookHash: String, quickCardHash: String) throws {
+        try write(
+            "SeedManifest.json",
+            contents: Self.makeManifest(
+                handbookHash: handbookHash,
+                quickCardHash: quickCardHash
+            )
+        )
+    }
+
+    static func sha256Hex(_ contents: String) -> String {
+        SHA256.hash(data: Data(contents.utf8)).map { String(format: "%02x", $0) }.joined()
+    }
+
+    private static func makeManifest(handbookHash: String, quickCardHash: String) -> String {
+        """
     {
       "schemaVersion": 1,
       "contentPackVersion": "0.1.0",
@@ -151,7 +193,7 @@ private struct SeedContentFixtures {
           "version": "2026.03.22.1",
           "fileName": "handbook-foundations-v1.json",
           "recordCount": 1,
-          "contentHash": null
+          "contentHash": "\(handbookHash)"
         },
         {
           "identifier": "quick-cards-core",
@@ -159,13 +201,14 @@ private struct SeedContentFixtures {
           "version": "2026.03.22.1",
           "fileName": "quick-cards-core-v1.json",
           "recordCount": 2,
-          "contentHash": null
+          "contentHash": "\(quickCardHash)"
         }
       ]
     }
     """
+    }
 
-    private static let handbookPack = """
+    static let handbookPack = """
     {
       "chapters": [
         {
@@ -213,7 +256,7 @@ private struct SeedContentFixtures {
     }
     """
 
-    private static let quickCardPack = """
+    static let quickCardPack = """
     {
       "quickCards": [
         {
