@@ -4,7 +4,7 @@ import Foundation
 
 protocol RetrievalService {
     /// Submit a user query and get a grounded retrieval outcome.
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) throws -> RetrievalOutcome
+    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome
 }
 
 // MARK: - Sensitivity Classifier Protocol
@@ -25,4 +25,18 @@ enum SensitivityResult: Equatable, Sendable {
 protocol CapabilityDetector {
     /// Detect the current device answer mode.
     func detectAnswerMode() -> AnswerMode
+}
+
+// MARK: - Grounded Answer Generator Protocol
+
+protocol GroundedAnswerGenerator {
+    /// Generate a grounded answer from retrieved evidence using on-device generation.
+    /// Called only when the device supports grounded generation.
+    /// Callers must handle failures by falling back to extractive assembly.
+    func generate(
+        query: String,
+        evidence: [EvidenceItem],
+        citations: [CitationReference],
+        confidence: ConfidenceLevel
+    ) async throws -> String
 }

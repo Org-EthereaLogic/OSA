@@ -17,11 +17,17 @@ struct AppDependencies {
         let noteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let searchService = try? LocalSearchService.makeDefault()
 
+        let capabilityDetector = DeviceCapabilityDetector()
+        let answerGenerator = Self.makeAnswerGenerator(
+            for: capabilityDetector.detectAnswerMode()
+        )
+
         let retrievalService: (any RetrievalService)? = searchService.map { search in
             LocalRetrievalService(
                 searchService: search,
                 sensitivityClassifier: SensitivityPolicy(),
-                capabilityDetector: DeviceCapabilityDetector()
+                capabilityDetector: capabilityDetector,
+                answerGenerator: answerGenerator
             )
         }
 
@@ -35,5 +41,19 @@ struct AppDependencies {
             searchService: searchService,
             retrievalService: retrievalService
         )
+    }
+
+    private static func makeAnswerGenerator(
+        for mode: AnswerMode
+    ) -> (any GroundedAnswerGenerator)? {
+        guard mode == .groundedGeneration else { return nil }
+
+        #if canImport(FoundationModels)
+        if #available(iOS 26, *) {
+            return FoundationModelAdapter()
+        }
+        #endif
+
+        return nil
     }
 }

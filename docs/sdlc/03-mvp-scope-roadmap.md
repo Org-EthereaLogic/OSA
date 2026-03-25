@@ -86,7 +86,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 3. ~~Handbook and quick-card browsing plus local search.~~ **Done.**
 4. ~~Inventory, checklists, and notes.~~ **Done:** domain models, repository protocols, SwiftData persistence, CRUD UI, and FTS5 search index implemented.
 5. ~~Retrieval pipeline and Ask with extractive fallback.~~ **Done:** retrieval pipeline, sensitivity policy, citation packaging, capability detection, extractive answer assembly, and bounded Ask UI implemented.
-6. Foundation Models integration on supported devices.
+6. ~~Foundation Models integration on supported devices.~~ **Done:** `FoundationModelAdapter` with real capability detection and async generation routing. Extractive fallback on unsupported hardware or generation failure.
 7. Trusted-source search, import, normalization, and local persistence.
 8. Hardening, migration tests, and release preparation.
 
@@ -118,7 +118,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 - **M3P1 — Retrieval pipeline, sensitivity policy, citation packaging, capability detection** _(Complete)_: domain-facing retrieval and citation models, `RetrievalService`/`SensitivityClassifier`/`CapabilityDetector` protocols, `LocalRetrievalService` pipeline (normalize → classify → search FTS5 → re-rank → cite → assemble), `SensitivityPolicy` for blocked/sensitive topic enforcement, `DeviceCapabilityDetector` (extractive-only default), `EvidenceRanker` with deterministic heuristics, and 23 focused tests.
 - **M3P2 — Citation packaging and evidence assembly** _(Complete)_: `CitationReference` model, evidence bundle packaging from retrieval results, structured evidence for both generative and extractive paths.
-- **M3P3 — Capability detection and model adapter** _(Not Started)_: Foundation Models generation adapter, real device capability detection, model adapter protocol with appropriate outputs per capability path.
+- **M3P3 — Capability detection and model adapter** _(Complete)_: `DeviceCapabilityDetector` with real runtime detection via `#if canImport(FoundationModels)` and `SystemLanguageModel.default.availability`, `GroundedAnswerGenerator` protocol, `FoundationModelAdapter` concrete implementation behind compile-time guards, `LocalRetrievalService` async routing with automatic extractive fallback on generation failure or missing adapter. `CapabilityDetectionTests` covers both paths, fallback, and citation integrity.
 - **M3P4 — Ask UI — bounded assistant interface with citations** _(Complete)_: retrieval-backed Ask UI with answer/citation/refusal states, scoped question input, inline citations, and capability-mode communication.
 - **M3P5 — Assistant policy, prompt shaping, and safety guardrails** _(Not Started)_: prompt shaping for scope filtering and safety classification, safety guardrail enforcement, logging boundary checks, and safety regression test suite.
 
@@ -166,4 +166,4 @@ flowchart TD
 
 1. ~~Turn Milestones 1 and 2 into the first implementation backlog.~~ **Done:** Milestones 1 and 2 are complete. Milestone 3 is in progress.
 2. Freeze one supported source format for the initial import prototype.
-3. ~~Avoid starting Ask generation work before retrieval and citations are demonstrably correct.~~ **Done:** M3P1 retrieval pipeline with citations is implemented and tested. M3P3 (Foundation Models generation adapter) is the next implementation step.
+3. ~~Avoid starting Ask generation work before retrieval and citations are demonstrably correct.~~ **Done:** M3P1 retrieval pipeline with citations is implemented and tested. M3P3 (Foundation Models generation adapter with capability detection) is implemented with automatic extractive fallback. M3P5 (prompt shaping and safety guardrails) is the next implementation step.

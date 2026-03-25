@@ -90,16 +90,18 @@ struct AskScreen: View {
             return
         }
 
-        do {
-            let outcome = try service.retrieve(query: trimmed, scopes: nil)
-            switch outcome {
-            case .answered(let result):
-                askState = .answered(result)
-            case .refused(let reason):
-                askState = .refused(reason)
+        Task {
+            do {
+                let outcome = try await service.retrieve(query: trimmed, scopes: nil)
+                switch outcome {
+                case .answered(let result):
+                    askState = .answered(result)
+                case .refused(let reason):
+                    askState = .refused(reason)
+                }
+            } catch {
+                askState = .refused(.insufficientEvidence)
             }
-        } catch {
-            askState = .refused(.insufficientEvidence)
         }
     }
 }

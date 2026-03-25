@@ -4,20 +4,23 @@ final class LocalRetrievalService: RetrievalService {
     private let searchService: SearchService
     private let sensitivityClassifier: SensitivityClassifier
     private let capabilityDetector: CapabilityDetector
+    private let answerGenerator: (any GroundedAnswerGenerator)?
 
     private let maxEvidenceItems = 8
 
     init(
         searchService: SearchService,
         sensitivityClassifier: SensitivityClassifier,
-        capabilityDetector: CapabilityDetector
+        capabilityDetector: CapabilityDetector,
+        answerGenerator: (any GroundedAnswerGenerator)? = nil
     ) {
         self.searchService = searchService
         self.sensitivityClassifier = sensitivityClassifier
         self.capabilityDetector = capabilityDetector
+        self.answerGenerator = answerGenerator
     }
 
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) throws -> RetrievalOutcome {
+    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
         // 1. Normalize query
         guard let normalized = QueryNormalizer.normalize(query) else {
             return .refused(.emptyQuery)
@@ -79,8 +82,10 @@ final class LocalRetrievalService: RetrievalService {
 
         // 10. Detect capability and assemble answer
         let answerMode = capabilityDetector.detectAnswerMode()
-        let answerText = assembleAnswer(
+        let answerText = await assembleAnswer(
+            query: query,
             evidence: topEvidence,
+            citations: citations,
             mode: answerMode,
             confidence: confidence
         )
@@ -150,13 +155,28 @@ final class LocalRetrievalService: RetrievalService {
     }
 
     private func assembleAnswer(
+        query: String,
         evidence: [EvidenceItem],
+        citations: [CitationReference],
         mode: AnswerMode,
         confidence: ConfidenceLevel
-    ) -> String {
+    ) async -> String {
         switch mode {
         case .groundedGeneration:
-            // Placeholder: Foundation Models integration will replace this
+            if let generator = answerGenerator {
+                do {
+                    return try await generator.generate(
+                        query: query,
+                        evidence: evidence,
+                        citations: citations,
+                        confidence: confidence
+                    )
+                } catch {
+                    // Generation failed — fall back to extractive assembly
+                    return assembleExtractiveAnswer(evidence: evidence, confidence: confidence)
+                }
+            }
+            // No generator injected — fall back to extractive
             return assembleExtractiveAnswer(evidence: evidence, confidence: confidence)
 
         case .extractiveOnly:

@@ -1,11 +1,11 @@
 import Foundation
 
+#if canImport(FoundationModels)
+import FoundationModels
+#endif
+
 struct DeviceCapabilityDetector: CapabilityDetector {
     func detectAnswerMode() -> AnswerMode {
-        // Foundation Models availability check
-        // In iOS 26+, use FoundationModels.SystemLanguageModel.default.availability
-        // For now, default to extractive-only since Foundation Models API
-        // requires runtime capability detection that we wire in Phase M3P3.
         if isFoundationModelsAvailable() {
             return .groundedGeneration
         } else {
@@ -14,10 +14,27 @@ struct DeviceCapabilityDetector: CapabilityDetector {
     }
 
     private func isFoundationModelsAvailable() -> Bool {
-        // Placeholder: actual detection requires FoundationModels framework import
-        // and checking SystemLanguageModel.default.availability at runtime.
-        // This will be wired when the model adapter layer is built.
-        // For now, default to false so the extractive path gets exercised first.
-        false
+        #if canImport(FoundationModels)
+        return Self.checkModelAvailability()
+        #else
+        return false
+        #endif
     }
+
+    #if canImport(FoundationModels)
+    private static func checkModelAvailability() -> Bool {
+        // FoundationModels requires iOS 26+ at runtime even when the SDK
+        // is present. Guard with @available before touching any FM type.
+        if #available(iOS 26, *) {
+            let availability = SystemLanguageModel.default.availability
+            switch availability {
+            case .available:
+                return true
+            default:
+                return false
+            }
+        }
+        return false
+    }
+    #endif
 }

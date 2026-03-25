@@ -131,16 +131,19 @@ Prompt inputs should include:
 
 ## Model Abstraction Layer
 
-**Current implementation (M3P1):**
+**Current implementation (M3P1 + M3P3):**
 
-- `CapabilityDetector.detectAnswerMode() -> AnswerMode` — returns `.extractive`, `.generative`, or `.unavailable` based on device capability.
+- `CapabilityDetector.detectAnswerMode() -> AnswerMode` — returns `.groundedGeneration`, `.extractiveOnly`, or `.searchResultsOnly` based on device capability.
+- `DeviceCapabilityDetector` — real runtime detection using `#if canImport(FoundationModels)` and `SystemLanguageModel.default.availability`.
 - `SensitivityClassifier.classify(query: String) -> SensitivityResult` — local heuristic classification of blocked and sensitive-static-only topics.
-- `LocalRetrievalService` assembles extractive answers internally from ranked evidence and citation packaging.
+- `GroundedAnswerGenerator` protocol — async generation boundary for grounded synthesis from retrieved evidence.
+- `FoundationModelAdapter: GroundedAnswerGenerator` — concrete Foundation Models adapter, compiled only when the SDK includes FoundationModels. Uses `LanguageModelSession` for on-device generation.
+- `LocalRetrievalService` retrieves evidence, packages citations, and routes to the generation adapter on supported devices or extractive assembly on unsupported devices. Falls back to extractive automatically if generation fails.
 
-**Future (M3P3+):**
+**Future (M3P5):**
 
-- `generateGroundedAnswer(evidence, policy, style)` — Foundation Models generation adapter for grounded synthesis on supported devices.
-- `composeExtractiveAnswer(evidence, style)` — currently folded into `LocalRetrievalService.assembleAnswer()`, to be extracted as a standalone protocol method.
+- Prompt-shaping layer with style constraints, safety templates, and structured output formatting for the generation adapter.
+- Extractive answer formatting refinements.
 
 This keeps UI and retrieval logic independent of the underlying model choice.
 
@@ -212,4 +215,5 @@ Recommendation: do not block the entire app or Ask feature when generative capab
 
 1. ~~Convert the allowed and disallowed task lists into policy tests before coding the assistant UI.~~ **Done:** `SensitivityPolicy` implements blocked-category detection (hunting, foraging, medical dosage) and sensitive-static-only classification (first aid, emergency hazards). `SensitivityPolicyTests` covers all branches.
 2. Decide whether personal notes are in Ask scope by default or opt-in.
-3. ~~Build the retrieval layer before evaluating answer-generation quality.~~ **Done:** `LocalRetrievalService` implements the full retrieval flow: normalize → classify sensitivity → search FTS5 → re-rank → check sufficiency → package citations → determine confidence → assemble extractive answer. Foundation Models generation adapter is stubbed for future integration.
+3. ~~Build the retrieval layer before evaluating answer-generation quality.~~ **Done:** `LocalRetrievalService` implements the full retrieval flow: normalize → classify sensitivity → search FTS5 → re-rank → check sufficiency → package citations → determine confidence → assemble extractive answer.
+4. ~~Implement capability detection and generation adapter.~~ **Done (M3P3):** `DeviceCapabilityDetector` performs real runtime detection via `#if canImport(FoundationModels)` and `SystemLanguageModel.default.availability`. `GroundedAnswerGenerator` protocol defines the generation boundary. `FoundationModelAdapter` provides the concrete Foundation Models implementation. `LocalRetrievalService` routes to grounded generation on supported devices with automatic extractive fallback. `CapabilityDetectionTests` covers both paths, generation failure fallback, and citation integrity.
