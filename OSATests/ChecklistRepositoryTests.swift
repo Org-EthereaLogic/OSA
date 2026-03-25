@@ -5,7 +5,8 @@ import XCTest
 @MainActor
 final class ChecklistRepositoryTests: XCTestCase {
     func testListTemplatesAfterSeedImport() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templates = try checklistRepo.listTemplates()
         XCTAssertEqual(templates.count, 1)
@@ -15,7 +16,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testTemplateBySlug() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let template = try XCTUnwrap(checklistRepo.template(slug: "test-emergency-kit-check"))
         XCTAssertEqual(template.title, "Test Emergency Kit Check")
@@ -29,7 +31,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testTemplateByID() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         let template = try XCTUnwrap(checklistRepo.template(id: templateID))
@@ -37,7 +40,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testStartRunFromTemplate() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         let run = try checklistRepo.startRun(from: templateID, title: "My Kit Check", contextNote: "Before trip")
@@ -51,7 +55,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testActiveRuns() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         _ = try checklistRepo.startRun(from: templateID, title: "Run 1", contextNote: nil)
@@ -62,7 +67,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testUpdateRunItemCompletion() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         let run = try checklistRepo.startRun(from: templateID, title: "Run", contextNote: nil)
@@ -97,7 +103,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testDeleteRun() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         let run = try checklistRepo.startRun(from: templateID, title: "To Delete", contextNote: nil)
@@ -109,7 +116,8 @@ final class ChecklistRepositoryTests: XCTestCase {
     }
 
     func testListRunsByStatus() throws {
-        let (_, checklistRepo) = try makeRepositories()
+        let (_, checklistRepo, container) = try makeRepositories()
+        withExtendedLifetime(container) {}
 
         let templateID = UUID(uuidString: "44444444-4444-4444-4444-444444444401")!
         let run = try checklistRepo.startRun(from: templateID, title: "Run", contextNote: nil)
@@ -136,7 +144,7 @@ final class ChecklistRepositoryTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeRepositories() throws -> (SwiftDataContentRepository, SwiftDataChecklistRepository) {
+    private func makeRepositories() throws -> (SwiftDataContentRepository, SwiftDataChecklistRepository, ModelContainer) {
         let container = try makeInMemoryContainer()
         let contentRepo = SwiftDataContentRepository(modelContext: container.mainContext)
         let checklistRepo = SwiftDataChecklistRepository(modelContext: container.mainContext)
@@ -154,7 +162,7 @@ final class ChecklistRepositoryTests: XCTestCase {
         )
 
         try contentRepo.upsertSeedContent(bundle, importedAt: Date())
-        return (contentRepo, checklistRepo)
+        return (contentRepo, checklistRepo, container)
     }
 
     private func makeInMemoryContainer() throws -> ModelContainer {

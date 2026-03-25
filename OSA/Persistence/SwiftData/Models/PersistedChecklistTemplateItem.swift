@@ -10,7 +10,6 @@ final class PersistedChecklistTemplateItem {
     var sortOrder: Int
     var isOptional: Bool
     var riskLevel: String?
-
     var template: PersistedChecklistTemplate?
 
     init(

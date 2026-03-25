@@ -26,14 +26,14 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
     func template(slug: String) throws -> ChecklistTemplate? {
         let descriptor = FetchDescriptor<PersistedChecklistTemplate>()
         return try modelContext.fetch(descriptor)
-            .first { $0.slug == slug }?
+            .first(where: { $0.slug == slug })?
             .toDomain()
     }
 
     func template(id: UUID) throws -> ChecklistTemplate? {
         let descriptor = FetchDescriptor<PersistedChecklistTemplate>()
         return try modelContext.fetch(descriptor)
-            .first { $0.id == id }?
+            .first(where: { $0.id == id })?
             .toDomain()
     }
 
@@ -46,16 +46,21 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
         descriptor.includePendingChanges = true
 
         let results = try modelContext.fetch(descriptor)
+
+        let filtered: [PersistedChecklistRun]
         if let status {
-            return results.filter { $0.statusRawValue == status.rawValue }.map { $0.toDomain() }
+            filtered = results.filter { $0.statusRawValue == status.rawValue }
+        } else {
+            filtered = results
         }
-        return results.map { $0.toDomain() }
+
+        return filtered.map { $0.toDomain() }
     }
 
     func run(id: UUID) throws -> ChecklistRun? {
         let descriptor = FetchDescriptor<PersistedChecklistRun>()
         return try modelContext.fetch(descriptor)
-            .first { $0.id == id }?
+            .first(where: { $0.id == id })?
             .toDomain()
     }
 

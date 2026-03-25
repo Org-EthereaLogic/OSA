@@ -10,7 +10,6 @@ final class PersistedChecklistRunItem {
     var isComplete: Bool
     var completedAt: Date?
     var sortOrder: Int
-
     var run: PersistedChecklistRun?
 
     init(

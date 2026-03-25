@@ -54,7 +54,7 @@ extension PersistedChecklistTemplate {
 // MARK: - ChecklistTemplateItem Mappings
 
 extension PersistedChecklistTemplateItem {
-    convenience init(from item: ChecklistTemplateItem, template: PersistedChecklistTemplate) {
+    convenience init(from item: ChecklistTemplateItem, template: PersistedChecklistTemplate? = nil) {
         self.init(
             id: item.id,
             templateID: item.templateID,
@@ -67,14 +67,13 @@ extension PersistedChecklistTemplateItem {
         )
     }
 
-    func update(from item: ChecklistTemplateItem, template: PersistedChecklistTemplate) {
+    func update(from item: ChecklistTemplateItem) {
         templateID = item.templateID
         text = item.text
         detail = item.detail
         sortOrder = item.sortOrder
         isOptional = item.isOptional
         riskLevel = item.riskLevel
-        self.template = template
     }
 
     func toDomain() -> ChecklistTemplateItem {
@@ -132,7 +131,7 @@ extension PersistedChecklistRun {
 // MARK: - ChecklistRunItem Mappings
 
 extension PersistedChecklistRunItem {
-    convenience init(from item: ChecklistRunItem, run: PersistedChecklistRun) {
+    convenience init(from item: ChecklistRunItem, run: PersistedChecklistRun? = nil) {
         self.init(
             id: item.id,
             runID: item.runID,

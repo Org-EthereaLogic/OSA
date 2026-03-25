@@ -179,7 +179,7 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
                 incomingItemIDs.insert(item.id)
 
                 if let existingItem = existingItemsByID[item.id] {
-                    existingItem.update(from: item, template: templateRecord)
+                    existingItem.update(from: item)
                 } else {
                     let newItem = PersistedChecklistTemplateItem(from: item, template: templateRecord)
                     modelContext.insert(newItem)

@@ -12,7 +12,6 @@ final class PersistedChecklistTemplate {
     var tagsJSON: String
     var sourceTypeRawValue: String
     var lastReviewedAt: Date?
-
     @Relationship(deleteRule: .cascade, inverse: \PersistedChecklistTemplateItem.template)
     var items: [PersistedChecklistTemplateItem]
 

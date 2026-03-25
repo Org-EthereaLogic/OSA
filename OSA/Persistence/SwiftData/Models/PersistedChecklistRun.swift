@@ -10,7 +10,6 @@ final class PersistedChecklistRun {
     var completedAt: Date?
     var statusRawValue: String
     var contextNote: String?
-
     @Relationship(deleteRule: .cascade, inverse: \PersistedChecklistRunItem.run)
     var items: [PersistedChecklistRunItem]
 
