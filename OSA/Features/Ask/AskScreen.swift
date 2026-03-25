@@ -108,7 +108,7 @@ struct AskScreen: View {
         HStack(spacing: Spacing.sm) {
             TextField("Ask a question...", text: $query)
                 .textFieldStyle(.roundedBorder)
-                .onSubmit(perform: submitQuery)
+                .onSubmit(submitQuery)
 
             Button(action: submitQuery) {
                 Image(systemName: "arrow.up.circle.fill")
@@ -276,11 +276,11 @@ private struct CitationRow: View {
     var body: some View {
         HStack(spacing: Spacing.sm) {
             Image(systemName: iconForKind(citation.kind))
-                .foregroundStyle(.accent)
+                .foregroundStyle(.tint)
 
             Text(citation.displayLabel)
                 .font(.subheadline)
-                .foregroundStyle(.accent)
+                .foregroundStyle(.tint)
 
             Spacer()
 

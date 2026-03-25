@@ -24,48 +24,39 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
     }
 
     func template(slug: String) throws -> ChecklistTemplate? {
-        let descriptor = FetchDescriptor<PersistedChecklistTemplate>(
-            predicate: #Predicate { $0.slug == slug }
-        )
-
-        return try modelContext.fetch(descriptor).first?.toDomain()
+        let descriptor = FetchDescriptor<PersistedChecklistTemplate>()
+        return try modelContext.fetch(descriptor)
+            .first { $0.slug == slug }?
+            .toDomain()
     }
 
     func template(id: UUID) throws -> ChecklistTemplate? {
-        let descriptor = FetchDescriptor<PersistedChecklistTemplate>(
-            predicate: #Predicate { $0.id == id }
-        )
-
-        return try modelContext.fetch(descriptor).first?.toDomain()
+        let descriptor = FetchDescriptor<PersistedChecklistTemplate>()
+        return try modelContext.fetch(descriptor)
+            .first { $0.id == id }?
+            .toDomain()
     }
 
     // MARK: - Run Management
 
     func listRuns(status: ChecklistRunStatus?) throws -> [ChecklistRun] {
-        var descriptor: FetchDescriptor<PersistedChecklistRun>
-
-        if let status {
-            let rawValue = status.rawValue
-            descriptor = FetchDescriptor<PersistedChecklistRun>(
-                predicate: #Predicate { $0.statusRawValue == rawValue },
-                sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
-            )
-        } else {
-            descriptor = FetchDescriptor<PersistedChecklistRun>(
-                sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
-            )
-        }
-
+        var descriptor = FetchDescriptor<PersistedChecklistRun>(
+            sortBy: [SortDescriptor(\.startedAt, order: .reverse)]
+        )
         descriptor.includePendingChanges = true
-        return try modelContext.fetch(descriptor).map(\.toDomain)
+
+        let results = try modelContext.fetch(descriptor)
+        if let status {
+            return results.filter { $0.statusRawValue == status.rawValue }.map { $0.toDomain() }
+        }
+        return results.map { $0.toDomain() }
     }
 
     func run(id: UUID) throws -> ChecklistRun? {
-        let descriptor = FetchDescriptor<PersistedChecklistRun>(
-            predicate: #Predicate { $0.id == id }
-        )
-
-        return try modelContext.fetch(descriptor).first?.toDomain()
+        let descriptor = FetchDescriptor<PersistedChecklistRun>()
+        return try modelContext.fetch(descriptor)
+            .first { $0.id == id }?
+            .toDomain()
     }
 
     func createRun(_ run: ChecklistRun) throws {
@@ -81,11 +72,8 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
     }
 
     func updateRun(_ run: ChecklistRun) throws {
-        let descriptor = FetchDescriptor<PersistedChecklistRun>(
-            predicate: #Predicate { $0.id == run.id }
-        )
-
-        guard let existing = try modelContext.fetch(descriptor).first else {
+        let descriptor = FetchDescriptor<PersistedChecklistRun>()
+        guard let existing = try modelContext.fetch(descriptor).first(where: { $0.id == run.id }) else {
             return
         }
 
@@ -103,11 +91,8 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
     }
 
     func deleteRun(id: UUID) throws {
-        let descriptor = FetchDescriptor<PersistedChecklistRun>(
-            predicate: #Predicate { $0.id == id }
-        )
-
-        guard let existing = try modelContext.fetch(descriptor).first else {
+        let descriptor = FetchDescriptor<PersistedChecklistRun>()
+        guard let existing = try modelContext.fetch(descriptor).first(where: { $0.id == id }) else {
             return
         }
 

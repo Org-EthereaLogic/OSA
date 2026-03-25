@@ -3,6 +3,7 @@ import SwiftData
 import XCTest
 @testable import OSA
 
+@MainActor
 final class SeedContentRepositoryTests: XCTestCase {
     func testSeedContentLoaderDecodesManifestAndPackFiles() throws {
         let fixtures = try SeedContentFixtures()

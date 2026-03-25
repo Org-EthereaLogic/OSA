@@ -75,18 +75,31 @@ struct SensitivityPolicy: SensitivityClassifier {
 
         // 3. Check blocked category patterns
         for pattern in Self.blockedPatterns {
-            if !pattern.keywords.isDisjoint(with: words) {
+            if Self.matchesPattern(pattern.keywords, words: words, lowered: lowered) {
                 return .blocked(reason: pattern.reason)
             }
         }
 
         // 4. Check sensitive-static-only patterns
         for pattern in Self.sensitivePatterns {
-            if !pattern.keywords.isDisjoint(with: words) {
+            if Self.matchesPattern(pattern.keywords, words: words, lowered: lowered) {
                 return .sensitiveStaticOnly(reason: pattern.reason)
             }
         }
 
         return .allowed
+    }
+
+    /// Matches keywords against query words for single-word keywords,
+    /// and against the full lowered query for multi-word phrases.
+    private static func matchesPattern(_ keywords: Set<String>, words: Set<String>, lowered: String) -> Bool {
+        for keyword in keywords {
+            if keyword.contains(" ") {
+                if lowered.contains(keyword) { return true }
+            } else {
+                if words.contains(keyword) { return true }
+            }
+        }
+        return false
     }
 }

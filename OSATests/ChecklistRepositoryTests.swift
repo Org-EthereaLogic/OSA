@@ -2,6 +2,7 @@ import SwiftData
 import XCTest
 @testable import OSA
 
+@MainActor
 final class ChecklistRepositoryTests: XCTestCase {
     func testListTemplatesAfterSeedImport() throws {
         let (_, checklistRepo) = try makeRepositories()
@@ -166,7 +167,8 @@ final class ChecklistRepositoryTests: XCTestCase {
             PersistedChecklistTemplate.self,
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
-            PersistedChecklistRunItem.self
+            PersistedChecklistRunItem.self,
+            PersistedNoteRecord.self
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: [configuration])

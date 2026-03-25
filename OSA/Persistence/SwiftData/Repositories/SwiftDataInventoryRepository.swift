@@ -29,12 +29,13 @@ final class SwiftDataInventoryRepository: InventoryRepository {
         }
 
         descriptor.includePendingChanges = true
-        return try modelContext.fetch(descriptor).map(\.toDomain)
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
     }
 
     func item(id: UUID) throws -> InventoryItem? {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedInventoryItem>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
@@ -46,8 +47,9 @@ final class SwiftDataInventoryRepository: InventoryRepository {
     }
 
     func updateItem(_ item: InventoryItem) throws {
+        let targetID = item.id
         let descriptor = FetchDescriptor<PersistedInventoryItem>(
-            predicate: #Predicate { $0.id == item.id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         guard let existing = try modelContext.fetch(descriptor).first else {
@@ -59,8 +61,9 @@ final class SwiftDataInventoryRepository: InventoryRepository {
     }
 
     func archiveItem(id: UUID) throws {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedInventoryItem>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         guard let existing = try modelContext.fetch(descriptor).first else {
@@ -73,8 +76,9 @@ final class SwiftDataInventoryRepository: InventoryRepository {
     }
 
     func deleteItem(id: UUID) throws {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedInventoryItem>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         guard let existing = try modelContext.fetch(descriptor).first else {
@@ -101,7 +105,7 @@ final class SwiftDataInventoryRepository: InventoryRepository {
                 guard let expiry = record.expiryDate else { return false }
                 return expiry <= cutoff
             }
-            .map(\.toDomain)
+            .map { $0.toDomain() }
     }
 
     func itemsBelowReorderThreshold() throws -> [InventoryItem] {
@@ -118,6 +122,6 @@ final class SwiftDataInventoryRepository: InventoryRepository {
                 guard let threshold = record.reorderThreshold else { return false }
                 return record.quantity <= threshold
             }
-            .map(\.toDomain)
+            .map { $0.toDomain() }
     }
 }

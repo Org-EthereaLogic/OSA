@@ -11,6 +11,7 @@ struct AppDependencies {
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
 
+    @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
         let inventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)

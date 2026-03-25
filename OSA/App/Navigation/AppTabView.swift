@@ -29,30 +29,32 @@ struct AppTabView: View {
                 }
             }
 
-            TabSection(AppTab.more.title) {
-                Tab(AppTab.checklists.title, systemImage: AppTab.checklists.icon, value: .checklists) {
+            TabSection {
+                Tab(AppTab.checklists.title, systemImage: AppTab.checklists.icon, value: AppTab.checklists) {
                     NavigationStack {
                         ChecklistsScreen()
                     }
                 }
 
-                Tab(AppTab.quickCards.title, systemImage: AppTab.quickCards.icon, value: .quickCards) {
+                Tab(AppTab.quickCards.title, systemImage: AppTab.quickCards.icon, value: AppTab.quickCards) {
                     NavigationStack {
                         QuickCardsScreen()
                     }
                 }
 
-                Tab(AppTab.notes.title, systemImage: AppTab.notes.icon, value: .notes) {
+                Tab(AppTab.notes.title, systemImage: AppTab.notes.icon, value: AppTab.notes) {
                     NavigationStack {
                         NotesScreen()
                     }
                 }
 
-                Tab(AppTab.settings.title, systemImage: AppTab.settings.icon, value: .settings) {
+                Tab(AppTab.settings.title, systemImage: AppTab.settings.icon, value: AppTab.settings) {
                     NavigationStack {
                         SettingsScreen()
                     }
                 }
+            } header: {
+                Text("More")
             }
         }
         .tabViewStyle(.sidebarAdaptable)

@@ -149,7 +149,7 @@ private struct ExpiryLabel: View {
     var body: some View {
         Label(date.formatted(date: .abbreviated, time: .omitted), systemImage: "calendar.badge.clock")
             .font(.caption)
-            .foregroundStyle(isExpired ? .red : isExpiringSoon ? .orange : .tertiary)
+            .foregroundStyle(isExpired ? Color.red : isExpiringSoon ? Color.orange : Color(.tertiaryLabel))
     }
 }
 

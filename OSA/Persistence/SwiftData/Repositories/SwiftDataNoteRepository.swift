@@ -24,12 +24,13 @@ final class SwiftDataNoteRepository: NoteRepository {
         }
 
         descriptor.includePendingChanges = true
-        return try modelContext.fetch(descriptor).map(\.toDomain)
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
     }
 
     func note(id: UUID) throws -> NoteRecord? {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedNoteRecord>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
@@ -41,8 +42,9 @@ final class SwiftDataNoteRepository: NoteRepository {
     }
 
     func updateNote(_ note: NoteRecord) throws {
+        let targetID = note.id
         let descriptor = FetchDescriptor<PersistedNoteRecord>(
-            predicate: #Predicate { $0.id == note.id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         guard let existing = try modelContext.fetch(descriptor).first else {
@@ -54,8 +56,9 @@ final class SwiftDataNoteRepository: NoteRepository {
     }
 
     func deleteNote(id: UUID) throws {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedNoteRecord>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         guard let existing = try modelContext.fetch(descriptor).first else {
@@ -73,7 +76,7 @@ final class SwiftDataNoteRepository: NoteRepository {
         descriptor.fetchLimit = limit
         descriptor.includePendingChanges = true
 
-        return try modelContext.fetch(descriptor).map(\.toDomain)
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
     }
 
     func notesLinkedToSection(id: UUID) throws -> [NoteRecord] {
@@ -85,7 +88,7 @@ final class SwiftDataNoteRepository: NoteRepository {
         descriptor.includePendingChanges = true
 
         return try modelContext.fetch(descriptor)
-            .map(\.toDomain)
+            .map { $0.toDomain() }
             .filter { $0.linkedSectionIDs.contains(id) }
     }
 
@@ -98,7 +101,7 @@ final class SwiftDataNoteRepository: NoteRepository {
         descriptor.includePendingChanges = true
 
         return try modelContext.fetch(descriptor)
-            .map(\.toDomain)
+            .map { $0.toDomain() }
             .filter { $0.linkedInventoryItemIDs.contains(id) }
     }
 }

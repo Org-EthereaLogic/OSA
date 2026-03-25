@@ -46,7 +46,7 @@ extension PersistedChecklistTemplate {
                     }
                     return $0.sortOrder < $1.sortOrder
                 }
-                .map(\.toDomain)
+                .map { $0.toDomain() }
         )
     }
 }
@@ -124,7 +124,7 @@ extension PersistedChecklistRun {
             contextNote: contextNote,
             items: items
                 .sorted { $0.sortOrder < $1.sortOrder }
-                .map(\.toDomain)
+                .map { $0.toDomain() }
         )
     }
 }

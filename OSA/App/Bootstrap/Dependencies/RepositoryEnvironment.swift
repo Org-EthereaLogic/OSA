@@ -1,35 +1,35 @@
 import SwiftUI
 
 private struct HandbookRepositoryKey: EnvironmentKey {
-    static let defaultValue: (any HandbookRepository)? = nil
+    nonisolated(unsafe) static let defaultValue: (any HandbookRepository)? = nil
 }
 
 private struct QuickCardRepositoryKey: EnvironmentKey {
-    static let defaultValue: (any QuickCardRepository)? = nil
+    nonisolated(unsafe) static let defaultValue: (any QuickCardRepository)? = nil
 }
 
 private struct InventoryRepositoryKey: EnvironmentKey {
-    static let defaultValue: (any InventoryRepository)? = nil
+    nonisolated(unsafe) static let defaultValue: (any InventoryRepository)? = nil
 }
 
 private struct ChecklistRepositoryKey: EnvironmentKey {
-    static let defaultValue: (any ChecklistRepository)? = nil
+    nonisolated(unsafe) static let defaultValue: (any ChecklistRepository)? = nil
 }
 
 private struct NoteRepositoryKey: EnvironmentKey {
-    static let defaultValue: (any NoteRepository)? = nil
+    nonisolated(unsafe) static let defaultValue: (any NoteRepository)? = nil
 }
 
 private struct SearchServiceKey: EnvironmentKey {
-    static let defaultValue: (any SearchService)? = nil
+    nonisolated(unsafe) static let defaultValue: (any SearchService)? = nil
 }
 
 private struct CapabilityDetectorKey: EnvironmentKey {
-    static let defaultValue: (any CapabilityDetector)? = nil
+    nonisolated(unsafe) static let defaultValue: (any CapabilityDetector)? = nil
 }
 
 private struct RetrievalServiceKey: EnvironmentKey {
-    static let defaultValue: (any RetrievalService)? = nil
+    nonisolated(unsafe) static let defaultValue: (any RetrievalService)? = nil
 }
 
 extension EnvironmentValues {

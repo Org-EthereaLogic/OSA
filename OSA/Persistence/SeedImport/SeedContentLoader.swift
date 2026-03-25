@@ -188,7 +188,7 @@ private struct SeedManifestFile: Decodable {
             schemaVersion: schemaVersion,
             contentPackVersion: contentPackVersion,
             generatedAt: generatedAt,
-            packs: packs.map(\.toDomain)
+            packs: packs.map { $0.toDomain() }
         )
     }
 }

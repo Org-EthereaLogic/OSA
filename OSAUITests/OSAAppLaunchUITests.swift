@@ -1,6 +1,7 @@
 import XCTest
 
 final class OSAAppLaunchUITests: XCTestCase {
+    @MainActor
     func testAppLaunchesToHomeTab() {
         let app = XCUIApplication()
         app.launch()

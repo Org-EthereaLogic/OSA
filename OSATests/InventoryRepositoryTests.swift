@@ -2,6 +2,7 @@ import SwiftData
 import XCTest
 @testable import OSA
 
+@MainActor
 final class InventoryRepositoryTests: XCTestCase {
     func testCreateAndListItems() throws {
         let container = try makeInMemoryContainer()

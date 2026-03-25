@@ -354,7 +354,7 @@ private struct HomeChecklistRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "checklist")
-                .foregroundStyle(.accent)
+                .foregroundStyle(.tint)
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(run.title)
@@ -381,7 +381,7 @@ private struct HomeInventoryRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "archivebox.fill")
-                .foregroundStyle(.accent)
+                .foregroundStyle(.tint)
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(reminder.title)

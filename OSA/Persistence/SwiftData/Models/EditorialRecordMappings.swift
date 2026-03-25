@@ -46,7 +46,7 @@ extension PersistedHandbookChapter {
 
                     return $0.sortOrder < $1.sortOrder
                 }
-                .map(\.toDomain)
+                .map { $0.toDomain() }
         )
     }
 }

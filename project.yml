@@ -27,6 +27,7 @@ targets:
     resources:
       - path: OSA/Resources/Assets.xcassets
       - path: OSA/Resources/Preview Content
+        optional: true
       - path: OSA/Resources/SeedContent
     settings:
       base:

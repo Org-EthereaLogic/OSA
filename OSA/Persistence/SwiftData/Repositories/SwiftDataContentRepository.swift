@@ -22,24 +22,27 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
     }
 
     func chapter(slug: String) throws -> HandbookChapter? {
+        let targetSlug = slug
         let descriptor = FetchDescriptor<PersistedHandbookChapter>(
-            predicate: #Predicate { $0.slug == slug }
+            predicate: #Predicate { $0.slug == targetSlug }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
     }
 
     func chapter(id: UUID) throws -> HandbookChapter? {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedHandbookChapter>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
     }
 
     func section(id: UUID) throws -> HandbookSection? {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedHandbookSection>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
@@ -54,20 +57,22 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
         )
         descriptor.includePendingChanges = true
 
-        return try modelContext.fetch(descriptor).map(\.toDomain)
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
     }
 
     func quickCard(slug: String) throws -> QuickCard? {
+        let targetSlug = slug
         let descriptor = FetchDescriptor<PersistedQuickCard>(
-            predicate: #Predicate { $0.slug == slug }
+            predicate: #Predicate { $0.slug == targetSlug }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()
     }
 
     func quickCard(id: UUID) throws -> QuickCard? {
+        let targetID = id
         let descriptor = FetchDescriptor<PersistedQuickCard>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.id == targetID }
         )
 
         return try modelContext.fetch(descriptor).first?.toDomain()

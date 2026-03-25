@@ -2,6 +2,7 @@ import SwiftData
 import XCTest
 @testable import OSA
 
+@MainActor
 final class NoteRepositoryTests: XCTestCase {
     func testCreateAndListNotes() throws {
         let repository = try makeRepository()
