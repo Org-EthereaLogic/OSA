@@ -140,10 +140,12 @@ Prompt inputs should include:
 - `FoundationModelAdapter: GroundedAnswerGenerator` — concrete Foundation Models adapter, compiled only when the SDK includes FoundationModels. Uses `LanguageModelSession` for on-device generation.
 - `LocalRetrievalService` retrieves evidence, packages citations, and routes to the generation adapter on supported devices or extractive assembly on unsupported devices. Falls back to extractive automatically if generation fails.
 
-**Future (M3P5):**
+**Current implementation (M3P5):**
 
-- Prompt-shaping layer with style constraints, safety templates, and structured output formatting for the generation adapter.
-- Extractive answer formatting refinements.
+- `GroundedPromptBuilder` — dedicated prompt-shaping layer producing model-ready prompts with grounding rules, citation requirements, scope limits, safety boundaries, style constraints, and override protection. Lives in `OSA/Assistant/PromptShaping/`.
+- `FoundationModelAdapter` delegates all prompt construction to `GroundedPromptBuilder` instead of building prompts inline.
+- `SensitivityPolicy` now detects prompt injection phrases (jailbreak, system-prompt extraction, scope overrides, safety bypass) and blocks them before retrieval or generation.
+- Safety regression tests (`SafetyRegressionTests`) cover adversarial prompt variants, routing verification, deterministic refusal, and privacy-bounded refusal reasons.
 
 This keeps UI and retrieval logic independent of the underlying model choice.
 
@@ -217,3 +219,4 @@ Recommendation: do not block the entire app or Ask feature when generative capab
 2. Decide whether personal notes are in Ask scope by default or opt-in.
 3. ~~Build the retrieval layer before evaluating answer-generation quality.~~ **Done:** `LocalRetrievalService` implements the full retrieval flow: normalize → classify sensitivity → search FTS5 → re-rank → check sufficiency → package citations → determine confidence → assemble extractive answer.
 4. ~~Implement capability detection and generation adapter.~~ **Done (M3P3):** `DeviceCapabilityDetector` performs real runtime detection via `#if canImport(FoundationModels)` and `SystemLanguageModel.default.availability`. `GroundedAnswerGenerator` protocol defines the generation boundary. `FoundationModelAdapter` provides the concrete Foundation Models implementation. `LocalRetrievalService` routes to grounded generation on supported devices with automatic extractive fallback. `CapabilityDetectionTests` covers both paths, generation failure fallback, and citation integrity.
+5. ~~Implement prompt shaping, policy enforcement, and safety regression coverage.~~ **Done (M3P5):** `GroundedPromptBuilder` replaces inline prompt construction with a dedicated shaping layer encoding grounding, citations, safety, style, and override-protection rules. `SensitivityPolicy` now detects prompt injection phrases and keywords. `SafetyRegressionTests` covers jailbreak phrasing, scope overrides, mixed-intent prompts, routing verification, deterministic refusal, and privacy-bounded refusal reasons. `GroundedPromptBuilderTests` verifies all prompt sections. `SensitivityPolicyTests` expanded with adversarial variants.

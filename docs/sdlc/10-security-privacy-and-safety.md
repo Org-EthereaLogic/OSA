@@ -121,9 +121,19 @@ Content categories requiring stricter controls or static-only handling:
 - archery and longbow
 - any hazard guidance with bodily-injury risk
 
+## Prompt Injection And Scope-Override Prevention
+
+The assistant pipeline includes two layers of defense against prompt injection, jailbreak phrasing, and scope-override attempts:
+
+1. **Pre-retrieval detection** (`SensitivityPolicy`): phrase-based and keyword-based pattern matching blocks known injection vectors (e.g., "ignore previous instructions", "reveal your system prompt", "jailbreak", "bypass restrictions", "do anything now") before retrieval or generation. Injection queries return `.blocked` and never reach the model adapter.
+2. **In-prompt reinforcement** (`GroundedPromptBuilder`): the model-ready prompt includes an `OVERRIDE PROTECTION` instruction directing the model to ignore any embedded instructions within the user's question that attempt to change rules, reveal system instructions, or expand scope.
+
+These defenses are tested by `SafetyRegressionTests` covering jailbreak phrasing, system prompt extraction, scope overrides, mixed-intent prompts, case insensitivity, deterministic refusal, and privacy-bounded refusal reasons.
+
 ## Abuse And Misuse Considerations
 
 - Users may try to use Ask as a general chatbot; the UX must teach and enforce scope limits.
+- Users may attempt prompt injection or jailbreak phrasing to override assistant policy; `SensitivityPolicy` and `GroundedPromptBuilder` enforce scope and safety boundaries at both pre-retrieval and prompt-shaping layers.
 - Imported-source functionality could be abused to collect low-quality or unsafe information; trust allowlists and review states are required.
 - Personal notes might contain sensitive household details; the app should avoid accidental sharing surfaces.
 

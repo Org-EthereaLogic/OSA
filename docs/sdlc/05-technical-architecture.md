@@ -10,7 +10,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
 - The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, domain-facing repository contracts for editorial content, SwiftData models for handbook chapters, sections, and quick cards, and bundled seed-import wiring for the first offline content slice.
 - Milestone 2 user-data domains are implemented: `InventoryRepository`, `ChecklistRepository`, `NoteRepository`, and `SearchService` protocols with SwiftData and SQLite FTS5 implementations. All repositories are injected via SwiftUI `EnvironmentValues`. A sidecar `SearchIndexStore` provides keyword search across all content types using BM25 ranking.
-- Milestone 3 Phase 1 retrieval pipeline is implemented: `RetrievalService`, `SensitivityClassifier`, and `CapabilityDetector` protocols in `OSA/Domain/Ask/`; `LocalRetrievalService` in `OSA/Retrieval/Querying/` wrapping FTS5 search with query normalization, sensitivity enforcement, deterministic re-ranking, and citation packaging; `SensitivityPolicy` in `OSA/Assistant/Policy/` for blocked and sensitive topic classification; `DeviceCapabilityDetector` in `OSA/Assistant/ModelAdapters/`; and a retrieval-backed Ask UI with answer, citation, and refusal states.
+- Milestone 3 is complete: `RetrievalService`, `SensitivityClassifier`, and `CapabilityDetector` protocols in `OSA/Domain/Ask/`; `LocalRetrievalService` in `OSA/Retrieval/Querying/` wrapping FTS5 search with query normalization, sensitivity enforcement, deterministic re-ranking, and citation packaging; `SensitivityPolicy` in `OSA/Assistant/Policy/` for blocked/sensitive topic classification and prompt injection detection; `DeviceCapabilityDetector` and `FoundationModelAdapter` in `OSA/Assistant/ModelAdapters/` for real runtime capability detection and grounded generation; `GroundedPromptBuilder` in `OSA/Assistant/PromptShaping/` for policy-aware prompt construction; and a retrieval-backed Ask UI with answer, citation, and refusal states.
 
 ## Assumptions
 
@@ -89,7 +89,7 @@ Recommended module or target boundaries even if v1 starts in a single app target
 - `Domain`: models, use cases, repository protocols, policy interfaces.
 - `Persistence`: SwiftData models, migrations, repository implementations.
 - `Retrieval`: chunking, indexing, query construction, ranking.
-- `Assistant`: prompt policies, answer formatting, model adapters.
+- `Assistant`: prompt policies (`Policy/`), prompt shaping (`PromptShaping/`), model adapters (`ModelAdapters/`), answer formatting, orchestration.
 - `Networking`: source clients, import pipeline, background tasks.
 - `Shared`: logging, capability checks, feature flags, utilities.
 

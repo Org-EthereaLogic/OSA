@@ -6,7 +6,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 ## Confirmed Facts
 
 - Offline reliability, grounding quality, and safety boundaries are first-order quality concerns.
-- The repository contains complete Milestone 1 and 2 implementations plus Milestone 3 Phases 1–4 (retrieval pipeline, capability detection, and model adapter). Unit-test and UI-test target scaffolding are in place. Repository-contract tests exist for editorial content (`OSATests/SeedContentRepositoryTests.swift`), inventory (`OSATests/InventoryRepositoryTests.swift`), checklists (`OSATests/ChecklistRepositoryTests.swift`), notes (`OSATests/NoteRepositoryTests.swift`), and the FTS5 search index (`OSATests/SearchIndexStoreTests.swift`). Retrieval pipeline tests cover query normalization (`OSATests/QueryNormalizerTests.swift`), sensitivity policy (`OSATests/SensitivityPolicyTests.swift`), evidence ranking (`OSATests/EvidenceRankerTests.swift`), and end-to-end retrieval with stub dependencies (`OSATests/LocalRetrievalServiceTests.swift`). Capability detection and adapter routing tests (`OSATests/CapabilityDetectionTests.swift`) cover both grounded-generation and extractive paths, generation failure fallback, citation integrity across both paths, and real detector behavior on the current platform. An app bootstrap smoke test (`OSATests/OSAAppSmokeTests.swift`) and a UI launch test (`OSAUITests/OSAAppLaunchUITests.swift`) round out the scaffolding. Feature UI surfaces consume repository and retrieval protocols through SwiftUI environment injection.
+- The repository contains complete Milestone 1, 2, and 3 implementations. Unit-test and UI-test target scaffolding are in place. Repository-contract tests exist for editorial content (`OSATests/SeedContentRepositoryTests.swift`), inventory (`OSATests/InventoryRepositoryTests.swift`), checklists (`OSATests/ChecklistRepositoryTests.swift`), notes (`OSATests/NoteRepositoryTests.swift`), and the FTS5 search index (`OSATests/SearchIndexStoreTests.swift`). Retrieval pipeline tests cover query normalization (`OSATests/QueryNormalizerTests.swift`), sensitivity policy (`OSATests/SensitivityPolicyTests.swift`), evidence ranking (`OSATests/EvidenceRankerTests.swift`), and end-to-end retrieval with stub dependencies (`OSATests/LocalRetrievalServiceTests.swift`). Capability detection and adapter routing tests (`OSATests/CapabilityDetectionTests.swift`) cover both grounded-generation and extractive paths, generation failure fallback, citation integrity across both paths, and real detector behavior on the current platform. Prompt-shaping tests (`OSATests/GroundedPromptBuilderTests.swift`) verify system instructions, evidence formatting, confidence guidance, and full prompt composition. Safety regression tests (`OSATests/SafetyRegressionTests.swift`) cover jailbreak phrasing, scope overrides, prompt injection detection, mixed-intent prompts, routing verification, deterministic refusal, and privacy-bounded refusal reasons. An app bootstrap smoke test (`OSATests/OSAAppSmokeTests.swift`) and a UI launch test (`OSAUITests/OSAAppLaunchUITests.swift`) round out the scaffolding. Feature UI surfaces consume repository and retrieval protocols through SwiftUI environment injection.
 - The app must behave correctly across offline, degraded, and online transition states.
 
 ## Assumptions
@@ -146,11 +146,19 @@ Pass condition: the app refuses, falls back, or cites correctly rather than inve
 
 ## Safety Regression Tests
 
+Implemented in `OSATests/SafetyRegressionTests.swift`:
+
 - high-risk medical prompts
 - weapon or tactical prompts
 - foraging and plant-identification prompts
 - unsafe fire or utility improvisation prompts
 - ambiguous phrasing that could route into risky advice
+- prompt injection phrases (jailbreak, ignore instructions, system prompt extraction)
+- scope-override attempts (role-play, bypass, unrestricted mode)
+- mixed-intent prompts (safe topic + blocked keyword, safe topic + injection)
+- routing verification (blocked queries never reach generation, sensitive-static-only restricts to static content)
+- deterministic refusal (same input yields same refusal)
+- privacy-bounded refusal reasons (refusal messages do not contain raw user content)
 
 ## Manual QA Scenarios
 

@@ -5,7 +5,7 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 ## Confirmed Facts
 
-- The project has completed Milestones 1 and 2, plus Milestone 3 Phase 1. Editorial-content persistence, user-data CRUD (inventory, checklists, notes), FTS5 search, and the grounded retrieval pipeline with sensitivity policy and extractive answer assembly are all implemented and tested. Remaining M3 work: Foundation Models generation adapter (M3P3) and prompt shaping with safety guardrails (M3P5).
+- The project has completed Milestones 1, 2, and 3. Editorial-content persistence, user-data CRUD (inventory, checklists, notes), FTS5 search, the grounded retrieval pipeline with sensitivity policy and extractive answer assembly, Foundation Models generation adapter (M3P3), and prompt shaping with safety guardrails (M3P5) are all implemented and tested.
 - AI capability, content safety, and offline reliability are core product risks rather than secondary concerns.
 
 ## Assumptions
@@ -27,10 +27,10 @@ Related docs: [Problem Brief](./01-problem-brief.md), [Technical Architecture](.
 
 | ID | Risk Description | Category | Likelihood | Impact | Mitigation | Owner | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| R1 | Foundation Models unavailable or underperforming on target devices, weakening Ask quality. | Platform | Medium | High | Extractive fallback and `DeviceCapabilityDetector` implemented in M3P1. Remaining: Foundation Models generation adapter (M3P3) and real-device matrix testing. | Engineering | Partially Mitigated |
-| R2 | Hallucinations or weak grounding produce unsafe or misleading answers. | AI Safety | Medium | High | Enforce local-evidence-only retrieval, mandatory citations, refusal paths, and adversarial safety tests. | Engineering | Open |
+| R1 | Foundation Models unavailable or underperforming on target devices, weakening Ask quality. | Platform | Medium | High | Extractive fallback and `DeviceCapabilityDetector` implemented in M3P1. `FoundationModelAdapter` with real capability detection implemented in M3P3. Remaining: real-device matrix testing across hardware tiers. | Engineering | Partially Mitigated |
+| R2 | Hallucinations or weak grounding produce unsafe or misleading answers. | AI Safety | Medium | High | Local-evidence-only retrieval enforced. `GroundedPromptBuilder` encodes mandatory grounding, citation, and refusal rules. `SafetyRegressionTests` covers adversarial prompt variants, routing verification, and deterministic refusal. Remaining: real-corpus evaluation with Foundation Models output. | Engineering | Partially Mitigated |
 | R3 | Imported knowledge becomes stale and answers remain technically grounded but outdated. | Content Freshness | High | High | Track freshness metadata, shorter stale windows for sensitive topics, and visible stale indicators. | Product/Content | Open |
-| R4 | Content safety drift expands assistant behavior into tactical, medical, or foraging advice. | Product Safety | Medium | High | Lock scope in ADRs, review prompts/policies, and add regression tests for blocked categories. | Product/Engineering | Open |
+| R4 | Content safety drift expands assistant behavior into tactical, medical, or foraging advice. | Product Safety | Medium | High | Scope locked in ADRs. `SensitivityPolicy` enforces blocked/sensitive categories and prompt injection detection. `GroundedPromptBuilder` reinforces safety boundaries in model prompts. `SafetyRegressionTests` regression suite covers blocked categories, injection, and mixed-intent prompts. | Product/Engineering | Partially Mitigated |
 | R5 | On-device storage growth from imported knowledge, raw artifacts, and search indexes degrades performance. | Storage | Medium | Medium | Set source-size limits, prune temp files, dedupe by hash, and monitor database/index growth. | Engineering | Open |
 | R6 | Schema and seed-content migrations become brittle as the corpus grows. | Data | Medium | High | Seed-content versioning and stable-ID import implemented. User-data schema stable across M1–M2. Comprehensive migration testing deferred to M5 (Hardening). | Engineering | Partially Mitigated |
 | R7 | Background refresh is unreliable across iOS conditions and produces confusing partial state. | Platform | Medium | Medium | Keep refresh resumable, atomic on commit, user-visible in status, and safe under Low Power Mode. | Engineering | Open |
