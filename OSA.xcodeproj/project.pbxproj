@@ -78,6 +78,7 @@
 		BD9FB2C7BE82165002D92F22 /* ChecklistRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F709D991D06D2064F260B3D /* ChecklistRepositoryTests.swift */; };
 		BDCAA39A0DBD4CC96C46F8E9 /* ChecklistRunHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B956A294C70B716A09B7A6F7 /* ChecklistRunHistoryView.swift */; };
 		BE3B67A34DD358F1CA7AC365 /* SeedContentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770BA3FBB3C4EC40C4D9515C /* SeedContentModels.swift */; };
+		C009F1857F6F8DD6341F7EF4 /* SeedContent in Resources */ = {isa = PBXBuildFile; fileRef = 2A70CF4F047A1176F84D1E25 /* SeedContent */; };
 		C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D21F90F253B86041E540 /* AskScreen.swift */; };
 		C0862A6111B7B4BF8068C7D5 /* AskRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BFD7BFC2751DBBD42B46A1 /* AskRepositories.swift */; };
 		C3BED80675917C8126592E3A /* ChecklistRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8976CA8306E4FCE07EC37FCE /* ChecklistRepositories.swift */; };
@@ -89,6 +90,7 @@
 		E8CCAC2F6746258D45B38E9E /* OSAAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */; };
 		E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33066DD014133D5714E64A75 /* HomeScreen.swift */; };
 		EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */; };
+		EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A91EA7AEBA66A00E2755A856 /* Assets.xcassets */; };
 		ED9A77EE17E1AB71B4F23155 /* PersistedChecklistTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */; };
 		EE3A036DA18803F032E2108A /* DeviceCapabilityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */; };
 		EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120A3CA2CA5A63B7033881B /* NotesScreen.swift */; };
@@ -138,6 +140,7 @@
 		22675AEFAC8EF498F3FF0B05 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCapabilityDetector.swift; sourceTree = "<group>"; };
 		25E6D96E8E16D18553C4B2A8 /* QueryNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryNormalizerTests.swift; sourceTree = "<group>"; };
+		2A70CF4F047A1176F84D1E25 /* SeedContent */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SeedContent; path = OSA/Resources/SeedContent; sourceTree = SOURCE_ROOT; };
 		2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedHandbookSection.swift; sourceTree = "<group>"; };
 		2B8DFCAFF627C2A75C6317A1 /* EvidenceRanker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvidenceRanker.swift; sourceTree = "<group>"; };
 		2E290385FA4F0F891F132363 /* ChecklistRecordMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRecordMappings.swift; sourceTree = "<group>"; };
@@ -186,6 +189,7 @@
 		A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		A802144BBE5DF01CEA0E82C0 /* SensitivityPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityPolicyTests.swift; sourceTree = "<group>"; };
 		A82F09506942F57BE9E8D4E0 /* HandbookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandbookModels.swift; sourceTree = "<group>"; };
+		A91EA7AEBA66A00E2755A856 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
 		A9F4828F8523D509C79EB962 /* OSAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAApp.swift; sourceTree = "<group>"; };
 		AC184E34779D5EC541A1C91D /* InventoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
@@ -253,12 +257,23 @@
 			path = Querying;
 			sourceTree = "<group>";
 		};
+		07B3EC71A0931B2AD9FA22FE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Preview Content";
+			path = "OSA/Resources/Preview Content";
+			sourceTree = "<group>";
+		};
 		121FAE7F770883FA9FB313F1 = {
 			isa = PBXGroup;
 			children = (
 				149F7594B294B87DC2A74350 /* OSA */,
 				D03BFB433C1F62BEBE736A3F /* OSATests */,
 				D0BAA061C12D3FFC32DFA8FD /* OSAUITests */,
+				07B3EC71A0931B2AD9FA22FE /* Preview Content */,
+				C3D88401F1E167CDEE60470C /* Resources */,
+				2A70CF4F047A1176F84D1E25 /* SeedContent */,
 				5A9939D028026BCD452523FB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -618,6 +633,15 @@
 			path = Bootstrap;
 			sourceTree = "<group>";
 		};
+		C3D88401F1E167CDEE60470C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A91EA7AEBA66A00E2755A856 /* Assets.xcassets */,
+			);
+			name = Resources;
+			path = OSA/Resources;
+			sourceTree = "<group>";
+		};
 		C84CB949EB8095D67D383E95 /* Ask */ = {
 			isa = PBXGroup;
 			children = (
@@ -777,6 +801,7 @@
 			buildConfigurationList = 556D0BF66EED942CBC3B740F /* Build configuration list for PBXNativeTarget "OSA" */;
 			buildPhases = (
 				F351BE7F822F829D206A08F5 /* Sources */,
+				246BAEDA40CF43C15B18A937 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -866,6 +891,18 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		246BAEDA40CF43C15B18A937 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */,
+				C009F1857F6F8DD6341F7EF4 /* SeedContent in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9961B09B28383494CB51A511 /* Sources */ = {

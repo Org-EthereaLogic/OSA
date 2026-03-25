@@ -24,11 +24,14 @@ targets:
         excludes:
           - "Resources/**"
           - "**/*.md"
-    resources:
       - path: OSA/Resources/Assets.xcassets
+        buildPhase: resources
       - path: OSA/Resources/Preview Content
+        buildPhase: resources
         optional: true
       - path: OSA/Resources/SeedContent
+        buildPhase: resources
+        type: folder
     settings:
       base:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES

@@ -10,6 +10,7 @@ Curated prompts and prompt-derived documents.
 - `20-m3-polish-sprint-home-settings-ask-navigation-seed-manifest-enhanced-prompt.md` captures the M3 polish sprint focused on live Home data, Settings capability status, Ask scope/navigation, and seed-manifest integrity.
 - `21-checklist-swiftdata-runtime-investigation-and-test-recovery-enhanced-prompt.md` captures the investigation and recovery plan for the checklist SwiftData runtime crash plus the remaining safety and UI test regressions.
 - `22-checklist-swiftdata-container-lifetime-final-report-enhanced-prompt.md` preserves the verified final report showing that the checklist crash was caused by test-only `ModelContainer` lifetime loss, not a production SwiftData relationship-graph defect.
+- `23-app-bundle-seed-content-packaging-and-full-launch-validation-enhanced-prompt.md` captures the immediate packaging fix for bundled seed content, the required cold-launch validation pass, and the preserved M4 dependency sequence that follows once the offline app baseline is stable.
 
 ## Rules
 
