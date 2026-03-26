@@ -33,25 +33,31 @@ struct HomeScreen: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack(alignment: .top, spacing: Spacing.sm) {
-                BrandMarkView(size: 60)
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            HStack(alignment: .center, spacing: Spacing.md) {
+                BrandMarkView(size: 48)
 
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(AppBrand.displayName)
-                        .font(.largeTitle.bold())
+                        .font(.stressTitle)
                     Text(AppBrand.subtitle)
-                        .font(.headline)
+                        .font(.categoryLabel)
                         .foregroundStyle(.secondary)
+                        .textCase(.uppercase)
                 }
 
                 Spacer()
                 ConnectivityBadge(state: .offline)
             }
 
-            Text("Local quick access to your most relevant cards, runs, reminders, and notes.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            HStack(spacing: Spacing.xs) {
+                Image(systemName: "internaldrive.fill")
+                    .font(.metadataCaption)
+                    .foregroundStyle(.osaLocal)
+                Text("All content stored locally on your device")
+                    .font(.metadataCaption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -334,7 +340,8 @@ private struct HomeQuickCardRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "bolt.fill")
-                .foregroundStyle(.orange)
+                .foregroundStyle(.osaEmergency)
+                .font(.body)
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(card.title)

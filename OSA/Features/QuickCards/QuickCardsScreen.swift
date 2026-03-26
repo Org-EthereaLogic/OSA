@@ -57,18 +57,22 @@ private struct QuickCardRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             HStack {
-                Text(card.category)
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .textCase(.uppercase)
-                    .foregroundStyle(.orange)
+                Label {
+                    Text(card.category)
+                        .font(.categoryLabel)
+                        .textCase(.uppercase)
+                } icon: {
+                    Image(systemName: "bolt.fill")
+                        .font(.caption2)
+                }
+                .foregroundStyle(.osaEmergency)
 
                 Spacer()
 
                 if card.lastReviewedAt != nil {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.blue)
+                    Label("Reviewed", systemImage: "checkmark.seal.fill")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaTrust)
                 }
             }
 
@@ -77,7 +81,7 @@ private struct QuickCardRow: View {
                 .foregroundStyle(.primary)
 
             Text(card.summary)
-                .font(.body)
+                .font(.cardBody)
                 .foregroundStyle(.secondary)
                 .lineLimit(3)
         }

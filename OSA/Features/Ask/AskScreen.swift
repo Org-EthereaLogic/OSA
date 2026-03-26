@@ -56,9 +56,14 @@ struct AskScreen: View {
 
     private var scopeCard: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
-            Label("Approved local sources", systemImage: "internaldrive.fill")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            HStack(spacing: Spacing.xs) {
+                Image(systemName: "internaldrive.fill")
+                    .foregroundStyle(.osaLocal)
+                Text("Local Retrieval")
+                    .font(.categoryLabel)
+                    .textCase(.uppercase)
+                    .foregroundStyle(.osaLocal)
+            }
 
             Text(scopeSummary)
                 .font(.subheadline)
@@ -67,8 +72,8 @@ struct AskScreen: View {
             Toggle(isOn: $includePersonalNotes) {
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text("Include personal notes")
-                    Text("Persisted locally and applied to retrieval.")
-                        .font(.caption2)
+                    Text("Stored on this device only.")
+                        .font(.metadataCaption)
                         .foregroundStyle(.tertiary)
                 }
             }
@@ -89,16 +94,16 @@ struct AskScreen: View {
 
     private var zeroState: some View {
         VStack(spacing: Spacing.md) {
-            Image(systemName: "bubble.left.and.text.bubble.right.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.tertiary)
-            Text("Ask a question about your handbook, inventory, or checklists.")
+            Image(systemName: "text.magnifyingglass")
+                .font(.system(size: 40))
+                .foregroundStyle(.osaCalm)
+            Text("Search your local knowledge base")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+            Text("Answers are grounded in approved local content with citations. This is not a general chatbot.")
+                .font(.metadataCaption)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
-            Text("Answers stay grounded in approved local content and include citations.")
-                .font(.caption)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, Spacing.xl)
         .padding(.top, Spacing.xxxl)

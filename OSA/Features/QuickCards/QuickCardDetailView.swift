@@ -6,32 +6,49 @@ struct QuickCardDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                Text(card.category)
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .textCase(.uppercase)
-                    .foregroundStyle(.orange)
+                // Category badge
+                Label {
+                    Text(card.category)
+                        .font(.categoryLabel)
+                        .textCase(.uppercase)
+                } icon: {
+                    Image(systemName: "bolt.fill")
+                        .font(.caption2)
+                }
+                .foregroundStyle(.osaEmergency)
 
+                // Title — large-type stress reading
                 Text(card.title)
-                    .font(.largeType)
+                    .font(.stressTitle)
+                    .foregroundStyle(.primary)
 
+                // Body content
                 if let attributed = try? AttributedString(markdown: card.bodyMarkdown) {
                     Text(attributed)
-                        .font(.body)
+                        .font(.cardBody)
                 } else {
                     Text(card.summary)
-                        .font(.body)
+                        .font(.cardBody)
                 }
 
-                if let reviewed = card.lastReviewedAt {
+                // Provenance metadata
+                if card.lastReviewedAt != nil || !card.tags.isEmpty {
                     Divider()
 
-                    Label(
-                        "Reviewed \(reviewed.formatted(date: .abbreviated, time: .omitted))",
-                        systemImage: "clock"
-                    )
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    VStack(alignment: .leading, spacing: Spacing.xs) {
+                        if let reviewed = card.lastReviewedAt {
+                            Label(
+                                "Reviewed \(reviewed.formatted(date: .abbreviated, time: .omitted))",
+                                systemImage: "checkmark.seal.fill"
+                            )
+                            .font(.metadataCaption)
+                            .foregroundStyle(.osaTrust)
+                        }
+
+                        Label("Stored locally on this device", systemImage: "internaldrive.fill")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
             .padding(.horizontal, Spacing.lg)
