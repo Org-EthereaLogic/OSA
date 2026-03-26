@@ -39,15 +39,26 @@ struct SettingsScreen: View {
             }
 
             Section("About") {
-                LabeledContent("App") {
-                    VStack(alignment: .trailing, spacing: Spacing.xxs) {
+                HStack(spacing: Spacing.sm) {
+                    BrandMarkView(size: 44)
+                    VStack(alignment: .leading, spacing: Spacing.xxs) {
                         Text(AppBrand.displayName)
                             .foregroundStyle(.secondary)
                         Text(AppBrand.subtitle)
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
-                            .multilineTextAlignment(.trailing)
                     }
+                    Spacer()
+                }
+                .padding(.vertical, Spacing.xxs)
+
+                LabeledContent("Icon") {
+                    Text("Custom asset")
+                        .foregroundStyle(.secondary)
+                }
+                LabeledContent("Logo") {
+                    Text("Custom image")
+                        .foregroundStyle(.secondary)
                 }
                 LabeledContent("Version") {
                     Text("0.1.0")

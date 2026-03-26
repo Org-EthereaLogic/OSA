@@ -20,6 +20,7 @@
 		2096C6ED1FA663135A42094B /* PersistedChecklistRunItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D3E9530AF92DE759ED6FAB /* PersistedChecklistRunItem.swift */; };
 		231C7460D764471E5C688F9C /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B98E8F7945F61FD91A2955E /* Spacing.swift */; };
 		23893D099A80722EC65E4696 /* SeedContentRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */; };
+		25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA0F0797832A7A191BC670A /* BrandMarkView.swift */; };
 		260039747D02E5C62E13DA30 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2BD31A77E64678EF783DC0 /* SearchResult.swift */; };
 		28A6D25DC4820D3D6B512B7E /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C4DA63B7F4013E88894 /* NoteEditorView.swift */; };
 		2CEF6833289ADB9453DD269A /* SwiftDataNoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CE979CDDABBD0E2CE911E /* SwiftDataNoteRepository.swift */; };
@@ -117,6 +118,7 @@
 		E8CCAC2F6746258D45B38E9E /* OSAAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */; };
 		E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33066DD014133D5714E64A75 /* HomeScreen.swift */; };
 		EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */; };
+		EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A91EA7AEBA66A00E2755A856 /* Assets.xcassets */; };
 		ED9A77EE17E1AB71B4F23155 /* PersistedChecklistTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */; };
 		EE3A036DA18803F032E2108A /* DeviceCapabilityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */; };
 		EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120A3CA2CA5A63B7033881B /* NotesScreen.swift */; };
@@ -222,6 +224,7 @@
 		8A99F4A55437149223B58396 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		8B98E8F7945F61FD91A2955E /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		8D82AF605981050637268D95 /* NoteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailView.swift; sourceTree = "<group>"; };
+		8DA0F0797832A7A191BC670A /* BrandMarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandMarkView.swift; sourceTree = "<group>"; };
 		8ED68C29388D3826CDAC4355 /* PersistedSourceRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedSourceRecord.swift; sourceTree = "<group>"; };
 		94BF440ABFFAAA9FC723F875 /* ImportedKnowledgeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeRepository.swift; sourceTree = "<group>"; };
 		96C3FD7C6E994EEFF345C5EB /* RepositoryEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryEnvironment.swift; sourceTree = "<group>"; };
@@ -238,6 +241,7 @@
 		A7E4B1BEDA6D2CF9990D1B25 /* TrustLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustLevel.swift; sourceTree = "<group>"; };
 		A802144BBE5DF01CEA0E82C0 /* SensitivityPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityPolicyTests.swift; sourceTree = "<group>"; };
 		A82F09506942F57BE9E8D4E0 /* HandbookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandbookModels.swift; sourceTree = "<group>"; };
+		A91EA7AEBA66A00E2755A856 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
 		A9F4828F8523D509C79EB962 /* OSAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAApp.swift; sourceTree = "<group>"; };
 		AC184E34779D5EC541A1C91D /* InventoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
@@ -317,6 +321,7 @@
 				149F7594B294B87DC2A74350 /* OSA */,
 				D03BFB433C1F62BEBE736A3F /* OSATests */,
 				D0BAA061C12D3FFC32DFA8FD /* OSAUITests */,
+				C3D88401F1E167CDEE60470C /* Resources */,
 				2A70CF4F047A1176F84D1E25 /* SeedContent */,
 				5A9939D028026BCD452523FB /* Products */,
 			);
@@ -545,6 +550,7 @@
 		632BED72C5C732A064993240 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				8DA0F0797832A7A191BC670A /* BrandMarkView.swift */,
 				E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */,
 			);
 			path = Components;
@@ -739,6 +745,15 @@
 				ABD200EBD8695D1C96F1F469 /* Repositories */,
 			);
 			path = ImportedKnowledge;
+			sourceTree = "<group>";
+		};
+		C3D88401F1E167CDEE60470C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A91EA7AEBA66A00E2755A856 /* Assets.xcassets */,
+			);
+			name = Resources;
+			path = OSA/Resources;
 			sourceTree = "<group>";
 		};
 		C84CB949EB8095D67D383E95 /* Ask */ = {
@@ -1008,6 +1023,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */,
 				C009F1857F6F8DD6341F7EF4 /* SeedContent in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1058,6 +1074,7 @@
 				C0862A6111B7B4BF8068C7D5 /* AskRepositories.swift in Sources */,
 				382AB8A28BC2886DAECC4081 /* AskScopeSettings.swift in Sources */,
 				C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */,
+				25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */,
 				FE2EFA05B5C1C87447F0FE02 /* ChapterDetailView.swift in Sources */,
 				FD263C691E8312C92B588229 /* ChecklistRecordMappings.swift in Sources */,
 				C3BED80675917C8126592E3A /* ChecklistRepositories.swift in Sources */,

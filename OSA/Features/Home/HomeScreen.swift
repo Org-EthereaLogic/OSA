@@ -34,7 +34,9 @@ struct HomeScreen: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack {
+            HStack(alignment: .top, spacing: Spacing.sm) {
+                BrandMarkView(size: 60)
+
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(AppBrand.displayName)
                         .font(.largeTitle.bold())
@@ -42,6 +44,7 @@ struct HomeScreen: View {
                         .font(.headline)
                         .foregroundStyle(.secondary)
                 }
+
                 Spacer()
                 ConnectivityBadge(state: .offline)
             }

@@ -24,6 +24,8 @@ targets:
         excludes:
           - "Resources/**"
           - "**/*.md"
+      - path: OSA/Resources/Assets.xcassets
+        buildPhase: resources
       - path: OSA/Resources/SeedContent
         buildPhase: resources
         type: folder
