@@ -90,7 +90,6 @@
 		E8CCAC2F6746258D45B38E9E /* OSAAppSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132BA42BDCD7FC7394879272 /* OSAAppSmokeTests.swift */; };
 		E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33066DD014133D5714E64A75 /* HomeScreen.swift */; };
 		EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */; };
-		EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A91EA7AEBA66A00E2755A856 /* Assets.xcassets */; };
 		ED9A77EE17E1AB71B4F23155 /* PersistedChecklistTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */; };
 		EE3A036DA18803F032E2108A /* DeviceCapabilityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */; };
 		EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120A3CA2CA5A63B7033881B /* NotesScreen.swift */; };
@@ -189,7 +188,6 @@
 		A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		A802144BBE5DF01CEA0E82C0 /* SensitivityPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityPolicyTests.swift; sourceTree = "<group>"; };
 		A82F09506942F57BE9E8D4E0 /* HandbookModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandbookModels.swift; sourceTree = "<group>"; };
-		A91EA7AEBA66A00E2755A856 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityState.swift; sourceTree = "<group>"; };
 		A9F4828F8523D509C79EB962 /* OSAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAApp.swift; sourceTree = "<group>"; };
 		AC184E34779D5EC541A1C91D /* InventoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
@@ -257,22 +255,12 @@
 			path = Querying;
 			sourceTree = "<group>";
 		};
-		07B3EC71A0931B2AD9FA22FE /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Preview Content";
-			path = "OSA/Resources/Preview Content";
-			sourceTree = "<group>";
-		};
 		121FAE7F770883FA9FB313F1 = {
 			isa = PBXGroup;
 			children = (
 				149F7594B294B87DC2A74350 /* OSA */,
 				D03BFB433C1F62BEBE736A3F /* OSATests */,
 				D0BAA061C12D3FFC32DFA8FD /* OSAUITests */,
-				07B3EC71A0931B2AD9FA22FE /* Preview Content */,
-				C3D88401F1E167CDEE60470C /* Resources */,
 				2A70CF4F047A1176F84D1E25 /* SeedContent */,
 				5A9939D028026BCD452523FB /* Products */,
 			);
@@ -633,15 +621,6 @@
 			path = Bootstrap;
 			sourceTree = "<group>";
 		};
-		C3D88401F1E167CDEE60470C /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				A91EA7AEBA66A00E2755A856 /* Assets.xcassets */,
-			);
-			name = Resources;
-			path = OSA/Resources;
-			sourceTree = "<group>";
-		};
 		C84CB949EB8095D67D383E95 /* Ask */ = {
 			isa = PBXGroup;
 			children = (
@@ -897,7 +876,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */,
 				C009F1857F6F8DD6341F7EF4 /* SeedContent in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
