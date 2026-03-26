@@ -1,9 +1,9 @@
 # Lantern Branding And UI Polish Sprint
 
-**Date:** 2026-03-26  
-**Prompt Level:** Level 2 (Workflow Prompt)  
-**Prompt Type:** Feature  
-**Complexity Classification:** Complex  
+**Date:** 2026-03-26
+**Prompt Level:** Level 2 (Workflow Prompt)
+**Prompt Type:** Feature
+**Complexity Classification:** Complex
 **Complexity Justification:** This sprint is a cross-surface presentation pass that likely touches 8-12 existing SwiftUI files plus shared design-system files. It stays inside the current architecture, but it requires coordinated updates across shared tokens, emergency-first hierarchy, Quick Cards presentation, Ask trust cues, and consistency states without widening product scope.
 
 ## Inputs Consulted

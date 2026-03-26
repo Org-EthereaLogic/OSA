@@ -228,6 +228,13 @@ Recommendation:
 - Use background `URLSession` only for larger content pack downloads or approved source refreshes.
 - Require imported content to complete normalization and local commit atomically before it becomes queryable.
 
+## CI And Quality Automation
+
+- **GitHub Actions CI** (`.github/workflows/ci.yml`): build, test, and Codecov coverage upload on push/PR to `main`.
+- **GitHub Actions CodeQL** (`.github/workflows/codeql.yml`): weekly and push/PR Swift security analysis.
+- **Codacy**: code quality analysis with local CLI (`.codacy/cli.sh`) and grade badge.
+- **Codecov**: code coverage tracking with PR diffs and coverage badge.
+
 ## Done Means
 
 - Architecture boundaries are clear enough to scaffold the project.

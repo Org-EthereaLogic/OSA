@@ -12,6 +12,13 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `snyk code test --path="$PWD"` | Run Snyk Code against the repository when first-party code or security-sensitive config changes |
 | `git status --short` | Inspect local workspace changes before and after edits |
 
+## CI And Quality Automation
+
+- GitHub Actions CI (`.github/workflows/ci.yml`) runs on every push and PR to `main`: build, full test suite with coverage, and Codecov upload.
+- GitHub Actions CodeQL (`.github/workflows/codeql.yml`) runs weekly and on push/PR: Swift security analysis.
+- Codacy CLI available locally via `.codacy/cli.sh` for on-demand code quality checks.
+- Coverage badge and Codacy grade badge are in `README.md`.
+
 ## Product Contract
 
 - The app is iPhone-first, offline-first, and local-first.
@@ -46,7 +53,9 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
 | `OSA/Retrieval/` | Local retrieval pipeline, query normalization, and evidence ranking (Chunking and Citations subdirs are stubs) |
-| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator) |
+| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); DTOs/ for fetch response types |
+| `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
+| `.codacy/` | Codacy CLI bootstrap script for local quality checks |
 | `OSA/Shared/` | Reusable UI and cross-cutting helpers |
 | `scripts/` | Helper scripts and tools (project generation, validation, branding) |
 | `docs/` | Documentation root — see `docs/README.md` for navigation |

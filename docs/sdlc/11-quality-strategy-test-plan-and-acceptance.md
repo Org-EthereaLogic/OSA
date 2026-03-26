@@ -182,6 +182,14 @@ Minimum device coverage should include:
 - Explicit offline, transition, and safety scenarios are defined.
 - Acceptance criteria can gate milestones and release readiness.
 
+## CI And Quality Automation
+
+- **GitHub Actions CI** (`.github/workflows/ci.yml`): runs on every push and pull request to `main`. Builds the project, runs the full test suite with code coverage enabled, converts the `.xcresult` bundle to Cobertura XML, and uploads to Codecov.
+- **GitHub Actions CodeQL** (`.github/workflows/codeql.yml`): runs weekly and on push/PR to `main`. Performs Swift security analysis with the `security-extended` query suite.
+- **Codecov**: tracks code coverage trends and provides PR-level coverage diffs. Badge in `README.md`.
+- **Codacy**: code quality analysis. Local CLI available via `.codacy/cli.sh`. Grade badge in `README.md`.
+- **Snyk Code**: run manually via `snyk code test --path="$PWD"` for first-party security scanning when security-sensitive code changes.
+
 ## Next-Step Recommendations
 
 1. Create a prompt regression suite before Ask implementation starts.
