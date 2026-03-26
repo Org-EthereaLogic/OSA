@@ -51,7 +51,9 @@
 		5A3BE340AC1EB3EB189361AB /* SafetyRegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FF74A6DA9DD5BDDB6E592 /* SafetyRegressionTests.swift */; };
 		5C34ED7B4532869FE3254BD1 /* PersistenceValueCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306FE173F0CAA08F6D18E6F6 /* PersistenceValueCoding.swift */; };
 		5CAFFE92C140EB69CB73A79D /* ImportedKnowledgeDocumentMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC05E5EF5CD44188E68E65E /* ImportedKnowledgeDocumentMappings.swift */; };
+		5F143D25534BDFD331AB8B8D /* AskLanternIntentExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8208C17873A575FD9E7967C /* AskLanternIntentExecutorTests.swift */; };
 		60ED2026F0DA57100D02A42B /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */; };
+		62CF7BE719CB1E587C28D477 /* AskLanternIntentExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9ED5FF1719CC362D7FD9DA /* AskLanternIntentExecutor.swift */; };
 		6369F79A5FC0344A1FE59F10 /* NWPathMonitorConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FD1F8BAAA5CFCF066CA62 /* NWPathMonitorConnectivityService.swift */; };
 		649D0E6BBA1AA7782BD4E79F /* ColorTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B612DA9C5D9B8F10DFEB3 /* ColorTokens.swift */; };
 		650B028D2CB607BD73BB6E74 /* SwiftDataPendingOperationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD5065A51460FDEC6D7935 /* SwiftDataPendingOperationRepository.swift */; };
@@ -72,6 +74,7 @@
 		87AB305D4C79FD2CE785BCAA /* ImportedKnowledgeImportPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5205E83CEECDCC198AA1E01C /* ImportedKnowledgeImportPipeline.swift */; };
 		898A46176937799CCCD71D56 /* InventoryItemFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576A5195E992FA824F110D2 /* InventoryItemFormView.swift */; };
 		8B81D9EF22614959A6CE0C5C /* SwiftDataInventoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B302104EBA8B8AEC19C612AF /* SwiftDataInventoryRepository.swift */; };
+		8CD93849497F2AC425BD6615 /* AskLanternIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2498F1581D9C135D3CFB1CD3 /* AskLanternIntent.swift */; };
 		8F3AEF8D357BADE0BA8AA38A /* KnowledgeChunkMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72602CDA1D8090046FD1C1AC /* KnowledgeChunkMappings.swift */; };
 		8FE7934359D28CB6C623E3EA /* ImportedKnowledgeRefreshCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5615AE0AD017A91EE8D376 /* ImportedKnowledgeRefreshCoordinatorTests.swift */; };
 		90468528CB98BDA7B848B178 /* GroundedPromptBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58CAD005A560B565BB294B3 /* GroundedPromptBuilderTests.swift */; };
@@ -147,6 +150,7 @@
 		F7CF6B22B5E27A29EFA4C526 /* ImportedKnowledgeNormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3FEEA5607ECB6111E3D1DB /* ImportedKnowledgeNormalizerTests.swift */; };
 		F9D0AB636F190235C003BD1C /* InventoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC184E34779D5EC541A1C91D /* InventoryItem.swift */; };
 		F9EFD1A57F50ABEBFC628954 /* QuickCardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690A5D630C83220A346F5292 /* QuickCardDetailView.swift */; };
+		FA8958F66E48709C0901F65B /* LanternAppShortcutsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FA392E30A9D3E8B67BEE /* LanternAppShortcutsProvider.swift */; };
 		FC6AD955DD70BDC01C551462 /* AskTrustedSourceImportFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A6100A80A0293AD76DC1C /* AskTrustedSourceImportFlowTests.swift */; };
 		FD02CCB8E2228AE8B0BCC744 /* SeedContentMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA35456E992E4EA601598 /* SeedContentMigrationTests.swift */; };
 		FD263C691E8312C92B588229 /* ChecklistRecordMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E290385FA4F0F891F132363 /* ChecklistRecordMappings.swift */; };
@@ -197,6 +201,7 @@
 		21B5287CDCB6F317A424AB70 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
 		22675AEFAC8EF498F3FF0B05 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCapabilityDetector.swift; sourceTree = "<group>"; };
+		2498F1581D9C135D3CFB1CD3 /* AskLanternIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntent.swift; sourceTree = "<group>"; };
 		25E6D96E8E16D18553C4B2A8 /* QueryNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryNormalizerTests.swift; sourceTree = "<group>"; };
 		2A70CF4F047A1176F84D1E25 /* SeedContent */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SeedContent; path = OSA/Resources/SeedContent; sourceTree = SOURCE_ROOT; };
 		2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedHandbookSection.swift; sourceTree = "<group>"; };
@@ -210,6 +215,7 @@
 		32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeNormalizer.swift; sourceTree = "<group>"; };
 		33066DD014133D5714E64A75 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		34BFD7BFC2751DBBD42B46A1 /* AskRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskRepositories.swift; sourceTree = "<group>"; };
+		3529FA392E30A9D3E8B67BEE /* LanternAppShortcutsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternAppShortcutsProvider.swift; sourceTree = "<group>"; };
 		3850E2241360E349F24B9585 /* OSAAppLaunchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAAppLaunchUITests.swift; sourceTree = "<group>"; };
 		3A6128B2FF4FB3A0E8212300 /* ReviewStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStatus.swift; sourceTree = "<group>"; };
 		3D8FF74A6DA9DD5BDDB6E592 /* SafetyRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyRegressionTests.swift; sourceTree = "<group>"; };
@@ -237,6 +243,7 @@
 		6B3FEEA5607ECB6111E3D1DB /* ImportedKnowledgeNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeNormalizerTests.swift; sourceTree = "<group>"; };
 		6D2CE979CDDABBD0E2CE911E /* SwiftDataNoteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataNoteRepository.swift; sourceTree = "<group>"; };
 		6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedImportedKnowledgeDocument.swift; sourceTree = "<group>"; };
+		6F9ED5FF1719CC362D7FD9DA /* AskLanternIntentExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntentExecutor.swift; sourceTree = "<group>"; };
 		72602CDA1D8090046FD1C1AC /* KnowledgeChunkMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunkMappings.swift; sourceTree = "<group>"; };
 		74988E7BE3ADCCDD9FD03D60 /* QuickCardRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardRouteView.swift; sourceTree = "<group>"; };
 		76336EE72F2AC53E90D8ACDA /* CapabilityDetectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityDetectionTests.swift; sourceTree = "<group>"; };
@@ -301,6 +308,7 @@
 		D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D58CAD005A560B565BB294B3 /* GroundedPromptBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundedPromptBuilderTests.swift; sourceTree = "<group>"; };
 		D7610F1BD90F903D62C2333C /* ContentRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRepositories.swift; sourceTree = "<group>"; };
+		D8208C17873A575FD9E7967C /* AskLanternIntentExecutorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntentExecutorTests.swift; sourceTree = "<group>"; };
 		DA875079093B65A6A03A1659 /* CreateChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChecklistView.swift; sourceTree = "<group>"; };
 		DABA1708C667412934B49F03 /* PersistedChecklistTemplateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedChecklistTemplateItem.swift; sourceTree = "<group>"; };
 		DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryScreen.swift; sourceTree = "<group>"; };
@@ -687,6 +695,15 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		880EFFB73E1E422878A017AB /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				2498F1581D9C135D3CFB1CD3 /* AskLanternIntent.swift */,
+				3529FA392E30A9D3E8B67BEE /* LanternAppShortcutsProvider.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		89999AE3B748E127A19981DC /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -750,6 +767,7 @@
 			isa = PBXGroup;
 			children = (
 				4CA7373D9A41B794C0CDC6A6 /* ModelAdapters */,
+				A5ED046696E0163E06F1DDAF /* Orchestration */,
 				05E21B4E28E1422426166241 /* Policy */,
 				EAC6BE54AC4AB7BB81525273 /* PromptShaping */,
 			);
@@ -762,6 +780,14 @@
 				34BFD7BFC2751DBBD42B46A1 /* AskRepositories.swift */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		A5ED046696E0163E06F1DDAF /* Orchestration */ = {
+			isa = PBXGroup;
+			children = (
+				6F9ED5FF1719CC362D7FD9DA /* AskLanternIntentExecutor.swift */,
+			);
+			path = Orchestration;
 			sourceTree = "<group>";
 		};
 		A6E018A46F91E4EC7E23490B /* Checklists */ = {
@@ -855,6 +881,7 @@
 			isa = PBXGroup;
 			children = (
 				B2D8DFD9DEE0CE6EE2BB14C7 /* Bootstrap */,
+				880EFFB73E1E422878A017AB /* Intents */,
 				D54A381D50E542E18849616E /* Navigation */,
 			);
 			path = App;
@@ -881,6 +908,7 @@
 		D03BFB433C1F62BEBE736A3F /* OSATests */ = {
 			isa = PBXGroup;
 			children = (
+				D8208C17873A575FD9E7967C /* AskLanternIntentExecutorTests.swift */,
 				C56A6100A80A0293AD76DC1C /* AskTrustedSourceImportFlowTests.swift */,
 				76336EE72F2AC53E90D8ACDA /* CapabilityDetectionTests.swift */,
 				5F709D991D06D2064F260B3D /* ChecklistRepositoryTests.swift */,
@@ -1125,6 +1153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F143D25534BDFD331AB8B8D /* AskLanternIntentExecutorTests.swift in Sources */,
 				FC6AD955DD70BDC01C551462 /* AskTrustedSourceImportFlowTests.swift in Sources */,
 				B86BB342FCEFE7E1FEBC9536 /* CapabilityDetectionTests.swift in Sources */,
 				BD9FB2C7BE82165002D92F22 /* ChecklistRepositoryTests.swift in Sources */,
@@ -1172,6 +1201,8 @@
 				120E79774EE8C620795E4B8D /* AppModelContainer.swift in Sources */,
 				7808AE641DE908499FF5077C /* AppTab.swift in Sources */,
 				405CE39F1743A1E2FACA1B80 /* AppTabView.swift in Sources */,
+				8CD93849497F2AC425BD6615 /* AskLanternIntent.swift in Sources */,
+				62CF7BE719CB1E587C28D477 /* AskLanternIntentExecutor.swift in Sources */,
 				C0862A6111B7B4BF8068C7D5 /* AskRepositories.swift in Sources */,
 				382AB8A28BC2886DAECC4081 /* AskScopeSettings.swift in Sources */,
 				C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */,
@@ -1216,6 +1247,7 @@
 				4216EFD6C8E981CD29BEEBD6 /* KnowledgeChunk.swift in Sources */,
 				8F3AEF8D357BADE0BA8AA38A /* KnowledgeChunkMappings.swift in Sources */,
 				5778777D30E4A8DD8B7E77D4 /* KnowledgeChunker.swift in Sources */,
+				FA8958F66E48709C0901F65B /* LanternAppShortcutsProvider.swift in Sources */,
 				304F425A79B2339D267D69DF /* LibraryScreen.swift in Sources */,
 				E8C088E672A2DA3DFEC39BFB /* LocalRetrievalService.swift in Sources */,
 				B36070D41FD744017D237A26 /* LocalSearchService.swift in Sources */,

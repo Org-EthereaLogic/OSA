@@ -9,6 +9,30 @@ private extension ProcessInfo {
     }
 }
 
+/// Shared runtime for App Intents and other non-SwiftUI entry points.
+///
+/// Lazily creates the same `AppDependencies` graph used by the main app.
+/// Thread-safe through `@MainActor` isolation.
+enum SharedRuntime {
+    @MainActor
+    private static var _dependencies: AppDependencies?
+
+    @MainActor
+    static var dependencies: AppDependencies {
+        if let existing = _dependencies { return existing }
+        let container = AppModelContainer.makeShared()
+        let deps = AppDependencies.live(modelContainer: container)
+        _dependencies = deps
+        return deps
+    }
+
+    /// Called by `OSAApp.init()` to share the already-created dependencies.
+    @MainActor
+    static func install(_ deps: AppDependencies) {
+        _dependencies = deps
+    }
+}
+
 enum AppModelContainer {
     @MainActor
     static func makeShared(bundle: Bundle = .main) -> ModelContainer {

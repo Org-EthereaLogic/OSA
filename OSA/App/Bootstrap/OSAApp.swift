@@ -9,7 +9,9 @@ struct OSAApp: App {
     init() {
         let container = AppModelContainer.makeShared()
         self.sharedModelContainer = container
-        self.dependencies = AppDependencies.live(modelContainer: container)
+        let deps = AppDependencies.live(modelContainer: container)
+        self.dependencies = deps
+        SharedRuntime.install(deps)
     }
 
     var body: some Scene {
