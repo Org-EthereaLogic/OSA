@@ -32,9 +32,15 @@ struct SettingsScreen: View {
             }
 
             Section("Privacy") {
-                LabeledContent("Data Storage") {
-                    Text("On device only")
-                        .foregroundStyle(.secondary)
+                HStack(spacing: Spacing.sm) {
+                    Image(systemName: "lock.shield.fill")
+                        .foregroundStyle(.osaLocal)
+                    VStack(alignment: .leading, spacing: Spacing.xxs) {
+                        Text("On-device only")
+                        Text("All data stays on this device. Nothing is transmitted.")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
             }
 
@@ -43,25 +49,18 @@ struct SettingsScreen: View {
                     BrandMarkView(size: 44)
                     VStack(alignment: .leading, spacing: Spacing.xxs) {
                         Text(AppBrand.displayName)
-                            .foregroundStyle(.secondary)
+                            .font(.cardTitle)
                         Text(AppBrand.subtitle)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
+                            .font(.metadataCaption)
+                            .foregroundStyle(.secondary)
                     }
                     Spacer()
                 }
                 .padding(.vertical, Spacing.xxs)
 
-                LabeledContent("Icon") {
-                    Text("Custom asset")
-                        .foregroundStyle(.secondary)
-                }
-                LabeledContent("Logo") {
-                    Text("Custom image")
-                        .foregroundStyle(.secondary)
-                }
                 LabeledContent("Version") {
                     Text("0.1.0")
+                        .font(.metadataCaption)
                         .foregroundStyle(.secondary)
                 }
             }

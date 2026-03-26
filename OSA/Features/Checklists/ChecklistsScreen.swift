@@ -108,19 +108,20 @@ private struct ActiveRunRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(run.title)
-                .font(.headline)
+                .font(.cardTitle)
 
             HStack(spacing: Spacing.sm) {
                 ProgressView(value: run.completionFraction)
+                    .tint(.osaCalm)
                     .frame(maxWidth: 120)
 
                 Text("\(Int(run.completionFraction * 100))%")
-                    .font(.caption)
+                    .font(.categoryLabel)
                     .foregroundStyle(.secondary)
             }
 
             Text("Started \(run.startedAt.formatted(date: .abbreviated, time: .shortened))")
-                .font(.caption2)
+                .font(.metadataCaption)
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, Spacing.xs)
@@ -135,7 +136,7 @@ private struct TemplateRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(template.title)
-                .font(.headline)
+                .font(.cardTitle)
 
             Text(template.description)
                 .font(.subheadline)
@@ -144,11 +145,11 @@ private struct TemplateRow: View {
 
             HStack(spacing: Spacing.sm) {
                 Label("\(template.itemCount) items", systemImage: "list.bullet")
-                    .font(.caption2)
+                    .font(.metadataCaption)
                     .foregroundStyle(.tertiary)
 
                 Label("\(template.estimatedMinutes) min", systemImage: "clock")
-                    .font(.caption2)
+                    .font(.metadataCaption)
                     .foregroundStyle(.tertiary)
             }
         }

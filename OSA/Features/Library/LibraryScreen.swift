@@ -55,7 +55,7 @@ private struct ChapterRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             Text(chapter.title)
-                .font(.headline)
+                .font(.cardTitle)
 
             Text(chapter.summary)
                 .font(.subheadline)
@@ -65,13 +65,13 @@ private struct ChapterRow: View {
             HStack(spacing: Spacing.sm) {
                 if chapter.isSeeded {
                     Label("Curated", systemImage: "checkmark.seal.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.blue)
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaTrust)
                 }
 
                 if let reviewed = chapter.lastReviewedAt {
                     Label(reviewed.formatted(date: .abbreviated, time: .omitted), systemImage: "clock")
-                        .font(.caption2)
+                        .font(.metadataCaption)
                         .foregroundStyle(.tertiary)
                 }
             }

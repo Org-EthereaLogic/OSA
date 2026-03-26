@@ -104,16 +104,16 @@ private struct NoteRow: View {
         VStack(alignment: .leading, spacing: Spacing.xs) {
             HStack {
                 Text(note.title)
-                    .font(.headline)
+                    .font(.cardTitle)
 
                 Spacer()
 
                 Text(note.noteType.displayName)
-                    .font(.caption2)
+                    .font(.categoryLabel)
                     .padding(.horizontal, Spacing.sm)
                     .padding(.vertical, Spacing.xxs)
-                    .background(note.noteType.color.opacity(0.15), in: Capsule())
-                    .foregroundStyle(note.noteType.color)
+                    .background(note.noteType.brandColor.opacity(0.15), in: Capsule())
+                    .foregroundStyle(note.noteType.brandColor)
             }
 
             if !note.plainText.isEmpty {
@@ -124,7 +124,7 @@ private struct NoteRow: View {
             }
 
             Text(note.updatedAt.formatted(date: .abbreviated, time: .shortened))
-                .font(.caption2)
+                .font(.metadataCaption)
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, Spacing.xs)
@@ -147,6 +147,14 @@ extension NoteType {
         case .personal: .blue
         case .localReference: .orange
         case .familyPlan: .purple
+        }
+    }
+
+    var brandColor: Color {
+        switch self {
+        case .personal: .osaCalm
+        case .localReference: .osaWarning
+        case .familyPlan: .osaTrust
         }
     }
 }
