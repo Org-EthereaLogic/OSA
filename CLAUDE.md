@@ -56,6 +56,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); DTOs/ for fetch response types |
 | `OSA/App/Intents/` | M6P1 AskLanternIntent (Siri App Intent) and LanternAppShortcutsProvider |
 | `OSA/App/Intents/Entities/` | M6P2 App Entities (HandbookSectionEntity, QuickCardEntity, ChecklistEntity, InventoryItemEntity) with EntityStringQuery, IndexedEntity, and shared EntityQueryResolver |
+| `OSA/Assistant/InventoryCompletion/` | M6P3 InventoryCompletionService (FM structured output + heuristic fallback) and InventoryCompletionMerger for inventory form suggestions |
 | `OSA/Assistant/Orchestration/` | M6P1 AskLanternIntentExecutor — intent-facing retrieval executor with citation formatting |
 | `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
 | `.codacy/` | Codacy CLI bootstrap script for local quality checks |

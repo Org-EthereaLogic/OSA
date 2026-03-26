@@ -10,6 +10,7 @@ struct InventoryItemFormView: View {
     let onSave: (InventoryItem) throws -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.inventoryCompletionService) private var completionService
 
     @State private var name: String = ""
     @State private var category: InventoryCategory = .other
@@ -22,6 +23,8 @@ struct InventoryItemFormView: View {
     @State private var hasReorderThreshold: Bool = false
     @State private var reorderThreshold: Int = 1
     @State private var showSaveError = false
+    @State private var isSuggesting = false
+    @State private var suggestionMessage: String?
 
     private var isEditing: Bool {
         if case .edit = mode { return true }
@@ -71,6 +74,29 @@ struct InventoryItemFormView: View {
                 TextField("Additional notes", text: $notes, axis: .vertical)
                     .lineLimit(3...6)
             }
+
+            if completionService != nil {
+                Section {
+                    Button {
+                        Task { await suggestDetails() }
+                    } label: {
+                        HStack {
+                            Label("Suggest Details", systemImage: "wand.and.stars")
+                            if isSuggesting {
+                                Spacer()
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(isSuggesting || name.trimmingCharacters(in: .whitespaces).isEmpty)
+
+                    if let suggestionMessage {
+                        Text(suggestionMessage)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
         }
         .navigationTitle(isEditing ? "Edit Item" : "New Item")
         .navigationBarTitleDisplayMode(.inline)
@@ -103,6 +129,44 @@ struct InventoryItemFormView: View {
         expiryDate = item.expiryDate ?? expiryDate
         hasReorderThreshold = item.reorderThreshold != nil
         reorderThreshold = item.reorderThreshold ?? 1
+    }
+
+    private func suggestDetails() async {
+        guard let completionService else { return }
+
+        isSuggesting = true
+        suggestionMessage = nil
+
+        let request = InventoryCompletionRequest(
+            name: name,
+            currentCategory: category,
+            currentQuantity: quantity,
+            currentUnit: unit,
+            currentLocation: location
+        )
+
+        let suggestion = await completionService.suggest(for: request)
+
+        if suggestion.isEmpty {
+            suggestionMessage = "No suggestions available for this input."
+        } else {
+            let merged = InventoryCompletionMerger.merge(
+                suggestion: suggestion,
+                into: InventoryCompletionMerger.FormState(
+                    category: category,
+                    quantity: quantity,
+                    unit: unit,
+                    location: location
+                )
+            )
+            category = merged.category
+            quantity = merged.quantity
+            unit = merged.unit
+            location = merged.location
+            suggestionMessage = "Details updated from suggestions."
+        }
+
+        isSuggesting = false
     }
 
     private func saveItem() {

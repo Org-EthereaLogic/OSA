@@ -52,6 +52,10 @@ private struct ImportPipelineKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: ImportedKnowledgeImportPipeline? = nil
 }
 
+private struct InventoryCompletionServiceKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any InventoryCompletionService)? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -116,5 +120,10 @@ extension EnvironmentValues {
     var importPipeline: ImportedKnowledgeImportPipeline? {
         get { self[ImportPipelineKey.self] }
         set { self[ImportPipelineKey.self] = newValue }
+    }
+
+    var inventoryCompletionService: (any InventoryCompletionService)? {
+        get { self[InventoryCompletionServiceKey.self] }
+        set { self[InventoryCompletionServiceKey.self] = newValue }
     }
 }

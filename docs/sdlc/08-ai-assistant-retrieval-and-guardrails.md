@@ -149,6 +149,12 @@ Prompt inputs should include:
 - `SensitivityPolicy` now detects prompt injection phrases (jailbreak, system-prompt extraction, scope overrides, safety bypass) and blocks them before retrieval or generation.
 - Safety regression tests (`SafetyRegressionTests`) cover adversarial prompt variants, routing verification, deterministic refusal, and privacy-bounded refusal reasons.
 
+**Current implementation (M6P3):**
+
+- `LocalInventoryCompletionService` in `OSA/Assistant/InventoryCompletion/` uses Foundation Models `@Generable` structured output to suggest `category`, `quantity`, `unit`, and `location` from partial inventory form input. Falls back to deterministic keyword-based heuristics when FM is unavailable.
+- `InventoryCompletionMerger` enforces conservative merge rules: blank unit/location may be populated, `.other` category may be replaced, default quantity `1` may be replaced, but non-empty/non-default user values are never overwritten.
+- Injected through `AppDependencies` and `EnvironmentValues`, consumed by `InventoryItemFormView` via a user-triggered "Suggest Details" action.
+
 This keeps UI and retrieval logic independent of the underlying model choice.
 
 ## Support Matrix For Device And Model Availability

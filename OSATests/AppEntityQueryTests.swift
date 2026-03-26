@@ -291,6 +291,9 @@ private func makeTestDependencies(
                 repository: StubImportedKnowledgeRepository(),
                 searchService: searchService
             )
+        ),
+        inventoryCompletionService: LocalInventoryCompletionService(
+            capabilityDetector: StubCapabilityDetector(mode: .extractiveOnly)
         )
     )
 }

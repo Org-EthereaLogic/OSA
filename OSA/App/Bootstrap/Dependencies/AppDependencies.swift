@@ -16,6 +16,7 @@ struct AppDependencies {
     let trustedSourceHTTPClient: any TrustedSourceHTTPClient
     let importPipeline: ImportedKnowledgeImportPipeline
     let refreshCoordinator: ImportedKnowledgeRefreshCoordinator
+    let inventoryCompletionService: any InventoryCompletionService
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -61,6 +62,10 @@ struct AppDependencies {
             importPipeline: importPipeline
         )
 
+        let inventoryCompletionService = LocalInventoryCompletionService(
+            capabilityDetector: capabilityDetector
+        )
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -76,7 +81,8 @@ struct AppDependencies {
             connectivityService: connectivityService,
             trustedSourceHTTPClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,
-            refreshCoordinator: refreshCoordinator
+            refreshCoordinator: refreshCoordinator,
+            inventoryCompletionService: inventoryCompletionService
         )
     }
 

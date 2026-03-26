@@ -21,6 +21,7 @@ Curated prompts and prompt-derived documents.
 - `32-testflight-internal-alpha-rc-5-rc-6-device-validation-enhanced-prompt.md` captures the next bounded step after Milestone 5 hardening: Stage 1 internal alpha execution for RC-5 and RC-6, including device-backed performance and privacy validation, evidence capture, and narrow release-readiness updates.
 - `33-m6p1-app-intents-foundation-enhanced-prompt.md` captures the first Apple Intelligence surface slice: a shared bootstrap seam for App Intents, `AskLanternIntent`, `AppShortcutsProvider`, compact citation-preserving Siri answers, and focused tests that prove Siri reuses the existing grounded Ask pipeline.
 - `34-m6p2-app-entities-and-spotlight-indexing-enhanced-prompt.md` captures the next Apple Intelligence slice after M6P1: four App Entities, search-backed entity queries, Spotlight exposure through `IndexedEntity`, privacy-bounded inventory handling, and focused verification that keeps later M6 phases out of scope.
+- `35-m6p3-fm-powered-inventory-completion-enhanced-prompt.md` captures the next Apple Intelligence slice after M6P2: a bounded inventory completion service using on-device Foundation Models structured output when available, deterministic heuristic fallback when unavailable, conservative merge rules in the shared inventory form, and focused verification that keeps later M6 phases and broader inventory redesign out of scope.
 
 ## Rules
 

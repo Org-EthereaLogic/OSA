@@ -30,6 +30,7 @@ struct OSAApp: App {
                 .environment(\.connectivityService, dependencies.connectivityService)
                 .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
                 .environment(\.importPipeline, dependencies.importPipeline)
+                .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
                 .task {
                     await dependencies.refreshCoordinator.start()
                 }

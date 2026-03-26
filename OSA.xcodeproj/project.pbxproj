@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01A7152221CE5F6DA826D768 /* InventoryCompletionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7A550428CDD7DF5DB09EA2 /* InventoryCompletionServiceTests.swift */; };
 		07A9E1259F1060B8C9D9981A /* PersistedChecklistTemplateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA1708C667412934B49F03 /* PersistedChecklistTemplateItem.swift */; };
 		0DB4A00F64E8835AD752F88E /* RepositoryEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C3FD7C6E994EEFF345C5EB /* RepositoryEnvironment.swift */; };
 		0E690B861B5C5A3923CFECE8 /* ImportedKnowledgeNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */; };
@@ -26,6 +27,7 @@
 		25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA0F0797832A7A191BC670A /* BrandMarkView.swift */; };
 		260039747D02E5C62E13DA30 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2BD31A77E64678EF783DC0 /* SearchResult.swift */; };
 		28A6D25DC4820D3D6B512B7E /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C4DA63B7F4013E88894 /* NoteEditorView.swift */; };
+		2AC39F6D009972EAF6D82AA5 /* InventoryCompletionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965F34FFCF66FF3C758EC /* InventoryCompletionModels.swift */; };
 		2C54D0D77F9C85B3BE9B0992 /* KnowledgeChunkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918EB971AAC5971AE2EFB200 /* KnowledgeChunkerTests.swift */; };
 		2CAC77926F9B3FD4003839D4 /* RefreshRetryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C167C697D56E61CEFCF36 /* RefreshRetryPolicy.swift */; };
 		2CEF6833289ADB9453DD269A /* SwiftDataNoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2CE979CDDABBD0E2CE911E /* SwiftDataNoteRepository.swift */; };
@@ -46,6 +48,7 @@
 		4FC51A16FB97050B8F9E6280 /* PersistedImportedKnowledgeDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */; };
 		5018AC591ACA28AECB749022 /* ContentRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7610F1BD90F903D62C2333C /* ContentRepositories.swift */; };
 		50314FDA64ED2A9E1B3C78B0 /* AppEntityQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DC56407C47E05650A0DECD /* AppEntityQueryTests.swift */; };
+		543315F34EDF80133CF4EECB /* InventoryCompletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */; };
 		5560BFD3FA98826DBB068337 /* TrustedSourceAllowlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FD29050530886B6101E1A /* TrustedSourceAllowlist.swift */; };
 		5778777D30E4A8DD8B7E77D4 /* KnowledgeChunker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F198F590CA450AF4BC48E5B /* KnowledgeChunker.swift */; };
 		5925081874355BD1FEF2BD83 /* OperationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685B09BB4606D1080E396901 /* OperationStatus.swift */; };
@@ -219,6 +222,7 @@
 		2F198F590CA450AF4BC48E5B /* KnowledgeChunker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunker.swift; sourceTree = "<group>"; };
 		2F326DECDC607C69E428EF26 /* ChecklistTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistTemplate.swift; sourceTree = "<group>"; };
 		306FE173F0CAA08F6D18E6F6 /* PersistenceValueCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceValueCoding.swift; sourceTree = "<group>"; };
+		315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionService.swift; sourceTree = "<group>"; };
 		325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentRepositoryTests.swift; sourceTree = "<group>"; };
 		32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeNormalizer.swift; sourceTree = "<group>"; };
 		33066DD014133D5714E64A75 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -305,6 +309,7 @@
 		AC184E34779D5EC541A1C91D /* InventoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
 		ACF66168FE2058AB73AB0222 /* PendingOperationRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingOperationRepositoryTests.swift; sourceTree = "<group>"; };
 		AD5615AE0AD017A91EE8D376 /* ImportedKnowledgeRefreshCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeRefreshCoordinatorTests.swift; sourceTree = "<group>"; };
+		AD7A550428CDD7DF5DB09EA2 /* InventoryCompletionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionServiceTests.swift; sourceTree = "<group>"; };
 		B302104EBA8B8AEC19C612AF /* SwiftDataInventoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataInventoryRepository.swift; sourceTree = "<group>"; };
 		B32DA35456E992E4EA601598 /* SeedContentMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentMigrationTests.swift; sourceTree = "<group>"; };
 		B90C875FE52B156BEC585CBC /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
@@ -342,6 +347,7 @@
 		FACB4768D546A1C391433CA9 /* TrustedSourceAllowlistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedSourceAllowlistTests.swift; sourceTree = "<group>"; };
 		FBC30B46C47CB6BD6B0CA0A3 /* ImportedKnowledgeRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeRepositoryTests.swift; sourceTree = "<group>"; };
 		FD0D49E567D03F81A7CB91AD /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		FE8965F34FFCF66FF3C758EC /* InventoryCompletionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionModels.swift; sourceTree = "<group>"; };
 		FF3500DB4056369141F6D825 /* ImportedKnowledgeDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeDocument.swift; sourceTree = "<group>"; };
 		FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -775,6 +781,15 @@
 			path = QuickCards;
 			sourceTree = "<group>";
 		};
+		9D417C55A4AF662ED64645CB /* InventoryCompletion */ = {
+			isa = PBXGroup;
+			children = (
+				FE8965F34FFCF66FF3C758EC /* InventoryCompletionModels.swift */,
+				315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */,
+			);
+			path = InventoryCompletion;
+			sourceTree = "<group>";
+		};
 		9D9BEBD87B2005B6A13933ED /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -793,6 +808,7 @@
 		A22D420E6F4B063F724FB37A /* Assistant */ = {
 			isa = PBXGroup;
 			children = (
+				9D417C55A4AF662ED64645CB /* InventoryCompletion */,
 				4CA7373D9A41B794C0CDC6A6 /* ModelAdapters */,
 				A5ED046696E0163E06F1DDAF /* Orchestration */,
 				05E21B4E28E1422426166241 /* Policy */,
@@ -948,6 +964,7 @@
 				6B3FEEA5607ECB6111E3D1DB /* ImportedKnowledgeNormalizerTests.swift */,
 				AD5615AE0AD017A91EE8D376 /* ImportedKnowledgeRefreshCoordinatorTests.swift */,
 				FBC30B46C47CB6BD6B0CA0A3 /* ImportedKnowledgeRepositoryTests.swift */,
+				AD7A550428CDD7DF5DB09EA2 /* InventoryCompletionServiceTests.swift */,
 				8656E38BC827294A36CFCE64 /* InventoryRepositoryTests.swift */,
 				918EB971AAC5971AE2EFB200 /* KnowledgeChunkerTests.swift */,
 				C6FAD37F9E251DDAAA3C765A /* LocalRetrievalServiceTests.swift */,
@@ -1195,6 +1212,7 @@
 				F7CF6B22B5E27A29EFA4C526 /* ImportedKnowledgeNormalizerTests.swift in Sources */,
 				8FE7934359D28CB6C623E3EA /* ImportedKnowledgeRefreshCoordinatorTests.swift in Sources */,
 				927949BF2C6AECF922F60EC4 /* ImportedKnowledgeRepositoryTests.swift in Sources */,
+				01A7152221CE5F6DA826D768 /* InventoryCompletionServiceTests.swift in Sources */,
 				B55C878224E2C82C6BCA169F /* InventoryRepositoryTests.swift in Sources */,
 				2C54D0D77F9C85B3BE9B0992 /* KnowledgeChunkerTests.swift in Sources */,
 				97C9A853608BB8DE04289D96 /* LocalRetrievalServiceTests.swift in Sources */,
@@ -1272,6 +1290,8 @@
 				0E690B861B5C5A3923CFECE8 /* ImportedKnowledgeNormalizer.swift in Sources */,
 				FDCE05B1BC682DF99F722BBD /* ImportedKnowledgeRefreshCoordinator.swift in Sources */,
 				98903305E3F2BAC7EDEA9D6D /* ImportedKnowledgeRepository.swift in Sources */,
+				2AC39F6D009972EAF6D82AA5 /* InventoryCompletionModels.swift in Sources */,
+				543315F34EDF80133CF4EECB /* InventoryCompletionService.swift in Sources */,
 				F9D0AB636F190235C003BD1C /* InventoryItem.swift in Sources */,
 				92AAE4E3B601F008F69FAA42 /* InventoryItemDetailView.swift in Sources */,
 				87F6B4B33D985F3FE6921778 /* InventoryItemEntity.swift in Sources */,
