@@ -2,11 +2,17 @@ import SwiftUI
 
 struct AskScreen: View {
     @Environment(\.retrievalService) private var retrievalService
+    @Environment(\.connectivityService) private var connectivityService
+    @Environment(\.trustedSourceHTTPClient) private var trustedSourceHTTPClient
+    @Environment(\.importPipeline) private var importPipeline
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
 
     @State private var query = ""
     @State private var askState: AskViewState = .idle
+    @State private var connectivity: ConnectivityState = .offline
+    @State private var showImportSheet = false
+    @State private var lastSubmittedQuery = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,7 +40,12 @@ struct AskScreen: View {
                         )
 
                     case .refused(let reason):
-                        RefusalView(reason: reason)
+                        RefusalView(
+                            reason: reason,
+                            connectivity: connectivity,
+                            canImport: trustedSourceHTTPClient != nil && importPipeline != nil,
+                            onImportTapped: { showImportSheet = true }
+                        )
                     }
                 }
                 .padding(.horizontal, Spacing.lg)
@@ -44,6 +55,18 @@ struct AskScreen: View {
         }
         .background(.osaBackground)
         .navigationTitle("Ask")
+        .task { await observeConnectivity() }
+        .sheet(isPresented: $showImportSheet, onDismiss: handleImportDismiss) {
+            if let client = trustedSourceHTTPClient, let pipeline = importPipeline {
+                TrustedSourceImportSheet(
+                    viewModel: TrustedSourceImportViewModel(
+                        httpClient: client,
+                        importPipeline: pipeline,
+                        originalQuery: lastSubmittedQuery
+                    )
+                )
+            }
+        }
         .navigationDestination(for: AskDestination.self) { destination in
             switch destination {
             case .quickCard(let id):
@@ -125,10 +148,25 @@ struct AskScreen: View {
         .background(.osaSurface)
     }
 
+    private func observeConnectivity() async {
+        guard let service = connectivityService else { return }
+        connectivity = service.currentState
+        for await state in service.stateStream() {
+            connectivity = state
+        }
+    }
+
+    private func handleImportDismiss() {
+        guard !lastSubmittedQuery.isEmpty else { return }
+        query = lastSubmittedQuery
+        submitQuery()
+    }
+
     private func submitQuery() {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
+        lastSubmittedQuery = trimmed
         askState = .loading
 
         guard let service = retrievalService else {
@@ -321,6 +359,13 @@ private struct CitationRow: View {
 
 private struct RefusalView: View {
     let reason: RefusalReason
+    let connectivity: ConnectivityState
+    let canImport: Bool
+    let onImportTapped: () -> Void
+
+    private var showOnlineOffer: Bool {
+        reason == .insufficientEvidence && connectivity == .onlineUsable && canImport
+    }
 
     var body: some View {
         VStack(spacing: Spacing.md) {
@@ -335,9 +380,42 @@ private struct RefusalView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+
+            if showOnlineOffer {
+                onlineOfferCard
+            } else if reason == .insufficientEvidence && connectivity != .onlineUsable {
+                offlineHint
+            }
         }
         .padding()
         .padding(.top, Spacing.xl)
+    }
+
+    private var onlineOfferCard: some View {
+        VStack(spacing: Spacing.sm) {
+            Button(action: onImportTapped) {
+                Label("Import from Trusted Source", systemImage: "globe")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+
+            Text("Browse approved publishers and import a page for offline use. This does not give the assistant web access.")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.top, Spacing.md)
+    }
+
+    private var offlineHint: some View {
+        HStack(spacing: Spacing.xs) {
+            Image(systemName: connectivity.icon)
+                .font(.caption)
+            Text("Trusted source import available when online.")
+                .font(.caption)
+        }
+        .foregroundStyle(.tertiary)
+        .padding(.top, Spacing.sm)
     }
 
     private var title: String {

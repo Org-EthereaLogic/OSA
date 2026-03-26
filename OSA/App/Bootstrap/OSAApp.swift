@@ -26,6 +26,8 @@ struct OSAApp: App {
                 .environment(\.capabilityDetector, dependencies.capabilityDetector)
                 .environment(\.retrievalService, dependencies.retrievalService)
                 .environment(\.connectivityService, dependencies.connectivityService)
+                .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
+                .environment(\.importPipeline, dependencies.importPipeline)
                 .task {
                     await dependencies.refreshCoordinator.start()
                 }

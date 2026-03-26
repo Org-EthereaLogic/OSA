@@ -44,6 +44,14 @@ private struct ConnectivityServiceKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any ConnectivityService)? = nil
 }
 
+private struct TrustedSourceHTTPClientKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any TrustedSourceHTTPClient)? = nil
+}
+
+private struct ImportPipelineKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: ImportedKnowledgeImportPipeline? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -98,5 +106,15 @@ extension EnvironmentValues {
     var connectivityService: (any ConnectivityService)? {
         get { self[ConnectivityServiceKey.self] }
         set { self[ConnectivityServiceKey.self] = newValue }
+    }
+
+    var trustedSourceHTTPClient: (any TrustedSourceHTTPClient)? {
+        get { self[TrustedSourceHTTPClientKey.self] }
+        set { self[TrustedSourceHTTPClientKey.self] = newValue }
+    }
+
+    var importPipeline: ImportedKnowledgeImportPipeline? {
+        get { self[ImportPipelineKey.self] }
+        set { self[ImportPipelineKey.self] = newValue }
     }
 }
