@@ -1,5 +1,7 @@
 # Lantern
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/789f3082553145829e16ff16dda1f104)](https://app.codacy.com?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Lantern is an offline-first iPhone preparedness app with a grounded local assistant, local-first privacy, and optional trusted-source enrichment that only becomes usable after local persistence and attribution.
 
 The internal repository, Xcode project, target, and scheme still use `OSA` for now. Build and test commands therefore still reference `OSA.xcodeproj` and the `OSA` scheme.
