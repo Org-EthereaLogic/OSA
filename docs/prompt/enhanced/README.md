@@ -11,6 +11,8 @@ Curated prompts and prompt-derived documents.
 - `21-checklist-swiftdata-runtime-investigation-and-test-recovery-enhanced-prompt.md` captures the investigation and recovery plan for the checklist SwiftData runtime crash plus the remaining safety and UI test regressions.
 - `22-checklist-swiftdata-container-lifetime-final-report-enhanced-prompt.md` preserves the verified final report showing that the checklist crash was caused by test-only `ModelContainer` lifetime loss, not a production SwiftData relationship-graph defect.
 - `23-app-bundle-seed-content-packaging-and-full-launch-validation-enhanced-prompt.md` captures the immediate packaging fix for bundled seed content, the required cold-launch validation pass, and the preserved M4 dependency sequence that follows once the offline app baseline is stable.
+- `24-coresimulator-restart-blocker-and-launch-validation-enhanced-prompt.md` preserves the simulator-service blocker that must be cleared before launch validation evidence can be trusted.
+- `25-simulator-screen-audit-and-m4-parallel-start-enhanced-prompt.md` captures the screenshot-backed screen audit that determines whether OSA has a solid offline baseline or should do UI hardening before starting `M4P1 ConnectivityService` and `M4P2 import domain models` in parallel.
 
 ## Rules
 
