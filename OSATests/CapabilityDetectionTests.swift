@@ -5,12 +5,15 @@ final class CapabilityDetectionTests: XCTestCase {
 
     // MARK: - DeviceCapabilityDetector Tests
 
-    func testDetectorReturnsExtractiveOnCurrentPlatform() {
-        // On the current SDK/simulator (no FoundationModels), the detector
-        // should return extractiveOnly since #if canImport(FoundationModels) is false.
+    func testDetectorReturnsValidModeOnCurrentPlatform() {
+        // The detector should return a valid answer mode based on the platform's
+        // Foundation Models availability. On iOS 26.4+ simulators this may be
+        // .groundedGeneration; on earlier SDKs it will be .extractiveOnly.
         let detector = DeviceCapabilityDetector()
         let mode = detector.detectAnswerMode()
-        XCTAssertEqual(mode, .extractiveOnly)
+        let validModes: Set<AnswerMode> = [.extractiveOnly, .groundedGeneration]
+        XCTAssertTrue(validModes.contains(mode),
+                      "Detector should return extractiveOnly or groundedGeneration, got \(mode)")
     }
 
     // MARK: - Stub Capability Detector Tests

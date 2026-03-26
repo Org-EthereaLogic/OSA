@@ -132,10 +132,11 @@ struct AskScreen: View {
         }
 
         let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: includePersonalNotes)
+        nonisolated(unsafe) let sendableService = service
 
         Task {
             do {
-                let outcome = try await service.retrieve(query: trimmed, scopes: scopes)
+                let outcome = try await sendableService.retrieve(query: trimmed, scopes: scopes)
                 await MainActor.run {
                     switch outcome {
                     case .answered(let result):
