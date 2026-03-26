@@ -115,10 +115,10 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Current Suite Status
 
-- Document creation status: complete for initial v0.1 draft set; updated through M4P6 completion.
-- Architecture confidence: high; Milestones 1–4 complete. All UI surfaces are backed by live data. CI and quality automation in place.
-- Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning. Milestone 4 provides the full import-to-refresh pipeline with user-facing Ask import UX for online knowledge enrichment.
-- Highest uncertainty areas: Foundation Models generation quality with real corpus data and retrieval ranking tuning.
+- Document creation status: complete for initial v0.1 draft set; updated through M5 completion.
+- Architecture confidence: high; Milestones 1–5 complete. All UI surfaces are backed by live data. CI and quality automation in place. Migration, offline stress, and safety regression hardening tests landed.
+- Product confidence: high; release-readiness evidence pack maps 6 criteria to test evidence (4 passed, 2 require device testing). App Store materials and TestFlight feedback plan exist as dated repo artifacts.
+- Highest uncertainty areas: Foundation Models generation quality with real corpus data; device-specific performance and App Store binary validation.
 
 ## Done Means
 

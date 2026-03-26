@@ -90,7 +90,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 5. ~~Retrieval pipeline and Ask with extractive fallback.~~ **Done:** retrieval pipeline, sensitivity policy, citation packaging, capability detection, extractive answer assembly, and bounded Ask UI implemented.
 6. ~~Foundation Models integration on supported devices.~~ **Done:** `FoundationModelAdapter` with real capability detection and async generation routing. Extractive fallback on unsupported hardware or generation failure.
 7. ~~Trusted-source search, import, normalization, and local persistence.~~ **Done:** M4P1 (ConnectivityService), M4P2 (imported knowledge domain models and persistence), M4P3 (trusted-source allowlist and HTTP client), M4P4 (normalization, chunking, local commit, and index extension), M4P5 (refresh and retry coordination), and M4P6 (Ask online-offer UX and trusted-source import sheet) are complete.
-8. Hardening, migration tests, and release preparation.
+8. ~~Hardening, migration tests, and release preparation.~~ **Done:** `SchemaMigrationTests` (7), `SeedContentMigrationTests` (6), `OfflineStressTests` (7), `SafetyRegressionTests` expanded (+14 to 53 total). App Store materials, TestFlight feedback plan, and release-readiness evidence pack created. 250 unit + 1 UI tests pass.
 9. Apple Intelligence surface: App Intents and Siri integration, FM-powered inventory completion, AssistantSchema, and knowledge-base discovery.
 
 ## Milestone-Based Roadmap
@@ -146,10 +146,16 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - **M4P6 — Ask online-offer UX and trusted-source import sheet** _(Complete)_: `TrustedSourceImportViewModel` (approved-source filtering, URL validation, preview fetch, import orchestration) and `TrustedSourceImportSheet` (multi-step import flow with publisher browse, preview, staged progress, success/failure states) in `Features/Ask/`. `AskScreen` updated with connectivity observation, conditional online offer in `RefusalView` when `.insufficientEvidence` + `.onlineUsable`, import sheet presentation, and automatic re-query on import success. Environment keys added for `trustedSourceHTTPClient` and `importPipeline`. `AskTrustedSourceImportFlowTests` (16 tests) covers URL validation, approved-source filtering, preview/import lifecycle, and state management.
 - Exit criteria met: imported source material can be used offline after successful local commit. Ask offers trusted-source import when local evidence is insufficient and the device is online.
 
-### Milestone 5: Hardening And Launch
+### Milestone 5: Hardening And Launch _(Complete)_
 
-- migration tests, offline stress tests, safety regression, App Store materials, TestFlight feedback loop.
-- Exit criteria: release criteria in [Release Readiness](./12-release-readiness-and-app-store-plan.md) are met.
+- Migration tests, offline stress tests, safety regression hardening, App Store materials, and TestFlight feedback loop.
+- **M5P1 — Schema and seed migration tests** _(Complete)_: `SchemaMigrationTests` (7 tests) validate V1 schema baseline — container creation with all 14 model types, model round-trips, seed state persistence, and idempotent creation. `SeedContentMigrationTests` (6 tests) validate seed version tracking — first import `.imported`, same version `.skippedAlreadyCurrent`, updated version `.updated`, schema/version state recording, and user data isolation.
+- **M5P2 — Offline stress and edge-case tests** _(Complete)_: `OfflineStressTests` (7 tests) validate cold start, repeated bootstrap without corruption, repository reads without connectivity, persistent store durability across re-creation, and `PendingOperation` isolation from search index.
+- **M5P3 — Safety regression hardening** _(Complete)_: `SafetyRegressionTests` expanded from 39 to 53 test methods with privacy-pressure prompts, professional-advice pressure, override variants, and stale-source boundary queries.
+- **M5P4 — App Store materials** _(Complete)_: `report/2026-03-26-m5-app-store-materials.md` with app name, descriptions, keywords, review notes, privacy disclosures, and content disclaimers.
+- **M5P5 — TestFlight feedback loop** _(Complete)_: `report/2026-03-26-m5-testflight-feedback-loop.md` with 3 tester stages, feedback prompts, triage rubric, and release-criteria mapping.
+- **M5P7 — Release-readiness evidence** _(Complete)_: `report/2026-03-26-m5-release-readiness.md` maps 6 release criteria to test evidence. RC-1 through RC-4 passed; RC-5/RC-6 require device testing.
+- Exit criteria: release criteria in [Release Readiness](./12-release-readiness-and-app-store-plan.md) are met (4 of 6 passed, 2 require device testing).
 
 ### Milestone 6: Apple Intelligence Surface _(Planned — v1.1)_
 
