@@ -93,6 +93,7 @@ V1 should avoid broad system permissions.
 - Local knowledge and personal data remain device-local by default.
 - Ask uses local retrieval and on-device generation or extractive fallback where available.
 - Users should be able to understand when an online request is about to happen.
+- Siri and Spotlight entity exposure (M6P2) follows privacy-bounded rules: inventory entities exclude archived items and never expose free-form `notes` in display representations or `CSSearchableItemAttributeSet` metadata. Checklist entities resolve templates only, not active runs. No notes or imported-knowledge entities are exposed to system surfaces.
 
 ## Future Sync And Privacy Implications
 

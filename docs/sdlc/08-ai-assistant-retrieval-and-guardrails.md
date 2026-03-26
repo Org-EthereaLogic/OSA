@@ -41,6 +41,8 @@ The assistant exists to help the user navigate and synthesize approved local con
 
 The assistant does not browse the live web directly and does not answer from model priors alone.
 
+Siri and Spotlight can also resolve named domain objects (M6P2): handbook sections, quick cards, checklist templates, and inventory items are exposed as `AppEntity` types with `EntityStringQuery` and `IndexedEntity` conformance. Entity resolution uses the existing FTS5 search index for candidate ranking and domain repositories for hydration. Privacy rules apply: inventory entities exclude archived items and never expose notes; checklist entities resolve templates only.
+
 ## Allowed Tasks
 
 - answer factual questions that are covered by local approved content
