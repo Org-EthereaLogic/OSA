@@ -18,6 +18,7 @@ Curated prompts and prompt-derived documents.
 - `28-m4p5-refresh-and-retry-coordination-enhanced-prompt.md` captures stale-source detection, durable `PendingOperation` retry semantics, and automatic in-app refresh coordination for approved imported sources after M4P4.
 - `30-m4p6-ask-online-offer-and-import-ux-enhanced-prompt.md` captures the Ask-side trusted-source import fallback that appears after insufficient local evidence, reuses the existing allowlist, HTTP client, import pipeline, and connectivity model, and proves imported content becomes available through local Ask retrieval and Library search.
 - `31-milestone-5-hardening-and-launch-enhanced-prompt.md` captures the release-hardening slice after Milestone 4: migration tests, offline stress coverage, safety regression expansion, App Store materials, TestFlight feedback-loop artifacts, and the dated release-readiness evidence pack.
+- `32-testflight-internal-alpha-rc-5-rc-6-device-validation-enhanced-prompt.md` captures the next bounded step after Milestone 5 hardening: Stage 1 internal alpha execution for RC-5 and RC-6, including device-backed performance and privacy validation, evidence capture, and narrow release-readiness updates.
 
 ## Rules
 
