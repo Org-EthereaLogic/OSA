@@ -17,6 +17,7 @@ Curated prompts and prompt-derived documents.
 - `27-m4p3-trusted-source-allowlist-and-http-client-enhanced-prompt.md` captures the first online-enrichment execution slice after M4P1 and M4P2: the launch trusted-source allowlist plus the minimal guarded HTTP client that knows who OSA may fetch from.
 - `28-m4p5-refresh-and-retry-coordination-enhanced-prompt.md` captures stale-source detection, durable `PendingOperation` retry semantics, and automatic in-app refresh coordination for approved imported sources after M4P4.
 - `30-m4p6-ask-online-offer-and-import-ux-enhanced-prompt.md` captures the Ask-side trusted-source import fallback that appears after insufficient local evidence, reuses the existing allowlist, HTTP client, import pipeline, and connectivity model, and proves imported content becomes available through local Ask retrieval and Library search.
+- `31-milestone-5-hardening-and-launch-enhanced-prompt.md` captures the release-hardening slice after Milestone 4: migration tests, offline stress coverage, safety regression expansion, App Store materials, TestFlight feedback-loop artifacts, and the dated release-readiness evidence pack.
 
 ## Rules
 
