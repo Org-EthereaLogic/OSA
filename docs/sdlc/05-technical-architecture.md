@@ -90,7 +90,7 @@ Recommended module or target boundaries even if v1 starts in a single app target
 - `Persistence`: SwiftData models, migrations, repository implementations.
 - `Retrieval`: query normalization, ranking. Chunking and Citations subdirs are stubs for future work.
 - `Assistant`: prompt policies (`Policy/`), prompt shaping (`PromptShaping/`), model adapters (`ModelAdapters/`). Orchestration and Formatting subdirs are stubs for future work.
-- `Networking`: M4P1 `ConnectivityService` with `NWPathMonitor` implemented in `Clients/`. Import domain models (`SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, `PendingOperation`) implemented in `Domain/ImportedKnowledge/` and `Persistence/SwiftData/`. `ImportPipeline/` and `Refresh/` remain scaffolded for M4P3+.
+- `Networking`: M4P1 `ConnectivityService` with `NWPathMonitor` implemented in `Clients/`. M4P3 adds `TrustedSourceAllowlist` (15 launch publishers, three trust tiers), `TrustedSourceHTTPClient` protocol, and `URLSessionTrustedSourceHTTPClient` implementation in `Clients/`, plus `TrustedSourceFetchResponse` DTO in `DTOs/`. Import domain models (`SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, `PendingOperation`) implemented in `Domain/ImportedKnowledge/` and `Persistence/SwiftData/`. `ImportPipeline/` and `Refresh/` remain scaffolded for M4P4+.
 - `Shared`: logging, capability checks, feature flags, utilities.
 
 The boundary matters more than the literal number of Xcode targets; a single target with clean folders and protocols is acceptable for v1.

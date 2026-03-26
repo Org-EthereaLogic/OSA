@@ -67,10 +67,10 @@ V1 recommendation:
 
 ## Network Security Assumptions
 
-- Use App Transport Security-compliant TLS connections only.
-- Restrict network calls to trusted source domains or approved endpoints.
-- Validate content type and size before full import where possible.
-- Treat all remote content as untrusted until normalized and approved locally.
+- Use App Transport Security-compliant TLS connections only (HTTPS scheme required by `TrustedSourceHTTPClient`).
+- Restrict network calls to trusted source domains via `TrustedSourceAllowlist` (exact host matching against 15 approved publishers, no wildcard rules).
+- Validate HTTPS scheme, allowlist membership, HTTP status (2xx), Content-Type (text/html, text/plain, application/xhtml+xml), payload size (≤2 MB), and post-redirect host before accepting a fetch response.
+- Treat all remote content as untrusted until normalized and approved locally; raw fetch responses (`TrustedSourceFetchResponse`) carry bytes and metadata only and do not claim approval or indexing.
 
 ## Secret Handling
 

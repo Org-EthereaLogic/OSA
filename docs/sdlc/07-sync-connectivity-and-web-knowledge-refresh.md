@@ -10,6 +10,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Data Mo
 - Imported or refreshed knowledge must become locally available for future offline use.
 - M4P1 ConnectivityService is implemented: `NWPathMonitorConnectivityService` in `OSA/Networking/Clients/` wraps `NWPathMonitor`, publishes `ConnectivityState` reactively, and is injected via SwiftUI environment.
 - M4P2 imported knowledge domain models and persistence are implemented: `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and `PendingOperation` with SwiftData persistence, cascade relationships, and repository protocols.
+- M4P3 trusted-source allowlist and HTTP client are implemented: `TrustedSourceAllowlist` enumerates 15 PNW-focused approved publishers across three trust tiers (curated/approved, community/approved, unverified/pending). `TrustedSourceHTTPClient` protocol defines the fetch contract; `URLSessionTrustedSourceHTTPClient` provides the live implementation with connectivity, HTTPS, allowlist, status, content-type, size, and post-redirect guards. `TrustedSourceFetchResponse` carries raw fetch metadata and body.
 
 ## Assumptions
 
@@ -220,6 +221,6 @@ sequenceDiagram
 
 ## Next-Step Recommendations
 
-1. ~~Define the first trusted-source allowlist and trust tiers.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused survival and preparedness sources. Tier 1–2 auto-approve; Tier 3 and user-added flagged for review.
-2. Add `PendingOperation` and source freshness fields to the first persistence schema.
-3. Prototype the import pipeline with one text-based source before supporting more complex formats.
+1. ~~Define the first trusted-source allowlist and trust tiers.~~ **Complete:** Three-tier allowlist implemented in `TrustedSourceAllowlist` with 15 PNW-focused sources. Tier 1–2 curated/community with `.approved` status; Tier 3 unverified with `.pending` status. Exact host matching, no wildcards.
+2. ~~Add `PendingOperation` and source freshness fields to the first persistence schema.~~ **Complete:** Implemented in M4P2.
+3. ~~Implement trusted-source HTTP client with fetch guards.~~ **Complete:** M4P3 `URLSessionTrustedSourceHTTPClient` enforces connectivity, HTTPS, allowlist, HTTP status, content-type, payload size, and post-redirect host validation. Next: prototype the import pipeline (M4P4+).

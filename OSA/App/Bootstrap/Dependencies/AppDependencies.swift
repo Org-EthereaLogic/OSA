@@ -13,6 +13,7 @@ struct AppDependencies {
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
     let connectivityService: any ConnectivityService
+    let trustedSourceHTTPClient: any TrustedSourceHTTPClient
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -41,6 +42,10 @@ struct AppDependencies {
         let connectivityService = NWPathMonitorConnectivityService()
         connectivityService.start()
 
+        let trustedSourceHTTPClient = URLSessionTrustedSourceHTTPClient(
+            connectivityService: connectivityService
+        )
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -53,7 +58,8 @@ struct AppDependencies {
             capabilityDetector: capabilityDetector,
             searchService: searchService,
             retrievalService: retrievalService,
-            connectivityService: connectivityService
+            connectivityService: connectivityService,
+            trustedSourceHTTPClient: trustedSourceHTTPClient
         )
     }
 
