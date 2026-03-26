@@ -22,7 +22,11 @@ enum AppModelContainer {
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
             PersistedChecklistRunItem.self,
-            PersistedNoteRecord.self
+            PersistedNoteRecord.self,
+            PersistedSourceRecord.self,
+            PersistedImportedKnowledgeDocument.self,
+            PersistedKnowledgeChunk.self,
+            PersistedPendingOperation.self
         ])
         let isTestHost = ProcessInfo.processInfo.isRunningTests
         let modelConfiguration = ModelConfiguration(

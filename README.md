@@ -1,6 +1,8 @@
-# OSA
+# Lantern
 
-OSA is an offline-first iPhone preparedness app with a grounded local assistant, local-first privacy, and optional trusted-source enrichment that only becomes usable after local persistence and attribution.
+Lantern is an offline-first iPhone preparedness app with a grounded local assistant, local-first privacy, and optional trusted-source enrichment that only becomes usable after local persistence and attribution.
+
+The internal repository, Xcode project, target, and scheme still use `OSA` for now. Build and test commands therefore still reference `OSA.xcodeproj` and the `OSA` scheme.
 
 ## Source Precedence
 

@@ -35,8 +35,13 @@ struct HomeScreen: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             HStack {
-                Text("OSA")
-                    .font(.largeTitle.bold())
+                VStack(alignment: .leading, spacing: Spacing.xxs) {
+                    Text(AppBrand.displayName)
+                        .font(.largeTitle.bold())
+                    Text(AppBrand.subtitle)
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                }
                 Spacer()
                 ConnectivityBadge(state: .offline)
             }

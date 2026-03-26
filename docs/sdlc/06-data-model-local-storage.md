@@ -11,6 +11,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - The first editorial-content persistence slice is now implemented: SwiftData models for `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
 - User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
 - A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types.
+- Imported knowledge persistence is now implemented: `PersistedSourceRecord`, `PersistedImportedKnowledgeDocument`, `PersistedKnowledgeChunk`, and `PersistedPendingOperation` SwiftData models with cascade relationships; domain value types and enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`); `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations; and repository-contract tests for both repositories.
 
 ## Assumptions
 
@@ -281,7 +282,7 @@ The more general SwiftData-backed settings entity remains deferred. `AskScopeSet
 - `numberValue` optional
 - `updatedAt`
 
-### PendingOperation _(deferred to M4 — Online Enrichment)_
+### PendingOperation _(M4P2 — Complete)_
 
 - `id`
 - `operationType`

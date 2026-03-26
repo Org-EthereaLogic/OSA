@@ -18,6 +18,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - Milestone 3 Phase 3 (Capability detection and model adapter) is implemented: real runtime detection via `DeviceCapabilityDetector` using `#if canImport(FoundationModels)` and `SystemLanguageModel.default.availability`, `GroundedAnswerGenerator` protocol, `FoundationModelAdapter` concrete implementation behind compile-time guards, `LocalRetrievalService` async routing with automatic extractive fallback on generation failure. `CapabilityDetectionTests` covers both capability paths, generation failure fallback, and citation integrity.
 - Milestone 3 Phase 5 (Assistant policy, prompt shaping, and safety guardrails) is implemented: `GroundedPromptBuilder` dedicated prompt-shaping layer with grounding rules, citation requirements, scope limits, safety boundaries, style constraints, and override protection. `SensitivityPolicy` extended with phrase-based and keyword-based prompt injection detection. `FoundationModelAdapter` delegates all prompt construction to `GroundedPromptBuilder`. `SafetyRegressionTests` covers jailbreak phrasing, scope overrides, mixed-intent prompts, routing verification, deterministic refusal, and privacy-bounded refusal reasons. `GroundedPromptBuilderTests` verifies all prompt sections. `SensitivityPolicyTests` expanded with adversarial variants.
 - M3 Polish sprint is complete: HomeScreen wired to live repositories (quick cards, active checklists, inventory reminders, recent notes from real data), SettingsScreen shows real capability detection via `capabilityDetector` environment key, AskScreen has `navigationDestination` routing to `QuickCardRouteView` and `HandbookSectionDetailView`, and `AskScopeSettings` (`@AppStorage`-backed) controls the personal-notes-in-Ask toggle across both AskScreen and SettingsScreen. Seed corpus expanded to 11 chapters with 35 sections and 14 quick cards with content hashes populated.
+- Milestone 4 Phase 1 (ConnectivityService) is implemented: `ConnectivityService` protocol with `NWPathMonitor` in `OSA/Networking/Clients/`, reactive state publishing, sync-in-progress override, and SwiftUI environment injection. `ConnectivityServiceTests` (19 tests) covers state transitions and multicasting.
+- Milestone 4 Phase 2 (Import domain models and persistence) is implemented: `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and `PendingOperation` domain models with SwiftData persistence, cascade relationships, and repository protocols. `ImportedKnowledgeRepositoryTests` (28 tests) and `PendingOperationRepositoryTests` (13 tests) verify CRUD, relationships, and queue management.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -108,10 +110,10 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Current Suite Status
 
-- Document creation status: complete for initial v0.1 draft set.
-- Architecture confidence: high; Milestones 1–3 are complete including the M3 polish sprint (Home wired to live repositories, Settings with real capability detection, Ask with navigation routing and scope settings). All UI surfaces are backed by live data.
-- Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning.
-- Highest uncertainty areas: Foundation Models generation quality with real corpus data and retrieval ranking tuning.
+- Document creation status: complete for initial v0.1 draft set; updated for M4P1 and M4P2 completion.
+- Architecture confidence: high; Milestones 1–3 complete, M4P1–P2 complete (ConnectivityService and imported knowledge domain models/persistence). All UI surfaces are backed by live data.
+- Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning. M4P1–P2 provide the foundation for online knowledge import.
+- Highest uncertainty areas: M4P3 import pipeline normalization and chunking quality; Foundation Models generation quality with real corpus data and retrieval ranking tuning.
 
 ## Done Means
 
@@ -126,3 +128,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. ~~Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.~~ **Done:** Handbook pack expanded to 11 chapters with 35 sections, quick-card pack to 14 cards, content hashes populated in SeedManifest.json v0.3.1. Two planned chapters (Local Notes/Maps, Archery/Longbow) deferred.
 4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **Done:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI), M3P3 (real device capability detection, Foundation Models generation adapter, async retrieval routing, extractive fallback), and M3P5 (prompt shaping layer, prompt injection detection, safety regression tests) are implemented. Milestone 3 core implementation is complete.
+5. ~~Implement M4P1 (ConnectivityService) and M4P2 (import domain models and persistence).~~ **Done:** M4P1 and M4P2 are complete. Proceed with M4P3 (trusted-source allowlist and HTTP client).

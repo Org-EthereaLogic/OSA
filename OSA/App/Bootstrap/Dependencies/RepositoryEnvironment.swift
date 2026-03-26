@@ -32,6 +32,18 @@ private struct RetrievalServiceKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any RetrievalService)? = nil
 }
 
+private struct ImportedKnowledgeRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any ImportedKnowledgeRepository)? = nil
+}
+
+private struct PendingOperationRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any PendingOperationRepository)? = nil
+}
+
+private struct ConnectivityServiceKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any ConnectivityService)? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -71,5 +83,20 @@ extension EnvironmentValues {
     var retrievalService: (any RetrievalService)? {
         get { self[RetrievalServiceKey.self] }
         set { self[RetrievalServiceKey.self] = newValue }
+    }
+
+    var importedKnowledgeRepository: (any ImportedKnowledgeRepository)? {
+        get { self[ImportedKnowledgeRepositoryKey.self] }
+        set { self[ImportedKnowledgeRepositoryKey.self] = newValue }
+    }
+
+    var pendingOperationRepository: (any PendingOperationRepository)? {
+        get { self[PendingOperationRepositoryKey.self] }
+        set { self[PendingOperationRepositoryKey.self] = newValue }
+    }
+
+    var connectivityService: (any ConnectivityService)? {
+        get { self[ConnectivityServiceKey.self] }
+        set { self[ConnectivityServiceKey.self] = newValue }
     }
 }

@@ -8,6 +8,8 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Data Mo
 - Core product functionality must continue to work offline.
 - Online capabilities are optional enrichments, not dependencies for core flows.
 - Imported or refreshed knowledge must become locally available for future offline use.
+- M4P1 ConnectivityService is implemented: `NWPathMonitorConnectivityService` in `OSA/Networking/Clients/` wraps `NWPathMonitor`, publishes `ConnectivityState` reactively, and is injected via SwiftUI environment.
+- M4P2 imported knowledge domain models and persistence are implemented: `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and `PendingOperation` with SwiftData persistence, cascade relationships, and repository protocols.
 
 ## Assumptions
 

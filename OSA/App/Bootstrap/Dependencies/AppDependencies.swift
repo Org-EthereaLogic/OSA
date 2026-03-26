@@ -7,9 +7,12 @@ struct AppDependencies {
     let inventoryRepository: any InventoryRepository
     let checklistRepository: any ChecklistRepository
     let noteRepository: any NoteRepository
+    let importedKnowledgeRepository: any ImportedKnowledgeRepository
+    let pendingOperationRepository: any PendingOperationRepository
     let capabilityDetector: any CapabilityDetector
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
+    let connectivityService: any ConnectivityService
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -17,6 +20,8 @@ struct AppDependencies {
         let inventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
         let checklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
         let noteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
+        let importedKnowledgeRepository = SwiftDataImportedKnowledgeRepository(modelContext: modelContainer.mainContext)
+        let pendingOperationRepository = SwiftDataPendingOperationRepository(modelContext: modelContainer.mainContext)
         let searchService = try? LocalSearchService.makeDefault()
 
         let capabilityDetector = DeviceCapabilityDetector()
@@ -33,6 +38,9 @@ struct AppDependencies {
             )
         }
 
+        let connectivityService = NWPathMonitorConnectivityService()
+        connectivityService.start()
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -40,9 +48,12 @@ struct AppDependencies {
             inventoryRepository: inventoryRepository,
             checklistRepository: checklistRepository,
             noteRepository: noteRepository,
+            importedKnowledgeRepository: importedKnowledgeRepository,
+            pendingOperationRepository: pendingOperationRepository,
             capabilityDetector: capabilityDetector,
             searchService: searchService,
-            retrievalService: retrievalService
+            retrievalService: retrievalService,
+            connectivityService: connectivityService
         )
     }
 

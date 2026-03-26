@@ -20,9 +20,12 @@ struct OSAApp: App {
                 .environment(\.inventoryRepository, dependencies.inventoryRepository)
                 .environment(\.checklistRepository, dependencies.checklistRepository)
                 .environment(\.noteRepository, dependencies.noteRepository)
+                .environment(\.importedKnowledgeRepository, dependencies.importedKnowledgeRepository)
+                .environment(\.pendingOperationRepository, dependencies.pendingOperationRepository)
                 .environment(\.searchService, dependencies.searchService)
                 .environment(\.capabilityDetector, dependencies.capabilityDetector)
                 .environment(\.retrievalService, dependencies.retrievalService)
+                .environment(\.connectivityService, dependencies.connectivityService)
         }
         .modelContainer(sharedModelContainer)
     }

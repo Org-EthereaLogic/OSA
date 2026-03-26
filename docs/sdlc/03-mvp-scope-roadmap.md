@@ -87,7 +87,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 4. ~~Inventory, checklists, and notes.~~ **Done:** domain models, repository protocols, SwiftData persistence, CRUD UI, and FTS5 search index implemented.
 5. ~~Retrieval pipeline and Ask with extractive fallback.~~ **Done:** retrieval pipeline, sensitivity policy, citation packaging, capability detection, extractive answer assembly, and bounded Ask UI implemented.
 6. ~~Foundation Models integration on supported devices.~~ **Done:** `FoundationModelAdapter` with real capability detection and async generation routing. Extractive fallback on unsupported hardware or generation failure.
-7. Trusted-source search, import, normalization, and local persistence.
+7. ~~Trusted-source search, import, normalization, and local persistence.~~ **In Progress:** M4P1 (ConnectivityService) and M4P2 (imported knowledge domain models and persistence) are complete. M4P3–P6 to follow.
 8. Hardening, migration tests, and release preparation.
 
 ## Milestone-Based Roadmap
@@ -132,9 +132,11 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - `AskScopeSettings` (`@AppStorage`-backed) controls personal-notes-in-Ask toggle across AskScreen and SettingsScreen.
 - Seed corpus expanded: 11 handbook chapters with 35 sections, 14 quick cards, content hashes populated in SeedManifest.json v0.3.1.
 
-### Milestone 4: Online Enrichment
+### Milestone 4: Online Enrichment _(In Progress)_
 
 - Trusted-source discovery, user approval, import pipeline, local indexing, and offline reuse of imported knowledge.
+- **M4P1 — ConnectivityService** _(Complete)_: `ConnectivityService` protocol with `NWPathMonitor` implementation, reactive state publishing, sync-in-progress override, and SwiftUI environment injection. `ConnectivityServiceTests` (19 tests) covers state transitions, stream multicasting, and sync override.
+- **M4P2 — Import domain models and persistence** _(Complete)_: `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and `PendingOperation` domain value types with supporting enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`). SwiftData persisted models with cascade relationships (`PersistedSourceRecord` → `PersistedImportedKnowledgeDocument` → `PersistedKnowledgeChunk`). `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations. Repository-contract tests (28 + 13 = 41 tests).
 - Exit criteria: imported source material can be used offline after successful local commit.
 
 ### Milestone 5: Hardening And Launch
@@ -162,6 +164,9 @@ flowchart TD
     E --> K
     A --> K
     K --> D
+    L[Connectivity Service] --> K
+    M[Imported Knowledge Schema] --> K
+    M --> D
 ```
 
 ## Done Means
@@ -172,6 +177,6 @@ flowchart TD
 
 ## Next-Step Recommendations
 
-1. ~~Turn Milestones 1 and 2 into the first implementation backlog.~~ **Done:** Milestones 1 and 2 are complete. Milestone 3 is in progress.
-2. Freeze one supported source format for the initial import prototype.
+1. ~~Turn Milestones 1 and 2 into the first implementation backlog.~~ **Done:** Milestones 1–3 are complete. Milestone 4 is in progress.
+2. ~~Freeze one supported source format for the initial import prototype.~~ **In Progress:** M4P1 (ConnectivityService) and M4P2 (import domain models and persistence) are complete. M4P3 (trusted-source allowlist and HTTP client) is next.
 3. ~~Avoid starting Ask generation work before retrieval and citations are demonstrably correct.~~ **Done:** M3P1 retrieval pipeline with citations is implemented and tested. M3P3 (Foundation Models generation adapter with capability detection) is implemented with automatic extractive fallback. M3P5 (prompt shaping, prompt injection detection, and safety regression tests) is complete.

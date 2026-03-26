@@ -176,7 +176,11 @@ final class ChecklistRepositoryTests: XCTestCase {
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
             PersistedChecklistRunItem.self,
-            PersistedNoteRecord.self
+            PersistedNoteRecord.self,
+            PersistedSourceRecord.self,
+            PersistedImportedKnowledgeDocument.self,
+            PersistedKnowledgeChunk.self,
+            PersistedPendingOperation.self
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: [configuration])

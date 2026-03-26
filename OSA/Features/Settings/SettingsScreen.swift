@@ -39,6 +39,16 @@ struct SettingsScreen: View {
             }
 
             Section("About") {
+                LabeledContent("App") {
+                    VStack(alignment: .trailing, spacing: Spacing.xxs) {
+                        Text(AppBrand.displayName)
+                            .foregroundStyle(.secondary)
+                        Text(AppBrand.subtitle)
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
                 LabeledContent("Version") {
                     Text("0.1.0")
                         .foregroundStyle(.secondary)

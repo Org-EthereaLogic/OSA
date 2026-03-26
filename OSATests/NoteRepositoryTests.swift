@@ -4,8 +4,42 @@ import XCTest
 
 @MainActor
 final class NoteRepositoryTests: XCTestCase {
+
+    private static var sharedContainer: ModelContainer = {
+        let schema = Schema([
+            PersistedHandbookChapter.self,
+            PersistedHandbookSection.self,
+            PersistedQuickCard.self,
+            PersistedSeedContentState.self,
+            PersistedInventoryItem.self,
+            PersistedChecklistTemplate.self,
+            PersistedChecklistTemplateItem.self,
+            PersistedChecklistRun.self,
+            PersistedChecklistRunItem.self,
+            PersistedNoteRecord.self,
+            PersistedSourceRecord.self,
+            PersistedImportedKnowledgeDocument.self,
+            PersistedKnowledgeChunk.self,
+            PersistedPendingOperation.self
+        ])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        return try! ModelContainer(for: schema, configurations: [configuration])
+    }()
+
+    private func makeRepository() -> SwiftDataNoteRepository {
+        SwiftDataNoteRepository(modelContext: Self.sharedContainer.mainContext)
+    }
+
+    private func cleanStore() throws {
+        let context = Self.sharedContainer.mainContext
+        let notes = try context.fetch(FetchDescriptor<PersistedNoteRecord>())
+        for note in notes { context.delete(note) }
+        try context.save()
+    }
+
     func testCreateAndListNotes() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let note = makeNote(title: "Emergency Contacts", noteType: .familyPlan)
         try repository.createNote(note)
@@ -17,7 +51,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testNoteByID() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let note = makeNote(title: "Meeting Points", noteType: .personal)
         try repository.createNote(note)
@@ -27,7 +62,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testUpdateNote() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         var note = makeNote(title: "Draft", noteType: .personal)
         try repository.createNote(note)
@@ -44,7 +80,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testDeleteNote() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let note = makeNote(title: "To Delete", noteType: .personal)
         try repository.createNote(note)
@@ -55,7 +92,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testFilterByType() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         try repository.createNote(makeNote(title: "Personal Note", noteType: .personal))
         try repository.createNote(makeNote(title: "Family Plan", noteType: .familyPlan))
@@ -71,7 +109,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testRecentNotes() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let older = makeNote(title: "Older", noteType: .personal, updatedAt: Date(timeIntervalSince1970: 1_000_000))
         let newer = makeNote(title: "Newer", noteType: .personal, updatedAt: Date(timeIntervalSince1970: 2_000_000))
@@ -85,7 +124,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testNotesLinkedToSection() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let sectionID = UUID()
         let linked = makeNote(title: "Linked", noteType: .personal, linkedSectionIDs: [sectionID])
@@ -100,7 +140,8 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     func testNotesLinkedToInventoryItem() throws {
-        let repository = try makeRepository()
+        try cleanStore()
+        let repository = makeRepository()
 
         let itemID = UUID()
         let linked = makeNote(title: "Linked", noteType: .personal, linkedInventoryItemIDs: [itemID])
@@ -115,13 +156,6 @@ final class NoteRepositoryTests: XCTestCase {
     }
 
     // MARK: - Helpers
-
-    private func makeRepository() throws -> SwiftDataNoteRepository {
-        let schema = Schema([PersistedNoteRecord.self])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [configuration])
-        return SwiftDataNoteRepository(modelContext: container.mainContext)
-    }
 
     private func makeNote(
         title: String,
