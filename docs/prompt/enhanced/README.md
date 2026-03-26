@@ -15,6 +15,7 @@ Curated prompts and prompt-derived documents.
 - `25-simulator-screen-audit-and-m4-parallel-start-enhanced-prompt.md` captures the screenshot-backed screen audit that determines whether OSA has a solid offline baseline or should do UI hardening before starting `M4P1 ConnectivityService` and `M4P2 import domain models` in parallel.
 - `26-headless-sidebar-audit-blockers-final-report-enhanced-prompt.md` preserves the executed screen-audit limitations on a headless Mac mini, including the unverified `More` surfaces behind `.sidebarAdaptable` and the non-functional `AssetCatalogSimulatorAgent` asset-compilation issue.
 - `27-m4p3-trusted-source-allowlist-and-http-client-enhanced-prompt.md` captures the first online-enrichment execution slice after M4P1 and M4P2: the launch trusted-source allowlist plus the minimal guarded HTTP client that knows who OSA may fetch from.
+- `28-m4p5-refresh-and-retry-coordination-enhanced-prompt.md` captures stale-source detection, durable `PendingOperation` retry semantics, and automatic in-app refresh coordination for approved imported sources after M4P4.
 
 ## Rules
 

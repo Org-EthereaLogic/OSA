@@ -26,6 +26,9 @@ struct OSAApp: App {
                 .environment(\.capabilityDetector, dependencies.capabilityDetector)
                 .environment(\.retrievalService, dependencies.retrievalService)
                 .environment(\.connectivityService, dependencies.connectivityService)
+                .task {
+                    await dependencies.refreshCoordinator.start()
+                }
         }
         .modelContainer(sharedModelContainer)
     }

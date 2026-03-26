@@ -15,6 +15,7 @@ struct AppDependencies {
     let connectivityService: any ConnectivityService
     let trustedSourceHTTPClient: any TrustedSourceHTTPClient
     let importPipeline: ImportedKnowledgeImportPipeline
+    let refreshCoordinator: ImportedKnowledgeRefreshCoordinator
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -52,6 +53,14 @@ struct AppDependencies {
             searchService: searchService
         )
 
+        let refreshCoordinator = ImportedKnowledgeRefreshCoordinator(
+            importedKnowledgeRepository: importedKnowledgeRepository,
+            pendingOperationRepository: pendingOperationRepository,
+            connectivityService: connectivityService,
+            httpClient: trustedSourceHTTPClient,
+            importPipeline: importPipeline
+        )
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -66,7 +75,8 @@ struct AppDependencies {
             retrievalService: retrievalService,
             connectivityService: connectivityService,
             trustedSourceHTTPClient: trustedSourceHTTPClient,
-            importPipeline: importPipeline
+            importPipeline: importPipeline,
+            refreshCoordinator: refreshCoordinator
         )
     }
 

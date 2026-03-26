@@ -87,7 +87,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 4. ~~Inventory, checklists, and notes.~~ **Done:** domain models, repository protocols, SwiftData persistence, CRUD UI, and FTS5 search index implemented.
 5. ~~Retrieval pipeline and Ask with extractive fallback.~~ **Done:** retrieval pipeline, sensitivity policy, citation packaging, capability detection, extractive answer assembly, and bounded Ask UI implemented.
 6. ~~Foundation Models integration on supported devices.~~ **Done:** `FoundationModelAdapter` with real capability detection and async generation routing. Extractive fallback on unsupported hardware or generation failure.
-7. ~~Trusted-source search, import, normalization, and local persistence.~~ **In Progress:** M4P1 (ConnectivityService), M4P2 (imported knowledge domain models and persistence), M4P3 (trusted-source allowlist and HTTP client), and M4P4 (normalization, chunking, local commit, and index extension) are complete. M4P5–P6 to follow.
+7. ~~Trusted-source search, import, normalization, and local persistence.~~ **In Progress:** M4P1 (ConnectivityService), M4P2 (imported knowledge domain models and persistence), M4P3 (trusted-source allowlist and HTTP client), M4P4 (normalization, chunking, local commit, and index extension), and M4P5 (refresh and retry coordination) are complete. M4P6 to follow.
 8. Hardening, migration tests, and release preparation.
 
 ## Milestone-Based Roadmap

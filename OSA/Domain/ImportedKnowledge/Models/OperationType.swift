@@ -6,4 +6,5 @@ enum OperationType: String, Codable, CaseIterable, Equatable, Sendable {
     case normalize
     case chunk
     case index
+    case refreshKnownSource
 }
