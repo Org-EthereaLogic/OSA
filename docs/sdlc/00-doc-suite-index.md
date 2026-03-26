@@ -23,6 +23,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - Milestone 4 Phase 3 (Trusted-source allowlist and HTTP client) is implemented: `TrustedSourceAllowlist` with 15 PNW-focused publishers across three trust tiers, `TrustedSourceHTTPClient` protocol with `URLSessionTrustedSourceHTTPClient` in `Clients/`, and `TrustedSourceFetchResponse` DTO. `TrustedSourceAllowlistTests` (9 tests) and `TrustedSourceHTTPClientTests` (10 tests) verify tier resolution, fetch lifecycle, and security enforcement.
 - Milestone 4 Phase 4 (Import pipeline) is implemented: `ImportedKnowledgeNormalizer`, `KnowledgeChunker`, and `ImportedKnowledgeImportPipeline` in `ImportPipeline/`. FTS5 search index extended with `.importedKnowledge` kind. Ask retrieval extended for approved imported knowledge. `ImportedKnowledgeNormalizerTests` (6 tests), `KnowledgeChunkerTests` (8 tests), `ImportedKnowledgeImportPipelineTests` (6 tests).
 - Milestone 4 Phase 5 (Refresh and retry coordination) is implemented: `RefreshRetryPolicy` and `ImportedKnowledgeRefreshCoordinator` in `Refresh/`. `RefreshRetryPolicyTests` (6 tests) and `ImportedKnowledgeRefreshCoordinatorTests` (6 tests) verify backoff, connectivity gating, and idempotent startup.
+- Milestone 4 Phase 6 (Ask online-offer UX and import sheet) is implemented: `TrustedSourceImportViewModel` and `TrustedSourceImportSheet` in `Features/Ask/` provide user-driven import from approved publishers when local evidence is insufficient and connectivity is usable. `AskScreen` `RefusalView` shows conditional import offer. `AskTrustedSourceImportFlowTests` (16 tests) verify URL validation, source filtering, preview/import lifecycle, and state management.
 - CI and quality automation: GitHub Actions CI workflow (`.github/workflows/ci.yml`) runs build, test, and Codecov coverage upload on push/PR to main. CodeQL security analysis (`.github/workflows/codeql.yml`) runs weekly and on push/PR. Codacy CLI available locally via `.codacy/cli.sh`.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
@@ -114,10 +115,10 @@ This suite defines the initial product, architecture, data, safety, quality, and
 
 ## Current Suite Status
 
-- Document creation status: complete for initial v0.1 draft set; updated through M4P5 completion.
-- Architecture confidence: high; Milestones 1–3 complete, M4P1–P5 complete (ConnectivityService, import domain models, trusted-source allowlist and HTTP client, import pipeline, refresh coordination). All UI surfaces are backed by live data. CI and quality automation in place.
-- Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning. M4P1–P5 provide the full import-to-refresh pipeline for online knowledge enrichment.
-- Highest uncertainty areas: Foundation Models generation quality with real corpus data and retrieval ranking tuning; M4P6 user-facing import and refresh UI.
+- Document creation status: complete for initial v0.1 draft set; updated through M4P6 completion.
+- Architecture confidence: high; Milestones 1–4 complete. All UI surfaces are backed by live data. CI and quality automation in place.
+- Product confidence: medium-high; the product principles and safety boundaries are clear enough for MVP planning. Milestone 4 provides the full import-to-refresh pipeline with user-facing Ask import UX for online knowledge enrichment.
+- Highest uncertainty areas: Foundation Models generation quality with real corpus data and retrieval ranking tuning.
 
 ## Done Means
 
@@ -132,4 +133,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 2. ~~Approve an initial trusted web source allowlist before implementing online knowledge refresh.~~ **Resolved:** Three-tier allowlist defined with 15 PNW-focused sources.
 3. ~~Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.~~ **Done:** Handbook pack expanded to 11 chapters with 35 sections, quick-card pack to 14 cards, content hashes populated in SeedManifest.json v0.3.1. Two planned chapters (Local Notes/Maps, Archery/Longbow) deferred.
 4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **Done:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI), M3P3 (real device capability detection, Foundation Models generation adapter, async retrieval routing, extractive fallback), and M3P5 (prompt shaping layer, prompt injection detection, safety regression tests) are implemented. Milestone 3 core implementation is complete.
-5. ~~Implement M4P1 (ConnectivityService) and M4P2 (import domain models and persistence).~~ **Done:** M4P1–P5 are complete. Proceed with M4P6 (user-facing import and refresh UI).
+5. ~~Implement M4P1 (ConnectivityService) and M4P2 (import domain models and persistence).~~ **Done:** M4P1–P6 are complete. Milestone 4 (Online Enrichment) is finished. Proceed with Milestone 5 (Hardening and Launch).
