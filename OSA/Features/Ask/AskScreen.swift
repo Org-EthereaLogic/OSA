@@ -159,7 +159,7 @@ struct AskScreen: View {
             return .quickCard(citation.id)
         case .handbookSection:
             return .handbookSection(citation.id)
-        case .inventoryItem, .checklistTemplate, .noteRecord:
+        case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
             return nil
         }
     }
@@ -297,7 +297,7 @@ private struct CitationRow: View {
         switch citation.kind {
         case .handbookSection, .quickCard:
             return true
-        case .inventoryItem, .checklistTemplate, .noteRecord:
+        case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
             return false
         }
     }
@@ -309,6 +309,7 @@ private struct CitationRow: View {
         case .inventoryItem: "archivebox.fill"
         case .checklistTemplate: "checklist"
         case .noteRecord: "note.text"
+        case .importedKnowledge: "globe"
         }
     }
 }

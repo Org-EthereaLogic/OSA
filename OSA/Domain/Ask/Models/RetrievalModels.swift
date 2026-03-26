@@ -8,6 +8,7 @@ enum RetrievalScope: String, CaseIterable, Equatable, Sendable {
     case inventory
     case checklists
     case notes
+    case importedKnowledge
 }
 
 // MARK: - Evidence Item
@@ -37,6 +38,7 @@ struct CitationReference: Identifiable, Equatable, Sendable {
         case .inventoryItem: "Inventory: \(title)"
         case .checklistTemplate: "Checklist: \(title)"
         case .noteRecord: "Note: \(title)"
+        case .importedKnowledge: "Source: \(title)"
         }
     }
 }

@@ -97,6 +97,7 @@ extension SearchResultKind {
         case .inventoryItem: "Inventory"
         case .checklistTemplate: "Checklists"
         case .noteRecord: "Notes"
+        case .importedKnowledge: "Imported Sources"
         }
     }
 
@@ -107,6 +108,7 @@ extension SearchResultKind {
         case .inventoryItem: "archivebox.fill"
         case .checklistTemplate: "checklist"
         case .noteRecord: "note.text"
+        case .importedKnowledge: "globe"
         }
     }
 }

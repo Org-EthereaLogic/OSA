@@ -125,6 +125,7 @@ final class LocalRetrievalService: RetrievalService {
             case .inventory: kinds.insert(.inventoryItem)
             case .checklists: kinds.insert(.checklistTemplate)
             case .notes: kinds.insert(.noteRecord)
+            case .importedKnowledge: kinds.insert(.importedKnowledge)
             }
         }
         return kinds.isEmpty ? nil : kinds
@@ -137,12 +138,13 @@ final class LocalRetrievalService: RetrievalService {
         case .inventoryItem: "Inventory"
         case .checklistTemplate: "Checklist"
         case .noteRecord: "Note"
+        case .importedKnowledge: "Imported Source"
         }
     }
 
     private func determineConfidence(evidence: [EvidenceItem]) -> ConfidenceLevel {
         let approvedSourceCount = evidence.filter {
-            $0.kind == .handbookSection || $0.kind == .quickCard
+            $0.kind == .handbookSection || $0.kind == .quickCard || $0.kind == .importedKnowledge
         }.count
 
         if approvedSourceCount >= 2 {

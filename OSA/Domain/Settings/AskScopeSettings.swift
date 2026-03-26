@@ -9,7 +9,8 @@ enum AskScopeSettings {
             .handbook,
             .quickCards,
             .inventory,
-            .checklists
+            .checklists,
+            .importedKnowledge
         ]
 
         if includePersonalNotes {

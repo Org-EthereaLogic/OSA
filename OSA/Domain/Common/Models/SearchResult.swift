@@ -6,6 +6,7 @@ enum SearchResultKind: String, Equatable, Sendable, CaseIterable {
     case inventoryItem
     case checklistTemplate
     case noteRecord
+    case importedKnowledge
 }
 
 struct SearchResult: Identifiable, Equatable, Sendable {

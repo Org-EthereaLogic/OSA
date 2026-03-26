@@ -14,6 +14,7 @@ struct AppDependencies {
     let retrievalService: (any RetrievalService)?
     let connectivityService: any ConnectivityService
     let trustedSourceHTTPClient: any TrustedSourceHTTPClient
+    let importPipeline: ImportedKnowledgeImportPipeline
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -46,6 +47,11 @@ struct AppDependencies {
             connectivityService: connectivityService
         )
 
+        let importPipeline = ImportedKnowledgeImportPipeline(
+            repository: importedKnowledgeRepository,
+            searchService: searchService
+        )
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -59,7 +65,8 @@ struct AppDependencies {
             searchService: searchService,
             retrievalService: retrievalService,
             connectivityService: connectivityService,
-            trustedSourceHTTPClient: trustedSourceHTTPClient
+            trustedSourceHTTPClient: trustedSourceHTTPClient,
+            importPipeline: importPipeline
         )
     }
 

@@ -150,6 +150,56 @@ final class LocalRetrievalServiceTests: XCTestCase {
         }
     }
 
+    func testImportedKnowledgeScopeMapsToSearchKind() async throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .importedKnowledge, title: "Emergency Water", snippet: "Imported guide content", score: 5.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let scopes: Set<RetrievalScope> = [.importedKnowledge]
+        let outcome = try await service.retrieve(query: "water", scopes: scopes)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.evidence.first?.kind, .importedKnowledge)
+            XCTAssertEqual(result.evidence.first?.sourceLabel, "Imported Source")
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testImportedKnowledgeContributesToHighConfidence() async throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .importedKnowledge, title: "A", snippet: "Content A", score: 5.0, tags: []),
+            SearchResult(id: UUID(), kind: .importedKnowledge, title: "B", snippet: "Content B", score: 4.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try await service.retrieve(query: "emergency", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.confidence, .groundedHigh)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testImportedKnowledgeCitationDisplayLabel() async throws {
+        let results = [
+            SearchResult(id: UUID(), kind: .importedKnowledge, title: "Water Guide", snippet: "Content", score: 5.0, tags: []),
+        ]
+        let service = makeService(searchResults: results)
+        let outcome = try await service.retrieve(query: "water", scopes: nil)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.citations.first?.displayLabel, "Source: Water Guide")
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testImportedKnowledgeIncludedInDefaultScopes() {
+        let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: false)
+        XCTAssertTrue(scopes.contains(.importedKnowledge))
+    }
+
     func testRetrievalScopesIncludeNotesWhenPersonalNotesAreEnabled() async throws {
         let noteID = UUID(uuidString: "99999999-9999-9999-9999-999999999999")!
         let results = [
@@ -187,6 +237,7 @@ struct StubSearchService: SearchService {
     func indexNote(_ note: NoteRecord) throws {}
     func indexHandbookSection(_ section: HandbookSection, chapterTitle: String) throws {}
     func indexQuickCard(_ card: QuickCard) throws {}
+    func indexImportedChunk(_ chunk: KnowledgeChunk, sourceTitle: String, publisherDomain: String) throws {}
     func removeFromIndex(id: UUID) throws {}
 }
 

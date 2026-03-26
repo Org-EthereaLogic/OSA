@@ -88,6 +88,17 @@ final class LocalSearchService: SearchService {
         )
     }
 
+    func indexImportedChunk(_ chunk: KnowledgeChunk, sourceTitle: String, publisherDomain: String) throws {
+        let title = chunk.headingPath.isEmpty ? sourceTitle : "\(sourceTitle) — \(chunk.headingPath)"
+        try store.upsert(
+            id: chunk.id,
+            kind: .importedKnowledge,
+            title: title,
+            body: chunk.plainText,
+            tags: ([publisherDomain] + chunk.tags).joined(separator: " ")
+        )
+    }
+
     func removeFromIndex(id: UUID) throws {
         try store.removeEntry(id: id)
     }
