@@ -56,6 +56,10 @@ private struct InventoryCompletionServiceKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any InventoryCompletionService)? = nil
 }
 
+private struct OnscreenContentManagerKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: OnscreenContentManager? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -125,5 +129,10 @@ extension EnvironmentValues {
     var inventoryCompletionService: (any InventoryCompletionService)? {
         get { self[InventoryCompletionServiceKey.self] }
         set { self[InventoryCompletionServiceKey.self] = newValue }
+    }
+
+    var onscreenContentManager: OnscreenContentManager? {
+        get { self[OnscreenContentManagerKey.self] }
+        set { self[OnscreenContentManagerKey.self] = newValue }
     }
 }

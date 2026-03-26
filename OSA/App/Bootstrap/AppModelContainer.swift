@@ -18,6 +18,12 @@ enum SharedRuntime {
     private static var _dependencies: AppDependencies?
 
     @MainActor
+    private static var _navigationCoordinator: AppNavigationCoordinator?
+
+    @MainActor
+    private static var _onscreenContentManager: OnscreenContentManager?
+
+    @MainActor
     static var dependencies: AppDependencies {
         if let existing = _dependencies { return existing }
         let container = AppModelContainer.makeShared()
@@ -26,10 +32,37 @@ enum SharedRuntime {
         return deps
     }
 
+    @MainActor
+    static var navigationCoordinator: AppNavigationCoordinator {
+        if let existing = _navigationCoordinator { return existing }
+        let coordinator = AppNavigationCoordinator()
+        _navigationCoordinator = coordinator
+        return coordinator
+    }
+
     /// Called by `OSAApp.init()` to share the already-created dependencies.
     @MainActor
     static func install(_ deps: AppDependencies) {
         _dependencies = deps
+    }
+
+    /// Called by `OSAApp` to share the navigation coordinator with App Intents.
+    @MainActor
+    static func installNavigationCoordinator(_ coordinator: AppNavigationCoordinator) {
+        _navigationCoordinator = coordinator
+    }
+
+    @MainActor
+    static var onscreenContentManager: OnscreenContentManager {
+        if let existing = _onscreenContentManager { return existing }
+        let manager = OnscreenContentManager()
+        _onscreenContentManager = manager
+        return manager
+    }
+
+    @MainActor
+    static func installOnscreenContentManager(_ manager: OnscreenContentManager) {
+        _onscreenContentManager = manager
     }
 }
 

@@ -1,10 +1,13 @@
 import SwiftUI
 
 struct AppTabView: View {
-    @State private var selectedTab: AppTab = .home
+    @Bindable var coordinator: AppNavigationCoordinator
+
+    @State private var libraryDeepLinkSectionID: UUID?
+    @State private var quickCardDeepLinkID: UUID?
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $coordinator.selectedTab) {
             Tab(AppTab.home.title, systemImage: AppTab.home.icon, value: .home) {
                 NavigationStack {
                     HomeScreen()
@@ -14,6 +17,9 @@ struct AppTabView: View {
             Tab(AppTab.library.title, systemImage: AppTab.library.icon, value: .library) {
                 NavigationStack {
                     LibraryScreen()
+                        .navigationDestination(item: $libraryDeepLinkSectionID) { sectionID in
+                            HandbookSectionDetailView(sectionID: sectionID)
+                        }
                 }
             }
 
@@ -39,6 +45,9 @@ struct AppTabView: View {
                 Tab(AppTab.quickCards.title, systemImage: AppTab.quickCards.icon, value: AppTab.quickCards) {
                     NavigationStack {
                         QuickCardsScreen()
+                            .navigationDestination(item: $quickCardDeepLinkID) { cardID in
+                                QuickCardRouteView(cardID: cardID)
+                            }
                     }
                 }
 
@@ -58,9 +67,19 @@ struct AppTabView: View {
             }
         }
         .tabViewStyle(.sidebarAdaptable)
+        .onChange(of: coordinator.pendingRoute) { _, route in
+            guard let route else { return }
+            _ = coordinator.consumePendingRoute()
+            switch route {
+            case .quickCard(let id):
+                quickCardDeepLinkID = id
+            case .handbookSection(let id):
+                libraryDeepLinkSectionID = id
+            }
+        }
     }
 }
 
 #Preview {
-    AppTabView()
+    AppTabView(coordinator: AppNavigationCoordinator())
 }

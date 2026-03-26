@@ -4,6 +4,7 @@ struct HandbookSectionDetailView: View {
     let sectionID: UUID
 
     @Environment(\.handbookRepository) private var repository
+    @Environment(\.onscreenContentManager) private var onscreenContentManager
     @State private var section: HandbookSection?
     @State private var chapter: HandbookChapter?
     @State private var loadFailed = false
@@ -25,6 +26,7 @@ struct HandbookSectionDetailView: View {
         .navigationTitle(section?.heading ?? "Section")
         .navigationBarTitleDisplayMode(.inline)
         .task { loadSection() }
+        .onDisappear { onscreenContentManager?.clear() }
     }
 
     @ViewBuilder
@@ -72,8 +74,14 @@ struct HandbookSectionDetailView: View {
 
             section = loadedSection
             chapter = try repository?.chapter(id: loadedSection.chapterID)
+            onscreenContentManager?.publishHandbookSection(
+                id: loadedSection.id,
+                heading: loadedSection.heading,
+                chapterTitle: chapter?.title ?? ""
+            )
         } catch {
             loadFailed = true
+            onscreenContentManager?.clear()
         }
     }
 }

@@ -5,6 +5,8 @@ import SwiftUI
 struct OSAApp: App {
     private let sharedModelContainer: ModelContainer
     private let dependencies: AppDependencies
+    @State private var navigationCoordinator = AppNavigationCoordinator()
+    @State private var onscreenContentManager = OnscreenContentManager()
 
     init() {
         let container = AppModelContainer.makeShared()
@@ -16,7 +18,7 @@ struct OSAApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppTabView()
+            AppTabView(coordinator: navigationCoordinator)
                 .environment(\.handbookRepository, dependencies.handbookRepository)
                 .environment(\.quickCardRepository, dependencies.quickCardRepository)
                 .environment(\.inventoryRepository, dependencies.inventoryRepository)
@@ -31,7 +33,10 @@ struct OSAApp: App {
                 .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
                 .environment(\.importPipeline, dependencies.importPipeline)
                 .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
+                .environment(\.onscreenContentManager, onscreenContentManager)
                 .task {
+                    SharedRuntime.installNavigationCoordinator(navigationCoordinator)
+                    SharedRuntime.installOnscreenContentManager(onscreenContentManager)
                     await dependencies.refreshCoordinator.start()
                 }
         }

@@ -4,6 +4,7 @@ struct QuickCardRouteView: View {
     let cardID: UUID
 
     @Environment(\.quickCardRepository) private var repository
+    @Environment(\.onscreenContentManager) private var onscreenContentManager
     @State private var card: QuickCard?
     @State private var loadFailed = false
 
@@ -22,16 +23,25 @@ struct QuickCardRouteView: View {
             }
         }
         .task { loadCard() }
+        .onDisappear { onscreenContentManager?.clear() }
     }
 
     private func loadCard() {
         do {
             card = try repository?.quickCard(id: cardID)
-            if card == nil {
+            if let card {
+                onscreenContentManager?.publishQuickCard(
+                    id: card.id,
+                    title: card.title,
+                    category: card.category
+                )
+            } else {
                 loadFailed = true
+                onscreenContentManager?.clear()
             }
         } catch {
             loadFailed = true
+            onscreenContentManager?.clear()
         }
     }
 }

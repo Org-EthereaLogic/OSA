@@ -27,7 +27,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - CI and quality automation: GitHub Actions CI workflow (`.github/workflows/ci.yml`) runs build, test, and Codecov coverage upload on push/PR to main. CodeQL security analysis (`.github/workflows/codeql.yml`) runs weekly and on push/PR. Codacy CLI available locally via `.codacy/cli.sh`.
 - M6P1 App Intents foundation is complete: `AskLanternIntent` and `LanternAppShortcutsProvider` for Siri question-answering, `SharedRuntime` for non-SwiftUI dependency access, `AskLanternIntentExecutor` for intent-facing retrieval with citation formatting. 8 focused tests.
 - M6P2 App Entities and Spotlight indexing is complete: `HandbookSectionEntity`, `QuickCardEntity`, `ChecklistEntity`, and `InventoryItemEntity` (`AppEntity` + `IndexedEntity` + `EntityStringQuery`) backed by `EntityQueryResolver`. Privacy rules enforce archived-item exclusion and notes redaction. 19 focused tests.
-- M6P3 FM-powered inventory completion is complete: `LocalInventoryCompletionService` in `OSA/Assistant/InventoryCompletion/` uses Foundation Models `@Generable` structured output to suggest inventory fields, with deterministic heuristic fallback. `InventoryCompletionMerger` enforces conservative merge rules. User-triggered "Suggest Details" in `InventoryItemFormView`. 33 focused tests. 310 unit + 1 UI tests pass.
+- M6P3 FM-powered inventory completion is complete: `LocalInventoryCompletionService` in `OSA/Assistant/InventoryCompletion/` uses Foundation Models `@Generable` structured output to suggest inventory fields, with deterministic heuristic fallback. `InventoryCompletionMerger` enforces conservative merge rules. User-triggered "Suggest Details" in `InventoryItemFormView`. 33 focused tests.
+- M6P4 AssistantSchema and onscreen content is complete: `AskLanternIntent` carries `@AssistantIntent(schema: .system.search)` with `StringSearchCriteria`. `AppNavigationCoordinator` mediates App Intent deep-link handoff. `OpenQuickCardIntent` and `OpenHandbookSectionIntent` accept existing entities. `OnscreenContentManager` publishes quick card and handbook section context. 12 focused tests. 322 unit + 1 UI tests pass.
 - Product direction provided for this suite requires offline-first behavior, local-first privacy, and a grounded assistant that answers only from approved local content and app data.
 
 ## Assumptions
@@ -84,7 +85,8 @@ This suite defines the initial product, architecture, data, safety, quality, and
 21. [M6P1 App Intents Foundation Enhanced Prompt](../prompt/enhanced/33-m6p1-app-intents-foundation-enhanced-prompt.md) _(implementation task prompt)_
 22. [M6P2 App Entities And Spotlight Indexing Enhanced Prompt](../prompt/enhanced/34-m6p2-app-entities-and-spotlight-indexing-enhanced-prompt.md) _(implementation task prompt)_
 23. [M6P3 FM-Powered Inventory Completion Enhanced Prompt](../prompt/enhanced/35-m6p3-fm-powered-inventory-completion-enhanced-prompt.md) _(implementation task prompt)_
-24. ADRs in [docs/adr](../adr/)
+24. [M6P4 AssistantSchema, Onscreen Content, And Navigation Intents Enhanced Prompt](../prompt/enhanced/36-m6p4-assistant-schema-onscreen-content-and-navigation-intents-enhanced-prompt.md) _(implementation task prompt)_
+25. ADRs in [docs/adr](../adr/)
 25. [Risk Register](./risk-register.md)
 
 ## File List
@@ -120,14 +122,15 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [33-m6p1-app-intents-foundation-enhanced-prompt.md](../prompt/enhanced/33-m6p1-app-intents-foundation-enhanced-prompt.md) | M6P1 App Intents foundation: AskLanternIntent, shortcuts provider, SharedRuntime. | Executed |
 | [34-m6p2-app-entities-and-spotlight-indexing-enhanced-prompt.md](../prompt/enhanced/34-m6p2-app-entities-and-spotlight-indexing-enhanced-prompt.md) | M6P2 App Entities and Spotlight indexing for Siri entity resolution. | Executed |
 | [35-m6p3-fm-powered-inventory-completion-enhanced-prompt.md](../prompt/enhanced/35-m6p3-fm-powered-inventory-completion-enhanced-prompt.md) | M6P3 FM-powered inventory completion with heuristic fallback. | Executed |
+| [36-m6p4-assistant-schema-onscreen-content-and-navigation-intents-enhanced-prompt.md](../prompt/enhanced/36-m6p4-assistant-schema-onscreen-content-and-navigation-intents-enhanced-prompt.md) | M6P4 AssistantSchema, onscreen content, and navigation intents. | Executed |
 | [sdlc_doc_suite_prompt.md](../prompt/enhanced/sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
 
 ## Current Suite Status
 
-- Document creation status: complete for initial v0.1 draft set; updated through M6P3 completion.
-- Architecture confidence: high; Milestones 1–5 and M6P1–P3 complete. All UI surfaces are backed by live data. CI and quality automation in place. Siri App Intents, App Entities with Spotlight indexing, and FM-powered inventory completion landed.
+- Document creation status: complete for initial v0.1 draft set; updated through M6P4 completion.
+- Architecture confidence: high; Milestones 1–5 and M6P1–P4 complete. All UI surfaces are backed by live data. CI and quality automation in place. Siri App Intents with AssistantSchema, App Entities with Spotlight, FM-powered inventory completion, deep-link navigation intents, and onscreen content manager landed.
 - Product confidence: high; release-readiness evidence pack maps 6 criteria to test evidence (4 passed, 2 require device testing). App Store materials and TestFlight feedback plan exist as dated repo artifacts.
-- Highest uncertainty areas: Foundation Models generation quality with real corpus data; device-specific performance and App Store binary validation; M6P4 AssistantSchema and M6P5 knowledge-base discovery remain planned.
+- Highest uncertainty areas: Foundation Models generation quality with real corpus data; device-specific performance and App Store binary validation; M6P5 knowledge-base discovery remains planned.
 
 ## Done Means
 
@@ -143,4 +146,4 @@ This suite defines the initial product, architecture, data, safety, quality, and
 3. ~~Expand the first bundled seed packs into the broader MVP handbook, quick-card, and checklist corpus.~~ **Done:** Handbook pack expanded to 11 chapters with 35 sections, quick-card pack to 14 cards, content hashes populated in SeedManifest.json v0.3.1. Two planned chapters (Local Notes/Maps, Archery/Longbow) deferred.
 4. ~~Begin Milestone 3 (Grounded Ask): retrieval pipeline, citation packaging, capability detection, and bounded Ask UI.~~ **Done:** M3P1 (retrieval pipeline, sensitivity policy, citation packaging, capability detection, bounded Ask UI), M3P3 (real device capability detection, Foundation Models generation adapter, async retrieval routing, extractive fallback), and M3P5 (prompt shaping layer, prompt injection detection, safety regression tests) are implemented. Milestone 3 core implementation is complete.
 5. ~~Implement M4P1 (ConnectivityService) and M4P2 (import domain models and persistence).~~ **Done:** M4P1–P6 are complete. Milestone 4 (Online Enrichment) is finished.
-6. ~~Implement M6P1–P3 (Siri and Apple Intelligence).~~ **Done:** M6P1 App Intents foundation, M6P2 App Entities and Spotlight indexing, and M6P3 FM-powered inventory completion are complete. M6P4 (AssistantSchema) and M6P5 (knowledge-base discovery) remain planned.
+6. ~~Implement M6P1–P4 (Siri and Apple Intelligence).~~ **Done:** M6P1 App Intents foundation, M6P2 App Entities and Spotlight indexing, M6P3 FM-powered inventory completion, and M6P4 AssistantSchema with navigation intents and onscreen content are complete. M6P5 (knowledge-base discovery) remains planned.
