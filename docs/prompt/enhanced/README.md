@@ -13,6 +13,7 @@ Curated prompts and prompt-derived documents.
 - `23-app-bundle-seed-content-packaging-and-full-launch-validation-enhanced-prompt.md` captures the immediate packaging fix for bundled seed content, the required cold-launch validation pass, and the preserved M4 dependency sequence that follows once the offline app baseline is stable.
 - `24-coresimulator-restart-blocker-and-launch-validation-enhanced-prompt.md` preserves the simulator-service blocker that must be cleared before launch validation evidence can be trusted.
 - `25-simulator-screen-audit-and-m4-parallel-start-enhanced-prompt.md` captures the screenshot-backed screen audit that determines whether OSA has a solid offline baseline or should do UI hardening before starting `M4P1 ConnectivityService` and `M4P2 import domain models` in parallel.
+- `26-headless-sidebar-audit-blockers-final-report-enhanced-prompt.md` preserves the executed screen-audit limitations on a headless Mac mini, including the unverified `More` surfaces behind `.sidebarAdaptable` and the non-functional `AssetCatalogSimulatorAgent` asset-compilation issue.
 
 ## Rules
 
