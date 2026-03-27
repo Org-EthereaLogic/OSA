@@ -16,17 +16,31 @@ struct ChapterDetailView: View {
                     description: Text("This chapter could not be loaded.")
                 )
             } else if let chapter {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: Spacing.xl) {
-                        chapterHeader(chapter)
-
-                        ForEach(chapter.sections.sorted(by: { $0.sortOrder < $1.sortOrder })) { section in
-                            SectionContentBlock(section: section)
-                        }
+                List {
+                    Section {
+                        ChapterHeroCard(chapter: chapter)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
                     }
-                    .padding(.horizontal, Spacing.lg)
-                    .padding(.bottom, Spacing.xxxl)
+
+                    Section {
+                        ForEach(chapter.sections.sorted(by: { $0.sortOrder < $1.sortOrder })) { section in
+                            NavigationLink {
+                                HandbookSectionDetailView(sectionID: section.id)
+                            } label: {
+                                SectionRow(section: section)
+                            }
+                            .listRowBackground(Color.osaSurface)
+                        }
+                    } header: {
+                        Text("\(chapter.sections.count) Sections")
+                            .font(.categoryLabel)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                .listStyle(.insetGrouped)
+                .scrollContentBackground(.hidden)
             } else {
                 ProgressView("Loading\u{2026}")
             }
@@ -35,30 +49,6 @@ struct ChapterDetailView: View {
         .navigationBarTitleDisplayMode(.large)
         .background(.osaBackground)
         .task { loadChapter() }
-    }
-
-    @ViewBuilder
-    private func chapterHeader(_ chapter: HandbookChapter) -> some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(chapter.summary)
-                .font(.body)
-                .foregroundStyle(.secondary)
-
-            HStack(spacing: Spacing.sm) {
-                if chapter.isSeeded {
-                    Label("Curated", systemImage: "checkmark.seal.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.osaTrust)
-                }
-
-                if let reviewed = chapter.lastReviewedAt {
-                    Label(reviewed.formatted(date: .abbreviated, time: .omitted), systemImage: "clock")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
-            }
-        }
-        .padding(.bottom, Spacing.md)
     }
 
     private func loadChapter() {
@@ -71,36 +61,94 @@ struct ChapterDetailView: View {
     }
 }
 
-// MARK: - Section Content
+// MARK: - Chapter Hero Card
 
-private struct SectionContentBlock: View {
-    let section: HandbookSection
+private struct ChapterHeroCard: View {
+    let chapter: HandbookChapter
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            Text(section.heading)
-                .font(.sectionHeader)
+            Text(chapter.summary)
+                .font(.brandSubheadline)
+                .foregroundStyle(Color.white.opacity(0.82))
+                .fixedSize(horizontal: false, vertical: true)
 
-            if section.safetyLevel == .sensitiveStaticOnly {
-                Label("Sensitive \u{2014} static content only", systemImage: "exclamationmark.shield")
-                    .font(.caption)
-                    .foregroundStyle(.osaEmergency)
-            }
+            HStack(spacing: Spacing.sm) {
+                if chapter.isSeeded {
+                    Label("Curated", systemImage: "checkmark.seal.fill")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaPaperGlow)
+                }
 
-            if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(section.bodyMarkdown)) {
-                Text(attributed)
-                    .font(.body)
-            } else {
-                Text(section.plainText)
-                    .font(.body)
-            }
+                if let reviewed = chapter.lastReviewedAt {
+                    Label(
+                        reviewed.formatted(date: .abbreviated, time: .omitted),
+                        systemImage: "clock"
+                    )
+                    .font(.metadataCaption)
+                    .foregroundStyle(.osaPaperGlow.opacity(0.7))
+                }
 
-            if let reviewed = section.lastReviewedAt {
-                Text("Reviewed \(reviewed.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                Label(
+                    "\(chapter.sections.count) sections",
+                    systemImage: "doc.text"
+                )
+                .font(.metadataCaption)
+                .foregroundStyle(.osaPaperGlow.opacity(0.7))
             }
         }
+        .padding(Spacing.xl)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            LinearGradient(
+                colors: [Color.osaCanopy, Color.osaPine, Color.osaNight],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: CornerRadius.xl)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.xl)
+                .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+        }
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.sm)
+    }
+}
+
+// MARK: - Section Row
+
+private struct SectionRow: View {
+    let section: HandbookSection
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text(section.heading)
+                .font(.cardTitle)
+
+            Text(section.plainText.prefix(120) + (section.plainText.count > 120 ? "\u{2026}" : ""))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+
+            HStack(spacing: Spacing.sm) {
+                if section.safetyLevel == .sensitiveStaticOnly {
+                    Label("Sensitive", systemImage: "exclamationmark.shield")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaEmergency)
+                }
+
+                if let reviewed = section.lastReviewedAt {
+                    Label(
+                        reviewed.formatted(date: .abbreviated, time: .omitted),
+                        systemImage: "checkmark.seal.fill"
+                    )
+                    .font(.metadataCaption)
+                    .foregroundStyle(.osaTrust)
+                }
+            }
+        }
+        .padding(.vertical, Spacing.xs)
     }
 }
 
