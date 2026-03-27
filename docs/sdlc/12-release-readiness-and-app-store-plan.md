@@ -1,12 +1,17 @@
 # Release Readiness And App Store Plan
 
-Status: Initial draft complete.  
+Status: Release criteria evaluated through Milestone 6. 5 of 6 criteria passed; RC-5 (device performance) requires physical device testing via TestFlight Stage 1.
 Related docs: [PRD](./02-prd.md), [Quality Strategy](./11-quality-strategy-test-plan-and-acceptance.md), [Security And Privacy](./10-security-privacy-and-safety.md), [Risk Register](./risk-register.md)
 
 ## Confirmed Facts
 
 - The app is privacy-sensitive and safety-sensitive enough that release quality depends on more than UI completeness.
 - The release plan must account for offline behavior, Ask guardrails, and clear user disclosures.
+- Milestones 1–6 are complete. 337 unit tests + 1 UI test pass across 36 suites.
+- M5P4 App Store materials (name, descriptions, review notes, privacy disclosures) are authored.
+- M5P5 TestFlight feedback loop (3 tester stages, triage rubric) is documented.
+- M5P7 release-readiness evidence pack is at `report/2026-03-26-m5-release-readiness.md`.
+- Internal alpha validation (RC-6) confirmed zero permission keys, zero background modes, zero ATS exceptions in the shipped binary.
 
 ## Assumptions
 
@@ -56,12 +61,14 @@ Suggested feedback prompts:
 
 ## Release Criteria
 
-- no open high-severity defects affecting offline core flows
-- no open high-severity privacy or safety issues
-- Ask passes citation and refusal regression suite
-- imported-source flow works end to end and remains available offline afterward
-- app size, cold start, and local performance are acceptable on target devices
-- App Store privacy answers match the shipped behavior
+| ID | Criterion | Status |
+| --- | --- | --- |
+| RC-1 | No open high-severity defects affecting offline core flows | **Passed** — 337 unit + 1 UI test, offline stress suite, schema migration suite all green |
+| RC-2 | No open high-severity privacy or safety issues | **Passed** — 53 safety regression tests, no permission keys, no ATS exceptions |
+| RC-3 | Ask passes citation and refusal regression suite | **Passed** — `SafetyRegressionTests` (53 tests) cover jailbreak, scope override, privacy pressure, stale-source boundaries |
+| RC-4 | Imported-source flow works end to end and remains available offline afterward | **Passed** — M4P4 import pipeline + M4P6 Ask online-offer UX + M6P5 discovery all tested |
+| RC-5 | App size, cold start, and local performance are acceptable on target devices | **Pending** — 11 MB app size is acceptable; physical device cold-start timing requires TestFlight Stage 1 |
+| RC-6 | App Store privacy answers match the shipped behavior | **Passed** — binary Info.plist inspection confirms zero permission keys, zero background modes, zero ATS exceptions |
 
 ## Privacy Disclosures Checklist
 
@@ -113,6 +120,7 @@ Before coding expands:
 
 ## Next-Step Recommendations
 
-1. Decide the release channel and tester audience before building onboarding copy.
-2. Prepare App Store privacy answers only after the implementation footprint is known.
-3. Build a release checklist into the repo once milestone tracking starts.
+1. ~~Decide the release channel and tester audience before building onboarding copy.~~ **Resolved:** TestFlight 3-stage plan documented in M5P5.
+2. ~~Prepare App Store privacy answers only after the implementation footprint is known.~~ **Resolved:** M5P4 App Store materials authored; RC-6 validates binary matches disclosures.
+3. ~~Build a release checklist into the repo once milestone tracking starts.~~ **Resolved:** RC-1 through RC-6 criteria evaluated above.
+4. Complete TestFlight Stage 1 on physical device for RC-5 cold-start timing validation.
