@@ -176,6 +176,7 @@
 		F9EFD1A57F50ABEBFC628954 /* QuickCardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690A5D630C83220A346F5292 /* QuickCardDetailView.swift */; };
 		FA8958F66E48709C0901F65B /* LanternAppShortcutsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FA392E30A9D3E8B67BEE /* LanternAppShortcutsProvider.swift */; };
 		FC6AD955DD70BDC01C551462 /* AskTrustedSourceImportFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A6100A80A0293AD76DC1C /* AskTrustedSourceImportFlowTests.swift */; };
+		FCB8366127C68F5B13FFA2C3 /* BrandWordmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4EC60BCAF39D1450C30D73 /* BrandWordmarkView.swift */; };
 		FD02CCB8E2228AE8B0BCC744 /* SeedContentMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32DA35456E992E4EA601598 /* SeedContentMigrationTests.swift */; };
 		FD263C691E8312C92B588229 /* ChecklistRecordMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E290385FA4F0F891F132363 /* ChecklistRecordMappings.swift */; };
 		FDCE05B1BC682DF99F722BBD /* ImportedKnowledgeRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218C590A5B43E95937CCEA28 /* ImportedKnowledgeRefreshCoordinator.swift */; };
@@ -303,6 +304,7 @@
 		8B98E8F7945F61FD91A2955E /* Spacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spacing.swift; sourceTree = "<group>"; };
 		8D82AF605981050637268D95 /* NoteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailView.swift; sourceTree = "<group>"; };
 		8DA0F0797832A7A191BC670A /* BrandMarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandMarkView.swift; sourceTree = "<group>"; };
+		8E4EC60BCAF39D1450C30D73 /* BrandWordmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandWordmarkView.swift; sourceTree = "<group>"; };
 		8ED68C29388D3826CDAC4355 /* PersistedSourceRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedSourceRecord.swift; sourceTree = "<group>"; };
 		918EB971AAC5971AE2EFB200 /* KnowledgeChunkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunkerTests.swift; sourceTree = "<group>"; };
 		92929373770BAE8DE8128495 /* EntityQueryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityQueryResolver.swift; sourceTree = "<group>"; };
@@ -666,6 +668,7 @@
 			isa = PBXGroup;
 			children = (
 				8DA0F0797832A7A191BC670A /* BrandMarkView.swift */,
+				8E4EC60BCAF39D1450C30D73 /* BrandWordmarkView.swift */,
 				E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */,
 			);
 			path = Components;
@@ -1311,6 +1314,7 @@
 				382AB8A28BC2886DAECC4081 /* AskScopeSettings.swift in Sources */,
 				C045037D7BF3855C53F8952E /* AskScreen.swift in Sources */,
 				25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */,
+				FCB8366127C68F5B13FFA2C3 /* BrandWordmarkView.swift in Sources */,
 				982D914FBFED1C2DAA647B7F /* BraveSearchClient.swift in Sources */,
 				FE2EFA05B5C1C87447F0FE02 /* ChapterDetailView.swift in Sources */,
 				ACB293F238DD46C9645783E4 /* ChecklistEntity.swift in Sources */,
