@@ -1,0 +1,17 @@
+:root {
+  --lantern-gold: #C49020;
+  --lantern-gold-bright: #E0B038;
+  --lantern-ember: #C2581A;
+  --lantern-ember-bright: #E07633;
+  --lantern-canopy: #214C40;
+  --lantern-pine: #173329;
+  --lantern-forest-night: #0E221C;
+  --lantern-slate: #343038;
+  --lantern-warm-surface: #FDF4E8;
+  --lantern-paper-glow: #FFF9E8;
+  --lantern-white: #FFFFFF;
+  --lantern-black: #000000;
+  --lantern-font-display: Avenir Next, Avenir, Helvetica Neue, Helvetica, sans-serif;
+  --lantern-font-ui: SF Pro Display, Avenir Next, system-ui, sans-serif;
+}
+

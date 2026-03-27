@@ -1,0 +1,145 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1024 1024"
+  fill="none"
+  role="img"
+  aria-label="Lantern app icon"
+>
+  <defs>
+    <linearGradient id="bg" x1="186" y1="112" x2="840" y2="914" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#214C40" />
+      <stop offset="0.55" stop-color="#18372E" />
+      <stop offset="1" stop-color="#0E221C" />
+    </linearGradient>
+    <radialGradient id="skyGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(511.5 362) rotate(90) scale(336)">
+      <stop offset="0" stop-color="#F7DF93" stop-opacity="0.42" />
+      <stop offset="0.54" stop-color="#D4A649" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#D4A649" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="ridge" x1="284" y1="286" x2="804" y2="804" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3D6F60" stop-opacity="0.8" />
+      <stop offset="1" stop-color="#24463C" stop-opacity="0.3" />
+    </linearGradient>
+    <linearGradient id="metal" x1="374" y1="192" x2="652" y2="824" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF9E8" />
+      <stop offset="0.45" stop-color="#E6DAB2" />
+      <stop offset="1" stop-color="#B89B58" />
+    </linearGradient>
+    <linearGradient id="body" x1="382" y1="324" x2="624" y2="784" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4E8C1" />
+      <stop offset="0.4" stop-color="#D8B164" />
+      <stop offset="1" stop-color="#A47F3A" />
+    </linearGradient>
+    <radialGradient id="glass" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 520) rotate(90) scale(196 176)">
+      <stop offset="0" stop-color="#FFF6D6" />
+      <stop offset="0.55" stop-color="#F0CB70" />
+      <stop offset="1" stop-color="#D69D33" />
+    </radialGradient>
+    <radialGradient id="flameOuter" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 556) rotate(90) scale(142 94)">
+      <stop offset="0" stop-color="#FFF7DB" />
+      <stop offset="0.62" stop-color="#F4C45B" />
+      <stop offset="1" stop-color="#E1911F" />
+    </radialGradient>
+    <radialGradient id="flameInner" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(512 548) rotate(90) scale(76 54)">
+      <stop offset="0" stop-color="#FFFDF1" />
+      <stop offset="1" stop-color="#FFE9A3" />
+    </radialGradient>
+    <filter id="softShadow" x="262" y="138" width="500" height="692" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+      <feOffset dy="18" />
+      <feGaussianBlur stdDeviation="18" />
+      <feComposite in2="hardAlpha" operator="out" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.03 0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0.34 0" />
+      <feBlend in2="BackgroundImageFix" mode="normal" result="dropShadow" />
+      <feBlend in="SourceGraphic" in2="dropShadow" mode="normal" result="shape" />
+    </filter>
+  </defs>
+
+  <rect x="40" y="40" width="944" height="944" rx="232" fill="url(#bg)" />
+  <circle cx="512" cy="360" r="312" fill="url(#skyGlow)" />
+
+  <path
+    d="M98 734C239 613 396 563 568 586C690 601 819 663 926 780V984H98V734Z"
+    fill="#10261F"
+    fill-opacity="0.72"
+  />
+  <path
+    d="M118 720C286 590 472 555 664 598C756 618 836 661 910 728"
+    stroke="url(#ridge)"
+    stroke-width="46"
+    stroke-linecap="round"
+    stroke-opacity="0.64"
+  />
+  <path
+    d="M184 820C318 731 470 694 628 714C718 725 797 758 872 812"
+    stroke="#4D7D6F"
+    stroke-width="22"
+    stroke-linecap="round"
+    stroke-opacity="0.3"
+  />
+
+  <g filter="url(#softShadow)">
+    <path
+      d="M394 310C394 222 446 166 512 166C578 166 630 222 630 310"
+      stroke="url(#metal)"
+      stroke-width="30"
+      stroke-linecap="round"
+    />
+    <rect x="430" y="286" width="164" height="58" rx="24" fill="url(#metal)" />
+    <path
+      d="M410 342H614L666 438L614 784H410L358 438L410 342Z"
+      fill="url(#body)"
+      stroke="url(#metal)"
+      stroke-width="22"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M434 404C434 385.222 449.222 370 468 370H556C574.778 370 590 385.222 590 404V650C590 668.778 574.778 684 556 684H468C449.222 684 434 668.778 434 650V404Z"
+      fill="url(#glass)"
+      fill-opacity="0.96"
+    />
+    <path
+      d="M450 450H574"
+      stroke="#FFF8E8"
+      stroke-opacity="0.18"
+      stroke-width="14"
+      stroke-linecap="round"
+    />
+    <path
+      d="M460 522H564"
+      stroke="#FFF8E8"
+      stroke-opacity="0.14"
+      stroke-width="12"
+      stroke-linecap="round"
+    />
+    <path
+      d="M470 598H554"
+      stroke="#FFF8E8"
+      stroke-opacity="0.12"
+      stroke-width="10"
+      stroke-linecap="round"
+    />
+    <path
+      d="M512 430C472 466 452 509 452 559C452 634 498 682 560 682C621 682 666 635 666 574C666 514 626 468 571 425C553 410 530 411 512 430Z"
+      fill="url(#flameOuter)"
+    />
+    <path
+      d="M514 474C491 495 480 522 480 554C480 598 508 630 544 630C580 630 606 601 606 565C606 530 583 498 551 473C539 463 525 463 514 474Z"
+      fill="url(#flameInner)"
+    />
+    <path
+      d="M476 736H548"
+      stroke="#FFF8E8"
+      stroke-opacity="0.24"
+      stroke-width="20"
+      stroke-linecap="round"
+    />
+    <path
+      d="M446 784H578"
+      stroke="url(#metal)"
+      stroke-width="26"
+      stroke-linecap="round"
+    />
+  </g>
+</svg>

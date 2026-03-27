@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1260 260" fill="none" role="img" aria-label="Lantern wordmark">
+  <defs>
+    <style>
+      .lantern-outline { fill: none; stroke: #FFFFFF; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+      .lantern-top { fill: #FFFFFF; }
+      .lantern-flame-outer { fill: #FFFFFF; }
+      .lantern-flame-inner { fill: #FDF4E8; }
+      .lantern-word { fill: #FFFFFF; font-family: Avenir Next, Avenir, Helvetica Neue, Helvetica, sans-serif; font-size: 174px; font-weight: 600; letter-spacing: 1.5px; }
+    </style>
+  </defs>
+  <g transform="translate(8 10) scale(0.96)">
+
+  <path class="lantern-outline" d="M62 60C62 34 79 18 100 18C121 18 138 34 138 60" />
+  <rect class="lantern-top" x="64" y="60" width="72" height="24" rx="10" />
+  <path class="lantern-outline" d="M72 84H128L148 128L134 202H66L52 128L72 84Z" />
+  <path class="lantern-flame-outer" d="M100 105C90 117 86 129 86 143C86 163 99 178 117 178C135 178 148 164 148 148C148 131 136 118 122 106C115 100 106 100 100 105Z" />
+  <path class="lantern-flame-inner" d="M104 122C98 130 95 138 95 148C95 161 103 170 114 170C125 170 133 162 133 152C133 141 126 131 117 123C113 119 107 119 104 122Z" />
+  <path class="lantern-outline" d="M80 214H120" />
+  </g>
+  <text class="lantern-word" x="236" y="176">Lantern</text>
+</svg>

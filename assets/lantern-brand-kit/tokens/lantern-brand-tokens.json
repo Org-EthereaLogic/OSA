@@ -1,0 +1,29 @@
+{
+  "name": "Lantern Brand Tokens",
+  "colors": {
+    "gold": "#C49020",
+    "gold_bright": "#E0B038",
+    "ember": "#C2581A",
+    "ember_bright": "#E07633",
+    "canopy": "#214C40",
+    "pine": "#173329",
+    "forest_night": "#0E221C",
+    "slate": "#343038",
+    "warm_surface": "#FDF4E8",
+    "paper_glow": "#FFF9E8",
+    "white": "#FFFFFF",
+    "black": "#000000"
+  },
+  "usage": {
+    "default_wordmark": "logos/lantern-wordmark-primary.svg",
+    "reversed_wordmark": "logos/lantern-wordmark-white.svg",
+    "transparent_mark": "icons/lantern-monogram-gold.svg",
+    "app_icon_base": "icons/lantern-icon-1024.png"
+  },
+  "typography": {
+    "display_stack": "Avenir Next, Avenir, Helvetica Neue, Helvetica, sans-serif",
+    "ui_stack": "SF Pro Display, Avenir Next, system-ui, sans-serif",
+    "notes": "PNG exports are preferred when exact wordmark appearance must remain stable across environments."
+  }
+}
+
