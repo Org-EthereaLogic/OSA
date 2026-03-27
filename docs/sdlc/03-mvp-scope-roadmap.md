@@ -157,7 +157,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - **M5P7 — Release-readiness evidence** _(Complete)_: `report/2026-03-26-m5-release-readiness.md` maps 6 release criteria to test evidence. RC-1 through RC-4 passed; RC-5/RC-6 require device testing.
 - Exit criteria: release criteria in [Release Readiness](./12-release-readiness-and-app-store-plan.md) are met (4 of 6 passed, 2 require device testing).
 
-### Milestone 6: Apple Intelligence Surface _(In Progress — v1.1)_
+### Milestone 6: Apple Intelligence Surface _(Complete — v1.1)_
 
 - Expose Lantern's retrieval pipeline and domain data to Siri and Apple Intelligence via App Intents. Add FM-powered inventory completion and knowledge-base discovery.
 - All queries routed through the existing `LocalRetrievalService` → `SensitivityPolicy` → `GroundedPromptBuilder` → `FoundationModelAdapter` chain. Siri becomes an additional input surface; the grounding contract, citation requirements, and safety guardrails remain enforced regardless of entry point.
