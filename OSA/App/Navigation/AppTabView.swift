@@ -68,6 +68,8 @@ struct AppTabView: View {
         }
         .tint(.osaPrimary)
         .tabViewStyle(.sidebarAdaptable)
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(.osaSurface, for: .tabBar)
         .onChange(of: coordinator.pendingRoute) { _, route in
             guard let route else { return }
             _ = coordinator.consumePendingRoute()

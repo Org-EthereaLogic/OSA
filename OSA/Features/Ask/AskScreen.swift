@@ -26,6 +26,7 @@ struct AskScreen: View {
 
                     case .loading:
                         ProgressView("Searching local sources...")
+                            .tint(.osaPrimary)
                             .padding(.top, Spacing.xxxl)
 
                     case .answered(let result):
@@ -80,18 +81,20 @@ struct AskScreen: View {
 
     private var scopeCard: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
-            HStack(spacing: Spacing.xs) {
-                Image(systemName: "internaldrive.fill")
-                    .foregroundStyle(.osaLocal)
-                Text("Local Retrieval")
-                    .font(.categoryLabel)
-                    .textCase(.uppercase)
-                    .foregroundStyle(.osaLocal)
-            }
+            HStack(spacing: Spacing.sm) {
+                BrandMarkView(size: 30)
 
-            Text(scopeSummary)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: Spacing.xxs) {
+                    Text("LOCAL RETRIEVAL")
+                        .font(.brandEyebrow)
+                        .foregroundStyle(.osaLocal)
+                        .tracking(1.1)
+
+                    Text(scopeSummary)
+                        .font(.brandSubheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
 
             Toggle(isOn: $includePersonalNotes) {
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
@@ -105,7 +108,11 @@ struct AskScreen: View {
         .padding(Spacing.lg)
         .padding(.top, Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.xl)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
     }
 
     private var scopeSummary: String {
@@ -118,35 +125,62 @@ struct AskScreen: View {
 
     private var zeroState: some View {
         VStack(spacing: Spacing.md) {
-            Image(systemName: "text.magnifyingglass")
-                .font(.system(size: 40))
-                .foregroundStyle(.osaCalm)
-            Text("Search your local knowledge base")
-                .font(.headline)
+            BrandMarkView(size: 56)
+
+            Text("Ask Lantern")
+                .font(.brandDisplay)
                 .multilineTextAlignment(.center)
+
+            Text("Search your local knowledge base")
+                .font(.brandSubheadline)
+                .multilineTextAlignment(.center)
+
             Text("Answers are grounded in approved local content with citations. This is not a general chatbot.")
                 .font(.metadataCaption)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, Spacing.xl)
-        .padding(.top, Spacing.xxxl)
+        .padding(Spacing.xl)
+        .frame(maxWidth: .infinity)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.xl)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+        .padding(.top, Spacing.xl)
     }
 
     private var inputBar: some View {
         HStack(spacing: Spacing.sm) {
             TextField("Ask a question...", text: $query)
-                .textFieldStyle(.roundedBorder)
+                .padding(.horizontal, Spacing.md)
+                .padding(.vertical, Spacing.sm + Spacing.xxs)
+                .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                .overlay {
+                    RoundedRectangle(cornerRadius: CornerRadius.md)
+                        .stroke(Color.osaHairline, lineWidth: 1)
+                }
                 .onSubmit(submitQuery)
 
             Button(action: submitQuery) {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)
             }
+            .foregroundStyle(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.secondary : Color.white)
+            .frame(width: 42, height: 42)
+            .background(
+                query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.osaHairline : Color.osaPrimary,
+                in: Circle()
+            )
             .disabled(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding(Spacing.lg)
         .background(.osaSurface)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(.osaHairline)
+                .frame(height: 1)
+        }
     }
 
     private func observeConnectivity() async {
@@ -244,22 +278,28 @@ private struct AnswerView: View {
                     Image(systemName: confidenceIcon)
                         .foregroundStyle(confidenceColor)
                     Text(confidenceLabel)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .font(.metadataCaption)
+                        .foregroundStyle(.primary)
                 }
+                .padding(.horizontal, Spacing.sm)
+                .padding(.vertical, Spacing.xs)
+                .background(confidenceColor.opacity(0.12), in: Capsule())
 
                 Text(result.answerText)
-                    .font(.body)
+                    .font(.cardBody)
                     .textSelection(.enabled)
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .clipShape(RoundedRectangle(cornerRadius: CornerRadius.md))
+            .padding(Spacing.lg)
+            .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+            .overlay {
+                RoundedRectangle(cornerRadius: CornerRadius.lg)
+                    .stroke(Color.osaHairline, lineWidth: 1)
+            }
 
             if !result.citations.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Sources")
-                        .font(.headline)
+                        .font(.sectionHeader)
 
                     ForEach(result.citations) { citation in
                         if let destination = destinationForCitation(citation) {
@@ -277,7 +317,7 @@ private struct AnswerView: View {
             if !result.suggestedActions.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Related")
-                        .font(.headline)
+                        .font(.sectionHeader)
 
                     ForEach(Array(result.suggestedActions.enumerated()), id: \.offset) { _, action in
                         SuggestedActionButton(
@@ -300,9 +340,9 @@ private struct AnswerView: View {
 
     private var confidenceColor: Color {
         switch result.confidence {
-        case .groundedHigh: .green
-        case .groundedMedium: .orange
-        case .insufficientLocalEvidence: .red
+        case .groundedHigh: .osaLocal
+        case .groundedMedium: .osaWarning
+        case .insufficientLocalEvidence: .osaCritical
         }
     }
 
@@ -334,6 +374,13 @@ private struct CitationRow: View {
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
+        }
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.md)
+                .stroke(Color.osaHairline, lineWidth: 1)
         }
     }
 
@@ -372,10 +419,10 @@ private struct RefusalView: View {
         VStack(spacing: Spacing.md) {
             Image(systemName: "exclamationmark.bubble.fill")
                 .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.osaCritical)
 
             Text(title)
-                .font(.headline)
+                .font(.cardTitle)
 
             Text(explanation)
                 .font(.subheadline)
@@ -388,8 +435,14 @@ private struct RefusalView: View {
                 offlineHint
             }
         }
-        .padding()
-        .padding(.top, Spacing.xl)
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.xl)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+        .padding(.top, Spacing.md)
     }
 
     private var onlineOfferCard: some View {
@@ -405,7 +458,9 @@ private struct RefusalView: View {
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
-        .padding(.top, Spacing.md)
+        .padding(Spacing.md)
+        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .padding(.top, Spacing.sm)
     }
 
     private var offlineHint: some View {
@@ -465,6 +520,7 @@ private struct SuggestedActionButton: View {
     private var row: some View {
         HStack {
             Image(systemName: icon)
+                .foregroundStyle(.osaPrimary)
             Text(label)
                 .font(.subheadline)
             Spacer()
@@ -473,6 +529,13 @@ private struct SuggestedActionButton: View {
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
+        }
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.md)
+                .stroke(Color.osaHairline, lineWidth: 1)
         }
     }
 

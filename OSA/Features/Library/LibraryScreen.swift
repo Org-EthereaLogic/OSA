@@ -27,7 +27,11 @@ struct LibraryScreen: View {
                     } label: {
                         ChapterRow(chapter: chapter)
                     }
+                    .listRowBackground(Color.osaSurface)
                 }
+                .listStyle(.insetGrouped)
+                .scrollContentBackground(.hidden)
+                .background(.osaBackground)
             }
         }
         .navigationTitle("Library")

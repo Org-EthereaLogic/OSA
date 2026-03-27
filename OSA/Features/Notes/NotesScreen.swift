@@ -76,6 +76,7 @@ struct NotesScreen: View {
                 } label: {
                     NoteRow(note: note)
                 }
+                .listRowBackground(Color.osaSurface)
             }
             .onDelete { offsets in
                 for index in offsets {
@@ -84,6 +85,9 @@ struct NotesScreen: View {
                 loadNotes()
             }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func loadNotes() {
@@ -143,11 +147,7 @@ extension NoteType {
     }
 
     var color: Color {
-        switch self {
-        case .personal: .blue
-        case .localReference: .orange
-        case .familyPlan: .purple
-        }
+        brandColor
     }
 
     var brandColor: Color {

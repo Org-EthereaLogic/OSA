@@ -5,6 +5,7 @@ Reusable SwiftUI view components that serve multiple features and are not owned 
 ## Current Components
 
 - `BrandMarkView` — renders the lantern brand mark at configurable sizes
+- `BrandWordmarkView` — renders the approved Lantern wordmark in primary or reversed form
 - `ConnectivityBadge` — displays connectivity state indicator
 
 ## Adding Components

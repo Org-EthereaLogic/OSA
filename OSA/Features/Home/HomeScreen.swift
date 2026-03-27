@@ -33,43 +33,58 @@ struct HomeScreen: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: Spacing.md) {
-            HStack(alignment: .center, spacing: Spacing.md) {
-                BrandMarkView(size: 48)
+        VStack(alignment: .leading, spacing: Spacing.lg) {
+            HStack(alignment: .top, spacing: Spacing.lg) {
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    Text("OFFLINE-FIRST PREPAREDNESS")
+                        .font(.brandEyebrow)
+                        .foregroundStyle(Color.white.opacity(0.72))
+                        .tracking(1.2)
 
-                VStack(alignment: .leading, spacing: Spacing.xxs) {
-                    Text(AppBrand.displayName)
-                        .font(.stressTitle)
-                        .foregroundStyle(.osaSlate)
-                    Text(AppBrand.subtitle)
-                        .font(.categoryLabel)
-                        .foregroundStyle(.secondary)
-                        .textCase(.uppercase)
+                    BrandWordmarkView(variant: .reversed, height: 34)
+
+                    Text(AppBrand.reassurance)
+                        .font(.brandSubheadline)
+                        .foregroundStyle(Color.white.opacity(0.82))
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    HStack(spacing: Spacing.sm) {
+                        HomeHeaderChip(
+                            title: "Stored locally",
+                            systemImage: "internaldrive.fill",
+                            tint: .osaLocal
+                        )
+                        HomeHeaderChip(
+                            title: "Cited answers",
+                            systemImage: "checkmark.shield.fill",
+                            tint: .osaTrust
+                        )
+                    }
                 }
 
-                Spacer()
-                ConnectivityBadge(state: .offline)
-            }
+                Spacer(minLength: Spacing.md)
 
-            HStack(spacing: Spacing.xs) {
-                Image(systemName: "internaldrive.fill")
-                    .font(.metadataCaption)
-                    .foregroundStyle(.osaLocal)
-                Text("All content stored locally on your device")
-                    .font(.metadataCaption)
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .trailing, spacing: Spacing.sm) {
+                    ConnectivityBadge(state: .offline)
+                    BrandMarkView(size: 68)
+                }
             }
         }
-        .padding(Spacing.lg)
+        .padding(Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             LinearGradient(
-                colors: [Color.osaPrimary.opacity(0.12), Color.osaPrimary.opacity(0.04)],
+                colors: [Color.osaCanopy, Color.osaPine, Color.osaNight],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
-            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+            in: RoundedRectangle(cornerRadius: CornerRadius.xl)
         )
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.xl)
+                .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+        }
+        .shadow(color: Color.osaNight.opacity(0.16), radius: 20, y: 10)
     }
 
     private var quickCardsSection: some View {
@@ -303,12 +318,36 @@ private struct HomeSectionCard<Content: View>: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Label(title, systemImage: systemImage)
                 .font(.sectionHeader)
+                .foregroundStyle(.primary)
 
             content()
         }
         .padding(Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.osaSecondaryBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.lg)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+    }
+}
+
+private struct HomeHeaderChip: View {
+    let title: String
+    let systemImage: String
+    let tint: Color
+
+    var body: some View {
+        Label(title, systemImage: systemImage)
+            .font(.metadataCaption)
+            .foregroundStyle(.osaPaperGlow)
+            .padding(.horizontal, Spacing.sm)
+            .padding(.vertical, Spacing.xs)
+            .background(tint.opacity(0.18), in: Capsule())
+            .overlay {
+                Capsule()
+                    .stroke(tint.opacity(0.35), lineWidth: 1)
+            }
     }
 }
 
@@ -318,6 +357,7 @@ private struct HomeSectionLoadingView: View {
     var body: some View {
         HStack(spacing: Spacing.sm) {
             ProgressView()
+                .tint(.osaPrimary)
             Text(label)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -341,7 +381,7 @@ private struct HomeSectionFailureView: View {
     var body: some View {
         Label(message, systemImage: "exclamationmark.triangle")
             .font(.subheadline)
-            .foregroundStyle(.secondary)
+            .foregroundStyle(.osaCritical)
     }
 }
 
@@ -353,10 +393,12 @@ private struct HomeQuickCardRow: View {
             Image(systemName: "bolt.fill")
                 .foregroundStyle(.osaEmergency)
                 .font(.body)
+                .frame(width: 30, height: 30)
+                .background(Color.osaPrimary.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(card.title)
-                    .font(.headline)
+                    .font(.cardTitle)
                     .foregroundStyle(.primary)
 
                 Text(card.summary)
@@ -380,11 +422,13 @@ private struct HomeChecklistRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "checklist")
-                .foregroundStyle(.tint)
+                .foregroundStyle(.osaCalm)
+                .frame(width: 30, height: 30)
+                .background(Color.osaCanopy.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(run.title)
-                    .font(.headline)
+                    .font(.cardTitle)
                     .foregroundStyle(.primary)
 
                 Text("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete")
@@ -407,11 +451,13 @@ private struct HomeInventoryRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "archivebox.fill")
-                .foregroundStyle(.tint)
+                .foregroundStyle(.osaTrust)
+                .frame(width: 30, height: 30)
+                .background(Color.osaPrimary.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(reminder.title)
-                    .font(.headline)
+                    .font(.cardTitle)
                     .foregroundStyle(.primary)
 
                 Text(reminder.detail)
@@ -435,11 +481,13 @@ private struct HomeNoteRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             Image(systemName: "note.text")
-                .foregroundStyle(note.noteType.color)
+                .foregroundStyle(note.noteType.brandColor)
+                .frame(width: 30, height: 30)
+                .background(note.noteType.brandColor.opacity(0.14), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(note.title)
-                    .font(.headline)
+                    .font(.cardTitle)
                     .foregroundStyle(.primary)
 
                 Text(note.plainText)

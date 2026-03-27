@@ -64,7 +64,7 @@ struct TrustedSourceImportSheet: View {
                     if case .invalid(let reason) = viewModel.urlValidation {
                         Text(reason)
                             .font(.caption)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(.osaCritical)
                     }
 
                     Button {
@@ -99,6 +99,8 @@ struct TrustedSourceImportSheet: View {
             }
         }
         .searchable(text: $viewModel.searchText, prompt: "Filter publishers")
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func publisherRow(_ source: TrustedSourceDefinition) -> some View {
@@ -199,6 +201,8 @@ struct TrustedSourceImportSheet: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(.osaBackground)
 
             VStack(spacing: Spacing.sm) {
                 Button {
@@ -227,7 +231,7 @@ struct TrustedSourceImportSheet: View {
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(.green)
+                .foregroundStyle(.osaLocal)
 
             Text("Imported Successfully")
                 .font(.headline)
@@ -266,7 +270,7 @@ struct TrustedSourceImportSheet: View {
 
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(.orange)
+                .foregroundStyle(.osaEmergency)
 
             Text("Import Failed")
                 .font(.headline)

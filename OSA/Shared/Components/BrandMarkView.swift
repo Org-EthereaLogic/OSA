@@ -11,6 +11,8 @@ struct BrandMarkView: View {
         Image("LanternMark")
             .resizable()
             .interpolation(.high)
+            .renderingMode(.original)
+            .scaledToFit()
             .frame(width: size, height: size)
             .accessibilityHidden(true)
     }

@@ -4,27 +4,58 @@ struct ConnectivityBadge: View {
     let state: ConnectivityState
 
     var body: some View {
-        Label(state.rawValue, systemImage: state.icon)
+        HStack(spacing: Spacing.xs) {
+            Circle()
+                .fill(appearance.dot)
+                .frame(width: 8, height: 8)
+
+            Label(state.rawValue, systemImage: state.icon)
+        }
+        .labelStyle(.titleAndIcon)
             .font(.metadataCaption)
             .fontWeight(.medium)
-            .foregroundStyle(foregroundColor)
+            .foregroundStyle(appearance.label)
             .padding(.horizontal, Spacing.sm)
             .padding(.vertical, Spacing.xs)
-            .background(backgroundMaterial, in: Capsule())
+            .background(appearance.background, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(appearance.border, lineWidth: 1)
+            }
             .accessibilityLabel(accessibilityDescription)
     }
 
-    private var foregroundColor: Color {
+    private var appearance: ConnectivityBadgeAppearance {
         switch state {
-        case .offline: .osaBoundary
-        case .onlineConstrained: .osaWarning
-        case .onlineUsable: .osaLocal
-        case .syncInProgress: .osaCalm
+        case .offline:
+            ConnectivityBadgeAppearance(
+                dot: .osaBoundary,
+                label: .primary,
+                background: .lanternDynamic(light: 0xF2E5CA, dark: 0x20352D),
+                border: .osaStroke
+            )
+        case .onlineConstrained:
+            ConnectivityBadgeAppearance(
+                dot: .osaWarning,
+                label: .primary,
+                background: .lanternDynamic(light: 0xF9E9C6, dark: 0x382D14),
+                border: .osaStroke
+            )
+        case .onlineUsable:
+            ConnectivityBadgeAppearance(
+                dot: .osaLocal,
+                label: .primary,
+                background: .lanternDynamic(light: 0xE6F0E9, dark: 0x18342B),
+                border: .osaHairline
+            )
+        case .syncInProgress:
+            ConnectivityBadgeAppearance(
+                dot: .osaTrust,
+                label: .primary,
+                background: .lanternDynamic(light: 0xF7EDDA, dark: 0x223830),
+                border: .osaStroke
+            )
         }
-    }
-
-    private var backgroundMaterial: some ShapeStyle {
-        .ultraThinMaterial
     }
 
     private var accessibilityDescription: String {
@@ -35,6 +66,13 @@ struct ConnectivityBadge: View {
         case .syncInProgress: "Refreshing content from approved sources."
         }
     }
+}
+
+private struct ConnectivityBadgeAppearance {
+    let dot: Color
+    let label: Color
+    let background: Color
+    let border: Color
 }
 
 #Preview {

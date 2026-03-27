@@ -69,6 +69,7 @@ struct InventoryScreen: View {
                         } label: {
                             InventoryItemRow(item: item)
                         }
+                        .listRowBackground(Color.osaSurface)
                     }
                     .onDelete { offsets in
                         deleteItems(in: grouped[category] ?? [], at: offsets)
@@ -78,6 +79,9 @@ struct InventoryScreen: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func loadItems() {
@@ -149,7 +153,7 @@ private struct ExpiryLabel: View {
     var body: some View {
         Label(date.formatted(date: .abbreviated, time: .omitted), systemImage: "calendar.badge.clock")
             .font(.metadataCaption)
-            .foregroundStyle(isExpired ? Color.red : isExpiringSoon ? .osaWarning : Color(.tertiaryLabel))
+            .foregroundStyle(isExpired ? Color.osaCritical : isExpiringSoon ? .osaWarning : Color(.tertiaryLabel))
     }
 }
 

@@ -25,6 +25,7 @@ struct HandbookSectionDetailView: View {
         }
         .navigationTitle(section?.heading ?? "Section")
         .navigationBarTitleDisplayMode(.inline)
+        .background(.osaBackground)
         .task { loadSection() }
         .onDisappear { onscreenContentManager?.clear() }
     }
@@ -42,7 +43,7 @@ struct HandbookSectionDetailView: View {
                 if section.safetyLevel == .sensitiveStaticOnly {
                     Label("Sensitive - static content only", systemImage: "exclamationmark.shield")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(.osaEmergency)
                 }
 
                 if let attributed = try? AttributedString(markdown: section.bodyMarkdown) {

@@ -56,6 +56,7 @@ struct ChecklistsScreen: View {
                         } label: {
                             ActiveRunRow(run: run)
                         }
+                        .listRowBackground(Color.osaSurface)
                     }
                 } header: {
                     Label("Active", systemImage: "play.circle.fill")
@@ -74,6 +75,7 @@ struct ChecklistsScreen: View {
                             } label: {
                                 TemplateRow(template: template)
                             }
+                            .listRowBackground(Color.osaSurface)
                         }
                     } header: {
                         Text(category.capitalized.replacingOccurrences(of: "-", with: " "))
@@ -87,7 +89,11 @@ struct ChecklistsScreen: View {
                 Label("Run History", systemImage: "clock.arrow.circlepath")
                     .foregroundStyle(.secondary)
             }
+            .listRowBackground(Color.osaSurface)
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func loadContent() {

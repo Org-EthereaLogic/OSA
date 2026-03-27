@@ -59,7 +59,7 @@ struct ChecklistRunView: View {
         List {
             Section {
                 ProgressView(value: run.completionFraction)
-                    .tint(run.completionFraction >= 1.0 ? .green : .accentColor)
+                    .tint(run.completionFraction >= 1.0 ? .osaLocal : .osaPrimary)
 
                 HStack {
                     Text("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete")
@@ -88,6 +88,9 @@ struct ChecklistRunView: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func loadRun() {
@@ -190,7 +193,7 @@ private struct RunItemRow: View {
         Button(action: onToggle) {
             HStack {
                 Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(item.isComplete ? .green : .secondary)
+                    .foregroundStyle(item.isComplete ? .osaLocal : .secondary)
                     .font(.title3)
 
                 VStack(alignment: .leading) {
@@ -235,8 +238,8 @@ private struct StatusBadge: View {
 
     private var color: Color {
         switch status {
-        case .inProgress: .blue
-        case .completed: .green
+        case .inProgress: .osaPrimary
+        case .completed: .osaLocal
         case .abandoned: .secondary
         }
     }

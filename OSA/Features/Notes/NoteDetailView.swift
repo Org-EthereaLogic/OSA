@@ -81,8 +81,8 @@ struct NoteDetailView: View {
                         .font(.caption)
                         .padding(.horizontal, Spacing.sm)
                         .padding(.vertical, Spacing.xxs)
-                        .background(note.noteType.color.opacity(0.15), in: Capsule())
-                        .foregroundStyle(note.noteType.color)
+                        .background(note.noteType.brandColor.opacity(0.15), in: Capsule())
+                        .foregroundStyle(note.noteType.brandColor)
 
                     Spacer()
 
@@ -106,6 +106,7 @@ struct NoteDetailView: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.bottom, Spacing.xxxl)
         }
+        .background(.osaBackground)
     }
 
     private func loadNote() {

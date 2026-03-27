@@ -87,8 +87,7 @@ struct SettingsScreen: View {
                 HStack(spacing: Spacing.sm) {
                     BrandMarkView(size: 44)
                     VStack(alignment: .leading, spacing: Spacing.xxs) {
-                        Text(AppBrand.displayName)
-                            .font(.cardTitle)
+                        BrandWordmarkView(height: 24)
                         Text(AppBrand.subtitle)
                             .font(.metadataCaption)
                             .foregroundStyle(.secondary)
@@ -106,6 +105,9 @@ struct SettingsScreen: View {
             }
         }
         .tint(.osaPrimary)
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
         .navigationTitle("Settings")
     }
 

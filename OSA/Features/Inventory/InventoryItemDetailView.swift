@@ -98,7 +98,7 @@ struct InventoryItemDetailView: View {
                     if let threshold = item.reorderThreshold {
                         LabeledContent("Reorder At") {
                             Text("\(threshold) \(item.unit)")
-                                .foregroundStyle(item.quantity <= threshold ? .orange : .secondary)
+                                .foregroundStyle(item.quantity <= threshold ? .osaWarning : .secondary)
                         }
                     }
                 }
@@ -120,6 +120,9 @@ struct InventoryItemDetailView: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(.osaBackground)
     }
 
     private func loadItem() {
@@ -170,7 +173,7 @@ private struct ExpiryBadge: View {
 
     var body: some View {
         Text(date.formatted(date: .abbreviated, time: .omitted))
-            .foregroundStyle(isExpired ? .red : isExpiringSoon ? .orange : .primary)
+            .foregroundStyle(isExpired ? .osaCritical : isExpiringSoon ? .osaWarning : .primary)
     }
 }
 

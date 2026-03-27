@@ -33,6 +33,7 @@ struct ChapterDetailView: View {
         }
         .navigationTitle(chapter?.title ?? "Chapter")
         .navigationBarTitleDisplayMode(.large)
+        .background(.osaBackground)
         .task { loadChapter() }
     }
 
@@ -47,7 +48,7 @@ struct ChapterDetailView: View {
                 if chapter.isSeeded {
                     Label("Curated", systemImage: "checkmark.seal.fill")
                         .font(.caption2)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.osaTrust)
                 }
 
                 if let reviewed = chapter.lastReviewedAt {
@@ -83,7 +84,7 @@ private struct SectionContentBlock: View {
             if section.safetyLevel == .sensitiveStaticOnly {
                 Label("Sensitive \u{2014} static content only", systemImage: "exclamationmark.shield")
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(.osaEmergency)
             }
 
             if let attributed = try? AttributedString(markdown: section.bodyMarkdown) {

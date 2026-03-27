@@ -26,7 +26,11 @@ struct ChecklistRunHistoryView: View {
                     } label: {
                         HistoryRow(run: run)
                     }
+                    .listRowBackground(Color.osaSurface)
                 }
+                .listStyle(.insetGrouped)
+                .scrollContentBackground(.hidden)
+                .background(.osaBackground)
             }
         }
         .navigationTitle("Run History")
@@ -56,7 +60,7 @@ private struct HistoryRow: View {
 
                 Text(run.status == .completed ? "Completed" : "Abandoned")
                     .font(.caption2)
-                    .foregroundStyle(run.status == .completed ? .green : .secondary)
+                    .foregroundStyle(run.status == .completed ? .osaLocal : .secondary)
             }
 
             HStack(spacing: Spacing.sm) {
