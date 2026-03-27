@@ -19,5 +19,8 @@ Packages/
 # CocoaPods (if ever used)
 Pods/
 
+# Test artifacts
+test_output.txt
+
 # Ignore insiders AI rules
 .github/instructions/codacy.instructions.md
