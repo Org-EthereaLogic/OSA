@@ -34,10 +34,12 @@ struct OSAApp: App {
                 .environment(\.importPipeline, dependencies.importPipeline)
                 .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
                 .environment(\.onscreenContentManager, onscreenContentManager)
+                .environment(\.discoveryCoordinator, dependencies.discoveryCoordinator)
                 .task {
                     SharedRuntime.installNavigationCoordinator(navigationCoordinator)
                     SharedRuntime.installOnscreenContentManager(onscreenContentManager)
                     await dependencies.refreshCoordinator.start()
+                    await dependencies.discoveryCoordinator.startIfDue()
                 }
         }
         .modelContainer(sharedModelContainer)

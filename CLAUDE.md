@@ -53,7 +53,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
 | `OSA/Retrieval/` | Local retrieval pipeline, query normalization, and evidence ranking (Chunking and Citations subdirs are stubs) |
-| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); DTOs/ for fetch response types |
+| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); M6P5 Discovery/ (RSSFeedParser, RSSFeedRegistry, RSSDiscoveryService, BraveSearchClient, KnowledgeDiscoveryCoordinator); DTOs/ for fetch response types |
 | `OSA/App/Intents/` | M6P1 AskLanternIntent (Siri App Intent with AssistantSchema search conformance) and LanternAppShortcutsProvider; M6P4 OpenQuickCardIntent, OpenHandbookSectionIntent, and OnscreenContentManager |
 | `OSA/App/Intents/Entities/` | M6P2 App Entities (HandbookSectionEntity, QuickCardEntity, ChecklistEntity, InventoryItemEntity) with EntityStringQuery, IndexedEntity, and shared EntityQueryResolver |
 | `OSA/Assistant/InventoryCompletion/` | M6P3 InventoryCompletionService (FM structured output + heuristic fallback) and InventoryCompletionMerger for inventory form suggestions |

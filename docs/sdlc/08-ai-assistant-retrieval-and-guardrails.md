@@ -161,6 +161,12 @@ Prompt inputs should include:
 - `OpenQuickCardIntent` and `OpenHandbookSectionIntent` accept existing `AppEntity` types and deep-link into the app via `AppNavigationCoordinator`. No second retrieval or lookup path is introduced.
 - `OnscreenContentManager` publishes currently viewed quick card or handbook section context for potential Siri follow-up. Only handbook sections and quick cards are published; notes, inventory, checklists, and imported knowledge remain excluded for privacy.
 
+**Current implementation (M6P5):**
+
+- `KnowledgeDiscoveryCoordinator` discovers new content from RSS feeds (primary, zero cost) and optionally Brave Search free tier (user-provided API key). Both sources produce candidate URLs filtered to `TrustedSourceAllowlist` domains.
+- Discovered URLs are deduplicated against already-imported sources, then fetched and imported through the existing `ImportedKnowledgeImportPipeline`. The existing trust model is preserved: tier 1/2 auto-approve, tier 3 lands as `.pending`.
+- Discovery is connectivity-gated, schedule-limited (once per day), and has a manual trigger in Settings. No content bypasses the editorial gate.
+
 This keeps UI and retrieval logic independent of the underlying model choice.
 
 ## Support Matrix For Device And Model Availability

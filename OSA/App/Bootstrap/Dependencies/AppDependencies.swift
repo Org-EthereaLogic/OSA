@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 
 struct AppDependencies {
@@ -17,6 +18,7 @@ struct AppDependencies {
     let importPipeline: ImportedKnowledgeImportPipeline
     let refreshCoordinator: ImportedKnowledgeRefreshCoordinator
     let inventoryCompletionService: any InventoryCompletionService
+    let discoveryCoordinator: KnowledgeDiscoveryCoordinator
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -66,6 +68,24 @@ struct AppDependencies {
             capabilityDetector: capabilityDetector
         )
 
+        let rssDiscoveryService = LiveRSSDiscoveryService()
+        let webSearchClient: (any WebSearchClient)? = {
+            let apiKey = UserDefaults.standard.string(
+                forKey: DiscoverySettings.braveSearchAPIKeyKey
+            )
+            guard let key = apiKey, !key.isEmpty else { return nil }
+            return BraveSearchClient(apiKey: key)
+        }()
+
+        let discoveryCoordinator = KnowledgeDiscoveryCoordinator(
+            rssDiscoveryService: rssDiscoveryService,
+            webSearchClient: webSearchClient,
+            httpClient: trustedSourceHTTPClient,
+            importPipeline: importPipeline,
+            importedKnowledgeRepository: importedKnowledgeRepository,
+            connectivityService: connectivityService
+        )
+
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
@@ -82,7 +102,8 @@ struct AppDependencies {
             trustedSourceHTTPClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,
             refreshCoordinator: refreshCoordinator,
-            inventoryCompletionService: inventoryCompletionService
+            inventoryCompletionService: inventoryCompletionService,
+            discoveryCoordinator: discoveryCoordinator
         )
     }
 

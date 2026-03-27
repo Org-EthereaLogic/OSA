@@ -60,6 +60,10 @@ private struct OnscreenContentManagerKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: OnscreenContentManager? = nil
 }
 
+private struct DiscoveryCoordinatorKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: KnowledgeDiscoveryCoordinator? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -134,5 +138,10 @@ extension EnvironmentValues {
     var onscreenContentManager: OnscreenContentManager? {
         get { self[OnscreenContentManagerKey.self] }
         set { self[OnscreenContentManagerKey.self] = newValue }
+    }
+
+    var discoveryCoordinator: KnowledgeDiscoveryCoordinator? {
+        get { self[DiscoveryCoordinatorKey.self] }
+        set { self[DiscoveryCoordinatorKey.self] = newValue }
     }
 }

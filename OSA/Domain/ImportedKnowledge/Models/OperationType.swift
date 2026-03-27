@@ -7,4 +7,5 @@ enum OperationType: String, Codable, CaseIterable, Equatable, Sendable {
     case chunk
     case index
     case refreshKnownSource
+    case discoverNewContent
 }

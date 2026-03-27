@@ -294,8 +294,23 @@ private func makeTestDependencies(
         ),
         inventoryCompletionService: LocalInventoryCompletionService(
             capabilityDetector: StubCapabilityDetector(mode: .extractiveOnly)
+        ),
+        discoveryCoordinator: KnowledgeDiscoveryCoordinator(
+            rssDiscoveryService: StubRSSDiscoveryService(),
+            webSearchClient: nil,
+            httpClient: StubTrustedSourceHTTPClient(),
+            importPipeline: ImportedKnowledgeImportPipeline(
+                repository: StubImportedKnowledgeRepository(),
+                searchService: searchService
+            ),
+            importedKnowledgeRepository: StubImportedKnowledgeRepository(),
+            connectivityService: StubConnectivityService()
         )
     )
+}
+
+private struct StubRSSDiscoveryService: RSSDiscoveryService {
+    func discoverArticles() async -> [DiscoveredArticle] { [] }
 }
 
 // MARK: - Focused Stubs (reuses StubSearchService and StubCapabilityDetector from LocalRetrievalServiceTests)
