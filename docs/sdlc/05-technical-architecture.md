@@ -185,7 +185,7 @@ The app should treat online behavior as enrichment, not dependency:
 
 Recommended flow:
 
-1. Discover candidate trusted sources.
+1. Discover candidate trusted sources (user-initiated import, or M6P5 knowledge discovery via RSS feeds and optional Brave Search — see below).
 2. Capture source metadata and download content into a raw cache.
 3. Normalize to project content schema.
 4. Run trust and policy filters.
@@ -193,6 +193,14 @@ Recommended flow:
 6. Persist `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and citation metadata.
 7. Index chunks locally.
 8. Mark content available for offline retrieval.
+
+### Knowledge Discovery (M6P5)
+
+The pipeline supports automated source discovery in addition to user-initiated imports:
+
+- **RSS feed discovery** (primary, zero cost): `RSSFeedRegistry` maintains known feed URLs for trusted sources. `RSSFeedParser` parses RSS 2.0 and Atom feeds. `LiveRSSDiscoveryService` fetches and returns candidate article URLs.
+- **Brave Search enrichment** (optional): `BraveSearchClient` queries Brave Search free tier using a user-provided API key with monthly budget tracking. Results are filtered to `TrustedSourceAllowlist` approved domains only.
+- **Coordination**: `KnowledgeDiscoveryCoordinator` orchestrates RSS + Brave discovery → deduplication against already-imported sources → routing into the existing `ImportedKnowledgeImportPipeline`. Connectivity-gated, schedule-limited (once per day), with manual trigger in Settings. Tier 1–2 sources auto-approve; Tier 3 lands as `.pending` for user review.
 
 ## Trust Boundaries
 
@@ -229,6 +237,16 @@ Recommendation:
 - Use `BGAppRefreshTask` for stale checks and metadata refresh.
 - Use background `URLSession` only for larger content pack downloads or approved source refreshes.
 - Require imported content to complete normalization and local commit atomically before it becomes queryable.
+
+## Design System And Brand
+
+The app adopts the Lantern brand palette with warm amber/gold as primary accent. Color tokens are defined in `OSA/Shared/DesignSystem/ColorTokens.swift` with three layers:
+
+- **Brand tokens** — `osaPrimary` (Lantern gold accent), `osaEmber` (deep warm orange for emergency urgency), `osaSlate` (dark warm charcoal for emphasis).
+- **Surface tokens** — `osaBackground` (system grouped), `osaSecondaryBackground` (warm card surface via `LanternWarmSurface`), `osaSurface` (system background for inputs and modals).
+- **Semantic meaning tokens** — `osaEmergency` (quick cards, critical alerts), `osaTrust` (reviewed badges, citation confidence), `osaCalm` (informational emphasis), `osaWarning` (expiry, low stock), `osaLocal` (offline-safe indicator), `osaBoundary` (scope limits, blocked topics).
+
+Named colors (`AccentColor`, `LanternEmber`, `LanternSlate`, `LanternWarmSurface`) are defined in the asset catalog and adapt to light/dark appearance. Brand assets (wordmarks, icons, favicon, typography guide, full color system) are in `assets/lantern-brand-kit/`.
 
 ## CI And Quality Automation
 

@@ -34,9 +34,10 @@ xcodebuild -project OSA.xcodeproj -scheme OSA -destination 'platform=iOS Simulat
 - `docs/adr/` — accepted architecture decisions
 - `docs/reference/` — non-canonical local reference snapshots and future preserved inputs
 - `scripts/` — project-generation, validation, and maintenance helpers
+- `assets/` — Lantern brand kit including wordmarks, icons, favicon, typography guide, and color system
 - `report/` — append-only human-readable verification and release evidence
 - `screenshot/` — image evidence retained alongside dated reports when needed
 
 ## Current Phase
 
-Milestone 1 remains in foundation work. The app shell and navigation exist; the repository is now organized for persistence, retrieval, assistant policy, seed content, and test implementation without changing the product boundary.
+Milestone 6 (Apple Intelligence Surface) is complete. The app includes offline-first handbook browsing, grounded local Ask assistant with citations, inventory/checklists/notes organizer, Siri App Intents with AssistantSchema, Spotlight indexing via App Entities, FM-powered inventory completion with heuristic fallback, RSS-based knowledge discovery with optional Brave Search enrichment, and the Lantern brand palette with warm amber/gold themed surfaces. 337 unit tests and 1 UI test pass across 36 suites. See `docs/sdlc/00-doc-suite-index.md` for detailed status.

@@ -12,6 +12,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Data Mo
 - M4P2 imported knowledge domain models and persistence are implemented: `SourceRecord`, `ImportedKnowledgeDocument`, `KnowledgeChunk`, and `PendingOperation` with SwiftData persistence, cascade relationships, and repository protocols.
 - M4P3 trusted-source allowlist and HTTP client are implemented: `TrustedSourceAllowlist` enumerates 15 PNW-focused approved publishers across three trust tiers (curated/approved, community/approved, unverified/pending). `TrustedSourceHTTPClient` protocol defines the fetch contract; `URLSessionTrustedSourceHTTPClient` provides the live implementation with connectivity, HTTPS, allowlist, status, content-type, size, and post-redirect guards. `TrustedSourceFetchResponse` carries raw fetch metadata and body.
 - M4P4 import pipeline is implemented: `ImportedKnowledgeNormalizer` accepts `TrustedSourceFetchResponse` and produces `NormalizedDocument` (title, plain text, markdown, content hash, publisher domain, document type). `KnowledgeChunker` chunks normalized documents by heading boundaries with paragraph-group fallback, producing `KnowledgeChunk` records with stable local IDs, heading paths, and token estimates. `ImportedKnowledgeImportPipeline` orchestrates normalize → chunk → persist → index with content-hash dedupe and document versioning (same-hash refresh vs. new-version supersede). Approved chunks are indexed via `SearchService.indexImportedChunk` and become discoverable by `LocalRetrievalService` and Ask; pending Tier 3 chunks persist locally but are not indexed.
+- M6P5 knowledge discovery is implemented: `RSSFeedParser` (RSS 2.0/Atom), `RSSFeedRegistry` (5 trusted sources), `LiveRSSDiscoveryService`, `BraveSearchClient` (optional, user-provided API key with monthly budget tracking), and `KnowledgeDiscoveryCoordinator` (unified RSS + Brave → dedup → existing ImportPipeline). Connectivity-gated, schedule-limited (once per day), manual trigger in Settings. Tier 1–2 auto-approve; Tier 3 lands as `.pending`.
 
 ## Assumptions
 
@@ -159,6 +160,30 @@ Recommendation:
 - Commit refreshed content atomically only after normalization, validation, and indexing complete.
 - Respect battery, Low Power Mode, and constrained network status.
 - Log background failures locally for later diagnostics without leaking content off-device.
+
+## Knowledge Discovery (M6P5)
+
+RSS-first discovery from trusted sources with optional Brave Search enrichment. All discovered URLs feed into the existing `ImportedKnowledgeImportPipeline`, ensuring no content bypasses the editorial gate.
+
+### RSS Feed Discovery (primary, zero cost)
+
+- `RSSFeedRegistry` maintains hardcoded feed URLs for 5 trusted sources with known RSS/Atom feeds.
+- `RSSFeedParser` (Foundation `XMLParser`-based) parses RSS 2.0 and Atom feeds, extracting title, publication date, and link.
+- `LiveRSSDiscoveryService` fetches and parses feeds, returning candidate article URLs.
+
+### Brave Search Integration (optional, user-provided API key)
+
+- `BraveSearchClient` queries the Brave Search free tier with monthly budget tracking.
+- Results are filtered to `TrustedSourceAllowlist` approved domains only — unapproved domains are discarded.
+- User must provide their own API key in Settings; when absent, Brave Search is skipped entirely.
+
+### Discovery Coordination
+
+- `KnowledgeDiscoveryCoordinator` orchestrates: RSS + Brave → deduplication against already-imported source URLs → routing into `ImportedKnowledgeImportPipeline`.
+- **Connectivity-gated**: discovery only runs when `ConnectivityState` is `.onlineUsable`.
+- **Schedule-limited**: once per 24-hour window, with manual trigger available in Settings.
+- **Tier behavior**: Tier 1–2 sources auto-approve through the import pipeline; Tier 3 sources land as `.pending` for user review.
+- **Error resilience**: a failed individual feed fetch does not abort the entire discovery run.
 
 ## Telemetry And Logging Boundaries
 
