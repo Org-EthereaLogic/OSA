@@ -91,7 +91,7 @@ struct NoteDetailView: View {
                         .foregroundStyle(.tertiary)
                 }
 
-                if let attributed = try? AttributedString(markdown: note.bodyMarkdown) {
+                if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(note.bodyMarkdown)) {
                     Text(attributed)
                         .font(.body)
                 } else {

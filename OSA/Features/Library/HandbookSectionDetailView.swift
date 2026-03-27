@@ -46,7 +46,7 @@ struct HandbookSectionDetailView: View {
                         .foregroundStyle(.osaEmergency)
                 }
 
-                if let attributed = try? AttributedString(markdown: section.bodyMarkdown) {
+                if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(section.bodyMarkdown)) {
                     Text(attributed)
                         .font(.body)
                 } else {

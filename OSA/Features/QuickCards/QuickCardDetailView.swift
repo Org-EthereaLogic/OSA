@@ -56,7 +56,7 @@ struct QuickCardDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: Spacing.lg) {
-                    if let attributed = try? AttributedString(markdown: card.bodyMarkdown) {
+                    if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(card.bodyMarkdown)) {
                         Text(attributed)
                             .font(.cardBody)
                     } else {
