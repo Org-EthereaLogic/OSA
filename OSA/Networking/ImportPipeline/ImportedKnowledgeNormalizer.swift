@@ -84,8 +84,8 @@ enum ImportedKnowledgeNormalizer {
         // Remove script and style blocks first
         var result = html
         let blockPatterns = [
-            "<script[^>]*>[\\s\\S]*?</script>",
-            "<style[^>]*>[\\s\\S]*?</style>"
+            "<script[^>]*>[\\s\\S]*?</script[^>]*>",
+            "<style[^>]*>[\\s\\S]*?</style[^>]*>"
         ]
         for pattern in blockPatterns {
             if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
