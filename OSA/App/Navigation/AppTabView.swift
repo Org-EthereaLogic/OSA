@@ -66,6 +66,7 @@ struct AppTabView: View {
                 Text("More")
             }
         }
+        .tint(.osaPrimary)
         .tabViewStyle(.sidebarAdaptable)
         .onChange(of: coordinator.pendingRoute) { _, route in
             guard let route else { return }

@@ -40,6 +40,7 @@ struct HomeScreen: View {
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(AppBrand.displayName)
                         .font(.stressTitle)
+                        .foregroundStyle(.osaSlate)
                     Text(AppBrand.subtitle)
                         .font(.categoryLabel)
                         .foregroundStyle(.secondary)
@@ -59,6 +60,16 @@ struct HomeScreen: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            LinearGradient(
+                colors: [Color.osaPrimary.opacity(0.12), Color.osaPrimary.opacity(0.04)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+        )
     }
 
     private var quickCardsSection: some View {

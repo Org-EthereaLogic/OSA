@@ -6,21 +6,27 @@ struct QuickCardDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                // Category badge
-                Label {
-                    Text(card.category)
-                        .font(.categoryLabel)
-                        .textCase(.uppercase)
-                } icon: {
-                    Image(systemName: "bolt.fill")
-                        .font(.caption2)
-                }
-                .foregroundStyle(.osaEmergency)
+                // Category + title header — warm ember accent area
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    Label {
+                        Text(card.category)
+                            .font(.categoryLabel)
+                            .textCase(.uppercase)
+                    } icon: {
+                        Image(systemName: "bolt.fill")
+                            .font(.caption2)
+                    }
+                    .foregroundStyle(.osaEmber)
 
-                // Title — large-type stress reading
-                Text(card.title)
-                    .font(.stressTitle)
-                    .foregroundStyle(.primary)
+                    // Title — large-type stress reading
+                    Text(card.title)
+                        .font(.stressTitle)
+                        .foregroundStyle(.primary)
+                }
+                .padding(Spacing.lg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.osaSecondaryBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                .padding(.horizontal, -Spacing.lg)
 
                 // Body content
                 if let attributed = try? AttributedString(markdown: card.bodyMarkdown) {

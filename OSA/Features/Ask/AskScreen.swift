@@ -53,6 +53,7 @@ struct AskScreen: View {
 
             inputBar
         }
+        .tint(.osaPrimary)
         .background(.osaBackground)
         .navigationTitle("Ask")
         .task { await observeConnectivity() }

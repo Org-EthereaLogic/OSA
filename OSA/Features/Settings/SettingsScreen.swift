@@ -95,7 +95,8 @@ struct SettingsScreen: View {
                     }
                     Spacer()
                 }
-                .padding(.vertical, Spacing.xxs)
+                .padding(.vertical, Spacing.sm)
+                .listRowBackground(Color.osaSecondaryBackground)
 
                 LabeledContent("Version") {
                     Text("0.1.0")
@@ -104,6 +105,7 @@ struct SettingsScreen: View {
                 }
             }
         }
+        .tint(.osaPrimary)
         .navigationTitle("Settings")
     }
 
