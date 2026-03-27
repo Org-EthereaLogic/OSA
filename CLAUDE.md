@@ -60,8 +60,10 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Assistant/Orchestration/` | M6P1 AskLanternIntentExecutor — intent-facing retrieval executor with citation formatting |
 | `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
 | `.codacy/` | Codacy CLI bootstrap script for local quality checks |
-| `OSA/Shared/` | Reusable UI and cross-cutting helpers |
-| `scripts/` | Helper scripts and tools (project generation, validation, branding) |
+| `OSA/Shared/` | Reusable UI (BrandMarkView, BrandWordmarkView, ConnectivityBadge), design system (ColorTokens, Typography), and cross-cutting helpers (MarkdownPreprocessor, AppBrand) |
+| `OSAUITests/` | UI tests: launch test, E2E visual navigation (OSAFullE2EVisualTests), content/input tests (OSAContentAndInputTests) |
+| `scripts/` | Helper scripts: project generation, validation, branding, TestFlight archive-and-upload (`archive-and-upload.sh`) |
+| `ExportOptions.plist` | Xcode archive export configuration for App Store Connect upload |
 | `docs/` | Documentation root — see `docs/README.md` for navigation |
 | `docs/sdlc/` | Canonical SDLC, product, architecture, quality, safety, and release docs |
 | `docs/adr/` | Accepted architecture decisions |

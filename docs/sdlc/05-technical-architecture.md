@@ -240,13 +240,19 @@ Recommendation:
 
 ## Design System And Brand
 
-The app adopts the Lantern brand palette with warm amber/gold as primary accent. Color tokens are defined in `OSA/Shared/DesignSystem/ColorTokens.swift` with three layers:
+The app adopts the Lantern brand palette with a forest-canopy identity anchored by warm gold, deep green, and paper-glow surfaces. Color tokens are defined in `OSA/Shared/DesignSystem/ColorTokens.swift` using `lanternDynamic(light:dark:)` for automatic light/dark adaptation, organized into three layers:
 
-- **Brand tokens** — `osaPrimary` (Lantern gold accent), `osaEmber` (deep warm orange for emergency urgency), `osaSlate` (dark warm charcoal for emphasis).
-- **Surface tokens** — `osaBackground` (system grouped), `osaSecondaryBackground` (warm card surface via `LanternWarmSurface`), `osaSurface` (system background for inputs and modals).
-- **Semantic meaning tokens** — `osaEmergency` (quick cards, critical alerts), `osaTrust` (reviewed badges, citation confidence), `osaCalm` (informational emphasis), `osaWarning` (expiry, low stock), `osaLocal` (offline-safe indicator), `osaBoundary` (scope limits, blocked topics).
+- **Brand tokens** — `osaPrimary` (Lantern gold accent), `osaCanopy` (#214C40 forest green), `osaPine` (#173329 deep pine), `osaNight` (#0E221C deepest neutral), `osaPaperGlow` (warm paper highlight), `osaEmber` (deep warm orange for emergency urgency), `osaSlate` (dark warm charcoal for emphasis).
+- **Surface tokens** — `osaBackground` (warm paper / forest night), `osaSecondaryBackground` (warm card / deep pine), `osaSurface` (input / modal), `osaElevatedSurface` (hero cards / canopy), `osaStroke` (branded card borders), `osaHairline` (fine dividers).
+- **Semantic meaning tokens** — `osaEmergency` (quick cards, critical alerts), `osaTrust` (reviewed badges, citation confidence), `osaCalm` (informational emphasis), `osaWarning` (expiry, low stock), `osaLocal` (offline-safe indicator), `osaBoundary` (scope limits, blocked topics), `osaCritical` (import failures, destructive warnings).
 
-Named colors (`AccentColor`, `LanternEmber`, `LanternSlate`, `LanternWarmSurface`) are defined in the asset catalog and adapt to light/dark appearance. Brand assets (wordmarks, icons, favicon, typography guide, full color system) are in `assets/lantern-brand-kit/`.
+Typography tokens (`stressTitle`, `cardTitle`, `cardBody`, `categoryLabel`, `metadataCaption`, `sectionHeader`, `brandEyebrow`, `brandSubheadline`) are defined in `OSA/Shared/DesignSystem/Typography.swift`.
+
+Named asset catalog colors (`AccentColor`, `LanternEmber`, `LanternSlate`) provide backward compatibility; all new colors use code-defined `lanternDynamic()` pairs. Brand assets (wordmarks, icons, favicon, typography guide, full color system) are in `assets/lantern-brand-kit/`. `BrandWordmarkView` and `BrandMarkView` in `OSA/Shared/Components/` render wordmark and monogram variants.
+
+### Markdown Rendering
+
+`MarkdownPreprocessor` in `OSA/Shared/Support/` preprocesses markdown body content before passing it to `AttributedString(markdown:)`. SwiftUI's `Text(AttributedString)` does not render block-level list elements — bullet and numbered list items collapse into a single paragraph. The preprocessor converts list items to paragraph-separated bullet points, applied across `ChapterDetailView`, `HandbookSectionDetailView`, `QuickCardDetailView`, and `NoteDetailView`.
 
 ## CI And Quality Automation
 
