@@ -34,6 +34,7 @@ struct OSAApp: App {
                 .environment(\.importPipeline, dependencies.importPipeline)
                 .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
                 .environment(\.onscreenContentManager, onscreenContentManager)
+                .environment(\.rssDiscoveryService, dependencies.rssDiscoveryService)
                 .environment(\.discoveryCoordinator, dependencies.discoveryCoordinator)
                 .task {
                     SharedRuntime.installNavigationCoordinator(navigationCoordinator)

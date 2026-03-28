@@ -295,6 +295,7 @@ private func makeTestDependencies(
         inventoryCompletionService: LocalInventoryCompletionService(
             capabilityDetector: StubCapabilityDetector(mode: .extractiveOnly)
         ),
+        rssDiscoveryService: StubRSSDiscoveryService(),
         discoveryCoordinator: KnowledgeDiscoveryCoordinator(
             rssDiscoveryService: StubRSSDiscoveryService(),
             webSearchClient: nil,

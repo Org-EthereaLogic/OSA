@@ -169,7 +169,9 @@ Under stress, the app should bias toward direct card opening and simple checklis
 ### Home
 
 - top header with app state and offline badge
-- emergency quick-card block (loaded from quick-card repository)
+- Spotlight section with segmented picker (Quick Cards / Feed tabs):
+  - Quick Cards tab: randomized selection of top 3 quick cards from repository
+  - Feed tab: top 5 most recent RSS-discovered articles sorted by publish date (lazy-loaded on first tab switch)
 - section for active checklist runs (loaded from checklist repository)
 - section for inventory reminders (loaded from inventory repository, filtered by expiry)
 - recent notes (loaded from notes repository)

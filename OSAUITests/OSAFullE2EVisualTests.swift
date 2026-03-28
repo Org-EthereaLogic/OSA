@@ -54,11 +54,25 @@ final class OSAFullE2EVisualTests: XCTestCase {
             "Quick Cards section header should appear on Home"
         )
 
-        // At least one quick card
-        XCTAssertTrue(
-            app.staticTexts["Earthquake Drop-Cover-Hold"].exists,
-            "Earthquake quick card should appear on Home"
-        )
+        // At least one quick card (randomized on each launch)
+        let quickCardLabels = [
+            "Earthquake Drop-Cover-Hold",
+            "First Hour Power Outage Check",
+            "Boil Water Advisory Steps",
+            "Gas Leak Response",
+            "Go-Bag Grab List",
+            "Family Meeting Point Reminder",
+            "Severe Weather Shelter Steps",
+            "Refrigerator Food Safety Timer",
+            "Water Rotation Check",
+            "Home Medication Check",
+            "Smoke And CO Detector Check",
+            "Vehicle Breakdown Safety Steps",
+            "Utility Shutoff Quick Reference",
+            "Winter Storm Home Preparation"
+        ]
+        let anyCardVisible = quickCardLabels.contains { app.staticTexts[$0].exists }
+        XCTAssertTrue(anyCardVisible, "At least one quick card should appear on Home")
 
         // Active Checklists section
         XCTAssertTrue(
@@ -73,9 +87,26 @@ final class OSAFullE2EVisualTests: XCTestCase {
     func testHomeTapQuickCard() {
         tapTab("Home")
 
-        let card = app.staticTexts["Earthquake Drop-Cover-Hold"]
-        guard card.waitForExistence(timeout: 3) else {
-            XCTFail("Earthquake quick card not found on Home")
+        // Quick cards are randomized; tap whichever one appears first
+        let quickCardLabels = [
+            "Earthquake Drop-Cover-Hold",
+            "First Hour Power Outage Check",
+            "Boil Water Advisory Steps",
+            "Gas Leak Response",
+            "Go-Bag Grab List",
+            "Family Meeting Point Reminder",
+            "Severe Weather Shelter Steps",
+            "Refrigerator Food Safety Timer",
+            "Water Rotation Check",
+            "Home Medication Check",
+            "Smoke And CO Detector Check",
+            "Vehicle Breakdown Safety Steps",
+            "Utility Shutoff Quick Reference",
+            "Winter Storm Home Preparation"
+        ]
+        guard let card = quickCardLabels.first(where: { app.staticTexts[$0].waitForExistence(timeout: 1) })
+            .map({ app.staticTexts[$0] }) else {
+            XCTFail("No quick card found on Home")
             return
         }
         card.tap()
@@ -85,6 +116,41 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
         // Navigate back
         navigateBack()
+    }
+
+    @MainActor
+    func testHomeSpotlightFeedTab() {
+        tapTab("Home")
+
+        // Segmented picker should have "Feed" segment
+        let feedSegment = app.buttons["Feed"]
+        guard feedSegment.waitForExistence(timeout: 3) else {
+            XCTFail("Feed segment should appear in Spotlight picker on Home")
+            return
+        }
+        feedSegment.tap()
+        sleep(3)
+
+        screenshot("Home-Spotlight-Feed")
+
+        // After tapping Feed, we should see either articles or an informational state
+        let anyArticle = app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS[c] 'Read more'")
+        ).firstMatch
+        let emptyState = app.staticTexts["No articles available. Connect to the internet to fetch feeds."]
+        let failedState = app.staticTexts["Feed service unavailable."]
+        let loadingState = app.staticTexts["Fetching latest articles..."]
+
+        let feedResolved = anyArticle.exists || emptyState.exists || failedState.exists || loadingState.exists
+        XCTAssertTrue(feedResolved, "Feed tab should show articles, empty state, or loading indicator")
+
+        // Switch back to Quick Cards to verify toggle works
+        let quickCardsSegment = app.buttons["Quick Cards"]
+        if quickCardsSegment.exists {
+            quickCardsSegment.tap()
+            sleep(1)
+            screenshot("Home-Spotlight-QuickCards")
+        }
     }
 
     @MainActor

@@ -5,8 +5,11 @@ struct HomeScreen: View {
     @Environment(\.checklistRepository) private var checklistRepository
     @Environment(\.inventoryRepository) private var inventoryRepository
     @Environment(\.noteRepository) private var noteRepository
+    @Environment(\.rssDiscoveryService) private var rssDiscoveryService
 
+    @State private var spotlightMode: SpotlightMode = .quickCards
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
+    @State private var feedState: HomeSectionState<[DiscoveredArticle]> = .loading
     @State private var checklistsState: HomeSectionState<[ChecklistRun]> = .loading
     @State private var inventoryState: HomeSectionState<[HomeInventoryReminder]> = .loading
     @State private var notesState: HomeSectionState<[NoteRecord]> = .loading
@@ -15,7 +18,7 @@ struct HomeScreen: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 header
-                quickCardsSection
+                spotlightSection
                 activeChecklistsSection
                 inventorySection
                 recentNotesSection
@@ -87,18 +90,50 @@ struct HomeScreen: View {
         .shadow(color: Color.osaNight.opacity(0.16), radius: 20, y: 10)
     }
 
-    private var quickCardsSection: some View {
-        HomeSectionCard(title: "Quick Cards", systemImage: "bolt.fill") {
+    private var spotlightSection: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Label("Quick Cards", systemImage: "bolt.fill")
+                .font(.sectionHeader)
+                .foregroundStyle(.primary)
+
+            Picker("", selection: $spotlightMode) {
+                ForEach(SpotlightMode.allCases) { mode in
+                    Label(mode.title, systemImage: mode.icon)
+                        .tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            switch spotlightMode {
+            case .quickCards:
+                quickCardsContent
+            case .feed:
+                feedContent
+            }
+        }
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.lg)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+        .onChange(of: spotlightMode) {
+            if spotlightMode == .feed, case .loading = feedState {
+                Task { await loadFeed() }
+            }
+        }
+    }
+
+    private var quickCardsContent: some View {
+        Group {
             switch quickCardsState {
             case .loading:
                 HomeSectionLoadingView(label: "Loading quick cards...")
-
             case .empty:
                 HomeSectionEmptyView(message: "No quick cards available yet.")
-
             case .failed(let message):
                 HomeSectionFailureView(message: message)
-
             case .loaded(let cards):
                 VStack(spacing: Spacing.sm) {
                     ForEach(cards) { card in
@@ -108,6 +143,25 @@ struct HomeScreen: View {
                             HomeQuickCardRow(card: card)
                         }
                         .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    private var feedContent: some View {
+        Group {
+            switch feedState {
+            case .loading:
+                HomeSectionLoadingView(label: "Fetching latest articles...")
+            case .empty:
+                HomeSectionEmptyView(message: "No articles available. Connect to the internet to fetch feeds.")
+            case .failed(let message):
+                HomeSectionFailureView(message: message)
+            case .loaded(let articles):
+                VStack(spacing: Spacing.sm) {
+                    ForEach(articles, id: \.articleURL) { article in
+                        HomeFeedArticleRow(article: article)
                     }
                 }
             }
@@ -200,15 +254,32 @@ struct HomeScreen: View {
         loadActiveChecklists()
         loadInventoryReminders()
         loadRecentNotes()
+        if spotlightMode == .feed {
+            Task { await loadFeed() }
+        }
     }
 
     private func loadQuickCards() {
         do {
-            let cards = Array((try quickCardRepository?.listQuickCards() ?? []).prefix(3))
+            let allCards = try quickCardRepository?.listQuickCards() ?? []
+            let cards = Array(allCards.shuffled().prefix(3))
             quickCardsState = cards.isEmpty ? .empty : .loaded(cards)
         } catch {
             quickCardsState = .failed("Quick cards could not be loaded.")
         }
+    }
+
+    private func loadFeed() async {
+        feedState = .loading
+        guard let service = rssDiscoveryService else {
+            feedState = .failed("Feed service unavailable.")
+            return
+        }
+        let articles = await service.discoverArticles()
+        let sorted = articles
+            .sorted { ($0.publishedDate ?? .distantPast) > ($1.publishedDate ?? .distantPast) }
+        let top = Array(sorted.prefix(5))
+        feedState = top.isEmpty ? .empty : .loaded(top)
     }
 
     private func loadActiveChecklists() {
@@ -289,6 +360,27 @@ struct HomeScreen: View {
                 return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
             }
             return lhs.priority < rhs.priority
+        }
+    }
+}
+
+private enum SpotlightMode: String, CaseIterable, Identifiable {
+    case quickCards
+    case feed
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .quickCards: "Quick Cards"
+        case .feed: "Feed"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .quickCards: "bolt.fill"
+        case .feed: "antenna.radiowaves.left.and.right"
         }
     }
 }
@@ -503,6 +595,59 @@ private struct HomeNoteRow: View {
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.trailing)
         }
+    }
+}
+
+private struct HomeFeedArticleRow: View {
+    let article: DiscoveredArticle
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        Button {
+            openURL(article.articleURL)
+        } label: {
+            HStack(alignment: .top, spacing: Spacing.md) {
+                Image(systemName: "antenna.radiowaves.left.and.right")
+                    .foregroundStyle(.osaCalm)
+                    .font(.body)
+                    .frame(width: 30, height: 30)
+                    .background(Color.osaCanopy.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
+
+                VStack(alignment: .leading, spacing: Spacing.xs) {
+                    Text(article.title)
+                        .font(.cardTitle)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
+
+                    HStack(spacing: Spacing.xs) {
+                        Text(article.sourceHost)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        if let date = article.publishedDate {
+                            Text("·")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                            Text(date.formatted(date: .abbreviated, time: .omitted))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Text("Read more")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.osaPrimary)
+                }
+
+                Spacer(minLength: 0)
+
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 

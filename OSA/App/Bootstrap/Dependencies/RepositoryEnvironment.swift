@@ -60,6 +60,10 @@ private struct OnscreenContentManagerKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: OnscreenContentManager? = nil
 }
 
+private struct RSSDiscoveryServiceKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any RSSDiscoveryService)? = nil
+}
+
 private struct DiscoveryCoordinatorKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: KnowledgeDiscoveryCoordinator? = nil
 }
@@ -138,6 +142,11 @@ extension EnvironmentValues {
     var onscreenContentManager: OnscreenContentManager? {
         get { self[OnscreenContentManagerKey.self] }
         set { self[OnscreenContentManagerKey.self] = newValue }
+    }
+
+    var rssDiscoveryService: (any RSSDiscoveryService)? {
+        get { self[RSSDiscoveryServiceKey.self] }
+        set { self[RSSDiscoveryServiceKey.self] = newValue }
     }
 
     var discoveryCoordinator: KnowledgeDiscoveryCoordinator? {

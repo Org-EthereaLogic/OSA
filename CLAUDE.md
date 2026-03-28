@@ -48,7 +48,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `project.yml` | Canonical XcodeGen manifest for the project |
 | `OSA.xcodeproj` | Generated Xcode project |
 | `OSA/App/` | App lifecycle, composition root, and navigation shell |
-| `OSA/Features/` | SwiftUI feature surfaces |
+| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles |
 | `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries |
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |

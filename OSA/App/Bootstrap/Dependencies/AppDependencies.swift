@@ -18,6 +18,7 @@ struct AppDependencies {
     let importPipeline: ImportedKnowledgeImportPipeline
     let refreshCoordinator: ImportedKnowledgeRefreshCoordinator
     let inventoryCompletionService: any InventoryCompletionService
+    let rssDiscoveryService: any RSSDiscoveryService
     let discoveryCoordinator: KnowledgeDiscoveryCoordinator
 
     @MainActor
@@ -103,6 +104,7 @@ struct AppDependencies {
             importPipeline: importPipeline,
             refreshCoordinator: refreshCoordinator,
             inventoryCompletionService: inventoryCompletionService,
+            rssDiscoveryService: rssDiscoveryService,
             discoveryCoordinator: discoveryCoordinator
         )
     }

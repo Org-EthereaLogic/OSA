@@ -131,14 +131,31 @@ final class OSAContentAndInputTests: XCTestCase {
     func testQuickCardContentIsReadable() {
         tapTab("Home")
 
-        let card = app.staticTexts["Earthquake Drop-Cover-Hold"]
-        guard card.waitForExistence(timeout: 3) else {
-            XCTFail("Earthquake quick card not on Home")
+        // Quick cards are randomized; tap whichever appears first
+        let quickCardLabels = [
+            "Earthquake Drop-Cover-Hold",
+            "First Hour Power Outage Check",
+            "Boil Water Advisory Steps",
+            "Gas Leak Response",
+            "Go-Bag Grab List",
+            "Family Meeting Point Reminder",
+            "Severe Weather Shelter Steps",
+            "Refrigerator Food Safety Timer",
+            "Water Rotation Check",
+            "Home Medication Check",
+            "Smoke And CO Detector Check",
+            "Vehicle Breakdown Safety Steps",
+            "Utility Shutoff Quick Reference",
+            "Winter Storm Home Preparation"
+        ]
+        guard let card = quickCardLabels.first(where: { app.staticTexts[$0].waitForExistence(timeout: 1) })
+            .map({ app.staticTexts[$0] }) else {
+            XCTFail("No quick card found on Home")
             return
         }
         card.tap()
         sleep(1)
-        screenshot("QuickCard-Earthquake-Detail")
+        screenshot("QuickCard-Detail")
 
         let allTexts = app.staticTexts.allElementsBoundByIndex
         let substantive = allTexts.filter { $0.label.count > 30 }
