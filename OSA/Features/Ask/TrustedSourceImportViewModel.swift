@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 /// Drives the trusted-source import flow presented from Ask
 /// after insufficient local evidence.
@@ -6,17 +7,18 @@ import Foundation
 /// All networking is user-initiated, allowlist-only, and preview-first.
 /// Import uses the existing M4P4 pipeline — no duplicate persistence logic.
 @MainActor
-final class TrustedSourceImportViewModel: ObservableObject {
+@Observable
+final class TrustedSourceImportViewModel {
 
     // MARK: - Published State
 
-    @Published var searchText = ""
-    @Published var urlText = ""
-    @Published private(set) var importState: ImportFlowState = .browsing
-    @Published private(set) var previewTitle: String?
-    @Published private(set) var previewDomain: String?
-    @Published private(set) var previewExcerpt: String?
-    @Published private(set) var errorMessage: String?
+    var searchText = ""
+    var urlText = ""
+    private(set) var importState: ImportFlowState = .browsing
+    private(set) var previewTitle: String?
+    private(set) var previewDomain: String?
+    private(set) var previewExcerpt: String?
+    private(set) var errorMessage: String?
 
     // MARK: - Dependencies
 

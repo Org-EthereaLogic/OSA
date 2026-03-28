@@ -4,7 +4,7 @@ import SwiftUI
 /// enter a trusted HTTPS page URL, preview fetched content, and import it
 /// into the local knowledge base.
 struct TrustedSourceImportSheet: View {
-    @ObservedObject var viewModel: TrustedSourceImportViewModel
+    @Bindable var viewModel: TrustedSourceImportViewModel
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {

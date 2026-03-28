@@ -4,6 +4,7 @@ logs/
 # Xcode
 build/
 DerivedData/
+.derivedData/
 *.xcuserdata
 *.xcworkspace/xcuserdata/
 xcuserdata/
