@@ -63,6 +63,20 @@ enum TrustedSourceAllowlist {
             defaultReviewStatus: .approved,
             notes: "USDA Forest Service — Pacific Northwest Region (R6)"
         ),
+        TrustedSourceDefinition(
+            publisherName: "National Weather Service",
+            canonicalHost: "api.weather.gov",
+            trustLevel: .curated,
+            defaultReviewStatus: .approved,
+            notes: "NWS weather alerts and forecast API"
+        ),
+        TrustedSourceDefinition(
+            publisherName: "NOAA Tsunami Warning Center",
+            canonicalHost: "wcatwc.arh.noaa.gov",
+            trustLevel: .curated,
+            defaultReviewStatus: .approved,
+            notes: "NOAA West Coast/Alaska Tsunami Warning Center"
+        ),
     ]
 
     // MARK: - Tier 2: Community / Approved

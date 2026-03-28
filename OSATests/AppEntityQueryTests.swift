@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import OSA
 
 @MainActor
@@ -306,12 +307,56 @@ private func makeTestDependencies(
             ),
             importedKnowledgeRepository: StubImportedKnowledgeRepository(),
             connectivityService: StubConnectivityService()
-        )
+        ),
+        weatherForecastRepository: StubWeatherForecastRepository(),
+        weatherForecastService: StubWeatherForecastService(),
+        weatherAlertService: StubWeatherAlertService(),
+        locationService: StubLocationService(),
+        mapAnnotationProvider: StubMapAnnotationProvider(),
+        tileCacheService: StubTileCacheService()
     )
 }
 
 private struct StubRSSDiscoveryService: RSSDiscoveryService {
     func discoverArticles() async -> [DiscoveredArticle] { [] }
+}
+
+private final class StubWeatherForecastRepository: WeatherForecastRepository, @unchecked Sendable {
+    func cachedForecasts() throws -> [DailyForecast] { [] }
+    func replaceForecasts(_ forecasts: [DailyForecast]) throws {}
+    func cacheInfo() throws -> ForecastCacheInfo? { nil }
+    func cachedAlerts() throws -> [WeatherAlert] { [] }
+    func replaceAlerts(_ alerts: [WeatherAlert]) throws {}
+    func activeAlerts() throws -> [WeatherAlert] { [] }
+}
+
+private struct StubWeatherForecastService: WeatherForecastService {
+    func fetchTenDayForecast(for location: CoreLocation.CLLocationCoordinate2D) async throws -> [DailyForecast] { [] }
+    func attribution() async -> (markURL: URL, legalURL: URL)? { nil }
+}
+
+private struct StubWeatherAlertService: WeatherAlertService {
+    func fetchAlerts() async -> [WeatherAlert] { [] }
+}
+
+private final class StubLocationService: LocationService, @unchecked Sendable {
+    @MainActor var currentLocation: CoreLocation.CLLocationCoordinate2D? { nil }
+    @MainActor var authorizationStatus: CoreLocation.CLAuthorizationStatus { .notDetermined }
+    func requestWhenInUseAuthorization() {}
+    @MainActor func locationStream() -> AsyncStream<CoreLocation.CLLocationCoordinate2D> {
+        AsyncStream { $0.finish() }
+    }
+}
+
+private struct StubMapAnnotationProvider: MapAnnotationProvider {
+    func annotations(near coordinate: CoreLocation.CLLocationCoordinate2D, radiusKm: Double) -> [MapAnnotationItem] { [] }
+    func allAnnotations() -> [MapAnnotationItem] { [] }
+}
+
+private struct StubTileCacheService: TileCacheService {
+    func hasCachedTiles(for region: CachedTileRegion) -> Bool { false }
+    func cachedRegions() -> [CachedTileRegion] { [] }
+    func tileData(x: Int, y: Int, z: Int) -> Data? { nil }
 }
 
 // MARK: - Focused Stubs (reuses StubSearchService and StubCapabilityDetector from LocalRetrievalServiceTests)

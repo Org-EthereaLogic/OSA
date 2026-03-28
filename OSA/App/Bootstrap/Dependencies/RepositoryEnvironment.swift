@@ -68,6 +68,30 @@ private struct DiscoveryCoordinatorKey: EnvironmentKey {
     static let defaultValue: KnowledgeDiscoveryCoordinator? = nil
 }
 
+private struct WeatherForecastRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any WeatherForecastRepository)? = nil
+}
+
+private struct WeatherForecastServiceKey: EnvironmentKey {
+    static let defaultValue: (any WeatherForecastService)? = nil
+}
+
+private struct WeatherAlertServiceKey: EnvironmentKey {
+    static let defaultValue: (any WeatherAlertService)? = nil
+}
+
+private struct LocationServiceKey: EnvironmentKey {
+    static let defaultValue: (any LocationService)? = nil
+}
+
+private struct MapAnnotationProviderKey: EnvironmentKey {
+    static let defaultValue: (any MapAnnotationProvider)? = nil
+}
+
+private struct TileCacheServiceKey: EnvironmentKey {
+    static let defaultValue: (any TileCacheService)? = nil
+}
+
 extension EnvironmentValues {
     var handbookRepository: (any HandbookRepository)? {
         get { self[HandbookRepositoryKey.self] }
@@ -152,5 +176,35 @@ extension EnvironmentValues {
     var discoveryCoordinator: KnowledgeDiscoveryCoordinator? {
         get { self[DiscoveryCoordinatorKey.self] }
         set { self[DiscoveryCoordinatorKey.self] = newValue }
+    }
+
+    var weatherForecastRepository: (any WeatherForecastRepository)? {
+        get { self[WeatherForecastRepositoryKey.self] }
+        set { self[WeatherForecastRepositoryKey.self] = newValue }
+    }
+
+    var weatherForecastService: (any WeatherForecastService)? {
+        get { self[WeatherForecastServiceKey.self] }
+        set { self[WeatherForecastServiceKey.self] = newValue }
+    }
+
+    var weatherAlertService: (any WeatherAlertService)? {
+        get { self[WeatherAlertServiceKey.self] }
+        set { self[WeatherAlertServiceKey.self] = newValue }
+    }
+
+    var locationService: (any LocationService)? {
+        get { self[LocationServiceKey.self] }
+        set { self[LocationServiceKey.self] = newValue }
+    }
+
+    var mapAnnotationProvider: (any MapAnnotationProvider)? {
+        get { self[MapAnnotationProviderKey.self] }
+        set { self[MapAnnotationProviderKey.self] = newValue }
+    }
+
+    var tileCacheService: (any TileCacheService)? {
+        get { self[TileCacheServiceKey.self] }
+        set { self[TileCacheServiceKey.self] = newValue }
     }
 }

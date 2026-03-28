@@ -29,6 +29,8 @@ targets:
       - path: OSA/Resources/SeedContent
         buildPhase: resources
         type: folder
+    entitlements:
+      path: OSA/OSA.entitlements
     settings:
       base:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
@@ -37,6 +39,7 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_CFBundleDisplayName: Lantern
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map."
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

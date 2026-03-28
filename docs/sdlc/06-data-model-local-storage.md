@@ -65,7 +65,10 @@ erDiagram
     KnowledgeChunk ||--o{ CitationRecord : cited_by
     AISession ||--o{ AIMessage : contains
     AppSetting ||--o{ PendingOperation : configures
+    DailyForecast }|--|| WeatherCache : cached_in
+    WeatherAlert }|--|| WeatherCache : cached_in
     %% Note: AISession, AIMessage, AppSetting, and PendingOperation are planned but not yet implemented.
+    %% DailyForecast and WeatherAlert are standalone cached entities (no relationships to other domain models).
 ```
 
 ## Entity Schemas
@@ -292,6 +295,37 @@ The more general SwiftData-backed settings entity remains deferred. `AskScopeSet
 - `updatedAt`
 - `retryCount`
 - `lastError`
+
+### DailyForecast _(Weather — Complete)_
+
+- `id`: UUID
+- `date`: Date
+- `highTemperature`: Double (Celsius)
+- `lowTemperature`: Double (Celsius)
+- `conditionCode`: String (WeatherKit condition raw value)
+- `conditionDescription`: String
+- `precipitationChance`: Double (0.0–1.0)
+- `uvIndexValue`: Int
+- `windSpeedKmh`: Double
+- `symbolName`: String (SF Symbol name)
+- `fetchedAt`: Date
+
+Persisted via `PersistedDailyForecast` SwiftData model. Entire forecast cache is replaced on each refresh. Staleness threshold: 1 hour.
+
+### WeatherAlert _(Weather — Complete)_
+
+- `id`: UUID
+- `title`: String
+- `summary`: String
+- `alertURL`: URL
+- `severity`: WeatherAlertSeverity (extreme, severe, moderate, minor, unknown)
+- `areaDescription`: String
+- `effectiveDate`: Date?
+- `expiresDate`: Date?
+- `sourceHost`: String
+- `fetchedAt`: Date
+
+Persisted via `PersistedWeatherAlert` SwiftData model. Active alerts filtered by `expiresDate > now`. Surfaced in both the Weather screen and the Home feed via `HomeFeedItem` union type.
 
 ## Local File And Storage Layout
 

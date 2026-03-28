@@ -26,6 +26,13 @@ enum RSSFeedRegistry {
         add("extension.oregonstate.edu",
             "https://extension.oregonstate.edu/rss.xml")
 
+        // Weather Alerts — NWS / NOAA
+        add("api.weather.gov",
+            "https://api.weather.gov/alerts/active.atom?area=WA",
+            "https://api.weather.gov/alerts/active.atom?area=OR")
+        add("wcatwc.arh.noaa.gov",
+            "https://wcatwc.arh.noaa.gov/rss/tsunamirss.xml")
+
         return map
     }()
 

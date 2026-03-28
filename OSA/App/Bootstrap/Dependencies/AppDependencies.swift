@@ -20,6 +20,12 @@ struct AppDependencies {
     let inventoryCompletionService: any InventoryCompletionService
     let rssDiscoveryService: any RSSDiscoveryService
     let discoveryCoordinator: KnowledgeDiscoveryCoordinator
+    let weatherForecastRepository: any WeatherForecastRepository
+    let weatherForecastService: any WeatherForecastService
+    let weatherAlertService: any WeatherAlertService
+    let locationService: any LocationService
+    let mapAnnotationProvider: any MapAnnotationProvider
+    let tileCacheService: any TileCacheService
 
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
@@ -69,6 +75,15 @@ struct AppDependencies {
             capabilityDetector: capabilityDetector
         )
 
+        let weatherForecastRepository = SwiftDataWeatherForecastRepository(
+            modelContext: modelContainer.mainContext
+        )
+        let weatherForecastService = LiveWeatherKitForecastService()
+        let weatherAlertService = LiveWeatherAlertService()
+        let locationService = CLLocationManagerService()
+        let mapAnnotationProvider = BundledMapAnnotationProvider()
+        let tileCacheService = OSMTileCacheService()
+
         let rssDiscoveryService = LiveRSSDiscoveryService()
         let braveSearchCredentialStore = BraveSearchCredentialStore()
 
@@ -103,7 +118,13 @@ struct AppDependencies {
             refreshCoordinator: refreshCoordinator,
             inventoryCompletionService: inventoryCompletionService,
             rssDiscoveryService: rssDiscoveryService,
-            discoveryCoordinator: discoveryCoordinator
+            discoveryCoordinator: discoveryCoordinator,
+            weatherForecastRepository: weatherForecastRepository,
+            weatherForecastService: weatherForecastService,
+            weatherAlertService: weatherAlertService,
+            locationService: locationService,
+            mapAnnotationProvider: mapAnnotationProvider,
+            tileCacheService: tileCacheService
         )
     }
 

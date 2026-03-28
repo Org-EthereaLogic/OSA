@@ -36,6 +36,12 @@ struct OSAApp: App {
                 .environment(\.onscreenContentManager, onscreenContentManager)
                 .environment(\.rssDiscoveryService, dependencies.rssDiscoveryService)
                 .environment(\.discoveryCoordinator, dependencies.discoveryCoordinator)
+                .environment(\.weatherForecastRepository, dependencies.weatherForecastRepository)
+                .environment(\.weatherForecastService, dependencies.weatherForecastService)
+                .environment(\.weatherAlertService, dependencies.weatherAlertService)
+                .environment(\.locationService, dependencies.locationService)
+                .environment(\.mapAnnotationProvider, dependencies.mapAnnotationProvider)
+                .environment(\.tileCacheService, dependencies.tileCacheService)
                 .task {
                     SharedRuntime.installNavigationCoordinator(navigationCoordinator)
                     SharedRuntime.installOnscreenContentManager(onscreenContentManager)

@@ -5,8 +5,10 @@ enum AppTab: String, Hashable, CaseIterable {
     case library
     case ask
     case inventory
+    case maps
     case checklists
     case quickCards
+    case weather
     case notes
     case settings
     case more
@@ -17,8 +19,10 @@ enum AppTab: String, Hashable, CaseIterable {
         case .library: "Library"
         case .ask: "Ask"
         case .inventory: "Inventory"
+        case .maps: "Map"
         case .checklists: "Checklists"
         case .quickCards: "Quick Cards"
+        case .weather: "Weather"
         case .notes: "Notes"
         case .settings: "Settings"
         case .more: "More"
@@ -31,8 +35,10 @@ enum AppTab: String, Hashable, CaseIterable {
         case .library: "books.vertical.fill"
         case .ask: "bubble.left.and.text.bubble.right.fill"
         case .inventory: "archivebox.fill"
+        case .maps: "map.fill"
         case .checklists: "checklist"
         case .quickCards: "bolt.fill"
+        case .weather: "cloud.sun.fill"
         case .notes: "note.text"
         case .settings: "gearshape.fill"
         case .more: "ellipsis"

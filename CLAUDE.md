@@ -22,7 +22,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 ## Product Contract
 
 - The app is iPhone-first, offline-first, and local-first.
-- Core top-level surfaces are `Home`, `Library`, `Ask`, `Inventory`, `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
+- Core top-level surfaces are `Home`, `Library`, `Ask`, `Inventory`, `Map`, `Checklists`, `Quick Cards`, `Weather`, `Notes`, and `Settings`.
 - The assistant is not a general chatbot and may answer only from approved local sources and allowed app data.
 - Imported web knowledge is usable only after it is persisted locally with provenance and appropriate review state.
 - When generative capability is unavailable, the app must degrade to extractive or search-first behavior instead of inventing answers.
@@ -48,12 +48,12 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `project.yml` | Canonical XcodeGen manifest for the project |
 | `OSA.xcodeproj` | Generated Xcode project |
 | `OSA/App/` | App lifecycle, composition root, and navigation shell |
-| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles |
+| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles and `WeatherAlertRow` for NWS alerts via `HomeFeedItem` union type; Maps/ (MapScreen, OnlineMapView, OfflineTileMapView, MapAnnotationPin); Weather/ (WeatherScreen, WeatherForecastRow, WeatherAlertRow) |
 | `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries |
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
 | `OSA/Retrieval/` | Local retrieval pipeline, query normalization, and evidence ranking (Chunking and Citations subdirs are stubs) |
-| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); M6P5 Discovery/ (RSSFeedParser, RSSFeedRegistry, RSSDiscoveryService, BraveSearchClient, BraveSearchCredentialStore for Keychain-based API key storage, KnowledgeDiscoveryCoordinator with lazy webSearchClientProvider); DTOs/ for fetch response types |
+| `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist (17 publishers) and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); M6P5 Discovery/ (RSSFeedParser, RSSFeedRegistry, RSSDiscoveryService, BraveSearchClient, BraveSearchCredentialStore for Keychain-based API key storage, KnowledgeDiscoveryCoordinator with lazy webSearchClientProvider); Weather/ (WeatherKitForecastService, NWSAlertParser for ATOM+CAP feeds, LiveWeatherAlertService); Location/ (CLLocationManagerService); Maps/ (OSMTileCacheService, BundledMapAnnotationProvider with pnw-map-annotations.json); DTOs/ for fetch response types |
 | `OSA/App/Intents/` | M6P1 AskLanternIntent (Siri App Intent with AssistantSchema search conformance) and LanternAppShortcutsProvider; M6P4 OpenQuickCardIntent, OpenHandbookSectionIntent, and OnscreenContentManager |
 | `OSA/App/Intents/Entities/` | M6P2 App Entities (HandbookSectionEntity, QuickCardEntity, ChecklistEntity, InventoryItemEntity) with EntityStringQuery, IndexedEntity, and shared EntityQueryResolver |
 | `OSA/Assistant/InventoryCompletion/` | M6P3 InventoryCompletionService (FM structured output + heuristic fallback) and InventoryCompletionMerger for inventory form suggestions |

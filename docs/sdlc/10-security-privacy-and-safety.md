@@ -84,7 +84,7 @@ V1 recommendation:
 V1 should avoid broad system permissions.
 
 - Notifications: optional, only if checklist or inventory reminders are added.
-- Location: not required for core MVP; do not request unless a future local-reference feature clearly needs it.
+- Location: requested when-in-use for Map screen (nearby shelters, evacuation routes) and Weather screen (local forecasts). `NSLocationWhenInUseUsageDescription` configured. `CLLocationManagerService` requests `whenInUseAuthorization` only when the Map tab is accessed; no background location. WeatherKit uses a default PNW coordinate when location is unavailable.
 - Contacts: do not request; family plan data should be entered manually into notes in v1.
 - Photos/files: only if a later attachment feature is approved.
 

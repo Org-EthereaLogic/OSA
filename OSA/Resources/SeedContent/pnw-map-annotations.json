@@ -1,0 +1,138 @@
+[
+  {
+    "title": "Portland Emergency Shelter — Oregon Convention Center",
+    "subtitle": "Red Cross designated shelter",
+    "latitude": 45.5289,
+    "longitude": -122.6630,
+    "category": "shelter",
+    "sourceURL": "https://www.redcross.org"
+  },
+  {
+    "title": "Seattle Emergency Shelter — Seattle Center",
+    "subtitle": "City-designated emergency shelter",
+    "latitude": 47.6205,
+    "longitude": -122.3493,
+    "category": "shelter",
+    "sourceURL": null
+  },
+  {
+    "title": "Tacoma Emergency Shelter — Tacoma Dome",
+    "subtitle": "Pierce County emergency shelter",
+    "latitude": 47.2363,
+    "longitude": -122.4281,
+    "category": "shelter",
+    "sourceURL": null
+  },
+  {
+    "title": "Salem Emergency Shelter — Oregon State Fairgrounds",
+    "subtitle": "Marion County shelter",
+    "latitude": 44.9385,
+    "longitude": -123.0381,
+    "category": "shelter",
+    "sourceURL": null
+  },
+  {
+    "title": "Cascadia Subduction Zone",
+    "subtitle": "Major seismic hazard zone — offshore OR/WA coast",
+    "latitude": 44.5,
+    "longitude": -125.0,
+    "category": "hazardZone",
+    "sourceURL": "https://www.usgs.gov"
+  },
+  {
+    "title": "Mt. Rainier Lahar Zone",
+    "subtitle": "Volcanic mudflow hazard — Puyallup Valley",
+    "latitude": 46.8523,
+    "longitude": -121.7603,
+    "category": "hazardZone",
+    "sourceURL": "https://www.usgs.gov"
+  },
+  {
+    "title": "Mt. Hood Lahar Zone",
+    "subtitle": "Volcanic mudflow hazard — Sandy River Valley",
+    "latitude": 45.3735,
+    "longitude": -121.6959,
+    "category": "hazardZone",
+    "sourceURL": "https://www.usgs.gov"
+  },
+  {
+    "title": "Oregon Coast Tsunami Inundation Zone",
+    "subtitle": "Tsunami hazard — Seaside to Brookings",
+    "latitude": 44.6365,
+    "longitude": -124.0535,
+    "category": "hazardZone",
+    "sourceURL": "https://www.oregon.gov"
+  },
+  {
+    "title": "OHSU Hospital",
+    "subtitle": "Level I Trauma Center — Portland",
+    "latitude": 45.4996,
+    "longitude": -122.6855,
+    "category": "hospital",
+    "sourceURL": null
+  },
+  {
+    "title": "Harborview Medical Center",
+    "subtitle": "Level I Trauma Center — Seattle",
+    "latitude": 47.6043,
+    "longitude": -122.3243,
+    "category": "hospital",
+    "sourceURL": null
+  },
+  {
+    "title": "Providence Portland Medical Center",
+    "subtitle": "Major hospital — NE Portland",
+    "latitude": 45.5345,
+    "longitude": -122.6153,
+    "category": "hospital",
+    "sourceURL": null
+  },
+  {
+    "title": "Portland Fire Station 1",
+    "subtitle": "Portland Fire & Rescue — Downtown",
+    "latitude": 45.5189,
+    "longitude": -122.6789,
+    "category": "fireStation",
+    "sourceURL": null
+  },
+  {
+    "title": "Seattle Fire Station 10",
+    "subtitle": "Seattle Fire Department — Pioneer Square",
+    "latitude": 47.6017,
+    "longitude": -122.3315,
+    "category": "fireStation",
+    "sourceURL": null
+  },
+  {
+    "title": "Evacuation Route — OR Coast US-101 to US-26",
+    "subtitle": "Primary coastal evacuation route inland",
+    "latitude": 45.7540,
+    "longitude": -123.9260,
+    "category": "evacuationRoute",
+    "sourceURL": "https://www.oregon.gov"
+  },
+  {
+    "title": "Evacuation Route — I-5 Corridor",
+    "subtitle": "Major north-south evacuation route",
+    "latitude": 45.5152,
+    "longitude": -122.6784,
+    "category": "evacuationRoute",
+    "sourceURL": null
+  },
+  {
+    "title": "Bull Run Watershed",
+    "subtitle": "Portland's primary water source",
+    "latitude": 45.4600,
+    "longitude": -122.0800,
+    "category": "waterSource",
+    "sourceURL": null
+  },
+  {
+    "title": "Cedar River Watershed",
+    "subtitle": "Seattle's primary water source",
+    "latitude": 47.3550,
+    "longitude": -121.7400,
+    "category": "waterSource",
+    "sourceURL": null
+  }
+]

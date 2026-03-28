@@ -7,11 +7,12 @@ struct HomeScreen: View {
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.rssDiscoveryService) private var rssDiscoveryService
     @Environment(\.connectivityService) private var connectivityService
+    @Environment(\.weatherAlertService) private var weatherAlertService
 
     @State private var spotlightMode: SpotlightMode = .quickCards
     @State private var connectivity: ConnectivityState = .offline
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
-    @State private var feedState: HomeSectionState<[DiscoveredArticle]> = .loading
+    @State private var feedState: HomeSectionState<[HomeFeedItem]> = .loading
     @State private var checklistsState: HomeSectionState<[ChecklistRun]> = .loading
     @State private var inventoryState: HomeSectionState<[HomeInventoryReminder]> = .loading
     @State private var notesState: HomeSectionState<[NoteRecord]> = .loading
@@ -159,10 +160,15 @@ struct HomeScreen: View {
                 HomeSectionEmptyView(message: "No articles available. Connect to the internet to fetch feeds.")
             case .failed(let message):
                 HomeSectionFailureView(message: message)
-            case .loaded(let articles):
+            case .loaded(let items):
                 VStack(spacing: Spacing.sm) {
-                    ForEach(articles, id: \.articleURL) { article in
-                        HomeFeedArticleRow(article: article)
+                    ForEach(items) { item in
+                        switch item {
+                        case .article(let article):
+                            HomeFeedArticleRow(article: article)
+                        case .weatherAlert(let alert):
+                            WeatherAlertRow(alert: alert)
+                        }
                     }
                 }
             }
@@ -283,15 +289,37 @@ struct HomeScreen: View {
 
     private func loadFeed() async {
         feedState = .loading
-        guard let service = rssDiscoveryService else {
-            feedState = .failed("Feed service unavailable.")
+        var items: [HomeFeedItem] = []
+
+        // Fetch RSS articles
+        if let service = rssDiscoveryService {
+            let articles = await service.discoverArticles()
+            items.append(contentsOf: articles.map { .article($0) })
+        }
+
+        // Fetch weather alerts
+        if let alertService = weatherAlertService {
+            let alerts = await alertService.fetchAlerts()
+            let active = alerts.filter { alert in
+                guard let expires = alert.expiresDate else { return true }
+                return expires > Date()
+            }
+            items.append(contentsOf: active.map { .weatherAlert($0) })
+        }
+
+        guard !items.isEmpty else {
+            feedState = rssDiscoveryService == nil ? .failed("Feed service unavailable.") : .empty
             return
         }
-        let articles = await service.discoverArticles()
-        let sorted = articles
-            .sorted { ($0.publishedDate ?? .distantPast) > ($1.publishedDate ?? .distantPast) }
-        let top = Array(sorted.prefix(5))
-        feedState = top.isEmpty ? .empty : .loaded(top)
+
+        // Sort: severe/extreme alerts pinned to top, then by date descending
+        let sorted = items.sorted { a, b in
+            let aSeverePriority = a.isHighPriority ? 1 : 0
+            let bSeverePriority = b.isHighPriority ? 1 : 0
+            if aSeverePriority != bSeverePriority { return aSeverePriority > bSeverePriority }
+            return a.sortDate > b.sortDate
+        }
+        feedState = .loaded(Array(sorted.prefix(7)))
     }
 
     private func loadActiveChecklists() {
@@ -405,11 +433,33 @@ private enum SpotlightMode: String, CaseIterable, Identifiable {
     }
 }
 
-private enum HomeSectionState<Value> {
-    case loading
-    case loaded(Value)
-    case empty
-    case failed(String)
+// HomeSectionState is defined in OSA/Shared/Support/HomeSectionState.swift
+
+/// Unified feed item that merges RSS articles and weather alerts for the Home feed.
+enum HomeFeedItem: Identifiable {
+    case article(DiscoveredArticle)
+    case weatherAlert(WeatherAlert)
+
+    var id: String {
+        switch self {
+        case .article(let a): "article-\(a.articleURL.absoluteString)"
+        case .weatherAlert(let a): "alert-\(a.id.uuidString)"
+        }
+    }
+
+    var sortDate: Date {
+        switch self {
+        case .article(let a): a.publishedDate ?? .distantPast
+        case .weatherAlert(let a): a.effectiveDate ?? a.fetchedAt
+        }
+    }
+
+    var isHighPriority: Bool {
+        switch self {
+        case .article: false
+        case .weatherAlert(let a): a.severity == .extreme || a.severity == .severe
+        }
+    }
 }
 
 private struct HomeInventoryReminder: Identifiable {

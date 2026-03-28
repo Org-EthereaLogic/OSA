@@ -83,7 +83,9 @@ enum AppModelContainer {
             PersistedSourceRecord.self,
             PersistedImportedKnowledgeDocument.self,
             PersistedKnowledgeChunk.self,
-            PersistedPendingOperation.self
+            PersistedPendingOperation.self,
+            PersistedDailyForecast.self,
+            PersistedWeatherAlert.self
         ])
         let isTestHost = ProcessInfo.processInfo.isRunningTests
         let modelConfiguration = ModelConfiguration(

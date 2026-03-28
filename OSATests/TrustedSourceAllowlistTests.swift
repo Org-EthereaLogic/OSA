@@ -26,6 +26,8 @@ struct TrustedSourceAllowlistTests {
             "www.usgs.gov",
             "www.redcross.org",
             "www.fs.usda.gov",
+            "api.weather.gov",
+            "wcatwc.arh.noaa.gov",
         ]
         for host in tier1Hosts {
             let url = URL(string: "https://\(host)/")!
@@ -97,9 +99,9 @@ struct TrustedSourceAllowlistTests {
 
     // MARK: - Total Count
 
-    @Test("Allowlist contains exactly 15 launch publishers")
-    func allowlistCountIs15() {
-        #expect(TrustedSourceAllowlist.allSources.count == 15)
+    @Test("Allowlist contains exactly 17 launch publishers")
+    func allowlistCountIs17() {
+        #expect(TrustedSourceAllowlist.allSources.count == 17)
     }
 
     // MARK: - Rejection

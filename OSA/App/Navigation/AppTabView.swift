@@ -35,7 +35,19 @@ struct AppTabView: View {
                 }
             }
 
+            Tab(AppTab.maps.title, systemImage: AppTab.maps.icon, value: .maps) {
+                NavigationStack {
+                    MapScreen()
+                }
+            }
+
             TabSection {
+                Tab(AppTab.weather.title, systemImage: AppTab.weather.icon, value: AppTab.weather) {
+                    NavigationStack {
+                        WeatherScreen()
+                    }
+                }
+
                 Tab(AppTab.checklists.title, systemImage: AppTab.checklists.icon, value: AppTab.checklists) {
                     NavigationStack {
                         ChecklistsScreen()
