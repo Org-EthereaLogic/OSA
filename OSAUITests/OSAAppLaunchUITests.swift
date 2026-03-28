@@ -1,6 +1,16 @@
 import XCTest
 
 final class OSAAppLaunchUITests: XCTestCase {
+    override func setUp() {
+        continueAfterFailure = true
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
     @MainActor
     func testAppLaunchesToHomeTab() throws {
         let app = XCUIApplication()

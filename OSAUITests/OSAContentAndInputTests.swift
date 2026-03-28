@@ -8,6 +8,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = true
+        XCUIDevice.shared.orientation = .portrait
         app = XCUIApplication()
         app.launchArguments.append("UI-TESTING")
         app.launch()
@@ -17,6 +18,11 @@ final class OSAContentAndInputTests: XCTestCase {
             XCTFail("Tab bar not found")
             return
         }
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
     }
 
     @MainActor

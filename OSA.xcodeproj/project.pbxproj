@@ -34,6 +34,7 @@
 		231C7460D764471E5C688F9C /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B98E8F7945F61FD91A2955E /* Spacing.swift */; };
 		23893D099A80722EC65E4696 /* SeedContentRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */; };
 		25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA0F0797832A7A191BC670A /* BrandMarkView.swift */; };
+		25E4EA42F74A85FA28BDD12E /* EmergencyContactRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8EE2B529135016E79F7BEB /* EmergencyContactRepositoryTests.swift */; };
 		25EEC39D315B3E9C625EE386 /* PersistedWeatherAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CEF1DD7129449C6C43FD3 /* PersistedWeatherAlert.swift */; };
 		260039747D02E5C62E13DA30 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2BD31A77E64678EF783DC0 /* SearchResult.swift */; };
 		26E6152B54AED23AB9A4717C /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EF8F0F27FD18428897505D /* MessageComposeView.swift */; };
@@ -65,6 +66,7 @@
 		4FC51A16FB97050B8F9E6280 /* PersistedImportedKnowledgeDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */; };
 		5018AC591ACA28AECB749022 /* ContentRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7610F1BD90F903D62C2333C /* ContentRepositories.swift */; };
 		50314FDA64ED2A9E1B3C78B0 /* AppEntityQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DC56407C47E05650A0DECD /* AppEntityQueryTests.swift */; };
+		5201BFBD368C93A2F4E5E174 /* OSARotationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570193DEE58B3253DCF265CD /* OSARotationUITests.swift */; };
 		525473FDC2F4D1AF96B8ECAA /* EmergencyContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691EE708EE63CE5507A76C75 /* EmergencyContact.swift */; };
 		543315F34EDF80133CF4EECB /* InventoryCompletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */; };
 		5560BFD3FA98826DBB068337 /* TrustedSourceAllowlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FD29050530886B6101E1A /* TrustedSourceAllowlist.swift */; };
@@ -335,6 +337,7 @@
 		52EEA0D158E00330D36AB5D5 /* ChecklistTemplateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistTemplateDetailView.swift; sourceTree = "<group>"; };
 		56782FE4D605E30B90B98FE7 /* OSATests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSATests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		56C1F1B6B0BE411AC53CE241 /* MapModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapModels.swift; sourceTree = "<group>"; };
+		570193DEE58B3253DCF265CD /* OSARotationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSARotationUITests.swift; sourceTree = "<group>"; };
 		5942E7C7B4B9D842FF6D217B /* DailyForecastMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyForecastMappings.swift; sourceTree = "<group>"; };
 		5A45F48ED7EEDD8AA5FCF5D7 /* RefreshRetryPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshRetryPolicyTests.swift; sourceTree = "<group>"; };
 		5C2A73478E43EEF4CD12E893 /* DiscoveryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryModels.swift; sourceTree = "<group>"; };
@@ -437,6 +440,7 @@
 		C6FAD37F9E251DDAAA3C765A /* LocalRetrievalServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalRetrievalServiceTests.swift; sourceTree = "<group>"; };
 		C7DC6438D46FC205B2B861F5 /* PersistedEmergencyContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedEmergencyContact.swift; sourceTree = "<group>"; };
 		C8B025EDF918DEB916B25292 /* PersistedNoteRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedNoteRecord.swift; sourceTree = "<group>"; };
+		CB8EE2B529135016E79F7BEB /* EmergencyContactRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactRepositoryTests.swift; sourceTree = "<group>"; };
 		CBCDF459839F6C3363926404 /* AppBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBrand.swift; sourceTree = "<group>"; };
 		D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1ED04D03AA1CD2560D48FB3 /* AppNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigationCoordinator.swift; sourceTree = "<group>"; };
@@ -1227,6 +1231,7 @@
 				76336EE72F2AC53E90D8ACDA /* CapabilityDetectionTests.swift */,
 				5F709D991D06D2064F260B3D /* ChecklistRepositoryTests.swift */,
 				4BE814B35308E6D518E762B4 /* ConnectivityServiceTests.swift */,
+				CB8EE2B529135016E79F7BEB /* EmergencyContactRepositoryTests.swift */,
 				C56E11FB54DBE3E760677EF1 /* EvidenceRankerTests.swift */,
 				D58CAD005A560B565BB294B3 /* GroundedPromptBuilderTests.swift */,
 				6B3CA1CA96C7E12EDA338829 /* ImportedKnowledgeImportPipelineTests.swift */,
@@ -1269,6 +1274,7 @@
 				3850E2241360E349F24B9585 /* OSAAppLaunchUITests.swift */,
 				2E183A89121B7AE8D29ECDA9 /* OSAContentAndInputTests.swift */,
 				A55C745E0F49839ABEDD32AF /* OSAFullE2EVisualTests.swift */,
+				570193DEE58B3253DCF265CD /* OSARotationUITests.swift */,
 			);
 			path = OSAUITests;
 			sourceTree = "<group>";
@@ -1520,6 +1526,7 @@
 				B86BB342FCEFE7E1FEBC9536 /* CapabilityDetectionTests.swift in Sources */,
 				BD9FB2C7BE82165002D92F22 /* ChecklistRepositoryTests.swift in Sources */,
 				F31B43D725D8E116413DA0BA /* ConnectivityServiceTests.swift in Sources */,
+				25E4EA42F74A85FA28BDD12E /* EmergencyContactRepositoryTests.swift in Sources */,
 				9499A6ED7C6DBD753DEFB450 /* EvidenceRankerTests.swift in Sources */,
 				90468528CB98BDA7B848B178 /* GroundedPromptBuilderTests.swift in Sources */,
 				EF7F7F855E758AEE7428DF2C /* ImportedKnowledgeImportPipelineTests.swift in Sources */,
@@ -1562,6 +1569,7 @@
 				3F540962175E4728D4CF49E2 /* OSAAppLaunchUITests.swift in Sources */,
 				304E7D436642558D2897285E /* OSAContentAndInputTests.swift in Sources */,
 				160548E01A73AC06280199AA /* OSAFullE2EVisualTests.swift in Sources */,
+				5201BFBD368C93A2F4E5E174 /* OSARotationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1780,7 +1788,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1837,7 +1845,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

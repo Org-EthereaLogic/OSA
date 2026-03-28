@@ -9,6 +9,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     override func setUp() {
         continueAfterFailure = true
+        XCUIDevice.shared.orientation = .portrait
         app = XCUIApplication()
         app.launchArguments.append("UI-TESTING")
         app.launch()
@@ -18,6 +19,11 @@ final class OSAFullE2EVisualTests: XCTestCase {
             XCTFail("App did not present a tab bar — seed content may be missing")
             return
         }
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
     }
 
     // MARK: - Tab Navigation
