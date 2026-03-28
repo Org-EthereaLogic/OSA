@@ -7,9 +7,9 @@
       "category": "go-bag",
       "description": "Verify your household 72-hour emergency kit is complete, current, and accessible.",
       "estimatedMinutes": 30,
-      "tags": ["go-bag", "kit", "evacuation", "essentials"],
+      "tags": ["go-bag", "kit", "evacuation", "essentials", "scenario:evacuation", "scenario:power-outage", "scenario:wildfire"],
       "sourceType": "seeded",
-      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
       "items": [
         { "id": "33333333-3333-3333-3333-333333333311", "text": "Water: 1 gallon per person per day for 3 days", "detail": "Check containers for leaks and expiration dates.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
         { "id": "33333333-3333-3333-3333-333333333312", "text": "Food: 3-day supply of non-perishable items", "detail": "Include a manual can opener if needed.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
@@ -30,9 +30,9 @@
       "category": "power-outage",
       "description": "Pre-storm or pre-outage readiness checklist for your household.",
       "estimatedMinutes": 20,
-      "tags": ["power", "storm", "home", "preparation"],
+      "tags": ["power", "storm", "home", "preparation", "scenario:power-outage", "scenario:winter-storm", "region:pacific-northwest"],
       "sourceType": "seeded",
-      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
       "items": [
         { "id": "33333333-3333-3333-3333-333333333321", "text": "Charge all phones, tablets, and battery banks", "detail": null, "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
         { "id": "33333333-3333-3333-3333-333333333322", "text": "Fill bathtubs and large containers with water", "detail": "For flushing toilets if water pumps lose power.", "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
@@ -51,9 +51,9 @@
       "category": "maintenance",
       "description": "Rotate stored food, water, batteries, and medications every 90 days.",
       "estimatedMinutes": 45,
-      "tags": ["maintenance", "rotation", "expiry", "supplies"],
+      "tags": ["maintenance", "rotation", "expiry", "supplies", "scenario:power-outage", "scenario:winter-storm"],
       "sourceType": "seeded",
-      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
       "items": [
         { "id": "33333333-3333-3333-3333-333333333331", "text": "Check water storage dates and rotate oldest containers", "detail": "Replace water stored longer than 6 months.", "sortOrder": 100, "isOptional": false, "riskLevel": "medium" },
         { "id": "33333333-3333-3333-3333-333333333332", "text": "Inspect canned food for damage or bulging", "detail": "Discard any suspect cans safely.", "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
@@ -71,9 +71,9 @@
       "category": "planning",
       "description": "Review and update your household emergency communication and meeting plan.",
       "estimatedMinutes": 25,
-      "tags": ["family", "communication", "contacts", "meeting-point"],
+      "tags": ["family", "communication", "contacts", "meeting-point", "scenario:family-communication", "scenario:evacuation"],
       "sourceType": "seeded",
-      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
       "items": [
         { "id": "33333333-3333-3333-3333-333333333341", "text": "Verify all household members have emergency contact list", "detail": "Include out-of-area contact person.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
         { "id": "33333333-3333-3333-3333-333333333342", "text": "Review primary and secondary meeting locations", "detail": "One near home, one outside neighborhood.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
@@ -90,9 +90,9 @@
       "category": "vehicle",
       "description": "Verify your vehicle emergency kit is stocked and accessible.",
       "estimatedMinutes": 15,
-      "tags": ["vehicle", "car", "kit", "travel"],
+      "tags": ["vehicle", "car", "kit", "travel", "scenario:evacuation", "scenario:winter-storm"],
       "sourceType": "seeded",
-      "lastReviewedAt": "2026-03-23T00:00:00Z",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
       "items": [
         { "id": "33333333-3333-3333-3333-333333333351", "text": "Jumper cables or portable jump starter", "detail": null, "sortOrder": 100, "isOptional": false, "riskLevel": "medium" },
         { "id": "33333333-3333-3333-3333-333333333352", "text": "Reflective triangles or flares", "detail": null, "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
@@ -102,6 +102,226 @@
         { "id": "33333333-3333-3333-3333-333333333356", "text": "Flashlight with extra batteries", "detail": null, "sortOrder": 600, "isOptional": false, "riskLevel": "low" },
         { "id": "33333333-3333-3333-3333-333333333357", "text": "Phone charging cable and car adapter", "detail": null, "sortOrder": 700, "isOptional": false, "riskLevel": "medium" },
         { "id": "33333333-3333-3333-3333-333333333358", "text": "Paper map of local area", "detail": "GPS may not be available in remote areas.", "sortOrder": 800, "isOptional": true, "riskLevel": "low" }
+      ]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333306",
+      "title": "Getting Started Household Setup",
+      "slug": "getting-started-household-setup",
+      "category": "setup",
+      "description": "Set up the household basics that make the app faster to use under stress.",
+      "estimatedMinutes": 20,
+      "tags": ["setup", "onboarding", "family", "scenario:family-communication", "scenario:power-outage", "scenario:evacuation", "region:pacific-northwest"],
+      "sourceType": "seeded",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "33333333-3333-3333-3333-333333333361", "text": "Choose your primary hazards and region", "detail": "Use onboarding or Settings so suggestions match the risks you actually face.", "sortOrder": 100, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333362", "text": "Add at least one emergency contact", "detail": "Store a local contact so the I'm Safe shortcut is ready before you need it.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333363", "text": "Confirm two meeting locations for your household", "detail": "Pick one near home and one outside the neighborhood.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "33333333-3333-3333-3333-333333333364", "text": "Add core inventory items for water, lighting, and first aid", "detail": "A small accurate inventory is more useful than a large incomplete one.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333365", "text": "Pin at least two quick cards or handbook sections", "detail": "Keep your most likely emergency references one tap away from Home.", "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "33333333-3333-3333-3333-333333333366", "text": "Review the 72-hour kit and family communication checklists", "detail": "Use them as your first maintenance loop, then adjust for your household.", "sortOrder": 600, "isOptional": false, "riskLevel": "medium" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555301",
+      "title": "Adult Hands-Only CPR",
+      "slug": "adult-hands-only-cpr",
+      "category": "medical",
+      "description": "Reviewed static reference for adult hands-only CPR until EMS or an AED takes over.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "medical", "cpr", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "timerProfile": "cpr-metronome",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555311", "text": "Call 911 and send someone for an AED if one is nearby.", "detail": "Start the emergency response first. Put the phone on speaker if you are alone.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555312", "text": "If the person is unresponsive and not breathing normally, place them flat on a firm surface.", "detail": "Occasional gasps are not normal breathing.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555313", "text": "Place the heel of one hand in the center of the chest and the other hand on top.", "detail": "Lock your elbows and position your shoulders directly over your hands.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555314", "text": "Push hard and fast at about 100 to 120 compressions per minute.", "detail": "Compress the chest about 2 inches deep and let it fully recoil between compressions.", "sortOrder": 400, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555315", "text": "Keep going until an AED is ready, EMS takes over, or the person clearly starts moving or breathing.", "detail": "Switch compressors if another trained adult is available and you are tiring out.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555316", "text": "If an AED arrives, turn it on and follow the spoken prompts immediately.", "detail": "Resume compressions as soon as the device tells you to.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555302",
+      "title": "Choking Response",
+      "slug": "choking-response",
+      "category": "medical",
+      "description": "Reviewed static steps for a responsive adult or child over age one who cannot speak or breathe.",
+      "estimatedMinutes": 4,
+      "tags": ["protocol", "medical", "airway", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555321", "text": "Ask if the person is choking and call 911 or direct someone to call.", "detail": "Act fast if they cannot speak, cough, or breathe.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555322", "text": "Stand to the side and slightly behind them. Lean them forward.", "detail": "Support their chest with one hand.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555323", "text": "Give 5 firm back blows between the shoulder blades.", "detail": "Use the heel of your hand and check after each blow.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555324", "text": "If the object does not clear, give 5 abdominal thrusts.", "detail": "Stand behind, place a fist just above the navel, and pull sharply inward and upward.", "sortOrder": 400, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555325", "text": "Alternate 5 back blows and 5 abdominal thrusts until the object clears or the person becomes unresponsive.", "detail": "Do not stop to offer food or drink.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555326", "text": "If the person becomes unresponsive, lower them to the ground and begin CPR.", "detail": "Use an AED as soon as one is available.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555303",
+      "title": "Severe Bleeding Response",
+      "slug": "severe-bleeding-response",
+      "category": "medical",
+      "description": "Reviewed static steps to control serious external bleeding while emergency help is on the way.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "medical", "bleeding", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555331", "text": "Call 911 for heavy, spurting, or uncontrolled bleeding.", "detail": "If possible, put the phone on speaker so you can keep working.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555332", "text": "Press hard directly on the wound with a clean cloth, dressing, or gloved hand.", "detail": "Use both hands if needed. Continuous pressure matters most.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555333", "text": "Do not keep lifting the dressing to check.", "detail": "If blood soaks through, add more material on top and keep pressing.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555334", "text": "If safe and no obvious fracture is present, raise the injured area above the heart while maintaining pressure.", "detail": "Do not move the limb if movement increases pain or appears unsafe.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555335", "text": "Use a tourniquet only for life-threatening bleeding from an arm or leg when direct pressure is not enough and you know how to apply it.", "detail": "Place it above the wound, not over a joint.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555336", "text": "Keep the person still and warm until responders arrive.", "detail": "Watch for signs of shock such as pale skin, weakness, or confusion.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555304",
+      "title": "Burns Response",
+      "slug": "burns-response",
+      "category": "medical",
+      "description": "Reviewed static steps for cooling and protecting a burn after the heat source is removed.",
+      "estimatedMinutes": 6,
+      "tags": ["protocol", "medical", "burns", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555341", "text": "Stop the burning source and move to a safe area.", "detail": "For electrical or chemical burns, call 911 and follow scene safety first.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555342", "text": "Cool the burn with cool running water for 10 to 20 minutes.", "detail": "Do not use ice or very cold water.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555343", "text": "Remove rings, watches, or tight items before swelling starts if they are not stuck to the skin.", "detail": "Do not peel away clothing that is fused to the burn.", "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555344", "text": "Cover the burn with a clean, dry, non-fluffy dressing.", "detail": "A sterile dressing or clean cloth is enough.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555345", "text": "Do not pop blisters or apply butter, oils, ointments, or ice.", "detail": "These can trap heat or increase tissue damage.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555346", "text": "Seek urgent care or call 911 for large burns or burns to the face, hands, feet, genitals, major joints, or from electricity or chemicals.", "detail": "Treat breathing trouble after a fire as an emergency.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555305",
+      "title": "Shock Response",
+      "slug": "shock-response",
+      "category": "medical",
+      "description": "Reviewed static steps to support someone who may be going into shock while emergency help is on the way.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "medical", "shock", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555351", "text": "Call 911 if the person has serious injury, chest pain, trouble breathing, major bleeding, or worsening confusion.", "detail": "Shock is a medical emergency.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555352", "text": "Lay the person flat if it is safe to do so.", "detail": "Avoid moving them if you suspect head, neck, back, or major leg injury.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555353", "text": "If there is no suspected spine or leg injury and breathing is okay, raise the legs 6 to 12 inches.", "detail": "Stop if it causes pain or breathing trouble.", "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555354", "text": "Keep the person warm with a coat or blanket.", "detail": "Do not overheat them and do not use direct heat.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555355", "text": "Do not give food or drink.", "detail": "They may need surgery or may vomit if they lose consciousness.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555356", "text": "Monitor breathing and be ready to begin CPR if they stop breathing normally.", "detail": "Use an AED if available.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555306",
+      "title": "Severe Allergic Reaction",
+      "slug": "severe-allergic-reaction",
+      "category": "medical",
+      "description": "Reviewed static steps for a severe allergic reaction with breathing trouble, swelling, or rapidly worsening symptoms.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "medical", "allergy", "scenario:home-fire"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555361", "text": "Call 911 for trouble breathing, throat swelling, dizziness, fainting, or rapidly spreading symptoms.", "detail": "Do not wait for symptoms to become severe if anaphylaxis is suspected.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555362", "text": "Use a prescribed epinephrine auto-injector immediately if one is available.", "detail": "Follow the device instructions and inject into the outer thigh.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555363", "text": "Note the time the epinephrine was given.", "detail": "Responders may need to know whether and when a second dose was used.", "sortOrder": 300, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555364", "text": "Keep the person lying down or seated upright if that makes breathing easier.", "detail": "Do not let them stand or walk around if they feel faint.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555365", "text": "If symptoms continue and medical guidance or device instructions allow, a second dose may be needed after 5 to 15 minutes.", "detail": "Use only if the person has another prescribed device available.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555366", "text": "Even if the person improves, they still need emergency evaluation.", "detail": "Symptoms can return after a short period.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555307",
+      "title": "Hypothermia Response",
+      "slug": "hypothermia-response",
+      "category": "weather",
+      "description": "Reviewed static steps to warm someone safely after dangerous cold exposure.",
+      "estimatedMinutes": 6,
+      "tags": ["protocol", "weather", "cold", "scenario:winter-storm", "season:winter"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555371", "text": "Move the person to warm, dry shelter.", "detail": "Get them out of wind, rain, snow, or cold ground as quickly as you safely can.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555372", "text": "Remove wet clothing and replace it with dry layers and blankets.", "detail": "Cover the head and neck as well.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555373", "text": "Warm the center of the body first: chest, neck, groin, and armpits.", "detail": "Use warm packs wrapped in cloth or skin-to-skin body heat if needed.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555374", "text": "Give warm, sweet drinks only if the person is fully awake and can swallow safely.", "detail": "Do not give alcohol.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555375", "text": "Do not rub the arms or legs aggressively and do not use direct high heat.", "detail": "Rapid warming of the extremities can worsen the situation.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555376", "text": "Call 911 for confusion, slurred speech, extreme drowsiness, or unconsciousness.", "detail": "Be ready to start CPR if breathing stops.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555308",
+      "title": "Heat Illness Response",
+      "slug": "heat-illness-response",
+      "category": "weather",
+      "description": "Reviewed static steps for suspected heat exhaustion or heat stroke while cooling the person fast.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "weather", "heat", "scenario:heat-wave", "season:summer"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555381", "text": "Move the person to shade or air conditioning immediately.", "detail": "Get them off hot pavement or out of a hot vehicle right away.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555382", "text": "Loosen or remove excess clothing.", "detail": "Airflow helps cooling start faster.", "sortOrder": 200, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555383", "text": "Cool with cool water, wet cloths, a fan, or wrapped ice packs on the neck, armpits, and groin.", "detail": "Use what is available safely and keep cooling continuously.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555384", "text": "Give small sips of cool water only if the person is fully alert and not vomiting.", "detail": "Do not force fluids if they are confused or sleepy.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555385", "text": "Call 911 for confusion, fainting, seizures, hot dry skin, or a temperature over 103 F if known.", "detail": "These are warning signs of heat stroke.", "sortOrder": 500, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555386", "text": "Stay with the person until they improve or EMS takes over.", "detail": "Watch for worsening confusion or vomiting.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555309",
+      "title": "Suspected Poisoning Response",
+      "slug": "suspected-poisoning-response",
+      "category": "medical",
+      "description": "Reviewed static steps for suspected poisoning, including when to call Poison Help versus 911.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "medical", "poisoning", "scenario:water-contamination"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-555555555391", "text": "Call Poison Help at 1-800-222-1222 right away unless the person has collapsed, is having a seizure, has trouble breathing, or cannot wake up.", "detail": "For those emergency signs, call 911 first.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555392", "text": "Remove the source if it is safe and move to fresh air if fumes are involved.", "detail": "Do not put yourself in danger during the move.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555393", "text": "Do not induce vomiting unless Poison Help or a medical professional tells you to.", "detail": "Induced vomiting can make some poisonings worse.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-555555555394", "text": "If poison is on the skin or in the eyes, rinse with clean running water.", "detail": "Keep rinsing while you get more instructions.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555395", "text": "Gather the container, label, amount, and time of exposure if you can.", "detail": "This helps Poison Help and responders guide the next step.", "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-555555555396", "text": "Follow Poison Help instructions exactly until emergency help arrives or the danger passes.", "detail": "Do not give food, drink, or home remedies unless instructed.", "sortOrder": 600, "isOptional": false, "riskLevel": "high" }
+      ]
+    },
+    {
+      "id": "55555555-5555-5555-5555-55555555530a",
+      "title": "Fracture Or Severe Sprain Response",
+      "slug": "fracture-or-severe-sprain-response",
+      "category": "injury",
+      "description": "Reviewed static steps to protect and cool a suspected fracture or severe sprain until care is available.",
+      "estimatedMinutes": 5,
+      "tags": ["protocol", "injury", "fracture", "sprain", "scenario:earthquake"],
+      "sourceType": "seeded",
+      "presentationStyle": "emergency-protocol",
+      "lastReviewedAt": "2026-03-28T00:00:00Z",
+      "items": [
+        { "id": "55555555-5555-5555-5555-5555555553a1", "text": "Stop activity and protect the injured area immediately.", "detail": "Do not test the injury by having the person walk or move it repeatedly.", "sortOrder": 100, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-5555555553a2", "text": "Call 911 for obvious deformity, heavy bleeding, numbness, bluish skin, or suspected spine, hip, or major limb injury.", "detail": "Treat loss of pulse or severe swelling as urgent.", "sortOrder": 200, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-5555555553a3", "text": "Immobilize the area in the position found.", "detail": "Do not try to straighten a visibly deformed limb.", "sortOrder": 300, "isOptional": false, "riskLevel": "high" },
+        { "id": "55555555-5555-5555-5555-5555555553a4", "text": "Apply a wrapped cold pack for 15 to 20 minutes at a time.", "detail": "Do not place ice directly on bare skin.", "sortOrder": 400, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-5555555553a5", "text": "Elevate the injured area if possible without causing more pain.", "detail": "Stop if movement increases pain or feels unsafe.", "sortOrder": 500, "isOptional": false, "riskLevel": "medium" },
+        { "id": "55555555-5555-5555-5555-5555555553a6", "text": "Do not give food or drink if emergency surgery might be needed.", "detail": "Keep the person warm and still while you wait for care.", "sortOrder": 600, "isOptional": false, "riskLevel": "medium" }
       ]
     }
   ]

@@ -17,3 +17,16 @@ struct SearchResult: Identifiable, Equatable, Sendable {
     let score: Double
     let tags: [String]
 }
+
+enum SearchSuggestionSource: String, Equatable, Sendable {
+    case recent
+    case title
+    case tag
+}
+
+struct SearchSuggestion: Identifiable, Equatable, Sendable {
+    let text: String
+    let source: SearchSuggestionSource
+
+    var id: String { "\(source.rawValue):\(text)" }
+}

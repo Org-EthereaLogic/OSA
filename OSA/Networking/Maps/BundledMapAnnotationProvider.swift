@@ -7,7 +7,7 @@ final class BundledMapAnnotationProvider: MapAnnotationProvider {
     private let annotations: [MapAnnotationItem]
 
     init(bundle: Bundle = .main) {
-        guard let url = bundle.url(forResource: "pnw-map-annotations", withExtension: "json"),
+        guard let url = Self.resourceURL(in: bundle),
               let data = try? Data(contentsOf: url),
               let decoded = try? JSONDecoder().decode([BundledAnnotation].self, from: data)
         else {
@@ -36,6 +36,21 @@ final class BundledMapAnnotationProvider: MapAnnotationProvider {
     }
 
     func allAnnotations() -> [MapAnnotationItem] { annotations }
+
+    private static func resourceURL(in bundle: Bundle) -> URL? {
+        let candidates = [bundle, Bundle.main] + Bundle.allBundles + Bundle.allFrameworks
+        for candidate in candidates {
+            if let url = candidate.url(
+                forResource: "pnw-map-annotations",
+                withExtension: "json",
+                subdirectory: "SeedContent"
+            ) {
+                return url
+            }
+        }
+
+        return nil
+    }
 }
 
 private struct BundledAnnotation: Codable {

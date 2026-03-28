@@ -107,13 +107,16 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 ### First Launch And Setup
 
-1. Open app to Home with brief explanation of offline-first behavior.
-2. Import bundled seed content into the local store.
-3. Offer optional lightweight setup:
-   - add family contact note
+1. App presents `OnboardingFlowView` as a fullScreenCover (controlled by `UserProfileSettings.onboardingCompletedKey` via `@AppStorage`).
+2. Onboarding introduces the offline-first preparedness concept and key app surfaces.
+3. Bundled seed content is imported into the local store during `AppModelContainer.makeShared()`.
+4. Offer optional lightweight setup:
+   - add emergency contacts (family, ICE) via `EmergencyContactFormView`
    - create first inventory item
    - pin favorite quick cards
-4. Show that the app is usable offline immediately.
+5. On completion, `onboardingCompleted` is set to `true` and the Home tab is shown.
+6. Show that the app is usable offline immediately.
+7. Skipped during UI testing (`UI-TESTING` launch argument forces onboarding completed).
 
 ### Offline Question Asking
 

@@ -6,7 +6,9 @@ struct AppDependencies {
     let quickCardRepository: any QuickCardRepository
     let seedContentRepository: any SeedContentRepository
     let inventoryRepository: any InventoryRepository
+    let supplyTemplateRepository: any SupplyTemplateRepository
     let checklistRepository: any ChecklistRepository
+    let emergencyContactRepository: any EmergencyContactRepository
     let noteRepository: any NoteRepository
     let importedKnowledgeRepository: any ImportedKnowledgeRepository
     let pendingOperationRepository: any PendingOperationRepository
@@ -31,7 +33,9 @@ struct AppDependencies {
     static func live(modelContainer: ModelContainer) -> AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
         let inventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
+        let supplyTemplateRepository = BundledSupplyTemplateRepository()
         let checklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
+        let emergencyContactRepository = SwiftDataEmergencyContactRepository(modelContext: modelContainer.mainContext)
         let noteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let importedKnowledgeRepository = SwiftDataImportedKnowledgeRepository(modelContext: modelContainer.mainContext)
         let pendingOperationRepository = SwiftDataPendingOperationRepository(modelContext: modelContainer.mainContext)
@@ -105,7 +109,9 @@ struct AppDependencies {
             quickCardRepository: contentRepository,
             seedContentRepository: contentRepository,
             inventoryRepository: inventoryRepository,
+            supplyTemplateRepository: supplyTemplateRepository,
             checklistRepository: checklistRepository,
+            emergencyContactRepository: emergencyContactRepository,
             noteRepository: noteRepository,
             importedKnowledgeRepository: importedKnowledgeRepository,
             pendingOperationRepository: pendingOperationRepository,

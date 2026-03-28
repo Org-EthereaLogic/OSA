@@ -93,4 +93,47 @@ final class SearchIndexStoreTests: XCTestCase {
         let results = try store.query(text: "run", kindFilter: nil, limit: 10)
         XCTAssertEqual(results.count, 1)
     }
+
+    func testSuggestionsIncludeTitlesAndNamespacedTags() throws {
+        let store = try SearchIndexStore()
+        try store.upsert(
+            id: UUID(),
+            kind: .quickCard,
+            title: "Wildfire Evacuation Checklist",
+            body: "Pack the car early.",
+            tags: "scenario:wildfire region:pacific-northwest season:summer"
+        )
+
+        let titleSuggestions = try store.suggestions(prefix: "wild", limit: 5)
+        XCTAssertTrue(titleSuggestions.contains { $0.text == "Wildfire Evacuation Checklist" && $0.source == .title })
+
+        let tagSuggestions = try store.suggestions(prefix: "scenario:w", limit: 5)
+        XCTAssertTrue(tagSuggestions.contains { $0.text == "scenario:wildfire" && $0.source == .tag })
+    }
+
+    func testSuggestionsDeduplicateCaseVariants() throws {
+        let store = try SearchIndexStore()
+        let sharedID = UUID()
+
+        try store.upsert(
+            id: sharedID,
+            kind: .quickCard,
+            title: "Winter Storm Plan",
+            body: "Stay warm.",
+            tags: "scenario:winter-storm"
+        )
+        try store.upsert(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "winter storm plan",
+            body: "Duplicate casing.",
+            tags: "scenario:winter-storm"
+        )
+
+        let suggestions = try store.suggestions(prefix: "winter", limit: 10)
+        XCTAssertEqual(
+            suggestions.filter { $0.text.lowercased() == "winter storm plan" }.count,
+            1
+        )
+    }
 }

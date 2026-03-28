@@ -166,6 +166,7 @@ struct AskScreen: View {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)
             }
+            .accessibilityLabel("Submit question")
             .foregroundStyle(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.secondary : Color.white)
             .frame(width: 42, height: 42)
             .background(

@@ -2,9 +2,12 @@ import Foundation
 
 final class LocalSearchService: SearchService {
     private let store: SearchIndexStore
+    private let userDefaults: UserDefaults
+    private let recentQueriesKey = "search.recentQueries"
 
-    init(store: SearchIndexStore) {
+    init(store: SearchIndexStore, userDefaults: UserDefaults = .standard) {
         self.store = store
+        self.userDefaults = userDefaults
     }
 
     static func makeDefault() throws -> LocalSearchService {
@@ -16,18 +19,57 @@ final class LocalSearchService: SearchService {
         return LocalSearchService(store: store)
     }
 
-    func search(query: String, scopes: Set<SearchResultKind>?, limit: Int) throws -> [SearchResult] {
+    func search(
+        query: String,
+        scopes: Set<SearchResultKind>?,
+        requiredTags: Set<String>,
+        limit: Int
+    ) throws -> [SearchResult] {
         let entries = try store.query(text: query, kindFilter: scopes, limit: limit)
-        return entries.map { entry in
+        let results = entries.map { entry in
             SearchResult(
                 id: entry.id,
                 kind: entry.kind,
                 title: entry.title,
                 snippet: entry.snippet,
                 score: entry.score,
-                tags: []
+                tags: entry.tags
             )
         }
+
+        guard !requiredTags.isEmpty else { return results }
+        return results.filter { result in
+            !requiredTags.isDisjoint(with: Set(result.tags))
+        }
+    }
+
+    func suggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] {
+        let localSuggestions = try store.suggestions(prefix: prefix, limit: limit)
+        let recent = recentQueries()
+            .filter { $0.localizedCaseInsensitiveContains(prefix) || $0.lowercased().hasPrefix(prefix.lowercased()) }
+            .map { SearchSuggestion(text: $0, source: .recent) }
+
+        var seen = Set<String>()
+        return (recent + localSuggestions).filter { suggestion in
+            let key = suggestion.text.lowercased()
+            if seen.contains(key) {
+                return false
+            }
+            seen.insert(key)
+            return true
+        }
+        .prefix(limit)
+        .map { $0 }
+    }
+
+    func recordSuccessfulQuery(_ query: String) throws {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        var values = recentQueries()
+        values.removeAll { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        values.insert(trimmed, at: 0)
+        userDefaults.set(Array(values.prefix(10)), forKey: recentQueriesKey)
     }
 
     func indexAllContent() throws {
@@ -101,5 +143,9 @@ final class LocalSearchService: SearchService {
 
     func removeFromIndex(id: UUID) throws {
         try store.removeEntry(id: id)
+    }
+
+    private func recentQueries() -> [String] {
+        userDefaults.stringArray(forKey: recentQueriesKey) ?? []
     }
 }

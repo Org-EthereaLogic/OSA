@@ -7,6 +7,7 @@ struct ChecklistTemplateDetailView: View {
     @State private var template: ChecklistTemplate?
     @State private var loadFailed = false
     @State private var showStartConfirmation = false
+    @State private var showProtocol = false
 
     var body: some View {
         Group {
@@ -25,6 +26,11 @@ struct ChecklistTemplateDetailView: View {
         .navigationTitle(template?.title ?? "Template")
         .navigationBarTitleDisplayMode(.large)
         .task { loadTemplate() }
+        .navigationDestination(isPresented: $showProtocol) {
+            if let template {
+                EmergencyProtocolView(template: template)
+            }
+        }
     }
 
     @ViewBuilder
@@ -42,6 +48,9 @@ struct ChecklistTemplateDetailView: View {
                     Text("\(template.estimatedMinutes) minutes")
                 }
                 LabeledContent("Items", value: "\(template.items.count)")
+                LabeledContent("Style") {
+                    Text(template.presentationStyle == .emergencyProtocol ? "Emergency Protocol" : "Checklist")
+                }
             }
 
             Section("Items") {
@@ -52,9 +61,16 @@ struct ChecklistTemplateDetailView: View {
 
             Section {
                 Button {
-                    startRun(from: template)
+                    if template.presentationStyle == .emergencyProtocol {
+                        showProtocol = true
+                    } else {
+                        startRun(from: template)
+                    }
                 } label: {
-                    Label("Start Checklist", systemImage: "play.fill")
+                    Label(
+                        template.presentationStyle == .emergencyProtocol ? "Open Protocol" : "Start Checklist",
+                        systemImage: template.presentationStyle == .emergencyProtocol ? "cross.case.fill" : "play.fill"
+                    )
                         .frame(maxWidth: .infinity)
                         .font(.headline)
                 }

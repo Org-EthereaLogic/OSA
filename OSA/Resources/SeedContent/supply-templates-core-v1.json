@@ -1,0 +1,60 @@
+{
+  "templates": [
+    {
+      "id": "66666666-6666-6666-6666-666666666301",
+      "title": "72-Hour Kit Readiness",
+      "slug": "72-hour-kit-readiness",
+      "scenario": "power-outage",
+      "summary": "Core supplies that keep a household functional for the first three days of a disruption.",
+      "items": [
+        { "id": "66666666-6666-6666-6666-666666666311", "title": "Stored water", "inventoryCategory": "water", "targetQuantity": 3, "unit": "gallons", "matchKeywords": ["water", "drinking"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666312", "title": "Shelf-stable meals", "inventoryCategory": "food", "targetQuantity": 9, "unit": "meals", "matchKeywords": ["meal", "food", "canned", "ready"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666313", "title": "Flashlights or lanterns", "inventoryCategory": "lighting", "targetQuantity": 2, "unit": "items", "matchKeywords": ["flashlight", "lantern", "headlamp"], "isCritical": true, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666314", "title": "First aid supplies", "inventoryCategory": "first-aid", "targetQuantity": 1, "unit": "kit", "matchKeywords": ["first aid", "medical", "bandage"], "isCritical": true, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666315", "title": "Emergency radio", "inventoryCategory": "communication", "targetQuantity": 1, "unit": "radio", "matchKeywords": ["radio", "weather radio", "noaa"], "isCritical": false, "scalesWithHouseholdSize": false }
+      ]
+    },
+    {
+      "id": "66666666-6666-6666-6666-666666666302",
+      "title": "Earthquake Home Kit",
+      "slug": "earthquake-home-kit",
+      "scenario": "earthquake",
+      "summary": "Household supplies that help after shaking, broken utilities, or short-notice evacuation.",
+      "items": [
+        { "id": "66666666-6666-6666-6666-666666666321", "title": "Stored water", "inventoryCategory": "water", "targetQuantity": 3, "unit": "gallons", "matchKeywords": ["water", "drinking"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666322", "title": "Hard-soled shoes", "inventoryCategory": "clothing", "targetQuantity": 1, "unit": "pair", "matchKeywords": ["shoe", "boots"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666323", "title": "Flashlights", "inventoryCategory": "lighting", "targetQuantity": 2, "unit": "items", "matchKeywords": ["flashlight", "headlamp"], "isCritical": true, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666324", "title": "Basic tools", "inventoryCategory": "tools", "targetQuantity": 1, "unit": "kit", "matchKeywords": ["wrench", "gloves", "tool"], "isCritical": false, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666325", "title": "Phone power bank", "inventoryCategory": "power", "targetQuantity": 1, "unit": "battery bank", "matchKeywords": ["battery", "power bank", "charger"], "isCritical": false, "scalesWithHouseholdSize": false }
+      ]
+    },
+    {
+      "id": "66666666-6666-6666-6666-666666666303",
+      "title": "Wildfire Evacuation Kit",
+      "slug": "wildfire-evacuation-kit",
+      "scenario": "wildfire",
+      "summary": "Core gear for leaving quickly during a wildfire warning or heavy smoke event.",
+      "items": [
+        { "id": "66666666-6666-6666-6666-666666666331", "title": "Go-bag water", "inventoryCategory": "water", "targetQuantity": 2, "unit": "gallons", "matchKeywords": ["water", "bottle"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666332", "title": "Ready food", "inventoryCategory": "food", "targetQuantity": 6, "unit": "meals", "matchKeywords": ["meal", "bar", "food"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666333", "title": "N95 or smoke masks", "inventoryCategory": "sanitation", "targetQuantity": 2, "unit": "masks", "matchKeywords": ["n95", "mask", "respirator"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666334", "title": "Important documents", "inventoryCategory": "documents", "targetQuantity": 1, "unit": "packet", "matchKeywords": ["document", "id", "insurance"], "isCritical": true, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666335", "title": "Charged battery banks", "inventoryCategory": "power", "targetQuantity": 1, "unit": "charger", "matchKeywords": ["battery", "power bank", "charger"], "isCritical": false, "scalesWithHouseholdSize": false }
+      ]
+    },
+    {
+      "id": "66666666-6666-6666-6666-666666666304",
+      "title": "Winter Storm Home Kit",
+      "slug": "winter-storm-home-kit",
+      "scenario": "winter-storm",
+      "summary": "Supplies for warmth, safe indoor living, and weather monitoring during cold outages.",
+      "items": [
+        { "id": "66666666-6666-6666-6666-666666666341", "title": "Stored water", "inventoryCategory": "water", "targetQuantity": 3, "unit": "gallons", "matchKeywords": ["water"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666342", "title": "Shelf-stable food", "inventoryCategory": "food", "targetQuantity": 9, "unit": "meals", "matchKeywords": ["food", "canned", "meal"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666343", "title": "Warm blankets and layers", "inventoryCategory": "clothing", "targetQuantity": 2, "unit": "layers", "matchKeywords": ["blanket", "coat", "gloves", "hat"], "isCritical": true, "scalesWithHouseholdSize": true },
+        { "id": "66666666-6666-6666-6666-666666666344", "title": "Flashlights", "inventoryCategory": "lighting", "targetQuantity": 2, "unit": "items", "matchKeywords": ["flashlight", "lantern"], "isCritical": true, "scalesWithHouseholdSize": false },
+        { "id": "66666666-6666-6666-6666-666666666345", "title": "Weather radio", "inventoryCategory": "communication", "targetQuantity": 1, "unit": "radio", "matchKeywords": ["radio", "weather radio"], "isCritical": false, "scalesWithHouseholdSize": false }
+      ]
+    }
+  ]
+}

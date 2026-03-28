@@ -15,6 +15,12 @@ struct MapScreen: View {
     @State private var selectedCategory: MapAnnotationCategory?
 
     private let defaultCenter = CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+    private let initialCategory: MapAnnotationCategory?
+
+    init(initialCategory: MapAnnotationCategory? = nil) {
+        self.initialCategory = initialCategory
+        _selectedCategory = State(initialValue: initialCategory)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -182,7 +188,7 @@ struct MapScreen: View {
     private func observeLocation() async {
         guard let service = locationService else { return }
         service.requestWhenInUseAuthorization()
-        for await coordinate in await service.locationStream() {
+        for await coordinate in service.locationStream() {
             userLocation = coordinate
         }
     }

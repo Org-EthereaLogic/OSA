@@ -4,8 +4,19 @@ struct SettingsScreen: View {
     @Environment(\.capabilityDetector) private var capabilityDetector
     @Environment(\.discoveryCoordinator) private var discoveryCoordinator
     @Environment(\.connectivityService) private var connectivityService
+    @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
+    @AppStorage(UserProfileSettings.regionKey)
+    private var regionRawValue = UserProfileSettings.regionDefault.rawValue
+    @AppStorage(UserProfileSettings.householdSizeKey)
+    private var householdSize = UserProfileSettings.householdSizeDefault
+    @AppStorage(UserProfileSettings.hazardsKey)
+    private var hazardsRawValue = UserProfileSettings.encode(hazards: [])
+    @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
+    private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @AppStorage(AccessibilitySettings.criticalHapticsKey)
+    private var criticalHaptics = AccessibilitySettings.criticalHapticsDefault
     @AppStorage(DiscoverySettings.isRSSDiscoveryEnabledKey)
     private var isRSSDiscoveryEnabled = DiscoverySettings.isRSSDiscoveryEnabledDefault
     @AppStorage(DiscoverySettings.lastDiscoveryDateKey)
@@ -15,6 +26,8 @@ struct SettingsScreen: View {
     @State private var isDiscovering = false
     @State private var lastDiscoveryMessage: String?
     @State private var credentialErrorMessage: String?
+    @State private var contacts: [EmergencyContact] = []
+    @State private var contactEditor: EmergencyContactEditorState?
     private let braveSearchCredentialStore: BraveSearchCredentialStore
 
     init(braveSearchCredentialStore: BraveSearchCredentialStore = BraveSearchCredentialStore()) {
@@ -26,6 +39,32 @@ struct SettingsScreen: View {
 
     var body: some View {
         List {
+            Section("Preparedness Profile") {
+                Picker("Region", selection: $regionRawValue) {
+                    ForEach(PreparednessRegion.allCases) { region in
+                        Text(region.displayName).tag(region.rawValue)
+                    }
+                }
+
+                Stepper(value: $householdSize, in: 1...12) {
+                    Text("Household Size: \(householdSize)")
+                }
+
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    Text("Primary Hazards")
+                        .font(.subheadline)
+                    ForEach(HazardScenario.allCases) { hazard in
+                        Toggle(
+                            hazard.displayName,
+                            isOn: Binding(
+                                get: { selectedHazards.contains(hazard) },
+                                set: { isOn in updateHazard(hazard, isSelected: isOn) }
+                            )
+                        )
+                    }
+                }
+            }
+
             Section("Assistant") {
                 LabeledContent("Model Capability") {
                     VStack(alignment: .trailing, spacing: Spacing.xxs) {
@@ -38,6 +77,47 @@ struct SettingsScreen: View {
                     }
                 }
                 Toggle("Include personal notes in Ask", isOn: $includePersonalNotes)
+            }
+
+            Section("Accessibility") {
+                Toggle("Large print reading mode", isOn: $largePrintReadingMode)
+                Toggle("Critical haptics", isOn: $criticalHaptics)
+            }
+
+            Section("Emergency Contacts") {
+                if contacts.isEmpty {
+                    Text("No emergency contacts yet. Add at least one local contact for the I’m Safe shortcut.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(contacts) { contact in
+                        Button {
+                            contactEditor = .edit(contact)
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: Spacing.xxs) {
+                                    Text(contact.name)
+                                        .foregroundStyle(.primary)
+                                    Text(contact.relationship.isEmpty ? contact.phoneNumber : "\(contact.relationship) · \(contact.phoneNumber)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .onDelete(perform: deleteContacts)
+                }
+
+                Button {
+                    contactEditor = .create
+                } label: {
+                    Label("Add Emergency Contact", systemImage: "plus")
+                }
             }
 
             Section("Connectivity") {
@@ -134,9 +214,25 @@ struct SettingsScreen: View {
         .scrollContentBackground(.hidden)
         .background(.osaBackground)
         .navigationTitle("Settings")
-        .task { await observeConnectivity() }
+        .task {
+            loadContacts()
+            await observeConnectivity()
+        }
         .onChange(of: braveSearchAPIKey) { _, newValue in
             persistBraveSearchAPIKey(newValue)
+        }
+        .sheet(item: $contactEditor, onDismiss: loadContacts) { editor in
+            NavigationStack {
+                EmergencyContactFormView(mode: editor.mode) { contact in
+                    switch editor {
+                    case .create:
+                        try emergencyContactRepository?.createContact(contact)
+                    case .edit:
+                        try emergencyContactRepository?.updateContact(contact)
+                    }
+                    loadContacts()
+                }
+            }
         }
     }
 
@@ -165,6 +261,22 @@ struct SettingsScreen: View {
         for await state in service.stateStream() {
             connectivity = state
         }
+    }
+
+    private func loadContacts() {
+        do {
+            contacts = try emergencyContactRepository?.listContacts() ?? []
+        } catch {
+            contacts = []
+        }
+    }
+
+    private func deleteContacts(at offsets: IndexSet) {
+        for index in offsets {
+            let contact = contacts[index]
+            try? emergencyContactRepository?.deleteContact(id: contact.id)
+        }
+        loadContacts()
     }
 
     private func persistBraveSearchAPIKey(_ apiKey: String) {
@@ -228,10 +340,47 @@ struct SettingsScreen: View {
             "Unknown"
         }
     }
+
+    private var selectedHazards: Set<HazardScenario> {
+        Set(UserProfileSettings.hazards(from: hazardsRawValue))
+    }
+
+    private func updateHazard(_ hazard: HazardScenario, isSelected: Bool) {
+        var hazards = selectedHazards
+        if isSelected {
+            hazards.insert(hazard)
+        } else {
+            hazards.remove(hazard)
+        }
+        hazardsRawValue = UserProfileSettings.encode(hazards: Array(hazards).sorted { $0.rawValue < $1.rawValue })
+    }
 }
 
 #Preview {
     NavigationStack {
         SettingsScreen()
+    }
+}
+
+private enum EmergencyContactEditorState: Identifiable {
+    case create
+    case edit(EmergencyContact)
+
+    var id: String {
+        switch self {
+        case .create:
+            "create"
+        case .edit(let contact):
+            "edit-\(contact.id.uuidString)"
+        }
+    }
+
+    var mode: EmergencyContactFormView.Mode {
+        switch self {
+        case .create:
+            .create
+        case .edit(let contact):
+            .edit(contact)
+        }
     }
 }

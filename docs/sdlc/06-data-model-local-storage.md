@@ -67,8 +67,11 @@ erDiagram
     AppSetting ||--o{ PendingOperation : configures
     DailyForecast }|--|| WeatherCache : cached_in
     WeatherAlert }|--|| WeatherCache : cached_in
+    EmergencyContact }|--|| UserData : belongs_to
+    SupplyTemplate ||--o{ SupplyTemplateItem : contains
     %% Note: AISession, AIMessage, AppSetting, and PendingOperation are planned but not yet implemented.
     %% DailyForecast and WeatherAlert are standalone cached entities (no relationships to other domain models).
+    %% EmergencyContact is a standalone user-entered entity. SupplyTemplate is bundled seed data for hazard-scenario supply kits.
 ```
 
 ## Entity Schemas
@@ -295,6 +298,24 @@ The more general SwiftData-backed settings entity remains deferred. `AskScopeSet
 - `updatedAt`
 - `retryCount`
 - `lastError`
+
+### EmergencyContact _(Emergency — Complete)_
+
+- `id`: UUID
+- `name`: String
+- `phone`: String
+- `email`: String?
+- `relationship`: String
+- `notes`: String?
+- `isPrimary`: Bool
+- `createdAt`: Date
+- `updatedAt`: Date
+
+Persisted via `PersistedEmergencyContact` SwiftData model. CRUD UI in `EmergencyContactFormView`. Repository: `EmergencyContactRepository` protocol with `SwiftDataEmergencyContactRepository` implementation.
+
+### SupplyTemplate _(Inventory — Complete)_
+
+Bundled hazard-scenario supply kits (e.g., earthquake, wildfire, flood). Loaded from `supply-templates-core-v1.json` via `BundledSupplyTemplateRepository`. Not persisted in SwiftData — read-only bundled content. Repository: `SupplyTemplateRepository` protocol.
 
 ### DailyForecast _(Weather — Complete)_
 

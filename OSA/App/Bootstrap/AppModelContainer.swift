@@ -7,6 +7,14 @@ private extension ProcessInfo {
         environment["XCTestConfigurationFilePath"] != nil
             || environment["XCTestSessionIdentifier"] != nil
     }
+
+    var isRunningUITests: Bool {
+        arguments.contains("UI-TESTING")
+    }
+
+    var isRunningUnitTests: Bool {
+        isRunningTests && !isRunningUITests
+    }
 }
 
 /// Shared runtime for App Intents and other non-SwiftUI entry points.
@@ -79,6 +87,7 @@ enum AppModelContainer {
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
             PersistedChecklistRunItem.self,
+            PersistedEmergencyContact.self,
             PersistedNoteRecord.self,
             PersistedSourceRecord.self,
             PersistedImportedKnowledgeDocument.self,
@@ -87,7 +96,8 @@ enum AppModelContainer {
             PersistedDailyForecast.self,
             PersistedWeatherAlert.self
         ])
-        let isTestHost = ProcessInfo.processInfo.isRunningTests
+        let processInfo = ProcessInfo.processInfo
+        let isTestHost = processInfo.isRunningTests
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: isTestHost
@@ -99,9 +109,9 @@ enum AppModelContainer {
                 configurations: [modelConfiguration]
             )
 
-            // Skip seed import when running inside a unit-test host process.
-            // The test host may not bundle seed content resources.
-            guard !ProcessInfo.processInfo.isRunningTests else {
+            // Skip seed import for unit-test hosts, but allow UI tests to
+            // import bundled content into an in-memory store for navigation.
+            guard !processInfo.isRunningUnitTests else {
                 return modelContainer
             }
 

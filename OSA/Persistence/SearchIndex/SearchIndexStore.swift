@@ -57,6 +57,7 @@ final class SearchIndexStore {
         var sql = """
             SELECT entry_id, kind, highlight(search_index, 2, '<b>', '</b>') AS title_hl,
                    snippet(search_index, 3, '<b>', '</b>', '...', 32) AS body_snip,
+                   tags,
                    bm25(search_index) AS rank
             FROM search_index
             WHERE search_index MATCH ?
@@ -90,7 +91,8 @@ final class SearchIndexStore {
             let kind = String(cString: sqlite3_column_text(stmt, 1))
             let titleHL = String(cString: sqlite3_column_text(stmt, 2))
             let bodySnippet = String(cString: sqlite3_column_text(stmt, 3))
-            let rank = sqlite3_column_double(stmt, 4)
+            let rawTags = String(cString: sqlite3_column_text(stmt, 4))
+            let rank = sqlite3_column_double(stmt, 5)
 
             if let uuid = UUID(uuidString: entryID),
                let resultKind = SearchResultKind(rawValue: kind) {
@@ -99,12 +101,36 @@ final class SearchIndexStore {
                     kind: resultKind,
                     title: titleHL.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: ""),
                     snippet: bodySnippet.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: ""),
-                    score: -rank
+                    score: -rank,
+                    tags: rawTags
+                        .split(separator: " ")
+                        .map(String.init)
                 ))
             }
         }
 
         return results
+    }
+
+    func suggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] {
+        let trimmed = prefix.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !trimmed.isEmpty else { return [] }
+
+        var suggestions: [SearchSuggestion] = []
+        suggestions.append(contentsOf: try titleSuggestions(prefix: trimmed, limit: limit))
+        suggestions.append(contentsOf: try tagSuggestions(prefix: trimmed, limit: limit))
+
+        var seen = Set<String>()
+        return suggestions.filter { suggestion in
+            let key = suggestion.text.lowercased()
+            if seen.contains(key) {
+                return false
+            }
+            seen.insert(key)
+            return true
+        }
+        .prefix(limit)
+        .map { $0 }
     }
 
     private func normalizeQuery(_ text: String) -> String {
@@ -139,6 +165,72 @@ final class SearchIndexStore {
             throw SearchIndexError.executeFailed(message)
         }
     }
+
+    private func titleSuggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] {
+        try simpleTextQuery(
+            sql: """
+                SELECT DISTINCT title
+                FROM search_index
+                WHERE lower(title) LIKE ?
+                ORDER BY title
+                LIMIT ?
+            """,
+            bindings: ["\(prefix)%", String(limit)]
+        )
+        .map { SearchSuggestion(text: $0, source: .title) }
+    }
+
+    private func tagSuggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] {
+        let raws = try simpleTextQuery(
+            sql: """
+                SELECT tags
+                FROM search_index
+                WHERE lower(tags) LIKE ?
+                   OR lower(tags) LIKE ?
+                   OR lower(tags) LIKE ?
+                LIMIT ?
+            """,
+            bindings: ["\(prefix)%", "% \(prefix)%", "%:\(prefix)%", String(limit * 4)]
+        )
+
+        let tags = raws
+            .flatMap { $0.split(separator: " ").map(String.init) }
+            .filter { $0.lowercased().contains(prefix) || $0.lowercased().hasPrefix(prefix) }
+            .sorted()
+
+        var seen = Set<String>()
+        return tags.filter { tag in
+            let key = tag.lowercased()
+            if seen.contains(key) {
+                return false
+            }
+            seen.insert(key)
+            return true
+        }
+        .prefix(limit)
+        .map { SearchSuggestion(text: $0, source: .tag) }
+    }
+
+    private func simpleTextQuery(sql: String, bindings: [String]) throws -> [String] {
+        var stmt: OpaquePointer?
+        guard sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK else {
+            let message = db.flatMap { String(cString: sqlite3_errmsg($0)) } ?? "Unknown error"
+            throw SearchIndexError.queryFailed(message)
+        }
+        defer { sqlite3_finalize(stmt) }
+
+        for (index, value) in bindings.enumerated() {
+            sqlite3_bind_text(stmt, Int32(index + 1), (value as NSString).utf8String, -1, nil)
+        }
+
+        var results: [String] = []
+        while sqlite3_step(stmt) == SQLITE_ROW {
+            guard let text = sqlite3_column_text(stmt, 0) else { continue }
+            results.append(String(cString: text))
+        }
+
+        return results
+    }
 }
 
 struct SearchIndexEntry {
@@ -147,6 +239,7 @@ struct SearchIndexEntry {
     let title: String
     let snippet: String
     let score: Double
+    let tags: [String]
 }
 
 enum SearchIndexError: Error {

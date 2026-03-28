@@ -3,6 +3,13 @@ import SwiftUI
 struct QuickCardDetailView: View {
     let card: QuickCard
 
+    @Environment(\.handbookRepository) private var handbookRepository
+    @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
+    private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
+    private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @State private var relatedSections: [HandbookSection] = []
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
@@ -58,10 +65,10 @@ struct QuickCardDetailView: View {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
                     if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(card.bodyMarkdown)) {
                         Text(attributed)
-                            .font(.cardBody)
+                            .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
                     } else {
                         Text(card.summary)
-                            .font(.cardBody)
+                            .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
                     }
 
                     if card.lastReviewedAt != nil || !card.tags.isEmpty {
@@ -82,6 +89,28 @@ struct QuickCardDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+
+                    if !relatedSections.isEmpty {
+                        Divider()
+
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            Text("Related Handbook")
+                                .font(.sectionHeader)
+
+                            ForEach(relatedSections) { section in
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: section.id)
+                                } label: {
+                                    Label(section.heading, systemImage: "book.closed.fill")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, Spacing.md)
+                                        .padding(.vertical, Spacing.sm)
+                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
                 }
                 .padding(Spacing.lg)
                 .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
@@ -97,6 +126,28 @@ struct QuickCardDetailView: View {
         .background(.osaBackground)
         .navigationTitle(card.title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    pinnedQuickCardIDsRawValue = PinnedContentSettings.toggled(card.id, rawValue: pinnedQuickCardIDsRawValue)
+                } label: {
+                    Image(systemName: isPinned ? "pin.fill" : "pin")
+                }
+                .accessibilityLabel(isPinned ? "Unpin quick card" : "Pin quick card")
+            }
+        }
+        .task { loadRelatedSections() }
+    }
+
+    private var isPinned: Bool {
+        PinnedContentSettings.isPinned(card.id, rawValue: pinnedQuickCardIDsRawValue)
+    }
+
+    private func loadRelatedSections() {
+        guard let handbookRepository else { return }
+        relatedSections = card.relatedSectionIDs.compactMap { id in
+            try? handbookRepository.section(id: id)
+        }
     }
 }
 

@@ -1,27 +1,54 @@
+import MessageUI
 import SwiftUI
 
 struct HomeScreen: View {
+    @Environment(\.handbookRepository) private var handbookRepository
     @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.checklistRepository) private var checklistRepository
     @Environment(\.inventoryRepository) private var inventoryRepository
+    @Environment(\.supplyTemplateRepository) private var supplyTemplateRepository
+    @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.rssDiscoveryService) private var rssDiscoveryService
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.weatherAlertService) private var weatherAlertService
+    @Environment(\.locationService) private var locationService
+
+    @AppStorage(UserProfileSettings.regionKey)
+    private var regionRawValue = UserProfileSettings.regionDefault.rawValue
+    @AppStorage(UserProfileSettings.householdSizeKey)
+    private var householdSize = UserProfileSettings.householdSizeDefault
+    @AppStorage(UserProfileSettings.hazardsKey)
+    private var hazardsRawValue = UserProfileSettings.encode(hazards: [])
+    @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
+    private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
+    private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
 
     @State private var spotlightMode: SpotlightMode = .quickCards
     @State private var connectivity: ConnectivityState = .offline
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
     @State private var feedState: HomeSectionState<[HomeFeedItem]> = .loading
+    @State private var pinnedState: HomeSectionState<[HomePinnedItem]> = .loading
+    @State private var suggestionsState: HomeSectionState<[HomeSuggestion]> = .loading
     @State private var checklistsState: HomeSectionState<[ChecklistRun]> = .loading
     @State private var inventoryState: HomeSectionState<[HomeInventoryReminder]> = .loading
     @State private var notesState: HomeSectionState<[NoteRecord]> = .loading
+    @State private var readinessSnapshot: SupplyReadinessSnapshot?
+    @State private var emergencyContacts: [EmergencyContact] = []
+    @State private var showEmergencyMode = false
+    @State private var showSafeMessageComposer = false
+    @State private var showSafeMessageAlert = false
+    @State private var safeMessageAlertText = ""
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 header
+                readinessSection
+                pinnedContentSection
                 spotlightSection
+                contextualSuggestionsSection
                 activeChecklistsSection
                 inventorySection
                 recentNotesSection
@@ -35,6 +62,23 @@ struct HomeScreen: View {
         .onAppear(perform: loadDashboard)
         .task { await observeConnectivity() }
         .refreshable { await refreshDashboard() }
+        .fullScreenCover(isPresented: $showEmergencyMode) {
+            EmergencyModeView(
+                safeMessageAvailable: !emergencyContacts.isEmpty,
+                onComposeSafeMessage: composeSafeMessage
+            )
+        }
+        .sheet(isPresented: $showSafeMessageComposer) {
+            MessageComposeView(
+                recipients: emergencyContacts.map(\.phoneNumber),
+                body: safeMessageBody
+            )
+        }
+        .alert("I’m Safe Unavailable", isPresented: $showSafeMessageAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(safeMessageAlertText)
+        }
     }
 
     private var header: some View {
@@ -65,6 +109,18 @@ struct HomeScreen: View {
                             tint: .osaTrust
                         )
                     }
+
+                    Button {
+                        showEmergencyMode = true
+                    } label: {
+                        Label("Emergency Mode", systemImage: "exclamationmark.triangle.fill")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, Spacing.md)
+                            .padding(.vertical, Spacing.sm)
+                            .background(Color.osaEmber.opacity(0.18), in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 Spacer(minLength: Spacing.md)
@@ -90,6 +146,85 @@ struct HomeScreen: View {
                 .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
         }
         .shadow(color: Color.osaNight.opacity(0.16), radius: 20, y: 10)
+    }
+
+    private var readinessSection: some View {
+        HomeSectionCard(title: "Readiness", systemImage: "gauge.with.dots.needle.50percent") {
+            if let readinessSnapshot {
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    HStack(alignment: .firstTextBaseline) {
+                        VStack(alignment: .leading, spacing: Spacing.xxs) {
+                            Text(readinessSnapshot.title)
+                                .font(.cardTitle)
+                            Text("Based on your \(readinessSnapshot.scenario.displayName.lowercased()) profile and current inventory.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text("\(readinessSnapshot.readinessPercent)%")
+                            .font(.stressTitle)
+                            .foregroundStyle(readinessSnapshot.readinessPercent >= 75 ? .osaLocal : .osaWarning)
+                    }
+
+                    HStack(spacing: Spacing.md) {
+                        ReadinessBadge(
+                            title: "Missing Critical",
+                            value: "\(readinessSnapshot.missingCriticalCount)",
+                            tint: readinessSnapshot.missingCriticalCount == 0 ? .osaLocal : .osaCritical
+                        )
+                        ReadinessBadge(
+                            title: "Near Expiry",
+                            value: "\(readinessSnapshot.nearExpiryCount)",
+                            tint: readinessSnapshot.nearExpiryCount == 0 ? .osaTrust : .osaWarning
+                        )
+                    }
+                }
+            } else {
+                HomeSectionEmptyView(message: "Add inventory items to start tracking readiness.")
+            }
+        }
+    }
+
+    private var pinnedContentSection: some View {
+        HomeSectionCard(title: "Pinned Content", systemImage: "pin.fill") {
+            switch pinnedState {
+            case .loading:
+                HomeSectionLoadingView(label: "Loading pinned items...")
+            case .empty:
+                HomeSectionEmptyView(message: "Pin quick cards or handbook sections for one-tap access.")
+            case .failed(let message):
+                HomeSectionFailureView(message: message)
+            case .loaded(let items):
+                VStack(spacing: Spacing.sm) {
+                    ForEach(items) { item in
+                        switch item {
+                        case .quickCard(let card):
+                            NavigationLink {
+                                QuickCardDetailView(card: card)
+                            } label: {
+                                HomePinnedRow(
+                                    icon: "bolt.fill",
+                                    title: card.title,
+                                    subtitle: card.summary
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        case .handbookSection(let section):
+                            NavigationLink {
+                                HandbookSectionDetailView(sectionID: section.id)
+                            } label: {
+                                HomePinnedRow(
+                                    icon: "book.closed.fill",
+                                    title: section.heading,
+                                    subtitle: section.plainText
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private var spotlightSection: some View {
@@ -202,6 +337,40 @@ struct HomeScreen: View {
         }
     }
 
+    private var contextualSuggestionsSection: some View {
+        HomeSectionCard(title: "Suggested For You", systemImage: "sparkles") {
+            switch suggestionsState {
+            case .loading:
+                HomeSectionLoadingView(label: "Finding relevant content...")
+            case .empty:
+                HomeSectionEmptyView(message: "Finish onboarding or pin a hazard profile to see contextual suggestions.")
+            case .failed(let message):
+                HomeSectionFailureView(message: message)
+            case .loaded(let suggestions):
+                VStack(spacing: Spacing.sm) {
+                    ForEach(suggestions) { suggestion in
+                        switch suggestion.destination {
+                        case .quickCard(let card):
+                            NavigationLink {
+                                QuickCardDetailView(card: card)
+                            } label: {
+                                HomeSuggestionRow(suggestion: suggestion)
+                            }
+                            .buttonStyle(.plain)
+                        case .handbookSection(let section):
+                            NavigationLink {
+                                HandbookSectionDetailView(sectionID: section.id)
+                            } label: {
+                                HomeSuggestionRow(suggestion: suggestion)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private var inventorySection: some View {
         HomeSectionCard(title: "Inventory", systemImage: "archivebox.fill") {
             switch inventoryState {
@@ -265,7 +434,11 @@ struct HomeScreen: View {
 
     private func reloadLocalSections() {
         loadQuickCards()
+        loadPinnedContent()
+        loadContextualSuggestions()
         loadActiveChecklists()
+        loadReadinessSnapshot()
+        loadEmergencyContacts()
         loadInventoryReminders()
         loadRecentNotes()
     }
@@ -331,6 +504,120 @@ struct HomeScreen: View {
         }
     }
 
+    private func loadPinnedContent() {
+        var items: [HomePinnedItem] = []
+
+        do {
+            let quickCardIDs = PinnedContentSettings.ids(from: pinnedQuickCardIDsRawValue)
+            let sectionIDs = PinnedContentSettings.ids(from: pinnedSectionIDsRawValue)
+
+            for id in quickCardIDs {
+                if let card = try quickCardRepository?.quickCard(id: id) {
+                    items.append(.quickCard(card))
+                }
+            }
+
+            for id in sectionIDs {
+                if let section = try handbookRepository?.section(id: id) {
+                    items.append(.handbookSection(section))
+                }
+            }
+
+            pinnedState = items.isEmpty ? .empty : .loaded(items)
+        } catch {
+            pinnedState = .failed("Pinned content could not be loaded.")
+        }
+    }
+
+    private func loadContextualSuggestions() {
+        let selectedHazards = UserProfileSettings.hazards(from: hazardsRawValue)
+        let region = UserProfileSettings.region(from: regionRawValue)
+        let targetTags = Set(selectedHazards.map(\.tag) + [region.tag, currentSeasonTag])
+
+        guard !targetTags.isEmpty else {
+            suggestionsState = .empty
+            return
+        }
+
+        var candidates: [HomeSuggestionCandidate] = []
+
+        do {
+            let cards = try quickCardRepository?.listQuickCards() ?? []
+            candidates.append(contentsOf: cards.compactMap { card in
+                let matchedTags = targetTags.intersection(Set(card.tags))
+                guard !matchedTags.isEmpty else { return nil }
+                return HomeSuggestionCandidate(
+                    suggestion: HomeSuggestion(
+                        title: card.title,
+                        subtitle: card.summary,
+                        reason: "Relevant for \(formatTagText(matchedTags.sorted().first ?? ""))",
+                        destination: .quickCard(card)
+                    ),
+                    score: matchedTags.count + 2
+                )
+            })
+
+            let chapterSummaries = try handbookRepository?.listChapters() ?? []
+            for summary in chapterSummaries {
+                guard let chapter = try handbookRepository?.chapter(id: summary.id) else { continue }
+                let chapterTags = Set(summary.tags)
+                for section in chapter.sections {
+                    let matchedTags = targetTags.intersection(Set(section.tags).union(chapterTags))
+                    guard !matchedTags.isEmpty else { continue }
+                    candidates.append(
+                        HomeSuggestionCandidate(
+                            suggestion: HomeSuggestion(
+                                title: section.heading,
+                                subtitle: section.plainText,
+                                reason: "Relevant for \(formatTagText(matchedTags.sorted().first ?? ""))",
+                                destination: .handbookSection(section)
+                            ),
+                            score: matchedTags.count
+                        )
+                    )
+                }
+            }
+
+            let suggestions = candidates
+                .sorted {
+                    if $0.score == $1.score {
+                        return $0.suggestion.title.localizedCaseInsensitiveCompare($1.suggestion.title) == .orderedAscending
+                    }
+                    return $0.score > $1.score
+                }
+                .prefix(4)
+                .map(\.suggestion)
+
+            suggestionsState = suggestions.isEmpty ? .empty : .loaded(suggestions)
+        } catch {
+            suggestionsState = .failed("Suggestions could not be loaded.")
+        }
+    }
+
+    private func loadReadinessSnapshot() {
+        let selectedHazards = UserProfileSettings.hazards(from: hazardsRawValue)
+        let fallbackScenario = selectedHazards.first ?? .powerOutage
+        guard let template = supplyTemplateRepository?.template(for: fallbackScenario) else {
+            readinessSnapshot = nil
+            return
+        }
+
+        do {
+            let inventory = try inventoryRepository?.listItems(includeArchived: false) ?? []
+            readinessSnapshot = evaluateReadiness(template: template, inventory: inventory)
+        } catch {
+            readinessSnapshot = nil
+        }
+    }
+
+    private func loadEmergencyContacts() {
+        do {
+            emergencyContacts = try emergencyContactRepository?.listContacts() ?? []
+        } catch {
+            emergencyContacts = []
+        }
+    }
+
     private func loadInventoryReminders() {
         do {
             let expiring = try inventoryRepository?.itemsExpiringSoon(within: 30) ?? []
@@ -349,6 +636,34 @@ struct HomeScreen: View {
         } catch {
             notesState = .failed("Recent notes could not be loaded.")
         }
+    }
+
+    private func composeSafeMessage() {
+        guard !emergencyContacts.isEmpty else {
+            safeMessageAlertText = "Add at least one emergency contact in Settings before using the I’m Safe shortcut."
+            showSafeMessageAlert = true
+            return
+        }
+
+        guard MFMessageComposeViewController.canSendText() else {
+            safeMessageAlertText = "Text messaging is not available on this device."
+            showSafeMessageAlert = true
+            return
+        }
+
+        showEmergencyMode = false
+        showSafeMessageComposer = true
+    }
+
+    private var safeMessageBody: String {
+        var body = "I am safe."
+
+        if let coordinate = locationService?.currentLocation {
+            body += " My location is \(String(format: "%.4f", coordinate.latitude)), \(String(format: "%.4f", coordinate.longitude))."
+        }
+
+        body += " I will contact you when I can."
+        return body
     }
 
     private func observeConnectivity() async {
@@ -410,6 +725,60 @@ struct HomeScreen: View {
             return lhs.priority < rhs.priority
         }
     }
+
+    private func evaluateReadiness(
+        template: SupplyTemplate,
+        inventory: [InventoryItem]
+    ) -> SupplyReadinessSnapshot {
+        var completedScore = 0.0
+        var missingCriticalCount = 0
+        var nearExpiryCount = 0
+
+        for templateItem in template.items {
+            let targetQuantity = templateItem.targetQuantity * (templateItem.scalesWithHouseholdSize ? householdSize : 1)
+            let matches = inventory.filter { item in
+                guard item.category == templateItem.inventoryCategory else { return false }
+                let searchableText = "\(item.name) \(item.notes) \(item.location)".lowercased()
+                return templateItem.matchKeywords.isEmpty
+                    || templateItem.matchKeywords.contains { searchableText.contains($0.lowercased()) }
+            }
+
+            let matchedQuantity = matches.reduce(0) { $0 + $1.quantity }
+            completedScore += min(Double(matchedQuantity) / Double(max(targetQuantity, 1)), 1.0)
+
+            if templateItem.isCritical && matchedQuantity < targetQuantity {
+                missingCriticalCount += 1
+            }
+
+            nearExpiryCount += matches.filter {
+                guard let expiryDate = $0.expiryDate else { return false }
+                return expiryDate <= Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? .distantFuture
+            }.count
+        }
+
+        let readinessPercent = Int((completedScore / Double(max(template.items.count, 1))) * 100.0)
+        return SupplyReadinessSnapshot(
+            title: template.title,
+            scenario: template.scenario,
+            readinessPercent: readinessPercent,
+            missingCriticalCount: missingCriticalCount,
+            nearExpiryCount: nearExpiryCount
+        )
+    }
+
+    private var currentSeasonTag: String {
+        let month = Calendar.current.component(.month, from: Date())
+        switch month {
+        case 3...5:
+            return "season:spring"
+        case 6...8:
+            return "season:summer"
+        case 9...11:
+            return "season:fall"
+        default:
+            return "season:winter"
+        }
+    }
 }
 
 private enum SpotlightMode: String, CaseIterable, Identifiable {
@@ -469,6 +838,39 @@ private struct HomeInventoryReminder: Identifiable {
     var priority: Int
 
     var id: UUID { itemID }
+}
+
+private enum HomePinnedItem: Identifiable {
+    case quickCard(QuickCard)
+    case handbookSection(HandbookSection)
+
+    var id: String {
+        switch self {
+        case .quickCard(let card):
+            "card-\(card.id.uuidString)"
+        case .handbookSection(let section):
+            "section-\(section.id.uuidString)"
+        }
+    }
+}
+
+private enum HomeSuggestionDestination {
+    case quickCard(QuickCard)
+    case handbookSection(HandbookSection)
+}
+
+private struct HomeSuggestion: Identifiable {
+    let title: String
+    let subtitle: String
+    let reason: String
+    let destination: HomeSuggestionDestination
+
+    var id: String { title + reason }
+}
+
+private struct HomeSuggestionCandidate {
+    let suggestion: HomeSuggestion
+    let score: Int
 }
 
 private struct HomeSectionCard<Content: View>: View {
@@ -637,6 +1039,96 @@ private struct HomeInventoryRow: View {
     }
 }
 
+private struct ReadinessBadge: View {
+    let title: String
+    let value: String
+    let tint: Color
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xxs) {
+            Text(value)
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(tint)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(tint.opacity(0.08), in: RoundedRectangle(cornerRadius: CornerRadius.md))
+    }
+}
+
+private struct HomePinnedRow: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Spacing.md) {
+            Image(systemName: icon)
+                .foregroundStyle(.osaPrimary)
+                .frame(width: 30, height: 30)
+                .background(Color.osaPrimary.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
+
+            VStack(alignment: .leading, spacing: Spacing.xs) {
+                Text(title)
+                    .font(.cardTitle)
+                    .foregroundStyle(.primary)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+    }
+}
+
+private struct HomeSuggestionRow: View {
+    let suggestion: HomeSuggestion
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Spacing.md) {
+            Image(systemName: icon)
+                .foregroundStyle(.osaCalm)
+                .frame(width: 30, height: 30)
+                .background(Color.osaCanopy.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.sm))
+
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
+                Text(suggestion.title)
+                    .font(.cardTitle)
+                    .foregroundStyle(.primary)
+                Text(suggestion.subtitle)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                Text(suggestion.reason)
+                    .font(.caption)
+                    .foregroundStyle(.osaPrimary)
+            }
+
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+        }
+    }
+
+    private var icon: String {
+        switch suggestion.destination {
+        case .quickCard:
+            "bolt.fill"
+        case .handbookSection:
+            "book.closed.fill"
+        }
+    }
+}
+
 private struct HomeNoteRow: View {
     let note: NoteRecord
 
@@ -725,4 +1217,15 @@ private struct HomeFeedArticleRow: View {
     NavigationStack {
         HomeScreen()
     }
+}
+
+private func formatTagText(_ rawTag: String) -> String {
+    rawTag
+        .replacingOccurrences(of: "scenario:", with: "")
+        .replacingOccurrences(of: "season:", with: "")
+        .replacingOccurrences(of: "region:", with: "")
+        .replacingOccurrences(of: "-", with: " ")
+        .split(separator: " ")
+        .map { $0.capitalized }
+        .joined(separator: " ")
 }

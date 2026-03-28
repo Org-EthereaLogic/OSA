@@ -48,9 +48,9 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `project.yml` | Canonical XcodeGen manifest for the project |
 | `OSA.xcodeproj` | Generated Xcode project |
 | `OSA/App/` | App lifecycle, composition root, and navigation shell |
-| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles and `WeatherAlertRow` for NWS alerts via `HomeFeedItem` union type; Maps/ (MapScreen, OnlineMapView, OfflineTileMapView, MapAnnotationPin); Weather/ (WeatherScreen, WeatherForecastRow, WeatherAlertRow) |
-| `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries |
-| `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations |
+| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles and `WeatherAlertRow` for NWS alerts via `HomeFeedItem` union type; Home/ also contains OnboardingFlowView (first-launch fullScreenCover) and EmergencyModeView; Maps/ (MapScreen with initialCategory filter, OnlineMapView, OfflineTileMapView, MapAnnotationPin); Weather/ (WeatherScreen, WeatherForecastRow, WeatherAlertRow); Checklists/ adds EmergencyProtocolsScreen, EmergencyProtocolView, ChecklistTemplateRouteView; Settings/ adds EmergencyContactFormView |
+| `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries; Emergency/ (EmergencyContact model and EmergencyContactRepository protocol); Inventory/ adds SupplyTemplate and SupplyTemplateRepository (hazard-scenario supply kits); Settings/ adds UserProfileSettings (onboarding state), AccessibilitySettings, PinnedContentSettings |
+| `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations; SeedImport/ adds BundledSupplyTemplateRepository; SwiftData/Models/ adds PersistedEmergencyContact with mappings; SwiftData/Repositories/ adds SwiftDataEmergencyContactRepository |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
 | `OSA/Retrieval/` | Local retrieval pipeline, query normalization, and evidence ranking (Chunking and Citations subdirs are stubs) |
 | `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist (17 publishers) and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); M6P5 Discovery/ (RSSFeedParser, RSSFeedRegistry, RSSDiscoveryService, BraveSearchClient, BraveSearchCredentialStore for Keychain-based API key storage, KnowledgeDiscoveryCoordinator with lazy webSearchClientProvider); Weather/ (WeatherKitForecastService, NWSAlertParser for ATOM+CAP feeds, LiveWeatherAlertService); Location/ (CLLocationManagerService); Maps/ (OSMTileCacheService, BundledMapAnnotationProvider with pnw-map-annotations.json); DTOs/ for fetch response types |
@@ -60,7 +60,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Assistant/Orchestration/` | M6P1 AskLanternIntentExecutor — intent-facing retrieval executor with citation formatting |
 | `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
 | `.codacy/` | Codacy CLI bootstrap script for local quality checks |
-| `OSA/Shared/` | Reusable UI (BrandMarkView, BrandWordmarkView, ConnectivityBadge), design system (ColorTokens, Typography), and cross-cutting helpers (MarkdownPreprocessor, AppBrand) |
+| `OSA/Shared/` | Reusable UI (BrandMarkView, BrandWordmarkView, ConnectivityBadge, MessageComposeView), design system (ColorTokens, Typography), cross-cutting helpers (MarkdownPreprocessor, AppBrand), Support/ (HomeSectionState, SettingsValueCoding) |
 | `OSAUITests/` | UI tests: launch test, E2E visual navigation (OSAFullE2EVisualTests), content/input tests (OSAContentAndInputTests) |
 | `scripts/` | Helper scripts: project generation, validation, branding, TestFlight archive-and-upload (`archive-and-upload.sh`) |
 | `ExportOptions.plist` | Xcode archive export configuration for App Store Connect upload |

@@ -10,6 +10,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = true
         app = XCUIApplication()
+        app.launchArguments.append("UI-TESTING")
         app.launch()
 
         let tabBar = app.tabBars.firstMatch
@@ -104,11 +105,13 @@ final class OSAFullE2EVisualTests: XCTestCase {
             "Utility Shutoff Quick Reference",
             "Winter Storm Home Preparation"
         ]
-        guard let card = quickCardLabels.first(where: { app.staticTexts[$0].waitForExistence(timeout: 1) })
-            .map({ app.staticTexts[$0] }) else {
+        guard let cardLabel = quickCardLabels.first(where: {
+            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.waitForExistence(timeout: 1)
+        }) else {
             XCTFail("No quick card found on Home")
             return
         }
+        let card = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", cardLabel)).firstMatch
         card.tap()
         sleep(1)
 

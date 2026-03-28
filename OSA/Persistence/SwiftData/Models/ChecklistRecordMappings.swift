@@ -13,6 +13,8 @@ extension PersistedChecklistTemplate {
             estimatedMinutes: template.estimatedMinutes,
             tagsJSON: PersistenceValueCoding.encode(template.tags),
             sourceTypeRawValue: template.sourceType.rawValue,
+            presentationStyleRawValue: template.presentationStyle.rawValue,
+            timerProfileRawValue: template.timerProfile?.rawValue,
             lastReviewedAt: template.lastReviewedAt
         )
     }
@@ -25,6 +27,8 @@ extension PersistedChecklistTemplate {
         estimatedMinutes = template.estimatedMinutes
         tagsJSON = PersistenceValueCoding.encode(template.tags)
         sourceTypeRawValue = template.sourceType.rawValue
+        presentationStyleRawValue = template.presentationStyle.rawValue
+        timerProfileRawValue = template.timerProfile?.rawValue
         lastReviewedAt = template.lastReviewedAt
     }
 
@@ -38,6 +42,10 @@ extension PersistedChecklistTemplate {
             estimatedMinutes: estimatedMinutes,
             tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
             sourceType: ChecklistSourceType(rawValue: sourceTypeRawValue) ?? .seeded,
+            presentationStyle: presentationStyleRawValue
+                .flatMap(ChecklistPresentationStyle.init(rawValue:))
+                ?? .standard,
+            timerProfile: timerProfileRawValue.flatMap(ChecklistTimerProfile.init(rawValue:)),
             lastReviewedAt: lastReviewedAt,
             items: items
                 .sorted {

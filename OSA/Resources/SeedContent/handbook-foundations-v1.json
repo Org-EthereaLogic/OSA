@@ -9,7 +9,10 @@
       "tags": [
         "foundations",
         "planning",
-        "offline-first"
+        "offline-first",
+        "scenario:power-outage",
+        "scenario:family-communication",
+        "region:pacific-northwest"
       ],
       "version": 2,
       "isSeeded": true,
@@ -99,7 +102,9 @@
         "family",
         "communication",
         "contacts",
-        "planning"
+        "planning",
+        "scenario:family-communication",
+        "scenario:evacuation"
       ],
       "version": 2,
       "isSeeded": true,
@@ -171,7 +176,9 @@
         "water",
         "storage",
         "purification",
-        "essentials"
+        "essentials",
+        "scenario:water-contamination",
+        "scenario:power-outage"
       ],
       "version": 1,
       "isSeeded": true,
@@ -243,7 +250,9 @@
         "food",
         "storage",
         "pantry",
-        "essentials"
+        "essentials",
+        "scenario:power-outage",
+        "scenario:winter-storm"
       ],
       "version": 1,
       "isSeeded": true,
@@ -315,7 +324,10 @@
         "power",
         "outage",
         "electricity",
-        "home"
+        "home",
+        "scenario:power-outage",
+        "scenario:winter-storm",
+        "region:pacific-northwest"
       ],
       "version": 1,
       "isSeeded": true,
@@ -388,7 +400,8 @@
         "cooking",
         "power-outage",
         "food-preparation",
-        "safety"
+        "safety",
+        "scenario:power-outage"
       ],
       "version": 1,
       "isSeeded": true,
@@ -480,7 +493,11 @@
         "warmth",
         "shelter",
         "cold-weather",
-        "home"
+        "home",
+        "scenario:winter-storm",
+        "scenario:heat-wave",
+        "season:winter",
+        "season:summer"
       ],
       "version": 1,
       "isSeeded": true,
@@ -552,7 +569,9 @@
         "first-aid",
         "hygiene",
         "medications",
-        "health"
+        "health",
+        "scenario:home-fire",
+        "scenario:heat-wave"
       ],
       "version": 1,
       "isSeeded": true,
@@ -624,7 +643,9 @@
         "go-bag",
         "evacuation",
         "kit",
-        "essentials"
+        "essentials",
+        "scenario:evacuation",
+        "scenario:wildfire"
       ],
       "version": 1,
       "isSeeded": true,
@@ -697,7 +718,9 @@
         "home",
         "utilities",
         "tools",
-        "supplies"
+        "supplies",
+        "scenario:earthquake",
+        "scenario:home-fire"
       ],
       "version": 1,
       "isSeeded": true,
@@ -771,7 +794,9 @@
         "fire",
         "lighting",
         "safety",
-        "power-outage"
+        "power-outage",
+        "scenario:home-fire",
+        "scenario:power-outage"
       ],
       "version": 1,
       "isSeeded": true,

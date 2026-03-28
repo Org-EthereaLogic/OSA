@@ -296,6 +296,8 @@ private struct ChecklistTemplateFile: Decodable {
     let estimatedMinutes: Int
     let tags: [String]
     let sourceType: ChecklistSourceType
+    let presentationStyle: ChecklistPresentationStyle?
+    let timerProfile: ChecklistTimerProfile?
     let lastReviewedAt: Date?
     let items: [ChecklistTemplateItemFile]
 
@@ -309,6 +311,8 @@ private struct ChecklistTemplateFile: Decodable {
             estimatedMinutes: estimatedMinutes,
             tags: tags,
             sourceType: sourceType,
+            presentationStyle: presentationStyle ?? .standard,
+            timerProfile: timerProfile,
             lastReviewedAt: lastReviewedAt,
             items: items.enumerated().map { index, item in
                 item.toDomain(templateID: id, defaultSortOrder: (index + 1) * 100)

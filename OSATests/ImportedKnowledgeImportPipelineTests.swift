@@ -49,7 +49,14 @@ private final class TrackingSearchService: SearchService {
     var indexedChunkIDs: [UUID] = []
     var removedIDs: [UUID] = []
 
-    func search(query: String, scopes: Set<SearchResultKind>?, limit: Int) throws -> [SearchResult] { [] }
+    func search(
+        query: String,
+        scopes: Set<SearchResultKind>?,
+        requiredTags: Set<String>,
+        limit: Int
+    ) throws -> [SearchResult] { [] }
+    func suggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] { [] }
+    func recordSuccessfulQuery(_ query: String) throws {}
     func indexAllContent() throws {}
     func indexInventoryItem(_ item: InventoryItem) throws {}
     func indexChecklistTemplate(_ template: ChecklistTemplate) throws {}

@@ -16,8 +16,16 @@ private struct ChecklistRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any ChecklistRepository)? = nil
 }
 
+private struct SupplyTemplateRepositoryKey: EnvironmentKey {
+    static let defaultValue: (any SupplyTemplateRepository)? = nil
+}
+
 private struct NoteRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any NoteRepository)? = nil
+}
+
+private struct EmergencyContactRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any EmergencyContactRepository)? = nil
 }
 
 private struct SearchServiceKey: EnvironmentKey {
@@ -69,7 +77,7 @@ private struct DiscoveryCoordinatorKey: EnvironmentKey {
 }
 
 private struct WeatherForecastRepositoryKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: (any WeatherForecastRepository)? = nil
+    static let defaultValue: (any WeatherForecastRepository)? = nil
 }
 
 private struct WeatherForecastServiceKey: EnvironmentKey {
@@ -113,9 +121,19 @@ extension EnvironmentValues {
         set { self[ChecklistRepositoryKey.self] = newValue }
     }
 
+    var supplyTemplateRepository: (any SupplyTemplateRepository)? {
+        get { self[SupplyTemplateRepositoryKey.self] }
+        set { self[SupplyTemplateRepositoryKey.self] = newValue }
+    }
+
     var noteRepository: (any NoteRepository)? {
         get { self[NoteRepositoryKey.self] }
         set { self[NoteRepositoryKey.self] = newValue }
+    }
+
+    var emergencyContactRepository: (any EmergencyContactRepository)? {
+        get { self[EmergencyContactRepositoryKey.self] }
+        set { self[EmergencyContactRepositoryKey.self] = newValue }
     }
 
     var searchService: (any SearchService)? {

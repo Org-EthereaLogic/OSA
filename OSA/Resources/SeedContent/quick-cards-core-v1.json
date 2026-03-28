@@ -16,7 +16,9 @@
       "tags": [
         "power",
         "lighting",
-        "communications"
+        "communications",
+        "scenario:power-outage",
+        "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-22T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -36,7 +38,8 @@
       "tags": [
         "water",
         "storage",
-        "rotation"
+        "rotation",
+        "scenario:water-contamination"
       ],
       "lastReviewedAt": "2026-03-22T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -56,7 +59,9 @@
         "water",
         "purification",
         "advisory",
-        "urgent"
+        "urgent",
+        "scenario:water-contamination",
+        "region:urban"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -76,7 +81,8 @@
         "gas",
         "utilities",
         "safety",
-        "urgent"
+        "urgent",
+        "scenario:home-fire"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -95,7 +101,9 @@
       "tags": [
         "go-bag",
         "evacuation",
-        "essentials"
+        "essentials",
+        "scenario:evacuation",
+        "scenario:wildfire"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -114,7 +122,9 @@
       "tags": [
         "family",
         "meeting-point",
-        "communication"
+        "communication",
+        "scenario:family-communication",
+        "scenario:evacuation"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -134,7 +144,9 @@
         "earthquake",
         "emergency",
         "safety",
-        "urgent"
+        "urgent",
+        "scenario:earthquake",
+        "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -154,7 +166,9 @@
         "weather",
         "tornado",
         "shelter",
-        "urgent"
+        "urgent",
+        "scenario:flood",
+        "season:spring"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -174,7 +188,8 @@
         "food",
         "refrigeration",
         "power-outage",
-        "safety"
+        "safety",
+        "scenario:power-outage"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -194,7 +209,8 @@
         "medications",
         "prescriptions",
         "health",
-        "maintenance"
+        "maintenance",
+        "scenario:heat-wave"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -214,7 +230,8 @@
         "fire-safety",
         "smoke-detector",
         "carbon-monoxide",
-        "maintenance"
+        "maintenance",
+        "scenario:home-fire"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -234,7 +251,9 @@
         "vehicle",
         "breakdown",
         "roadside",
-        "safety"
+        "safety",
+        "scenario:evacuation",
+        "scenario:winter-storm"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -255,7 +274,9 @@
         "shutoff",
         "gas",
         "water",
-        "electrical"
+        "electrical",
+        "scenario:earthquake",
+        "scenario:home-fire"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
@@ -276,7 +297,10 @@
         "winter",
         "storm",
         "warmth",
-        "preparation"
+        "preparation",
+        "scenario:winter-storm",
+        "season:winter",
+        "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1

@@ -20,11 +20,14 @@ final class OfflineStressTests: XCTestCase {
         PersistedChecklistTemplateItem.self,
         PersistedChecklistRun.self,
         PersistedChecklistRunItem.self,
+        PersistedEmergencyContact.self,
         PersistedNoteRecord.self,
         PersistedSourceRecord.self,
         PersistedImportedKnowledgeDocument.self,
         PersistedKnowledgeChunk.self,
-        PersistedPendingOperation.self
+        PersistedPendingOperation.self,
+        PersistedDailyForecast.self,
+        PersistedWeatherAlert.self
     ]
 
     // MARK: - Cold Start

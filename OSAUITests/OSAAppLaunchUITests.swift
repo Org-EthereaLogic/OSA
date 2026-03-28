@@ -4,6 +4,7 @@ final class OSAAppLaunchUITests: XCTestCase {
     @MainActor
     func testAppLaunchesToHomeTab() throws {
         let app = XCUIApplication()
+        app.launchArguments.append("UI-TESTING")
         app.launch()
 
         let tabBar = app.tabBars.firstMatch

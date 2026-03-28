@@ -176,6 +176,7 @@ final class ChecklistRepositoryTests: XCTestCase {
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
             PersistedChecklistRunItem.self,
+            PersistedEmergencyContact.self,
             PersistedNoteRecord.self,
             PersistedSourceRecord.self,
             PersistedImportedKnowledgeDocument.self,
@@ -197,6 +198,8 @@ final class ChecklistRepositoryTests: XCTestCase {
             estimatedMinutes: 15,
             tags: ["test"],
             sourceType: .seeded,
+            presentationStyle: .standard,
+            timerProfile: nil,
             lastReviewedAt: nil,
             items: [
                 ChecklistTemplateItem(id: UUID(uuidString: "44444444-4444-4444-4444-444444444411")!, templateID: templateID, text: "Water supply", detail: nil, sortOrder: 100, isOptional: false, riskLevel: "high"),

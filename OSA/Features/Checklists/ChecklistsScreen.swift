@@ -64,7 +64,25 @@ struct ChecklistsScreen: View {
             }
 
             if !templates.isEmpty {
-                let grouped = Dictionary(grouping: templates) { $0.category }
+                let protocolTemplates = templates.filter { $0.presentationStyle == .emergencyProtocol }
+                let standardTemplates = templates.filter { $0.presentationStyle == .standard }
+
+                if !protocolTemplates.isEmpty {
+                    Section {
+                        ForEach(protocolTemplates) { template in
+                            NavigationLink {
+                                ChecklistTemplateDetailView(slug: template.slug)
+                            } label: {
+                                TemplateRow(template: template)
+                            }
+                            .listRowBackground(Color.osaSurface)
+                        }
+                    } header: {
+                        Label("Emergency Protocols", systemImage: "cross.case.fill")
+                    }
+                }
+
+                let grouped = Dictionary(grouping: standardTemplates) { $0.category }
                 let sortedCategories = grouped.keys.sorted()
 
                 ForEach(sortedCategories, id: \.self) { category in
@@ -157,6 +175,12 @@ private struct TemplateRow: View {
                 Label("\(template.estimatedMinutes) min", systemImage: "clock")
                     .font(.metadataCaption)
                     .foregroundStyle(.tertiary)
+
+                if template.presentationStyle == .emergencyProtocol {
+                    Label("Protocol", systemImage: "cross.case.fill")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaEmergency)
+                }
             }
         }
         .padding(.vertical, Spacing.xs)

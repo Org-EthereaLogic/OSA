@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01A7152221CE5F6DA826D768 /* InventoryCompletionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7A550428CDD7DF5DB09EA2 /* InventoryCompletionServiceTests.swift */; };
+		03D4D005BAEB72F8664BF859 /* ChecklistTemplateRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C82E64972EE24054EC14BC3 /* ChecklistTemplateRouteView.swift */; };
 		07132DBFCBE2755FA14AD99C /* BundledMapAnnotationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE5125E5954E49C3485F14B /* BundledMapAnnotationProvider.swift */; };
 		07A9E1259F1060B8C9D9981A /* PersistedChecklistTemplateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA1708C667412934B49F03 /* PersistedChecklistTemplateItem.swift */; };
 		0D2448D90B1FE2AD19625FC0 /* RSSFeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD670D8723E9BF4B192FC5 /* RSSFeedParser.swift */; };
@@ -23,16 +24,19 @@
 		1280D4D708C607A95FD40DEE /* SwiftDataWeatherForecastRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A399E142A157185693D316C5 /* SwiftDataWeatherForecastRepository.swift */; };
 		14F415B47E00F2957712B853 /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1541ACA87426AFB755E7984F /* OperationType.swift */; };
 		14F7BA5ED338E025821DBD29 /* InventoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */; };
+		156D3E90ACC7B48234885808 /* SupplyTemplateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0458217A848B91378DA752E1 /* SupplyTemplateRepository.swift */; };
 		160548E01A73AC06280199AA /* OSAFullE2EVisualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55C745E0F49839ABEDD32AF /* OSAFullE2EVisualTests.swift */; };
 		1A180860FBAB2673306932A0 /* InventoryRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0864CF1D77EB1DCD52972F54 /* InventoryRepositories.swift */; };
 		1BA92623EA17CF9628D6F4A3 /* RSSFeedRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E863A9E1740D8FAC52B4577C /* RSSFeedRegistry.swift */; };
 		1D994F6F7BA5DE9A2C57EF20 /* OfflineTileMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0CFAE88DA4656F803279C5 /* OfflineTileMapView.swift */; };
 		2096C6ED1FA663135A42094B /* PersistedChecklistRunItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D3E9530AF92DE759ED6FAB /* PersistedChecklistRunItem.swift */; };
+		20BC42BE6EC1C729565C2F0D /* BundledSupplyTemplateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC87D5EFF533FD2983B1C3F /* BundledSupplyTemplateRepository.swift */; };
 		231C7460D764471E5C688F9C /* Spacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B98E8F7945F61FD91A2955E /* Spacing.swift */; };
 		23893D099A80722EC65E4696 /* SeedContentRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */; };
 		25ACE52C090B9A9D1FA73812 /* BrandMarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA0F0797832A7A191BC670A /* BrandMarkView.swift */; };
 		25EEC39D315B3E9C625EE386 /* PersistedWeatherAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CEF1DD7129449C6C43FD3 /* PersistedWeatherAlert.swift */; };
 		260039747D02E5C62E13DA30 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2BD31A77E64678EF783DC0 /* SearchResult.swift */; };
+		26E6152B54AED23AB9A4717C /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EF8F0F27FD18428897505D /* MessageComposeView.swift */; };
 		28A6D25DC4820D3D6B512B7E /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F41C4DA63B7F4013E88894 /* NoteEditorView.swift */; };
 		28DE28A86DDA58951150FA0E /* WeatherKitForecastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C97E66FE9C3CF8AEC89EE2 /* WeatherKitForecastService.swift */; };
 		2AC39F6D009972EAF6D82AA5 /* InventoryCompletionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE8965F34FFCF66FF3C758EC /* InventoryCompletionModels.swift */; };
@@ -61,12 +65,14 @@
 		4FC51A16FB97050B8F9E6280 /* PersistedImportedKnowledgeDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */; };
 		5018AC591ACA28AECB749022 /* ContentRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7610F1BD90F903D62C2333C /* ContentRepositories.swift */; };
 		50314FDA64ED2A9E1B3C78B0 /* AppEntityQueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76DC56407C47E05650A0DECD /* AppEntityQueryTests.swift */; };
+		525473FDC2F4D1AF96B8ECAA /* EmergencyContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691EE708EE63CE5507A76C75 /* EmergencyContact.swift */; };
 		543315F34EDF80133CF4EECB /* InventoryCompletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */; };
 		5560BFD3FA98826DBB068337 /* TrustedSourceAllowlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FD29050530886B6101E1A /* TrustedSourceAllowlist.swift */; };
 		569E76F0139E6EE1C5C9B74A /* PersistedDailyForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA83C798F26803B6D0873ED /* PersistedDailyForecast.swift */; };
 		5778777D30E4A8DD8B7E77D4 /* KnowledgeChunker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F198F590CA450AF4BC48E5B /* KnowledgeChunker.swift */; };
 		5925081874355BD1FEF2BD83 /* OperationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685B09BB4606D1080E396901 /* OperationStatus.swift */; };
 		59A2665B2E796E31CE6FD63C /* SwiftDataChecklistRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09723CAD2EB4C7E01584BD74 /* SwiftDataChecklistRepository.swift */; };
+		59FC54D45A8632FE5B06F30D /* SupplyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9667CDE4B4DAB119E71B49AC /* SupplyTemplate.swift */; };
 		5A3BE340AC1EB3EB189361AB /* SafetyRegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FF74A6DA9DD5BDDB6E592 /* SafetyRegressionTests.swift */; };
 		5C34ED7B4532869FE3254BD1 /* PersistenceValueCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306FE173F0CAA08F6D18E6F6 /* PersistenceValueCoding.swift */; };
 		5CAFFE92C140EB69CB73A79D /* ImportedKnowledgeDocumentMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC05E5EF5CD44188E68E65E /* ImportedKnowledgeDocumentMappings.swift */; };
@@ -76,6 +82,8 @@
 		6369F79A5FC0344A1FE59F10 /* NWPathMonitorConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FD1F8BAAA5CFCF066CA62 /* NWPathMonitorConnectivityService.swift */; };
 		649D0E6BBA1AA7782BD4E79F /* ColorTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8B612DA9C5D9B8F10DFEB3 /* ColorTokens.swift */; };
 		650B028D2CB607BD73BB6E74 /* SwiftDataPendingOperationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48AD5065A51460FDEC6D7935 /* SwiftDataPendingOperationRepository.swift */; };
+		6801B2CA7D6D551EB7C35F21 /* EmergencyProtocolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDB35C5EB5ED1A66BB840A1 /* EmergencyProtocolView.swift */; };
+		69FAF66645B727BAAE5964B5 /* EmergencyContactMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C2000A160F3BCAC7F3269D /* EmergencyContactMappings.swift */; };
 		6A3AD02E8A391E69B2EA7972 /* PersistedChecklistRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = F26ADC1A8F22481BD287B0DE /* PersistedChecklistRun.swift */; };
 		6A51BFDD7817D33177B2C5C8 /* OnscreenContentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930E8DE02FB0C51459DC997 /* OnscreenContentManager.swift */; };
 		6D561557ADE1D3493C4EA6FD /* OSMTileCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC703395CD8B26B67FBE81BE /* OSMTileCacheService.swift */; };
@@ -84,8 +92,10 @@
 		72B37ACB38E868D6921A1118 /* PersistedNoteRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B025EDF918DEB916B25292 /* PersistedNoteRecord.swift */; };
 		746A6EA81572A2AE6A742AEA /* WeatherAlertRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38873D51A175E736FF16C652 /* WeatherAlertRow.swift */; };
 		76AD3F97878A524E5FBCBAD7 /* TrustedSourceHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DE974AE8641DD6E7809C81 /* TrustedSourceHTTPClientTests.swift */; };
+		76B23BD2028446BE35B554C5 /* EmergencyContactRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC884DAFB91A05060F08E198 /* EmergencyContactRepository.swift */; };
 		7808AE641DE908499FF5077C /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0D49E567D03F81A7CB91AD /* AppTab.swift */; };
 		7832B012F22E7E090B26174A /* SeedContentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC44F7CABE0294488BE3A6A /* SeedContentLoader.swift */; };
+		79CAEC4FF0566BC59281CE2E /* UserProfileSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CB899FE034362457F085C0 /* UserProfileSettings.swift */; };
 		7BF80CD1DC1C3B5F0FC2357B /* OSAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4828F8523D509C79EB962 /* OSAApp.swift */; };
 		7C9A9EF53FF7590BEB333AAA /* PendingOperationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF66168FE2058AB73AB0222 /* PendingOperationRepositoryTests.swift */; };
 		7F21C0A0E121335AFC7ABEAC /* SensitivityPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A802144BBE5DF01CEA0E82C0 /* SensitivityPolicyTests.swift */; };
@@ -99,6 +109,7 @@
 		87AB305D4C79FD2CE785BCAA /* ImportedKnowledgeImportPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5205E83CEECDCC198AA1E01C /* ImportedKnowledgeImportPipeline.swift */; };
 		87F6B4B33D985F3FE6921778 /* InventoryItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE412CBE23992375431B18AB /* InventoryItemEntity.swift */; };
 		898A46176937799CCCD71D56 /* InventoryItemFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0576A5195E992FA824F110D2 /* InventoryItemFormView.swift */; };
+		8AD55E9EEDFE723D32870491 /* PersistedEmergencyContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC6438D46FC205B2B861F5 /* PersistedEmergencyContact.swift */; };
 		8B81D9EF22614959A6CE0C5C /* SwiftDataInventoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B302104EBA8B8AEC19C612AF /* SwiftDataInventoryRepository.swift */; };
 		8BBCB5EC75B4CB57C2C41989 /* OpenHandbookSectionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C63BED665A713F32750422C /* OpenHandbookSectionIntent.swift */; };
 		8CCF66E98FD681DC62836D97 /* DailyForecastMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5942E7C7B4B9D842FF6D217B /* DailyForecastMappings.swift */; };
@@ -119,6 +130,7 @@
 		979BF556BFA25CE6A65043A8 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659BECAFFD08EAAEC492A3F1 /* LocationService.swift */; };
 		97C9A853608BB8DE04289D96 /* LocalRetrievalServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6FAD37F9E251DDAAA3C765A /* LocalRetrievalServiceTests.swift */; };
 		982D914FBFED1C2DAA647B7F /* BraveSearchClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28D33BDBC46B698F8409275 /* BraveSearchClient.swift */; };
+		98716E0453CB4EF7ACB21BC4 /* EmergencyProtocolsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8E4B5A26EC18EE51FB686 /* EmergencyProtocolsScreen.swift */; };
 		98903305E3F2BAC7EDEA9D6D /* ImportedKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BF440ABFFAAA9FC723F875 /* ImportedKnowledgeRepository.swift */; };
 		99317C00A8628E7365939E5E /* NoteRecordMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423453D9BB7A9D94BADBB335 /* NoteRecordMappings.swift */; };
 		9AB564FAEAAD7FE42A1E6886 /* AppBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDF459839F6C3363926404 /* AppBrand.swift */; };
@@ -146,13 +158,16 @@
 		ADA53782E74F55ED105C8D7A /* NWSAlertParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2952BA2C73521086DF843DA6 /* NWSAlertParser.swift */; };
 		AED59EC5E3942248AFFBC2A5 /* PersistedHandbookSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */; };
 		B06568EE4D7653E335FEA587 /* ChecklistRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00166C23B71FBE908EC7899 /* ChecklistRunView.swift */; };
+		B084D24B8B6C72F2A968E907 /* EmergencyModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CB3D75FD836C817CC43327 /* EmergencyModeView.swift */; };
 		B28261588294442EF8EF4FA8 /* ConnectivityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */; };
 		B36070D41FD744017D237A26 /* LocalSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD85B6654E7773A34474CEA /* LocalSearchService.swift */; };
 		B55C878224E2C82C6BCA169F /* InventoryRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8656E38BC827294A36CFCE64 /* InventoryRepositoryTests.swift */; };
 		B722A6C2EBDEB0EF828A1C79 /* DiscoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2A73478E43EEF4CD12E893 /* DiscoveryModels.swift */; };
 		B86BB342FCEFE7E1FEBC9536 /* CapabilityDetectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76336EE72F2AC53E90D8ACDA /* CapabilityDetectionTests.swift */; };
 		B888372EC0D0C3106C086A13 /* PendingOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02299C2CDE78AC7BB7341E14 /* PendingOperation.swift */; };
+		B946406F5286948C68AE6726 /* SwiftDataEmergencyContactRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED3A681650DE2E86818C25D /* SwiftDataEmergencyContactRepository.swift */; };
 		B98F000AD08292056E5A2962 /* NoteRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F426B658EC82E56A4EB9976 /* NoteRecord.swift */; };
+		BB0C629795CA7C898709A6AB /* AccessibilitySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E009DE17B43BD1E90A1A44 /* AccessibilitySettings.swift */; };
 		BC89A3E500A9DB3FB13B8B79 /* SwiftDataContentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3E0AD8B88CD5C1F59EB282 /* SwiftDataContentRepository.swift */; };
 		BD9FB2C7BE82165002D92F22 /* ChecklistRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F709D991D06D2064F260B3D /* ChecklistRepositoryTests.swift */; };
 		BDCAA39A0DBD4CC96C46F8E9 /* ChecklistRunHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B956A294C70B716A09B7A6F7 /* ChecklistRunHistoryView.swift */; };
@@ -168,10 +183,13 @@
 		C5DB8C542A346F98BD27C88D /* QuickCardsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */; };
 		C6D73722567B05FE919588AF /* ConnectivityRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A67BCDB1F0D91CBC3F6DA2C /* ConnectivityRepositories.swift */; };
 		C728D1C2B93B9C441E9A33D2 /* URLSessionTrustedSourceHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD55384CAC331FA9818CCF6 /* URLSessionTrustedSourceHTTPClient.swift */; };
+		C8DD863BF82818902AF1FE03 /* SettingsValueCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2F12D241A6CFB985F69CFD /* SettingsValueCoding.swift */; };
+		C9EAA5D38F0FDBFB761850AD /* PinnedContentSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBC59C726AD5908DEABE901 /* PinnedContentSettings.swift */; };
 		CCC8E2911A1A99E71EBDBEDD /* RefreshRetryPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45F48ED7EEDD8AA5FCF5D7 /* RefreshRetryPolicyTests.swift */; };
 		CF92FFC2E313B4895EBAED99 /* SwiftDataImportedKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775021C2C8E85C8F405973A9 /* SwiftDataImportedKnowledgeRepository.swift */; };
 		D0685A9E71888700A230E1CF /* GroundedPromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7749A787B8DFAA402840D46 /* GroundedPromptBuilder.swift */; };
 		D59FA988185030CC5A95CDED /* ChecklistsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87963E80C62EE235D4223E44 /* ChecklistsScreen.swift */; };
+		D5B0117848BBD29B7058C637 /* EmergencyContactFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FBCBE79EEED744C107DE5D /* EmergencyContactFormView.swift */; };
 		D8C59A0B49673AF8575B32F6 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF86A21B3E9CB1A6F773C7 /* MapScreen.swift */; };
 		DA2368EF195DB840CBF64641 /* PersistedPendingOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E716FE3C5F3D834D4E2ECF5C /* PersistedPendingOperation.swift */; };
 		DA591A7130A5A6403632508E /* SourceRecordMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F0DE31F9C531F79DEFEF00 /* SourceRecordMappings.swift */; };
@@ -190,6 +208,7 @@
 		EBD39EEC7CF17F6527AF18DC /* AppNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1ED04D03AA1CD2560D48FB3 /* AppNavigationCoordinator.swift */; };
 		EC493644EB63F7ADFF6C37B1 /* TrustedSourceImportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C434D9DA0AB3CFC7495093A6 /* TrustedSourceImportViewModel.swift */; };
 		ED9A77EE17E1AB71B4F23155 /* PersistedChecklistTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */; };
+		EDC4532D832B3818E418788D /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE2D4E0544329BA178A6479 /* OnboardingFlowView.swift */; };
 		EE3A036DA18803F032E2108A /* DeviceCapabilityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */; };
 		EEB9973FB12C6D6E1CB44A6A /* NotesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120A3CA2CA5A63B7033881B /* NotesScreen.swift */; };
 		EF7F7F855E758AEE7428DF2C /* ImportedKnowledgeImportPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3CA1CA96C7E12EDA338829 /* ImportedKnowledgeImportPipelineTests.swift */; };
@@ -237,6 +256,7 @@
 		0251347BB78371C6673BEB76 /* HandbookSectionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandbookSectionDetailView.swift; sourceTree = "<group>"; };
 		0390691EBC99372A712AB5F7 /* KnowledgeDiscoveryCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeDiscoveryCoordinatorTests.swift; sourceTree = "<group>"; };
 		042BF4E595A333C70BDF41AF /* WeatherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModels.swift; sourceTree = "<group>"; };
+		0458217A848B91378DA752E1 /* SupplyTemplateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplyTemplateRepository.swift; sourceTree = "<group>"; };
 		0576A5195E992FA824F110D2 /* InventoryItemFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemFormView.swift; sourceTree = "<group>"; };
 		06161643B664766169DEA984 /* ChecklistEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistEntity.swift; sourceTree = "<group>"; };
 		0864CF1D77EB1DCD52972F54 /* InventoryRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryRepositories.swift; sourceTree = "<group>"; };
@@ -244,6 +264,7 @@
 		09723CAD2EB4C7E01584BD74 /* SwiftDataChecklistRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataChecklistRepository.swift; sourceTree = "<group>"; };
 		099C5F85C76901ED2159B3A5 /* ChecklistRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRun.swift; sourceTree = "<group>"; };
 		0AAA6321592CFFAF026200D7 /* RSSFeedRegistryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSFeedRegistryTests.swift; sourceTree = "<group>"; };
+		0AC8E4B5A26EC18EE51FB686 /* EmergencyProtocolsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyProtocolsScreen.swift; sourceTree = "<group>"; };
 		0E4C167C697D56E61CEFCF36 /* RefreshRetryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshRetryPolicy.swift; sourceTree = "<group>"; };
 		0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedChecklistTemplate.swift; sourceTree = "<group>"; };
 		1004DDBCBF221F4CC2927644 /* RSSFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSFeedParserTests.swift; sourceTree = "<group>"; };
@@ -252,6 +273,7 @@
 		134E5F20A5F24EB94CD2F05D /* InventoryRecordMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryRecordMappings.swift; sourceTree = "<group>"; };
 		153F118508059F815B424ADB /* WeatherForecastRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastRow.swift; sourceTree = "<group>"; };
 		1541ACA87426AFB755E7984F /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
+		15EF8F0F27FD18428897505D /* MessageComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposeView.swift; sourceTree = "<group>"; };
 		17D49BF15C2269C7DA665507 /* PendingOperationMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingOperationMappings.swift; sourceTree = "<group>"; };
 		19A3EFAF8427D400F849DF56 /* SearchIndexStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchIndexStoreTests.swift; sourceTree = "<group>"; };
 		1A001884B6240E166E1FAEF1 /* MapAnnotationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAnnotationProviderTests.swift; sourceTree = "<group>"; };
@@ -266,6 +288,7 @@
 		234DFF3D3760D257E5BB53E9 /* DeviceCapabilityDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCapabilityDetector.swift; sourceTree = "<group>"; };
 		2498F1581D9C135D3CFB1CD3 /* AskLanternIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntent.swift; sourceTree = "<group>"; };
 		25E6D96E8E16D18553C4B2A8 /* QueryNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryNormalizerTests.swift; sourceTree = "<group>"; };
+		28CB3D75FD836C817CC43327 /* EmergencyModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyModeView.swift; sourceTree = "<group>"; };
 		2952BA2C73521086DF843DA6 /* NWSAlertParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWSAlertParser.swift; sourceTree = "<group>"; };
 		2A70CF4F047A1176F84D1E25 /* SeedContent */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SeedContent; path = OSA/Resources/SeedContent; sourceTree = SOURCE_ROOT; };
 		2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedHandbookSection.swift; sourceTree = "<group>"; };
@@ -276,6 +299,7 @@
 		2E290385FA4F0F891F132363 /* ChecklistRecordMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRecordMappings.swift; sourceTree = "<group>"; };
 		2F198F590CA450AF4BC48E5B /* KnowledgeChunker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunker.swift; sourceTree = "<group>"; };
 		2F326DECDC607C69E428EF26 /* ChecklistTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistTemplate.swift; sourceTree = "<group>"; };
+		2FDB35C5EB5ED1A66BB840A1 /* EmergencyProtocolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyProtocolView.swift; sourceTree = "<group>"; };
 		306FE173F0CAA08F6D18E6F6 /* PersistenceValueCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceValueCoding.swift; sourceTree = "<group>"; };
 		315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionService.swift; sourceTree = "<group>"; };
 		325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentRepositoryTests.swift; sourceTree = "<group>"; };
@@ -288,8 +312,10 @@
 		38873D51A175E736FF16C652 /* WeatherAlertRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertRow.swift; sourceTree = "<group>"; };
 		3A6128B2FF4FB3A0E8212300 /* ReviewStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStatus.swift; sourceTree = "<group>"; };
 		3BE5125E5954E49C3485F14B /* BundledMapAnnotationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledMapAnnotationProvider.swift; sourceTree = "<group>"; };
+		3C2F12D241A6CFB985F69CFD /* SettingsValueCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsValueCoding.swift; sourceTree = "<group>"; };
 		3D8FF74A6DA9DD5BDDB6E592 /* SafetyRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyRegressionTests.swift; sourceTree = "<group>"; };
 		3E7D8064176EEF006EE7E7F9 /* SchemaMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaMigrationTests.swift; sourceTree = "<group>"; };
+		3FBC59C726AD5908DEABE901 /* PinnedContentSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedContentSettings.swift; sourceTree = "<group>"; };
 		402FD29050530886B6101E1A /* TrustedSourceAllowlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedSourceAllowlist.swift; sourceTree = "<group>"; };
 		416AE674FF679A3A4ABC6011 /* WeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepository.swift; sourceTree = "<group>"; };
 		4209562822D8C58597DF8571 /* OSA.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = OSA.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -302,6 +328,7 @@
 		4A67BCDB1F0D91CBC3F6DA2C /* ConnectivityRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityRepositories.swift; sourceTree = "<group>"; };
 		4BE814B35308E6D518E762B4 /* ConnectivityServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityServiceTests.swift; sourceTree = "<group>"; };
 		4BEA2EA38CAF74AE4F395331 /* NoteRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRepositoryTests.swift; sourceTree = "<group>"; };
+		4C82E64972EE24054EC14BC3 /* ChecklistTemplateRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistTemplateRouteView.swift; sourceTree = "<group>"; };
 		4D3DBF170B8902A9BD54A600 /* QuickCardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardEntity.swift; sourceTree = "<group>"; };
 		4F841CBCB3B6783193ED0F6A /* NWSAlertParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWSAlertParserTests.swift; sourceTree = "<group>"; };
 		5205E83CEECDCC198AA1E01C /* ImportedKnowledgeImportPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeImportPipeline.swift; sourceTree = "<group>"; };
@@ -315,9 +342,11 @@
 		5F709D991D06D2064F260B3D /* ChecklistRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRepositoryTests.swift; sourceTree = "<group>"; };
 		601BCBCADF12BF3456B24F49 /* HandbookSectionEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandbookSectionEntity.swift; sourceTree = "<group>"; };
 		609A529605A68066F628B98B /* KnowledgeChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunk.swift; sourceTree = "<group>"; };
+		63C2000A160F3BCAC7F3269D /* EmergencyContactMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactMappings.swift; sourceTree = "<group>"; };
 		659BECAFFD08EAAEC492A3F1 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		685B09BB4606D1080E396901 /* OperationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationStatus.swift; sourceTree = "<group>"; };
 		690A5D630C83220A346F5292 /* QuickCardDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardDetailView.swift; sourceTree = "<group>"; };
+		691EE708EE63CE5507A76C75 /* EmergencyContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContact.swift; sourceTree = "<group>"; };
 		6A0CFAE88DA4656F803279C5 /* OfflineTileMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineTileMapView.swift; sourceTree = "<group>"; };
 		6B3CA1CA96C7E12EDA338829 /* ImportedKnowledgeImportPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeImportPipelineTests.swift; sourceTree = "<group>"; };
 		6B3FEEA5607ECB6111E3D1DB /* ImportedKnowledgeNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeNormalizerTests.swift; sourceTree = "<group>"; };
@@ -325,6 +354,7 @@
 		6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedImportedKnowledgeDocument.swift; sourceTree = "<group>"; };
 		6F9ED5FF1719CC362D7FD9DA /* AskLanternIntentExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntentExecutor.swift; sourceTree = "<group>"; };
 		72602CDA1D8090046FD1C1AC /* KnowledgeChunkMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunkMappings.swift; sourceTree = "<group>"; };
+		72E009DE17B43BD1E90A1A44 /* AccessibilitySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilitySettings.swift; sourceTree = "<group>"; };
 		74988E7BE3ADCCDD9FD03D60 /* QuickCardRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardRouteView.swift; sourceTree = "<group>"; };
 		752CEF1DD7129449C6C43FD3 /* PersistedWeatherAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedWeatherAlert.swift; sourceTree = "<group>"; };
 		76336EE72F2AC53E90D8ACDA /* CapabilityDetectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapabilityDetectionTests.swift; sourceTree = "<group>"; };
@@ -360,6 +390,7 @@
 		92929373770BAE8DE8128495 /* EntityQueryResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityQueryResolver.swift; sourceTree = "<group>"; };
 		92DE974AE8641DD6E7809C81 /* TrustedSourceHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedSourceHTTPClientTests.swift; sourceTree = "<group>"; };
 		94BF440ABFFAAA9FC723F875 /* ImportedKnowledgeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeRepository.swift; sourceTree = "<group>"; };
+		9667CDE4B4DAB119E71B49AC /* SupplyTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplyTemplate.swift; sourceTree = "<group>"; };
 		96C3FD7C6E994EEFF345C5EB /* RepositoryEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryEnvironment.swift; sourceTree = "<group>"; };
 		96DE0BFFCC6C211F91BBF21A /* OpenQuickCardIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenQuickCardIntent.swift; sourceTree = "<group>"; };
 		982F146067A07202E06C3DBE /* LocalRetrievalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalRetrievalService.swift; sourceTree = "<group>"; };
@@ -373,6 +404,7 @@
 		9F426B658EC82E56A4EB9976 /* NoteRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRecord.swift; sourceTree = "<group>"; };
 		A34FD1F8BAAA5CFCF066CA62 /* NWPathMonitorConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWPathMonitorConnectivityService.swift; sourceTree = "<group>"; };
 		A399E142A157185693D316C5 /* SwiftDataWeatherForecastRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataWeatherForecastRepository.swift; sourceTree = "<group>"; };
+		A4FBCBE79EEED744C107DE5D /* EmergencyContactFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactFormView.swift; sourceTree = "<group>"; };
 		A5566793AB0CA37B4CAC9BF8 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		A55C745E0F49839ABEDD32AF /* OSAFullE2EVisualTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSAFullE2EVisualTests.swift; sourceTree = "<group>"; };
 		A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
@@ -391,6 +423,7 @@
 		B098CBB5537C4FA49DC6A028 /* MapAnnotationPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAnnotationPin.swift; sourceTree = "<group>"; };
 		B302104EBA8B8AEC19C612AF /* SwiftDataInventoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataInventoryRepository.swift; sourceTree = "<group>"; };
 		B32DA35456E992E4EA601598 /* SeedContentMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentMigrationTests.swift; sourceTree = "<group>"; };
+		B8CB899FE034362457F085C0 /* UserProfileSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSettings.swift; sourceTree = "<group>"; };
 		B90C875FE52B156BEC585CBC /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
 		B956A294C70B716A09B7A6F7 /* ChecklistRunHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRunHistoryView.swift; sourceTree = "<group>"; };
 		BBD11187037BC5CB0A530404 /* FoundationModelAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelAdapter.swift; sourceTree = "<group>"; };
@@ -402,6 +435,7 @@
 		C56A6100A80A0293AD76DC1C /* AskTrustedSourceImportFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskTrustedSourceImportFlowTests.swift; sourceTree = "<group>"; };
 		C56E11FB54DBE3E760677EF1 /* EvidenceRankerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvidenceRankerTests.swift; sourceTree = "<group>"; };
 		C6FAD37F9E251DDAAA3C765A /* LocalRetrievalServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalRetrievalServiceTests.swift; sourceTree = "<group>"; };
+		C7DC6438D46FC205B2B861F5 /* PersistedEmergencyContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedEmergencyContact.swift; sourceTree = "<group>"; };
 		C8B025EDF918DEB916B25292 /* PersistedNoteRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedNoteRecord.swift; sourceTree = "<group>"; };
 		CBCDF459839F6C3363926404 /* AppBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBrand.swift; sourceTree = "<group>"; };
 		D1BAF1292EEEF70E9C63A5DC /* OSAUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = OSAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -413,6 +447,7 @@
 		DA875079093B65A6A03A1659 /* CreateChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChecklistView.swift; sourceTree = "<group>"; };
 		DABA1708C667412934B49F03 /* PersistedChecklistTemplateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedChecklistTemplateItem.swift; sourceTree = "<group>"; };
 		DB0CB2952CBD4246191AFBC3 /* OSA.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OSA.entitlements; sourceTree = "<group>"; };
+		DED3A681650DE2E86818C25D /* SwiftDataEmergencyContactRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataEmergencyContactRepository.swift; sourceTree = "<group>"; };
 		DF3A117D3E02FE71186B269E /* RSSDiscoveryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSDiscoveryService.swift; sourceTree = "<group>"; };
 		DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryScreen.swift; sourceTree = "<group>"; };
 		E2D6F653ACFCC1BB8049CBE0 /* WeatherAlertServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertServiceTests.swift; sourceTree = "<group>"; };
@@ -424,8 +459,10 @@
 		EBA84A6F15F7732CFE355C00 /* LibraryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryScreen.swift; sourceTree = "<group>"; };
 		EBD55384CAC331FA9818CCF6 /* URLSessionTrustedSourceHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTrustedSourceHTTPClient.swift; sourceTree = "<group>"; };
 		EC703395CD8B26B67FBE81BE /* OSMTileCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSMTileCacheService.swift; sourceTree = "<group>"; };
+		EC884DAFB91A05060F08E198 /* EmergencyContactRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyContactRepository.swift; sourceTree = "<group>"; };
 		ECC80F0475BECB35B39A410F /* PersistedSeedContentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedSeedContentState.swift; sourceTree = "<group>"; };
 		EDCF86A21B3E9CB1A6F773C7 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
+		EFE2D4E0544329BA178A6479 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
 		F00166C23B71FBE908EC7899 /* ChecklistRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRunView.swift; sourceTree = "<group>"; };
 		F0C97E66FE9C3CF8AEC89EE2 /* WeatherKitForecastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherKitForecastService.swift; sourceTree = "<group>"; };
 		F26ADC1A8F22481BD287B0DE /* PersistedChecklistRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedChecklistRun.swift; sourceTree = "<group>"; };
@@ -441,6 +478,7 @@
 		FE8965F34FFCF66FF3C758EC /* InventoryCompletionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionModels.swift; sourceTree = "<group>"; };
 		FF3500DB4056369141F6D825 /* ImportedKnowledgeDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeDocument.swift; sourceTree = "<group>"; };
 		FF4E5E879942C01D06AD36B7 /* QuickCardsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardsScreen.swift; sourceTree = "<group>"; };
+		FFC87D5EFF533FD2983B1C3F /* BundledSupplyTemplateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledSupplyTemplateRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -505,6 +543,7 @@
 				8B86F6E1D486696EA18A5E17 /* Checklists */,
 				CDF9A17566C16CE1C7128222 /* Common */,
 				1E6FA8B435EB2EDE44EBEB5F /* Content */,
+				8051190A6502B147A5C937D3 /* Emergency */,
 				BB4EE2CAD503046F9388AB93 /* ImportedKnowledge */,
 				C8D903F14CC0F48B75A82F78 /* Inventory */,
 				F12DACFFCBDEB029CDD6F210 /* Maps */,
@@ -596,7 +635,9 @@
 		376EE5FD5C50456349750BAF /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				28CB3D75FD836C817CC43327 /* EmergencyModeView.swift */,
 				33066DD014133D5714E64A75 /* HomeScreen.swift */,
+				EFE2D4E0544329BA178A6479 /* OnboardingFlowView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -655,6 +696,7 @@
 				2E290385FA4F0F891F132363 /* ChecklistRecordMappings.swift */,
 				5942E7C7B4B9D842FF6D217B /* DailyForecastMappings.swift */,
 				984258C388B4FAE00740E36B /* EditorialRecordMappings.swift */,
+				63C2000A160F3BCAC7F3269D /* EmergencyContactMappings.swift */,
 				2BC05E5EF5CD44188E68E65E /* ImportedKnowledgeDocumentMappings.swift */,
 				134E5F20A5F24EB94CD2F05D /* InventoryRecordMappings.swift */,
 				72602CDA1D8090046FD1C1AC /* KnowledgeChunkMappings.swift */,
@@ -665,6 +707,7 @@
 				0F3AD91C0B79531685941D04 /* PersistedChecklistTemplate.swift */,
 				DABA1708C667412934B49F03 /* PersistedChecklistTemplateItem.swift */,
 				1AA83C798F26803B6D0873ED /* PersistedDailyForecast.swift */,
+				C7DC6438D46FC205B2B861F5 /* PersistedEmergencyContact.swift */,
 				108D2C88497F33EF56376023 /* PersistedHandbookChapter.swift */,
 				2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */,
 				6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */,
@@ -763,6 +806,7 @@
 				8DA0F0797832A7A191BC670A /* BrandMarkView.swift */,
 				8E4EC60BCAF39D1450C30D73 /* BrandWordmarkView.swift */,
 				E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */,
+				15EF8F0F27FD18428897505D /* MessageComposeView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -776,9 +820,18 @@
 			path = SwiftData;
 			sourceTree = "<group>";
 		};
+		6631945325BDA8206BE91013 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				EC884DAFB91A05060F08E198 /* EmergencyContactRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
 		68F3336FF589EC09A0C03060 /* SeedImport */ = {
 			isa = PBXGroup;
 			children = (
+				FFC87D5EFF533FD2983B1C3F /* BundledSupplyTemplateRepository.swift */,
 				F2ED36E8CBC50766B4FEB8EE /* SeedContentImporter.swift */,
 				5EC44F7CABE0294488BE3A6A /* SeedContentLoader.swift */,
 			);
@@ -828,6 +881,7 @@
 			isa = PBXGroup;
 			children = (
 				AC184E34779D5EC541A1C91D /* InventoryItem.swift */,
+				9667CDE4B4DAB119E71B49AC /* SupplyTemplate.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -837,6 +891,7 @@
 			children = (
 				09723CAD2EB4C7E01584BD74 /* SwiftDataChecklistRepository.swift */,
 				7F3E0AD8B88CD5C1F59EB282 /* SwiftDataContentRepository.swift */,
+				DED3A681650DE2E86818C25D /* SwiftDataEmergencyContactRepository.swift */,
 				775021C2C8E85C8F405973A9 /* SwiftDataImportedKnowledgeRepository.swift */,
 				B302104EBA8B8AEC19C612AF /* SwiftDataInventoryRepository.swift */,
 				6D2CE979CDDABBD0E2CE911E /* SwiftDataNoteRepository.swift */,
@@ -879,10 +934,20 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		8051190A6502B147A5C937D3 /* Emergency */ = {
+			isa = PBXGroup;
+			children = (
+				FD38F1E586BB48373B305E1C /* Models */,
+				6631945325BDA8206BE91013 /* Repositories */,
+			);
+			path = Emergency;
+			sourceTree = "<group>";
+		};
 		8442EA16E2D985F7E8872411 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
 				0864CF1D77EB1DCD52972F54 /* InventoryRepositories.swift */,
+				0458217A848B91378DA752E1 /* SupplyTemplateRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -890,6 +955,7 @@
 		8681B9D28C5BEFC8886D344A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				A4FBCBE79EEED744C107DE5D /* EmergencyContactFormView.swift */,
 				A59A6E86B94FCDCEB3E43705 /* SettingsScreen.swift */,
 			);
 			path = Settings;
@@ -1031,7 +1097,10 @@
 				F00166C23B71FBE908EC7899 /* ChecklistRunView.swift */,
 				87963E80C62EE235D4223E44 /* ChecklistsScreen.swift */,
 				52EEA0D158E00330D36AB5D5 /* ChecklistTemplateDetailView.swift */,
+				4C82E64972EE24054EC14BC3 /* ChecklistTemplateRouteView.swift */,
 				DA875079093B65A6A03A1659 /* CreateChecklistView.swift */,
+				0AC8E4B5A26EC18EE51FB686 /* EmergencyProtocolsScreen.swift */,
+				2FDB35C5EB5ED1A66BB840A1 /* EmergencyProtocolView.swift */,
 			);
 			path = Checklists;
 			sourceTree = "<group>";
@@ -1242,6 +1311,7 @@
 				CBCDF459839F6C3363926404 /* AppBrand.swift */,
 				2D988FE417870599E03FAA42 /* HomeSectionState.swift */,
 				E7CA069DB20461C0374F150A /* MarkdownPreprocessor.swift */,
+				3C2F12D241A6CFB985F69CFD /* SettingsValueCoding.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1283,7 +1353,10 @@
 		EF88DF58DF275DCF6050F37F /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				72E009DE17B43BD1E90A1A44 /* AccessibilitySettings.swift */,
 				F61E4006C81A63656E061EFB /* AskScopeSettings.swift */,
+				3FBC59C726AD5908DEABE901 /* PinnedContentSettings.swift */,
+				B8CB899FE034362457F085C0 /* UserProfileSettings.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1312,6 +1385,14 @@
 			isa = PBXGroup;
 			children = (
 				20D7FD590F6F4334571B8B30 /* RetrievalModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FD38F1E586BB48373B305E1C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				691EE708EE63CE5507A76C75 /* EmergencyContact.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1488,6 +1569,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB0C629795CA7C898709A6AB /* AccessibilitySettings.swift in Sources */,
 				9AB564FAEAAD7FE42A1E6886 /* AppBrand.swift in Sources */,
 				94CE794A028F52F1E13647EA /* AppDependencies.swift in Sources */,
 				120E79774EE8C620795E4B8D /* AppModelContainer.swift in Sources */,
@@ -1503,6 +1585,7 @@
 				FCB8366127C68F5B13FFA2C3 /* BrandWordmarkView.swift in Sources */,
 				982D914FBFED1C2DAA647B7F /* BraveSearchClient.swift in Sources */,
 				07132DBFCBE2755FA14AD99C /* BundledMapAnnotationProvider.swift in Sources */,
+				20BC42BE6EC1C729565C2F0D /* BundledSupplyTemplateRepository.swift in Sources */,
 				FE2EFA05B5C1C87447F0FE02 /* ChapterDetailView.swift in Sources */,
 				ACB293F238DD46C9645783E4 /* ChecklistEntity.swift in Sources */,
 				FD263C691E8312C92B588229 /* ChecklistRecordMappings.swift in Sources */,
@@ -1512,6 +1595,7 @@
 				B06568EE4D7653E335FEA587 /* ChecklistRunView.swift in Sources */,
 				940A32A092ADAC686B6D554A /* ChecklistTemplate.swift in Sources */,
 				F2544320A7C6FE5B7F6528F8 /* ChecklistTemplateDetailView.swift in Sources */,
+				03D4D005BAEB72F8664BF859 /* ChecklistTemplateRouteView.swift in Sources */,
 				D59FA988185030CC5A95CDED /* ChecklistsScreen.swift in Sources */,
 				649D0E6BBA1AA7782BD4E79F /* ColorTokens.swift in Sources */,
 				B28261588294442EF8EF4FA8 /* ConnectivityBadge.swift in Sources */,
@@ -1525,6 +1609,13 @@
 				B722A6C2EBDEB0EF828A1C79 /* DiscoveryModels.swift in Sources */,
 				9FE7226456BBA4FEF14D1835 /* DocumentType.swift in Sources */,
 				81AB7487EFEE0CB7711E756F /* EditorialRecordMappings.swift in Sources */,
+				525473FDC2F4D1AF96B8ECAA /* EmergencyContact.swift in Sources */,
+				D5B0117848BBD29B7058C637 /* EmergencyContactFormView.swift in Sources */,
+				69FAF66645B727BAAE5964B5 /* EmergencyContactMappings.swift in Sources */,
+				76B23BD2028446BE35B554C5 /* EmergencyContactRepository.swift in Sources */,
+				B084D24B8B6C72F2A968E907 /* EmergencyModeView.swift in Sources */,
+				6801B2CA7D6D551EB7C35F21 /* EmergencyProtocolView.swift in Sources */,
+				98716E0453CB4EF7ACB21BC4 /* EmergencyProtocolsScreen.swift in Sources */,
 				E88C548C9C2480BB983FBB54 /* EntityQueryResolver.swift in Sources */,
 				9657AB95BDAF7AE8450E85F6 /* EvidenceRanker.swift in Sources */,
 				A88BC73C4E6C07B07B309272 /* FoundationModelAdapter.swift in Sources */,
@@ -1563,6 +1654,7 @@
 				F8AEB958486CE9E8EF8A3D50 /* MapRepositories.swift in Sources */,
 				D8C59A0B49673AF8575B32F6 /* MapScreen.swift in Sources */,
 				E6AEED21A8993ECAF7BF058B /* MarkdownPreprocessor.swift in Sources */,
+				26E6152B54AED23AB9A4717C /* MessageComposeView.swift in Sources */,
 				6369F79A5FC0344A1FE59F10 /* NWPathMonitorConnectivityService.swift in Sources */,
 				ADA53782E74F55ED105C8D7A /* NWSAlertParser.swift in Sources */,
 				70E7106FF0778564D020A223 /* NoteDetailView.swift in Sources */,
@@ -1574,6 +1666,7 @@
 				7BF80CD1DC1C3B5F0FC2357B /* OSAApp.swift in Sources */,
 				6D561557ADE1D3493C4EA6FD /* OSMTileCacheService.swift in Sources */,
 				1D994F6F7BA5DE9A2C57EF20 /* OfflineTileMapView.swift in Sources */,
+				EDC4532D832B3818E418788D /* OnboardingFlowView.swift in Sources */,
 				947B9E2E0260255A2C83D5CD /* OnlineMapView.swift in Sources */,
 				6A51BFDD7817D33177B2C5C8 /* OnscreenContentManager.swift in Sources */,
 				8BBCB5EC75B4CB57C2C41989 /* OpenHandbookSectionIntent.swift in Sources */,
@@ -1588,6 +1681,7 @@
 				ED9A77EE17E1AB71B4F23155 /* PersistedChecklistTemplate.swift in Sources */,
 				07A9E1259F1060B8C9D9981A /* PersistedChecklistTemplateItem.swift in Sources */,
 				569E76F0139E6EE1C5C9B74A /* PersistedDailyForecast.swift in Sources */,
+				8AD55E9EEDFE723D32870491 /* PersistedEmergencyContact.swift in Sources */,
 				A1975C11DF34CCF215D63AC2 /* PersistedHandbookChapter.swift in Sources */,
 				AED59EC5E3942248AFFBC2A5 /* PersistedHandbookSection.swift in Sources */,
 				4FC51A16FB97050B8F9E6280 /* PersistedImportedKnowledgeDocument.swift in Sources */,
@@ -1600,6 +1694,7 @@
 				0F68188A4A68F28A12D44DE5 /* PersistedSourceRecord.swift in Sources */,
 				25EEC39D315B3E9C625EE386 /* PersistedWeatherAlert.swift in Sources */,
 				5C34ED7B4532869FE3254BD1 /* PersistenceValueCoding.swift in Sources */,
+				C9EAA5D38F0FDBFB761850AD /* PinnedContentSettings.swift in Sources */,
 				4F3AEDE91C6D9B7652513B1B /* PreviewConnectivityService.swift in Sources */,
 				A4893163BAAE9DA356C41CC8 /* QueryNormalizer.swift in Sources */,
 				31E7C2AEE0560BB94C421BAF /* QuickCard.swift in Sources */,
@@ -1623,11 +1718,15 @@
 				BE3B67A34DD358F1CA7AC365 /* SeedContentModels.swift in Sources */,
 				0EC383E2323F4FE79D923A18 /* SensitivityPolicy.swift in Sources */,
 				EAF2BC7A52D4CCF3E024D939 /* SettingsScreen.swift in Sources */,
+				C8DD863BF82818902AF1FE03 /* SettingsValueCoding.swift in Sources */,
 				A7B01909FB70D7F268A270F9 /* SourceRecord.swift in Sources */,
 				DA591A7130A5A6403632508E /* SourceRecordMappings.swift in Sources */,
 				231C7460D764471E5C688F9C /* Spacing.swift in Sources */,
+				59FC54D45A8632FE5B06F30D /* SupplyTemplate.swift in Sources */,
+				156D3E90ACC7B48234885808 /* SupplyTemplateRepository.swift in Sources */,
 				59A2665B2E796E31CE6FD63C /* SwiftDataChecklistRepository.swift in Sources */,
 				BC89A3E500A9DB3FB13B8B79 /* SwiftDataContentRepository.swift in Sources */,
+				B946406F5286948C68AE6726 /* SwiftDataEmergencyContactRepository.swift in Sources */,
 				CF92FFC2E313B4895EBAED99 /* SwiftDataImportedKnowledgeRepository.swift in Sources */,
 				8B81D9EF22614959A6CE0C5C /* SwiftDataInventoryRepository.swift in Sources */,
 				2CEF6833289ADB9453DD269A /* SwiftDataNoteRepository.swift in Sources */,
@@ -1641,6 +1740,7 @@
 				EC493644EB63F7ADFF6C37B1 /* TrustedSourceImportViewModel.swift in Sources */,
 				47628196BB2DF48F4BC9E6B5 /* Typography.swift in Sources */,
 				C728D1C2B93B9C441E9A33D2 /* URLSessionTrustedSourceHTTPClient.swift in Sources */,
+				79CAEC4FF0566BC59281CE2E /* UserProfileSettings.swift in Sources */,
 				90F76902FC9F8DE087B9AFF5 /* WeatherAlertMappings.swift in Sources */,
 				746A6EA81572A2AE6A742AEA /* WeatherAlertRow.swift in Sources */,
 				2CD466E0B70D272B51FB3320 /* WeatherAlertService.swift in Sources */,

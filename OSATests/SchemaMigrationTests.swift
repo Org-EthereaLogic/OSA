@@ -21,11 +21,14 @@ final class SchemaMigrationTests: XCTestCase {
         PersistedChecklistTemplateItem.self,
         PersistedChecklistRun.self,
         PersistedChecklistRunItem.self,
+        PersistedEmergencyContact.self,
         PersistedNoteRecord.self,
         PersistedSourceRecord.self,
         PersistedImportedKnowledgeDocument.self,
         PersistedKnowledgeChunk.self,
-        PersistedPendingOperation.self
+        PersistedPendingOperation.self,
+        PersistedDailyForecast.self,
+        PersistedWeatherAlert.self
     ]
 
     // MARK: - Container Creation
@@ -35,11 +38,11 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertNotNil(container)
     }
 
-    func testAllFourteenModelTypesAreRegisteredInSchema() throws {
+    func testAllSeventeenModelTypesAreRegisteredInSchema() throws {
         let schema = Schema(Self.allModelTypes)
         let entityNames = Set(schema.entities.map(\.name))
 
-        XCTAssertEqual(entityNames.count, 14, "Expected 14 entity types in the V1 schema")
+        XCTAssertEqual(entityNames.count, 17, "Expected 17 entity types in the V1 schema")
         XCTAssertTrue(entityNames.contains("PersistedHandbookChapter"))
         XCTAssertTrue(entityNames.contains("PersistedHandbookSection"))
         XCTAssertTrue(entityNames.contains("PersistedQuickCard"))
@@ -49,11 +52,14 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertTrue(entityNames.contains("PersistedChecklistTemplateItem"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistRun"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistRunItem"))
+        XCTAssertTrue(entityNames.contains("PersistedEmergencyContact"))
         XCTAssertTrue(entityNames.contains("PersistedNoteRecord"))
         XCTAssertTrue(entityNames.contains("PersistedSourceRecord"))
         XCTAssertTrue(entityNames.contains("PersistedImportedKnowledgeDocument"))
         XCTAssertTrue(entityNames.contains("PersistedKnowledgeChunk"))
         XCTAssertTrue(entityNames.contains("PersistedPendingOperation"))
+        XCTAssertTrue(entityNames.contains("PersistedDailyForecast"))
+        XCTAssertTrue(entityNames.contains("PersistedWeatherAlert"))
     }
 
     // MARK: - Insert and Fetch Round-Trips

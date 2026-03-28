@@ -94,6 +94,8 @@ final class AppEntityQueryTests: XCTestCase {
             estimatedMinutes: 30,
             tags: ["emergency"],
             sourceType: .seeded,
+            presentationStyle: .standard,
+            timerProfile: nil,
             lastReviewedAt: nil,
             items: [
                 ChecklistTemplateItem(
@@ -210,7 +212,7 @@ final class AppEntityQueryTests: XCTestCase {
         let template = ChecklistTemplate(
             id: templateID, title: "Go Bag", slug: "go-bag",
             category: "Emergency", description: "", estimatedMinutes: 15,
-            tags: [], sourceType: .seeded, lastReviewedAt: nil, items: []
+            tags: [], sourceType: .seeded, presentationStyle: .standard, timerProfile: nil, lastReviewedAt: nil, items: []
         )
         let deps = makeTestDependencies(templates: [template])
         let resolver = EntityQueryResolver(dependencies: deps)
@@ -270,7 +272,9 @@ private func makeTestDependencies(
         quickCardRepository: quickCardRepo,
         seedContentRepository: StubSeedContentRepository(),
         inventoryRepository: inventoryRepo,
+        supplyTemplateRepository: StubSupplyTemplateRepository(),
         checklistRepository: checklistRepo,
+        emergencyContactRepository: StubEmergencyContactRepository(),
         noteRepository: StubNoteRepository(),
         importedKnowledgeRepository: StubImportedKnowledgeRepository(),
         pendingOperationRepository: StubPendingOperationRepository(),
@@ -420,6 +424,19 @@ private final class StubInventoryRepository: InventoryRepository, @unchecked Sen
     func deleteItem(id: UUID) throws {}
     func itemsExpiringSoon(within days: Int) throws -> [InventoryItem] { [] }
     func itemsBelowReorderThreshold() throws -> [InventoryItem] { [] }
+}
+
+private struct StubSupplyTemplateRepository: SupplyTemplateRepository {
+    func listTemplates() -> [SupplyTemplate] { [] }
+    func template(for scenario: HazardScenario) -> SupplyTemplate? { nil }
+}
+
+private final class StubEmergencyContactRepository: EmergencyContactRepository, @unchecked Sendable {
+    func listContacts() throws -> [EmergencyContact] { [] }
+    func contact(id: UUID) throws -> EmergencyContact? { nil }
+    func createContact(_ contact: EmergencyContact) throws {}
+    func updateContact(_ contact: EmergencyContact) throws {}
+    func deleteContact(id: UUID) throws {}
 }
 
 private final class StubSeedContentRepository: SeedContentRepository, @unchecked Sendable {

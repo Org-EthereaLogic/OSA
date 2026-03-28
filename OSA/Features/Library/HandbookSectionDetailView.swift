@@ -4,9 +4,16 @@ struct HandbookSectionDetailView: View {
     let sectionID: UUID
 
     @Environment(\.handbookRepository) private var repository
+    @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.onscreenContentManager) private var onscreenContentManager
+    @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
+    private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
+    private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @State private var section: HandbookSection?
     @State private var chapter: HandbookChapter?
+    @State private var relatedCards: [QuickCard] = []
+    @State private var relatedSections: [HandbookSection] = []
     @State private var loadFailed = false
 
     var body: some View {
@@ -28,6 +35,16 @@ struct HandbookSectionDetailView: View {
         .background(.osaBackground)
         .task { loadSection() }
         .onDisappear { onscreenContentManager?.clear() }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    pinnedSectionIDsRawValue = PinnedContentSettings.toggled(sectionID, rawValue: pinnedSectionIDsRawValue)
+                } label: {
+                    Image(systemName: isPinned ? "pin.fill" : "pin")
+                }
+                .accessibilityLabel(isPinned ? "Unpin handbook section" : "Pin handbook section")
+            }
+        }
     }
 
     @ViewBuilder
@@ -86,10 +103,10 @@ struct HandbookSectionDetailView: View {
                 VStack(alignment: .leading, spacing: Spacing.lg) {
                     if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(section.bodyMarkdown)) {
                         Text(attributed)
-                            .font(.body)
+                            .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .body)
                     } else {
                         Text(section.plainText)
-                            .font(.body)
+                            .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .body)
                     }
 
                     if section.lastReviewedAt != nil || !section.tags.isEmpty {
@@ -108,6 +125,41 @@ struct HandbookSectionDetailView: View {
                             Label("Stored locally on this device", systemImage: "internaldrive.fill")
                                 .font(.metadataCaption)
                                 .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    if !relatedCards.isEmpty || !relatedSections.isEmpty {
+                        Divider()
+
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            Text("Related Content")
+                                .font(.sectionHeader)
+
+                            ForEach(relatedCards) { card in
+                                NavigationLink {
+                                    QuickCardDetailView(card: card)
+                                } label: {
+                                    Label(card.title, systemImage: "bolt.fill")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, Spacing.md)
+                                        .padding(.vertical, Spacing.sm)
+                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                }
+                                .buttonStyle(.plain)
+                            }
+
+                            ForEach(relatedSections) { related in
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: related.id)
+                                } label: {
+                                    Label(related.heading, systemImage: "book.closed.fill")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, Spacing.md)
+                                        .padding(.vertical, Spacing.sm)
+                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                 }
@@ -133,6 +185,7 @@ struct HandbookSectionDetailView: View {
 
             section = loadedSection
             chapter = try repository?.chapter(id: loadedSection.chapterID)
+            loadRelatedContent(for: loadedSection)
             onscreenContentManager?.publishHandbookSection(
                 id: loadedSection.id,
                 heading: loadedSection.heading,
@@ -141,6 +194,38 @@ struct HandbookSectionDetailView: View {
         } catch {
             loadFailed = true
             onscreenContentManager?.clear()
+        }
+    }
+
+    private var isPinned: Bool {
+        PinnedContentSettings.isPinned(sectionID, rawValue: pinnedSectionIDsRawValue)
+    }
+
+    private func loadRelatedContent(for loadedSection: HandbookSection) {
+        let scenarioTags = Set(loadedSection.tags.filter { $0.hasPrefix("scenario:") })
+
+        if let quickCardRepository {
+            let cards = (try? quickCardRepository.listQuickCards()) ?? []
+            relatedCards = cards.filter { card in
+                card.relatedSectionIDs.contains(loadedSection.id)
+                    || !scenarioTags.isDisjoint(with: Set(card.tags))
+            }
+            .prefix(3)
+            .map { $0 }
+        } else {
+            relatedCards = []
+        }
+
+        if let chapter {
+            relatedSections = chapter.sections.filter { candidate in
+                candidate.id != loadedSection.id
+                    && (!scenarioTags.isDisjoint(with: Set(candidate.tags))
+                        || candidate.parentSectionID == loadedSection.parentSectionID)
+            }
+            .prefix(3)
+            .map { $0 }
+        } else {
+            relatedSections = []
         }
     }
 }

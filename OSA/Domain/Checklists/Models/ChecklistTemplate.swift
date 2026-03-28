@@ -5,6 +5,15 @@ enum ChecklistSourceType: String, Codable, Equatable, Sendable {
     case userCreated = "user-created"
 }
 
+enum ChecklistPresentationStyle: String, Codable, Equatable, Sendable {
+    case standard
+    case emergencyProtocol = "emergency-protocol"
+}
+
+enum ChecklistTimerProfile: String, Codable, Equatable, Sendable {
+    case cprMetronome = "cpr-metronome"
+}
+
 struct ChecklistTemplateItem: Identifiable, Equatable, Sendable {
     let id: UUID
     let templateID: UUID
@@ -24,6 +33,8 @@ struct ChecklistTemplateSummary: Identifiable, Equatable, Sendable {
     let estimatedMinutes: Int
     let tags: [String]
     let sourceType: ChecklistSourceType
+    let presentationStyle: ChecklistPresentationStyle
+    let timerProfile: ChecklistTimerProfile?
     let itemCount: Int
 }
 
@@ -36,6 +47,8 @@ struct ChecklistTemplate: Identifiable, Equatable, Sendable {
     let estimatedMinutes: Int
     let tags: [String]
     let sourceType: ChecklistSourceType
+    let presentationStyle: ChecklistPresentationStyle
+    let timerProfile: ChecklistTimerProfile?
     let lastReviewedAt: Date?
     let items: [ChecklistTemplateItem]
 
@@ -49,6 +62,8 @@ struct ChecklistTemplate: Identifiable, Equatable, Sendable {
             estimatedMinutes: estimatedMinutes,
             tags: tags,
             sourceType: sourceType,
+            presentationStyle: presentationStyle,
+            timerProfile: timerProfile,
             itemCount: items.count
         )
     }

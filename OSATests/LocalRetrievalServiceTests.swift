@@ -224,13 +224,27 @@ final class LocalRetrievalServiceTests: XCTestCase {
 struct StubSearchService: SearchService {
     let results: [SearchResult]
 
-    func search(query: String, scopes: Set<SearchResultKind>?, limit: Int) throws -> [SearchResult] {
+    func search(
+        query: String,
+        scopes: Set<SearchResultKind>?,
+        requiredTags: Set<String>,
+        limit: Int
+    ) throws -> [SearchResult] {
+        var filtered = results
+
         if let scopes {
-            return results.filter { scopes.contains($0.kind) }
+            filtered = filtered.filter { scopes.contains($0.kind) }
         }
-        return results
+
+        if !requiredTags.isEmpty {
+            filtered = filtered.filter { !requiredTags.isDisjoint(with: Set($0.tags)) }
+        }
+
+        return Array(filtered.prefix(limit))
     }
 
+    func suggestions(prefix: String, limit: Int) throws -> [SearchSuggestion] { [] }
+    func recordSuccessfulQuery(_ query: String) throws {}
     func indexAllContent() throws {}
     func indexInventoryItem(_ item: InventoryItem) throws {}
     func indexChecklistTemplate(_ template: ChecklistTemplate) throws {}

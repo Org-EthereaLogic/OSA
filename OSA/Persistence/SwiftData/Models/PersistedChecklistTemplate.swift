@@ -11,6 +11,8 @@ final class PersistedChecklistTemplate {
     var estimatedMinutes: Int
     var tagsJSON: String
     var sourceTypeRawValue: String
+    var presentationStyleRawValue: String?
+    var timerProfileRawValue: String?
     var lastReviewedAt: Date?
     @Relationship(deleteRule: .cascade, inverse: \PersistedChecklistTemplateItem.template)
     var items: [PersistedChecklistTemplateItem]
@@ -24,6 +26,8 @@ final class PersistedChecklistTemplate {
         estimatedMinutes: Int,
         tagsJSON: String,
         sourceTypeRawValue: String,
+        presentationStyleRawValue: String?,
+        timerProfileRawValue: String?,
         lastReviewedAt: Date?,
         items: [PersistedChecklistTemplateItem] = []
     ) {
@@ -35,6 +39,8 @@ final class PersistedChecklistTemplate {
         self.estimatedMinutes = estimatedMinutes
         self.tagsJSON = tagsJSON
         self.sourceTypeRawValue = sourceTypeRawValue
+        self.presentationStyleRawValue = presentationStyleRawValue
+        self.timerProfileRawValue = timerProfileRawValue
         self.lastReviewedAt = lastReviewedAt
         self.items = items
     }
