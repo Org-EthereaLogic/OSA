@@ -50,6 +50,8 @@ struct InventoryItemFormView: View {
 
             Section("Quantity") {
                 Stepper("\(quantity)", value: $quantity, in: 0...9999)
+                    .accessibilityLabel("Quantity")
+                    .accessibilityValue("\(quantity)")
                 TextField("Unit (e.g., gallons, boxes)", text: $unit)
             }
 
@@ -68,6 +70,8 @@ struct InventoryItemFormView: View {
                 Toggle("Alert When Low", isOn: $hasReorderThreshold)
                 if hasReorderThreshold {
                     Stepper("Threshold: \(reorderThreshold)", value: $reorderThreshold, in: 1...9999)
+                        .accessibilityLabel("Reorder threshold")
+                        .accessibilityValue("\(reorderThreshold)")
                 }
             }
 
@@ -90,6 +94,7 @@ struct InventoryItemFormView: View {
                         }
                     }
                     .disabled(isSuggesting || name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityHint("Uses local suggestions to fill category, quantity, unit, and location.")
 
                     if let suggestionMessage {
                         Text(suggestionMessage)
@@ -104,10 +109,12 @@ struct InventoryItemFormView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .accessibilityHint("Discards changes and closes the form.")
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") { saveItem() }
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityHint("Saves this inventory item on the device.")
             }
         }
         .alert("Save Failed", isPresented: $showSaveError) {

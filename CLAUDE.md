@@ -48,7 +48,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `project.yml` | Canonical XcodeGen manifest for the project |
 | `OSA.xcodeproj` | Generated Xcode project |
 | `OSA/App/` | App lifecycle, composition root, and navigation shell |
-| `OSA/Features/` | SwiftUI feature surfaces; Home screen has Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles and `WeatherAlertRow` for NWS alerts via `HomeFeedItem` union type; Home/ also contains OnboardingFlowView (first-launch fullScreenCover) and EmergencyModeView; Maps/ (MapScreen with initialCategory filter, OnlineMapView, OfflineTileMapView, MapAnnotationPin); Weather/ (WeatherScreen, WeatherForecastRow, WeatherAlertRow); Checklists/ adds EmergencyProtocolsScreen, EmergencyProtocolView, ChecklistTemplateRouteView; Settings/ adds EmergencyContactFormView |
+| `OSA/Features/` | SwiftUI feature surfaces; Home/ decomposed into HomeScreen (coordinator) + HomeSectionViews (HomeHeaderView, HomeReadinessSectionView, HomePinnedContentSectionView, HomeSpotlightSectionView, HomeSuggestionsSectionView, HomeActiveChecklistsSectionView, HomeInventorySectionView, HomeRecentNotesSectionView), OnboardingFlowView, EmergencyModeView; Spotlight section (Quick Cards / Feed segmented picker) with `HomeFeedArticleRow` for RSS articles and `WeatherAlertRow` for NWS alerts via `HomeFeedItem` union type; Maps/ (MapScreen with initialCategory filter, OnlineMapView, OfflineTileMapView, MapAnnotationPin); Weather/ (WeatherScreen, WeatherForecastRow, WeatherAlertRow); Checklists/ adds EmergencyProtocolsScreen, EmergencyProtocolView, ChecklistTemplateRouteView; Settings/ adds EmergencyContactFormView |
 | `OSA/Domain/` | Domain models, repository protocols, and use-case boundaries; Emergency/ (EmergencyContact model and EmergencyContactRepository protocol); Inventory/ adds SupplyTemplate and SupplyTemplateRepository (hazard-scenario supply kits); Settings/ adds UserProfileSettings (onboarding state), AccessibilitySettings, PinnedContentSettings |
 | `OSA/Persistence/` | SwiftData models, mappings, migrations, and repository implementations; SeedImport/ adds BundledSupplyTemplateRepository; SwiftData/Models/ adds PersistedEmergencyContact with mappings; SwiftData/Repositories/ adds SwiftDataEmergencyContactRepository |
 | `OSA/Assistant/` | Assistant policy, prompt shaping, and model adapters |
@@ -61,12 +61,13 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
 | `.codacy/` | Codacy CLI bootstrap script for local quality checks |
 | `OSA/Shared/` | Reusable UI (BrandMarkView, BrandWordmarkView, ConnectivityBadge, MessageComposeView), design system (ColorTokens, Typography), cross-cutting helpers (MarkdownPreprocessor, AppBrand), Support/ (HomeSectionState, SettingsValueCoding), Support/Haptics/ (HapticFeedbackService protocol, LiveHapticFeedbackService with UIKitHapticEngine cached generators, AppHapticEvent enum, `.hapticTap()` view modifier) |
-| `OSAUITests/` | UI tests: launch test, E2E visual navigation (OSAFullE2EVisualTests), content/input tests (OSAContentAndInputTests) |
+| `OSAUITests/` | UI tests: launch (OSAAppLaunchUITests), E2E visual navigation (OSAFullE2EVisualTests), content/input (OSAContentAndInputTests), rotation (OSARotationUITests), accessibility smoke (OSAAccessibilitySmokeTests) — 30 UI tests total |
 | `scripts/` | Helper scripts: project generation, validation, branding, TestFlight archive-and-upload (`archive-and-upload.sh`) |
 | `ExportOptions.plist` | Xcode archive export configuration for App Store Connect upload |
 | `docs/` | Documentation root — see `docs/README.md` for navigation |
 | `docs/sdlc/` | Canonical SDLC, product, architecture, quality, safety, and release docs |
 | `docs/adr/` | Accepted architecture decisions |
+| `docs/reference/` | Non-canonical reference snapshots, audit backlogs, and manual QA checklists |
 | `docs/prompt/` | Enhanced task prompts and prompt-working areas |
 
 ## Reading Order

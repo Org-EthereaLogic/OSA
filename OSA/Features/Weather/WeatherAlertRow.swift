@@ -13,6 +13,7 @@ struct WeatherAlertRow: View {
                     .frame(width: 30, height: 30)
                     .background(severityColor.opacity(0.12),
                                in: RoundedRectangle(cornerRadius: CornerRadius.sm))
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(alert.title)
@@ -40,6 +41,7 @@ struct WeatherAlertRow: View {
                 Image(systemName: "arrow.up.right")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
             }
             .padding(Spacing.md)
             .background(
@@ -50,8 +52,12 @@ struct WeatherAlertRow: View {
                 RoundedRectangle(cornerRadius: CornerRadius.md)
                     .stroke(severityColor.opacity(0.2), lineWidth: 1)
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(alert.title)
+            .accessibilityValue(accessibilityValue)
         }
         .buttonStyle(.plain)
+        .accessibilityHint("Opens the full weather alert.")
     }
 
     private var severityIcon: String {
@@ -70,5 +76,19 @@ struct WeatherAlertRow: View {
         case .moderate: .osaWarning
         case .minor, .unknown: .osaCalm
         }
+    }
+
+    private var accessibilityValue: String {
+        var components: [String] = []
+
+        if !alert.areaDescription.isEmpty {
+            components.append(alert.areaDescription)
+        }
+
+        if let expires = alert.expiresDate {
+            components.append("Expires \(expires.formatted(date: .abbreviated, time: .shortened))")
+        }
+
+        return components.joined(separator: ". ")
     }
 }

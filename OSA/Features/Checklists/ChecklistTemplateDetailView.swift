@@ -77,6 +77,11 @@ struct ChecklistTemplateDetailView: View {
                         .font(.headline)
                 }
                 .buttonStyle(.borderedProminent)
+                .accessibilityHint(
+                    template.presentationStyle == .emergencyProtocol
+                        ? "Opens the protocol in large-step mode."
+                        : "Starts a new checklist run."
+                )
                 .listRowInsets(EdgeInsets(top: Spacing.sm, leading: Spacing.lg, bottom: Spacing.sm, trailing: Spacing.lg))
             }
         }
@@ -122,6 +127,7 @@ private struct TemplateItemRow: View {
                 Image(systemName: "circle")
                     .foregroundStyle(.tertiary)
                     .font(.caption)
+                    .accessibilityHidden(true)
 
                 Text(item.text)
                     .font(.body)
@@ -143,6 +149,7 @@ private struct TemplateItemRow: View {
                     .padding(.leading, Spacing.xl)
             }
         }
+        .accessibilityElement(children: .combine)
     }
 }
 

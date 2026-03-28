@@ -43,7 +43,11 @@ struct ChecklistRunView: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
+                    .accessibilityLabel("Checklist actions")
+                    .accessibilityHint("Shows actions for this checklist run.")
                 }
             }
         }
@@ -61,6 +65,8 @@ struct ChecklistRunView: View {
             Section {
                 ProgressView(value: run.completionFraction)
                     .tint(run.completionFraction >= 1.0 ? .osaLocal : .osaPrimary)
+                    .accessibilityLabel("Checklist progress")
+                    .accessibilityValue("\(Int(run.completionFraction * 100)) percent complete")
 
                 HStack {
                     Text("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete")
@@ -202,6 +208,7 @@ private struct RunItemRow: View {
                 Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(item.isComplete ? .osaLocal : .secondary)
                     .font(.title3)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading) {
                     Text(item.text)
@@ -218,6 +225,10 @@ private struct RunItemRow: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(item.text)
+        .accessibilityValue(item.isComplete ? "Complete" : "Incomplete")
+        .accessibilityHint(item.isComplete ? "Double-tap to mark incomplete." : "Double-tap to mark complete.")
     }
 }
 

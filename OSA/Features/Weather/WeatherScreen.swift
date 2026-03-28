@@ -86,7 +86,7 @@ struct WeatherScreen: View {
         Group {
             switch alertsState {
             case .loading:
-                ProgressView()
+                ProgressView("Loading alerts...")
                     .frame(maxWidth: .infinity, minHeight: 60)
             case .empty:
                 Label("No active weather alerts", systemImage: "checkmark.shield")
@@ -102,6 +102,7 @@ struct WeatherScreen: View {
                     Text("Active Alerts")
                         .font(.sectionHeader)
                         .foregroundStyle(.primary)
+                        .accessibilityAddTraits(.isHeader)
                     ForEach(alerts) { alert in
                         WeatherAlertRow(alert: alert)
                     }
@@ -116,7 +117,7 @@ struct WeatherScreen: View {
         Group {
             switch forecastState {
             case .loading:
-                ProgressView()
+                ProgressView("Loading forecast...")
                     .frame(maxWidth: .infinity, minHeight: 100)
             case .empty:
                 Label("No forecast data available", systemImage: "cloud.slash")
@@ -132,6 +133,7 @@ struct WeatherScreen: View {
                     Text("10-Day Forecast")
                         .font(.sectionHeader)
                         .foregroundStyle(.primary)
+                        .accessibilityAddTraits(.isHeader)
                     ForEach(forecasts) { forecast in
                         WeatherForecastRow(forecast: forecast)
                     }

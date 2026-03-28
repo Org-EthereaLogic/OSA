@@ -10,6 +10,7 @@ struct EmergencyProtocolView: View {
     @State private var currentIndex = 0
     @State private var metronomeRunning = false
     @State private var beatCount = 0
+    @AccessibilityFocusState private var focusedElement: EmergencyProtocolAccessibilityTarget?
 
     private let metronomeTimer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
 
@@ -26,6 +27,9 @@ struct EmergencyProtocolView: View {
             guard metronomeRunning, template.timerProfile == .cprMetronome else { return }
             beatCount += 1
             hapticFeedbackService?.play(.cprMetronomeBeat)
+        }
+        .onAppear {
+            focusCurrentStep()
         }
     }
 
@@ -74,16 +78,23 @@ struct EmergencyProtocolView: View {
         let item = template.items[currentIndex]
 
         return VStack(alignment: .leading, spacing: Spacing.lg) {
-            Text(item.text)
-                .font(largePrintReadingMode ? .system(size: 34, weight: .bold, design: .rounded) : .stressTitle)
-                .foregroundStyle(.primary)
-                .minimumScaleFactor(0.9)
+            VStack(alignment: .leading, spacing: Spacing.lg) {
+                Text(item.text)
+                    .font(largePrintReadingMode ? .system(size: 34, weight: .bold, design: .rounded) : .stressTitle)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityFocused($focusedElement, equals: .stepSummary)
 
-            if let detail = item.detail, !detail.isEmpty {
-                Text(detail)
-                    .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
-                    .foregroundStyle(.secondary)
+                if let detail = item.detail, !detail.isEmpty {
+                    Text(detail)
+                        .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Step \(currentIndex + 1) of \(template.items.count)")
+            .accessibilityValue(stepSummaryValue(for: item))
 
             if item.riskLevel == "high" {
                 Label("High priority", systemImage: "exclamationmark.triangle.fill")
@@ -120,6 +131,7 @@ struct EmergencyProtocolView: View {
             }
             .buttonStyle(.bordered)
             .disabled(currentIndex == 0)
+            .accessibilityHint("Moves to the previous protocol step.")
 
             Button {
                 stepForward()
@@ -129,6 +141,11 @@ struct EmergencyProtocolView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.osaPrimary)
+            .accessibilityHint(
+                currentIndex == template.items.count - 1
+                    ? "Returns to the final step for review."
+                    : "Moves to the next protocol step."
+            )
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.bottom, Spacing.lg)
@@ -138,12 +155,14 @@ struct EmergencyProtocolView: View {
         guard currentIndex > 0 else { return }
         currentIndex = max(currentIndex - 1, 0)
         hapticFeedbackService?.play(.protocolStepBackward)
+        focusCurrentStep()
     }
 
     private func stepForward() {
         guard !template.items.isEmpty else { return }
         currentIndex = min(currentIndex + 1, template.items.count - 1)
         hapticFeedbackService?.play(.protocolStepForward)
+        focusCurrentStep()
     }
 
     private func toggleMetronome() {
@@ -154,6 +173,24 @@ struct EmergencyProtocolView: View {
             hapticFeedbackService?.prepare(.cprMetronomeBeat)
         }
     }
+
+    private func focusCurrentStep() {
+        DispatchQueue.main.async {
+            focusedElement = .stepSummary
+        }
+    }
+
+    private func stepSummaryValue(for item: ChecklistTemplateItem) -> String {
+        if let detail = item.detail, !detail.isEmpty {
+            return item.riskLevel == "high" ? "\(detail) High priority." : detail
+        }
+
+        return item.riskLevel == "high" ? "High priority." : ""
+    }
+}
+
+private enum EmergencyProtocolAccessibilityTarget: Hashable {
+    case stepSummary
 }
 
 private struct CPRMetronomeCard: View {

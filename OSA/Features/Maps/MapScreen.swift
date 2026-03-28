@@ -51,7 +51,11 @@ struct MapScreen: View {
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Map display options")
+                .accessibilityHint("Shows map source and display actions.")
             }
         }
         .task { loadAnnotations() }
@@ -125,6 +129,7 @@ struct MapScreen: View {
             }
             .font(.caption)
             .fontWeight(.medium)
+            .accessibilityHint("Opens Apple Maps near your current or default location.")
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, Spacing.sm)
@@ -148,6 +153,7 @@ struct MapScreen: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.osaPrimary)
+            .accessibilityHint("Opens Apple Maps for offline maps or navigation.")
         }
         .padding(Spacing.xxl)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -225,6 +231,7 @@ private struct FilterChip: View {
                 if let icon {
                     Image(systemName: icon)
                         .font(.caption2)
+                        .accessibilityHidden(true)
                 }
                 Text(title)
                     .font(.caption)
@@ -239,5 +246,17 @@ private struct FilterChip: View {
             .foregroundStyle(isSelected ? Color.osaPrimary : .secondary)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(title)
+        .accessibilityValue(isSelected ? "Selected" : "Not selected")
+        .accessibilityHint(accessibilityHint)
+    }
+
+    private var accessibilityHint: String {
+        switch title {
+        case "All":
+            return "Shows all map locations."
+        default:
+            return "Filters the map to \(title.lowercased()) locations."
+        }
     }
 }

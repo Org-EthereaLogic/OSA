@@ -33,7 +33,11 @@ struct InventoryScreen: View {
                     showingAddItem = true
                 } label: {
                     Image(systemName: "plus")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Add inventory item")
+                .accessibilityHint("Creates a new inventory item.")
             }
 
             ToolbarItem(placement: .topBarLeading) {
@@ -42,8 +46,11 @@ struct InventoryScreen: View {
                     loadItems()
                 } label: {
                     Image(systemName: showArchived ? "archivebox.fill" : "archivebox")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
                 .accessibilityLabel(showArchived ? "Hide archived" : "Show archived")
+                .accessibilityHint("Shows or hides archived inventory items.")
             }
         }
         .sheet(isPresented: $showingAddItem) {
@@ -135,6 +142,7 @@ private struct InventoryItemRow: View {
             }
         }
         .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -158,6 +166,8 @@ private struct ExpiryLabel: View {
         Label(date.formatted(date: .abbreviated, time: .omitted), systemImage: "calendar.badge.clock")
             .font(.metadataCaption)
             .foregroundStyle(isExpired ? Color.osaCritical : isExpiringSoon ? .osaWarning : Color(.tertiaryLabel))
+            .accessibilityLabel(isExpired ? "Expired" : isExpiringSoon ? "Expiring soon" : "Expiry date")
+            .accessibilityValue(date.formatted(date: .abbreviated, time: .omitted))
     }
 }
 

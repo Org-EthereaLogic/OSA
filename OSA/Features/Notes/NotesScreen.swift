@@ -33,7 +33,11 @@ struct NotesScreen: View {
                     showingCreateNote = true
                 } label: {
                     Image(systemName: "plus")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Add note")
+                .accessibilityHint("Creates a new note.")
             }
 
             ToolbarItem(placement: .topBarLeading) {
@@ -55,7 +59,11 @@ struct NotesScreen: View {
                     }
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Filter notes")
+                .accessibilityHint("Filters notes by note type.")
             }
         }
         .sheet(isPresented: $showingCreateNote) {
@@ -136,6 +144,7 @@ private struct NoteRow: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
     }
 }
 

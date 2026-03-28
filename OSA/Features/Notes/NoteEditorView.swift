@@ -42,6 +42,7 @@ struct NoteEditorView: View {
             Section("Content") {
                 TextEditor(text: $bodyMarkdown)
                     .frame(minHeight: 200)
+                    .accessibilityLabel("Note content")
             }
         }
         .navigationTitle(isEditing ? "Edit Note" : "New Note")
@@ -49,10 +50,12 @@ struct NoteEditorView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .accessibilityHint("Discards changes and closes the note editor.")
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") { saveNote() }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .accessibilityHint("Saves this note on the device.")
             }
         }
         .alert("Save Failed", isPresented: $showSaveError) {

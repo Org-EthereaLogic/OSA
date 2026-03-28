@@ -46,7 +46,11 @@ struct NoteDetailView: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
+                    .accessibilityLabel("Note actions")
+                    .accessibilityHint("Shows edit and delete actions for this note.")
                 }
             }
         }

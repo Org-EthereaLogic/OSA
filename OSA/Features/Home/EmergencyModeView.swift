@@ -22,7 +22,8 @@ struct EmergencyModeView: View {
             .background(.osaBackground)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Close") { dismiss() }
+                    Button("Exit Emergency Mode") { dismiss() }
+                        .accessibilityHint("Closes Emergency Mode and returns to Home.")
                 }
             }
         }
@@ -32,16 +33,16 @@ struct EmergencyModeView: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("EMERGENCY MODE")
                 .font(.brandEyebrow)
-                .foregroundStyle(Color.white.opacity(0.72))
+                .foregroundStyle(.white)
                 .tracking(1.2)
 
             Text("Large targets, reviewed protocols, and local shortcuts for high-stress moments.")
                 .font(.brandSubheadline)
-                .foregroundStyle(Color.white.opacity(0.84))
+                .foregroundStyle(.white)
 
             Text("Call emergency services whenever the situation is immediately life-threatening.")
                 .font(.metadataCaption)
-                .foregroundStyle(Color.white.opacity(0.72))
+                .foregroundStyle(Color.white.opacity(0.92))
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -69,6 +70,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityHint("Opens reviewed step-by-step emergency protocols.")
 
             NavigationLink {
                 QuickCardsScreen()
@@ -82,6 +84,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityHint("Opens large-type emergency quick cards.")
 
             Button(action: onComposeSafeMessage) {
                 EmergencyActionCard(
@@ -93,6 +96,11 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .disabled(!safeMessageAvailable || !MFMessageComposeViewController.canSendText())
+            .accessibilityHint(
+                safeMessageAvailable
+                    ? "Opens a pre-filled text message to your saved emergency contacts."
+                    : "Unavailable until you add at least one emergency contact in Settings."
+            )
 
             Button {
                 hapticFeedbackService?.play(.emergencyPrimaryAction)
@@ -108,6 +116,7 @@ struct EmergencyModeView: View {
                 )
             }
             .buttonStyle(.plain)
+            .accessibilityHint("Opens the system dialer for emergency services.")
         }
     }
 
@@ -115,6 +124,7 @@ struct EmergencyModeView: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("Nearby Resources")
                 .font(.sectionHeader)
+                .accessibilityAddTraits(.isHeader)
 
             NavigationLink {
                 MapScreen(initialCategory: .hospital)
@@ -127,6 +137,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityHint("Opens the map filtered to nearby hospitals.")
 
             NavigationLink {
                 MapScreen(initialCategory: .shelter)
@@ -139,6 +150,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityHint("Opens the map filtered to nearby shelters.")
         }
     }
 }
@@ -154,6 +166,7 @@ private struct EmergencyActionCard: View {
             Image(systemName: systemImage)
                 .font(.system(size: 26, weight: .semibold))
                 .foregroundStyle(tint)
+                .accessibilityHidden(true)
 
             Text(title)
                 .font(.stressTitle)
@@ -171,6 +184,7 @@ private struct EmergencyActionCard: View {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -184,6 +198,7 @@ private struct EmergencyWideActionRow: View {
             Image(systemName: systemImage)
                 .font(.title3)
                 .foregroundStyle(.osaPrimary)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(title)
                     .font(.headline)
@@ -195,6 +210,7 @@ private struct EmergencyWideActionRow: View {
             Image(systemName: "chevron.right")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
         }
         .padding(Spacing.lg)
         .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
@@ -202,5 +218,6 @@ private struct EmergencyWideActionRow: View {
             RoundedRectangle(cornerRadius: CornerRadius.lg)
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
     }
 }

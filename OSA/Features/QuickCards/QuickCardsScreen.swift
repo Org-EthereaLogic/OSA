@@ -33,6 +33,7 @@ struct QuickCardsScreen: View {
                                 }
                                 .buttonStyle(.plain)
                                 .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens quick card details.")
                             }
                         }
                     }
@@ -103,6 +104,7 @@ private struct QuickCardRow: View {
                 } icon: {
                     Image(systemName: "bolt.fill")
                         .font(.caption2)
+                        .accessibilityHidden(true)
                 }
                 .foregroundStyle(.osaEmergency)
 
@@ -142,6 +144,7 @@ private struct QuickCardRow: View {
                 .stroke(Color.osaPrimary.opacity(0.2), lineWidth: 1)
         }
         .shadow(color: Color.osaNight.opacity(0.1), radius: 14, y: 8)
+        .accessibilityElement(children: .combine)
     }
 }
 

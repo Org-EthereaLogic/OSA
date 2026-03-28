@@ -54,7 +54,11 @@ struct InventoryItemDetailView: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis.circle")
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
+                    .accessibilityLabel("Inventory item actions")
+                    .accessibilityHint("Shows edit, archive, and delete actions.")
                 }
             }
         }
@@ -178,6 +182,8 @@ private struct ExpiryBadge: View {
     var body: some View {
         Text(date.formatted(date: .abbreviated, time: .omitted))
             .foregroundStyle(isExpired ? .osaCritical : isExpiringSoon ? .osaWarning : .primary)
+            .accessibilityLabel(isExpired ? "Expired" : isExpiringSoon ? "Expiring soon" : "Expiry date")
+            .accessibilityValue(date.formatted(date: .abbreviated, time: .omitted))
     }
 }
 

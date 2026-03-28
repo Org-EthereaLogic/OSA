@@ -46,10 +46,12 @@ struct SettingsScreen: View {
                         Text(region.displayName).tag(region.rawValue)
                     }
                 }
+                .accessibilityHint("Updates region-based suggestions and preparedness defaults.")
 
                 Stepper(value: $householdSize, in: 1...12) {
                     Text("Household Size: \(householdSize)")
                 }
+                .accessibilityHint("Adjusts household-based preparedness calculations.")
 
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Primary Hazards")
@@ -62,6 +64,7 @@ struct SettingsScreen: View {
                                 set: { isOn in updateHazard(hazard, isSelected: isOn) }
                             )
                         )
+                        .accessibilityHint("Includes \(hazard.displayName.lowercased()) in your preparedness profile.")
                     }
                 }
             }
@@ -78,11 +81,14 @@ struct SettingsScreen: View {
                     }
                 }
                 Toggle("Include personal notes in Ask", isOn: $includePersonalNotes)
+                    .accessibilityHint("Allows Ask to search personal notes stored on this device.")
             }
 
             Section("Accessibility") {
                 Toggle("Large print reading mode", isOn: $largePrintReadingMode)
+                    .accessibilityHint("Uses larger text on reading-heavy emergency content.")
                 Toggle("Critical haptics", isOn: $criticalHaptics)
+                    .accessibilityHint("Enables stronger haptic feedback for important actions.")
             }
 
             Section("Emergency Contacts") {
@@ -107,9 +113,12 @@ struct SettingsScreen: View {
                                 Image(systemName: "chevron.right")
                                     .font(.caption)
                                     .foregroundStyle(.tertiary)
+                                    .accessibilityHidden(true)
                             }
+                            .accessibilityElement(children: .combine)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityHint("Edits this emergency contact.")
                     }
                     .onDelete(perform: deleteContacts)
                 }
@@ -119,6 +128,7 @@ struct SettingsScreen: View {
                 } label: {
                     Label("Add Emergency Contact", systemImage: "plus")
                 }
+                .accessibilityHint("Creates a new emergency contact stored on this device.")
             }
 
             Section("Connectivity") {
@@ -133,6 +143,7 @@ struct SettingsScreen: View {
 
             Section("Knowledge Discovery") {
                 Toggle("Auto-discover from RSS feeds", isOn: $isRSSDiscoveryEnabled)
+                    .accessibilityHint("Automatically checks approved RSS feeds when discovery is due.")
 
                 Button {
                     Task { await runManualDiscovery() }
@@ -146,6 +157,7 @@ struct SettingsScreen: View {
                     }
                 }
                 .disabled(isDiscovering || discoveryCoordinator == nil || connectivity != .onlineUsable)
+                .accessibilityHint("Checks approved sources for newly importable content.")
 
                 if let lastDiscoveryMessage {
                     Text(lastDiscoveryMessage)

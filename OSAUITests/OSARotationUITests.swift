@@ -57,11 +57,11 @@ final class OSARotationUITests: XCTestCase {
         rotate(to: .landscapeRight)
         emergencyButton.tap()
 
-        XCTAssertTrue(app.buttons["Close"].waitForExistence(timeout: 5), "Emergency mode should open in landscape")
+        XCTAssertTrue(app.buttons["Exit Emergency Mode"].waitForExistence(timeout: 5), "Emergency mode should open in landscape")
         XCTAssertTrue(app.staticTexts["Protocols"].exists, "Emergency mode should show protocol action cards in landscape")
 
         rotate(to: .portrait)
-        app.buttons["Close"].tap()
+        app.buttons["Exit Emergency Mode"].tap()
 
         let quickCard = firstVisibleQuickCardButton()
         XCTAssertTrue(quickCard.waitForExistence(timeout: 3), "A Home quick card should remain tappable after rotation")

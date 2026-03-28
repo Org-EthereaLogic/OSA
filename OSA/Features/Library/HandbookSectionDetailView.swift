@@ -38,13 +38,15 @@ struct HandbookSectionDetailView: View {
         .onDisappear { onscreenContentManager?.clear() }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
+                PinToolbarButton(
+                    isPinned: isPinned,
+                    pinLabel: "Pin handbook section",
+                    unpinLabel: "Unpin handbook section",
+                    hint: "Adds this handbook section to pinned content on Home."
+                ) {
                     pinnedSectionIDsRawValue = PinnedContentSettings.toggled(sectionID, rawValue: pinnedSectionIDsRawValue)
                     hapticFeedbackService?.play(.pinToggle)
-                } label: {
-                    Image(systemName: isPinned ? "pin.fill" : "pin")
                 }
-                .accessibilityLabel(isPinned ? "Unpin handbook section" : "Pin handbook section")
             }
         }
     }
@@ -64,6 +66,7 @@ struct HandbookSectionDetailView: View {
                     Text(section.heading)
                         .font(.stressTitle)
                         .foregroundStyle(.white)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     HStack(spacing: Spacing.sm) {
                         if section.safetyLevel == .sensitiveStaticOnly {
@@ -136,6 +139,7 @@ struct HandbookSectionDetailView: View {
                         VStack(alignment: .leading, spacing: Spacing.sm) {
                             Text("Related Content")
                                 .font(.sectionHeader)
+                                .accessibilityAddTraits(.isHeader)
 
                             ForEach(relatedCards) { card in
                                 NavigationLink {
@@ -148,6 +152,7 @@ struct HandbookSectionDetailView: View {
                                         .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityHint("Opens the related quick card.")
                             }
 
                             ForEach(relatedSections) { related in
@@ -161,6 +166,7 @@ struct HandbookSectionDetailView: View {
                                         .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityHint("Opens the related handbook section.")
                             }
                         }
                     }

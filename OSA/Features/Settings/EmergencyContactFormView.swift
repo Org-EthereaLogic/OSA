@@ -38,6 +38,7 @@ struct EmergencyContactFormView: View {
             Section("Notes") {
                 TextField("Optional notes", text: $notes, axis: .vertical)
                     .lineLimit(2...4)
+                    .accessibilityLabel("Contact notes")
             }
         }
         .navigationTitle(existingContact == nil ? "New Contact" : "Edit Contact")
@@ -45,11 +46,13 @@ struct EmergencyContactFormView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .accessibilityHint("Discards changes and closes the emergency contact form.")
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") { saveContact() }
                     .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                         || phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .accessibilityHint("Saves this emergency contact on the device.")
             }
         }
         .alert("Unable to Save Contact", isPresented: $showSaveError) {

@@ -27,6 +27,7 @@ struct ChecklistRunHistoryView: View {
                         HistoryRow(run: run)
                     }
                     .listRowBackground(Color.osaSurface)
+                    .accessibilityHint("Opens checklist run details.")
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)
@@ -76,6 +77,7 @@ private struct HistoryRow: View {
             }
         }
         .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
     }
 }
 

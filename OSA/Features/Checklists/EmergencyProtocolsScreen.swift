@@ -33,9 +33,11 @@ struct EmergencyProtocolsScreen: View {
                                 .lineLimit(2)
                         }
                         .padding(.vertical, Spacing.xs)
+                        .accessibilityElement(children: .combine)
                     }
                     .listRowBackground(Color.osaSurface)
                     .hapticTap(.prominentNavigation)
+                    .accessibilityHint("Opens the emergency protocol details.")
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)

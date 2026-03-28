@@ -16,7 +16,7 @@ struct OnlineMapView: View {
         Map(position: $cameraPosition) {
             ForEach(annotations) { item in
                 Annotation(item.title, coordinate: item.coordinate) {
-                    MapAnnotationPin(category: item.category)
+                    MapAnnotationPin(item: item)
                 }
             }
             UserAnnotation()

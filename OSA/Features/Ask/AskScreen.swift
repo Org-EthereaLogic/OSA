@@ -14,6 +14,7 @@ struct AskScreen: View {
     @State private var connectivity: ConnectivityState = .offline
     @State private var showImportSheet = false
     @State private var lastSubmittedQuery = ""
+    @AccessibilityFocusState private var focusedElement: AskAccessibilityTarget?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -40,6 +41,7 @@ struct AskScreen: View {
                                 destination(for: action)
                             }
                         )
+                        .accessibilityFocused($focusedElement, equals: .answer)
 
                     case .refused(let reason):
                         RefusalView(
@@ -105,6 +107,7 @@ struct AskScreen: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+            .accessibilityHint("Allows Ask to search notes stored locally on this device.")
         }
         .padding(Spacing.lg)
         .padding(.top, Spacing.md)
@@ -162,14 +165,17 @@ struct AskScreen: View {
                         .stroke(Color.osaHairline, lineWidth: 1)
                 }
                 .onSubmit(submitQuery)
+                .accessibilityLabel("Ask a question...")
+                .accessibilityHint("Search approved local content with citations.")
 
             Button(action: submitQuery) {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)
             }
             .accessibilityLabel("Submit question")
+            .accessibilityHint("Submits your question to search local sources.")
             .foregroundStyle(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.secondary : Color.white)
-            .frame(width: 42, height: 42)
+            .frame(width: 44, height: 44)
             .background(
                 query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.osaHairline : Color.osaPrimary,
                 in: Circle()
@@ -204,6 +210,7 @@ struct AskScreen: View {
         guard !trimmed.isEmpty else { return }
 
         lastSubmittedQuery = trimmed
+        focusedElement = nil
         hapticFeedbackService?.play(.askSubmit)
         askState = .loading
 
@@ -222,6 +229,9 @@ struct AskScreen: View {
                     switch outcome {
                     case .answered(let result):
                         askState = .answered(result)
+                        DispatchQueue.main.async {
+                            focusedElement = .answer
+                        }
                     case .refused(let reason):
                         askState = .refused(reason)
                     }
@@ -257,6 +267,10 @@ struct AskScreen: View {
     }
 }
 
+private enum AskAccessibilityTarget: Hashable {
+    case answer
+}
+
 private enum AskViewState {
     case idle
     case loading
@@ -280,6 +294,7 @@ private struct AnswerView: View {
                 HStack(spacing: Spacing.xs) {
                     Image(systemName: confidenceIcon)
                         .foregroundStyle(confidenceColor)
+                        .accessibilityHidden(true)
                     Text(confidenceLabel)
                         .font(.metadataCaption)
                         .foregroundStyle(.primary)
@@ -287,6 +302,9 @@ private struct AnswerView: View {
                 .padding(.horizontal, Spacing.sm)
                 .padding(.vertical, Spacing.xs)
                 .background(confidenceColor.opacity(0.12), in: Capsule())
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Confidence")
+                .accessibilityValue(confidenceLabel)
 
                 Text(result.answerText)
                     .font(.cardBody)
@@ -298,11 +316,15 @@ private struct AnswerView: View {
                 RoundedRectangle(cornerRadius: CornerRadius.lg)
                     .stroke(Color.osaHairline, lineWidth: 1)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Answer")
+            .accessibilityValue("\(confidenceLabel). \(result.answerText)")
 
             if !result.citations.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Sources")
                         .font(.sectionHeader)
+                        .accessibilityAddTraits(.isHeader)
 
                     ForEach(result.citations) { citation in
                         if let destination = destinationForCitation(citation) {
@@ -310,6 +332,7 @@ private struct AnswerView: View {
                                 CitationRow(citation: citation)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityHint("Opens the cited source.")
                         } else {
                             CitationRow(citation: citation)
                         }
@@ -321,6 +344,7 @@ private struct AnswerView: View {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Related")
                         .font(.sectionHeader)
+                        .accessibilityAddTraits(.isHeader)
 
                     ForEach(Array(result.suggestedActions.enumerated()), id: \.offset) { _, action in
                         SuggestedActionButton(
@@ -365,6 +389,7 @@ private struct CitationRow: View {
         HStack(spacing: Spacing.sm) {
             Image(systemName: iconForKind(citation.kind))
                 .foregroundStyle(.tint)
+                .accessibilityHidden(true)
 
             Text(citation.displayLabel)
                 .font(.subheadline)
@@ -376,6 +401,7 @@ private struct CitationRow: View {
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
             }
         }
         .padding(.horizontal, Spacing.md)
@@ -385,6 +411,7 @@ private struct CitationRow: View {
             RoundedRectangle(cornerRadius: CornerRadius.md)
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private var isNavigable: Bool {
@@ -423,6 +450,7 @@ private struct RefusalView: View {
             Image(systemName: "exclamationmark.bubble.fill")
                 .font(.system(size: 40))
                 .foregroundStyle(.osaCritical)
+                .accessibilityHidden(true)
 
             Text(title)
                 .font(.cardTitle)
@@ -446,6 +474,7 @@ private struct RefusalView: View {
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
         .padding(.top, Spacing.md)
+        .accessibilityElement(children: .combine)
     }
 
     private var onlineOfferCard: some View {
@@ -455,6 +484,7 @@ private struct RefusalView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
+            .accessibilityHint("Browse approved publishers and import a page for offline use.")
 
             Text("Browse approved publishers and import a page for offline use. This does not give the assistant web access.")
                 .font(.caption)
@@ -514,6 +544,7 @@ private struct SuggestedActionButton: View {
                 row
             }
             .buttonStyle(.plain)
+            .accessibilityHint("Opens related content.")
         } else {
             row
                 .foregroundStyle(.secondary)

@@ -32,7 +32,11 @@ struct ChecklistsScreen: View {
                     showingCreateAdhoc = true
                 } label: {
                     Image(systemName: "plus")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel("Add checklist")
+                .accessibilityHint("Creates a new ad hoc checklist.")
             }
         }
         .sheet(isPresented: $showingCreateAdhoc) {
@@ -58,6 +62,7 @@ struct ChecklistsScreen: View {
                         }
                         .listRowBackground(Color.osaSurface)
                         .hapticTap(.prominentNavigation)
+                        .accessibilityHint("Opens the active checklist run.")
                     }
                 } header: {
                     Label("Active", systemImage: "play.circle.fill")
@@ -78,6 +83,7 @@ struct ChecklistsScreen: View {
                             }
                             .listRowBackground(Color.osaSurface)
                             .hapticTap(.prominentNavigation)
+                            .accessibilityHint("Opens the emergency protocol details.")
                         }
                     } header: {
                         Label("Emergency Protocols", systemImage: "cross.case.fill")
@@ -97,6 +103,7 @@ struct ChecklistsScreen: View {
                             }
                             .listRowBackground(Color.osaSurface)
                             .hapticTap(.prominentNavigation)
+                            .accessibilityHint("Opens the checklist template.")
                         }
                     } header: {
                         Text(category.capitalized.replacingOccurrences(of: "-", with: " "))
@@ -111,6 +118,7 @@ struct ChecklistsScreen: View {
                     .foregroundStyle(.secondary)
             }
             .listRowBackground(Color.osaSurface)
+            .accessibilityHint("Opens completed and abandoned checklist runs.")
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
@@ -141,6 +149,8 @@ private struct ActiveRunRow: View {
                 ProgressView(value: run.completionFraction)
                     .tint(.osaCalm)
                     .frame(maxWidth: 120)
+                    .accessibilityLabel("Checklist progress")
+                    .accessibilityValue("\(Int(run.completionFraction * 100)) percent complete")
 
                 Text("\(Int(run.completionFraction * 100))%")
                     .font(.categoryLabel)
@@ -152,6 +162,9 @@ private struct ActiveRunRow: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(run.title)
+        .accessibilityValue("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete. \(Int(run.completionFraction * 100)) percent.")
     }
 }
 
@@ -187,6 +200,7 @@ private struct TemplateRow: View {
             }
         }
         .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
     }
 }
 

@@ -1,16 +1,19 @@
 import SwiftUI
 
 struct MapAnnotationPin: View {
-    let category: MapAnnotationCategory
+    let item: MapAnnotationItem
 
     var body: some View {
-        Image(systemName: category.icon)
+        Image(systemName: item.category.icon)
             .font(.caption)
             .foregroundStyle(.white)
             .padding(Spacing.xs)
-            .background(category.pinColor, in: Circle())
+            .background(item.category.pinColor, in: Circle())
             .overlay { Circle().stroke(.white, lineWidth: 2) }
             .shadow(color: .black.opacity(0.2), radius: 2, y: 1)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(item.title)
+            .accessibilityValue(item.subtitle ?? item.category.rawValue.capitalized)
     }
 }
 

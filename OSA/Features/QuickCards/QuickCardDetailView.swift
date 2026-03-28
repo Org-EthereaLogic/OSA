@@ -28,10 +28,12 @@ struct QuickCardDetailView: View {
                     Text(card.title)
                         .font(.stressTitle)
                         .foregroundStyle(.white)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(card.summary)
                         .font(.brandSubheadline)
                         .foregroundStyle(Color.white.opacity(0.78))
+                        .fixedSize(horizontal: false, vertical: true)
 
                     HStack(spacing: Spacing.sm) {
                         Label("Stored locally", systemImage: "internaldrive.fill")
@@ -97,6 +99,7 @@ struct QuickCardDetailView: View {
                         VStack(alignment: .leading, spacing: Spacing.sm) {
                             Text("Related Handbook")
                                 .font(.sectionHeader)
+                                .accessibilityAddTraits(.isHeader)
 
                             ForEach(relatedSections) { section in
                                 NavigationLink {
@@ -109,6 +112,7 @@ struct QuickCardDetailView: View {
                                         .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityHint("Opens the related handbook section.")
                             }
                         }
                     }
@@ -129,13 +133,15 @@ struct QuickCardDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
+                PinToolbarButton(
+                    isPinned: isPinned,
+                    pinLabel: "Pin quick card",
+                    unpinLabel: "Unpin quick card",
+                    hint: "Adds this quick card to pinned content on Home."
+                ) {
                     pinnedQuickCardIDsRawValue = PinnedContentSettings.toggled(card.id, rawValue: pinnedQuickCardIDsRawValue)
                     hapticFeedbackService?.play(.pinToggle)
-                } label: {
-                    Image(systemName: isPinned ? "pin.fill" : "pin")
                 }
-                .accessibilityLabel(isPinned ? "Unpin quick card" : "Pin quick card")
             }
         }
         .task { loadRelatedSections() }
