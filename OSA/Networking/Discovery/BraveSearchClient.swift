@@ -1,4 +1,91 @@
 import Foundation
+import Security
+
+enum BraveSearchCredentialStoreError: LocalizedError, Equatable {
+    case unexpectedStatus(OSStatus)
+
+    var errorDescription: String? {
+        switch self {
+        case .unexpectedStatus(let status):
+            "Secure storage failed (\(status))."
+        }
+    }
+}
+
+/// Stores the optional Brave Search API key in the device keychain.
+struct BraveSearchCredentialStore: Sendable {
+    private let service: String
+    private let account: String
+
+    init(
+        service: String = "com.etherealogic.OSA.discovery.brave-search",
+        account: String = DiscoverySettings.braveSearchAPIKeyKey
+    ) {
+        self.service = service
+        self.account = account
+    }
+
+    func loadStoredAPIKey() -> String? {
+        (try? loadAPIKey()) ?? nil
+    }
+
+    func saveAPIKey(_ apiKey: String) throws {
+        let trimmed = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            try deleteAPIKey()
+            return
+        }
+
+        try deleteAPIKey()
+
+        let attributes: [CFString: Any] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecAttrAccessible: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+            kSecValueData: Data(trimmed.utf8)
+        ]
+
+        let status = SecItemAdd(attributes as CFDictionary, nil)
+        guard status == errSecSuccess else {
+            throw BraveSearchCredentialStoreError.unexpectedStatus(status)
+        }
+    }
+
+    func deleteAPIKey() throws {
+        let status = SecItemDelete(baseQuery as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw BraveSearchCredentialStoreError.unexpectedStatus(status)
+        }
+    }
+
+    private func loadAPIKey() throws -> String? {
+        var query = baseQuery
+        query[kSecReturnData] = true
+        query[kSecMatchLimit] = kSecMatchLimitOne
+
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+
+        switch status {
+        case errSecSuccess:
+            guard let data = item as? Data else { return nil }
+            return String(data: data, encoding: .utf8)
+        case errSecItemNotFound:
+            return nil
+        default:
+            throw BraveSearchCredentialStoreError.unexpectedStatus(status)
+        }
+    }
+
+    private var baseQuery: [CFString: Any] {
+        [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account
+        ]
+    }
+}
 
 /// A web search result from a search API.
 struct WebSearchResult: Equatable, Sendable {
@@ -14,7 +101,7 @@ protocol WebSearchClient: Sendable {
 
 /// Minimal Brave Search API client for the free tier (2000 queries/month).
 ///
-/// The API key is user-provided via Settings and stored in `@AppStorage`.
+/// The API key is user-provided via Settings and stored in the device keychain.
 /// Budget tracking uses a simple monthly counter to avoid exceeding the free tier.
 final class BraveSearchClient: WebSearchClient, @unchecked Sendable {
     private let apiKey: String

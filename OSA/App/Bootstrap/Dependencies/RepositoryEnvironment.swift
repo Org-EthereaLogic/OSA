@@ -41,31 +41,31 @@ private struct PendingOperationRepositoryKey: EnvironmentKey {
 }
 
 private struct ConnectivityServiceKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: (any ConnectivityService)? = nil
+    static let defaultValue: (any ConnectivityService)? = nil
 }
 
 private struct TrustedSourceHTTPClientKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: (any TrustedSourceHTTPClient)? = nil
+    static let defaultValue: (any TrustedSourceHTTPClient)? = nil
 }
 
 private struct ImportPipelineKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: ImportedKnowledgeImportPipeline? = nil
+    static let defaultValue: ImportedKnowledgeImportPipeline? = nil
 }
 
 private struct InventoryCompletionServiceKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: (any InventoryCompletionService)? = nil
+    static let defaultValue: (any InventoryCompletionService)? = nil
 }
 
 private struct OnscreenContentManagerKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: OnscreenContentManager? = nil
+    static let defaultValue: OnscreenContentManager? = nil
 }
 
 private struct RSSDiscoveryServiceKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: (any RSSDiscoveryService)? = nil
+    static let defaultValue: (any RSSDiscoveryService)? = nil
 }
 
 private struct DiscoveryCoordinatorKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: KnowledgeDiscoveryCoordinator? = nil
+    static let defaultValue: KnowledgeDiscoveryCoordinator? = nil
 }
 
 extension EnvironmentValues {

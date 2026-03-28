@@ -298,7 +298,7 @@ private func makeTestDependencies(
         rssDiscoveryService: StubRSSDiscoveryService(),
         discoveryCoordinator: KnowledgeDiscoveryCoordinator(
             rssDiscoveryService: StubRSSDiscoveryService(),
-            webSearchClient: nil,
+            webSearchClientProvider: { nil },
             httpClient: StubTrustedSourceHTTPClient(),
             importPipeline: ImportedKnowledgeImportPipeline(
                 repository: StubImportedKnowledgeRepository(),

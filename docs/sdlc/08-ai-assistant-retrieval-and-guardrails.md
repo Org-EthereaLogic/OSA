@@ -157,7 +157,7 @@ Prompt inputs should include:
 
 **Current implementation (M6P4):**
 
-- `AskLanternIntent` now carries `@AssistantIntent(schema: .system.search)` with `StringSearchCriteria`, giving Siri semantic understanding that this is an in-app search action. The existing grounded retrieval pipeline is unchanged.
+- `AskLanternIntent` now carries `@AppIntent(schema: .system.search)` with `ShowInAppSearchResultsIntent` conformance, giving Siri semantic understanding that this is an in-app search action. The existing grounded retrieval pipeline is unchanged.
 - `OpenQuickCardIntent` and `OpenHandbookSectionIntent` accept existing `AppEntity` types and deep-link into the app via `AppNavigationCoordinator`. No second retrieval or lookup path is introduced.
 - `OnscreenContentManager` publishes currently viewed quick card or handbook section context for potential Siri follow-up. Only handbook sections and quick cards are published; notes, inventory, checklists, and imported knowledge remain excluded for privacy.
 

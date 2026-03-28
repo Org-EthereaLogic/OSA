@@ -76,6 +76,7 @@ V1 recommendation:
 
 - Avoid shipping third-party API secrets inside the app binary.
 - If a future provider requires secrets, use a developer-controlled proxy or user-supplied credentials stored in Keychain.
+- The optional Brave Search API key is stored in the device Keychain via `BraveSearchCredentialStore` with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` protection. The key is entered by the user in Settings (`SecureField` with `.privacySensitive()`), never transmitted except to the Brave Search API, and never included in backups.
 - Keep trust policy, allowlists, and capability flags as app-configured data, not hard-coded secrets.
 
 ## Permission Model

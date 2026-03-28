@@ -9,6 +9,7 @@ final class KnowledgeDiscoveryCoordinatorTests: XCTestCase {
     private func makeCoordinator(
         rssArticles: [DiscoveredArticle] = [],
         searchResults: [WebSearchResult]? = nil,
+        searchClientProvider: (@Sendable () -> (any WebSearchClient)?)? = nil,
         existingURLs: Set<String> = [],
         connectivityState: ConnectivityState = .onlineUsable,
         fetchShouldFail: Bool = false,
@@ -21,11 +22,13 @@ final class KnowledgeDiscoveryCoordinatorTests: XCTestCase {
         }
 
         let rssService = StubRSSService(articles: rssArticles)
-        let searchClient: (any WebSearchClient)? = searchResults.map { StubSearchClient(results: $0) }
+        let provider = searchClientProvider ?? {
+            searchResults.map { StubSearchClient(results: $0) }
+        }
 
         return KnowledgeDiscoveryCoordinator(
             rssDiscoveryService: rssService,
-            webSearchClient: searchClient,
+            webSearchClientProvider: provider,
             httpClient: StubHTTPClient(shouldFail: fetchShouldFail),
             importPipeline: ImportedKnowledgeImportPipeline(
                 repository: StubImportedKnowledgeRepo(existingURLs: existingURLs),
@@ -133,6 +136,24 @@ final class KnowledgeDiscoveryCoordinatorTests: XCTestCase {
         XCTAssertEqual(result.articlesDiscovered, 0)
     }
 
+    func testWebSearchClientProviderIsResolvedAtDiscoveryTime() async {
+        let provider = MutableSearchClientProvider()
+        let coordinator = makeCoordinator(searchClientProvider: { provider.client })
+
+        provider.client = StubSearchClient(results: [
+            WebSearchResult(
+                title: "Quake Guide",
+                url: URL(string: "https://www.ready.gov/earthquakes")!,
+                snippet: nil
+            )
+        ])
+
+        let result = await coordinator.discoverAndImport()
+
+        XCTAssertEqual(result.articlesDiscovered, 1)
+        XCTAssertEqual(result.articlesImported, 1)
+    }
+
     // MARK: - Fetch Failures
 
     func testFailedFetchDoesNotAbortBatch() async {
@@ -179,6 +200,10 @@ private struct StubRSSService: RSSDiscoveryService {
 private struct StubSearchClient: WebSearchClient {
     let results: [WebSearchResult]
     func search(query: String) async throws -> [WebSearchResult] { results }
+}
+
+private final class MutableSearchClientProvider: @unchecked Sendable {
+    var client: (any WebSearchClient)?
 }
 
 private final class StubHTTPClient: TrustedSourceHTTPClient, @unchecked Sendable {

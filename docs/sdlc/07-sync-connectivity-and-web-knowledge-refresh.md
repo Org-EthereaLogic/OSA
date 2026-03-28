@@ -175,7 +175,8 @@ RSS-first discovery from trusted sources with optional Brave Search enrichment. 
 
 - `BraveSearchClient` queries the Brave Search free tier with monthly budget tracking.
 - Results are filtered to `TrustedSourceAllowlist` approved domains only — unapproved domains are discarded.
-- User must provide their own API key in Settings; when absent, Brave Search is skipped entirely.
+- User must provide their own API key in Settings; stored securely in the device Keychain via `BraveSearchCredentialStore` with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`. When absent, Brave Search is skipped entirely.
+- `KnowledgeDiscoveryCoordinator` uses a `webSearchClientProvider` closure for lazy client resolution at discovery time, reading the latest API key from Keychain.
 
 ### Discovery Coordination
 

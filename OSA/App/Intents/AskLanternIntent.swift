@@ -8,10 +8,10 @@ import AppIntents
 /// The assistant contract, citation requirements, and safety guardrails
 /// remain enforced regardless of entry point.
 ///
-/// The `@AssistantIntent(schema: .system.search)` macro registers this
+/// The `@AppIntent(schema: .system.search)` macro registers this
 /// intent with Apple's assistant schema so Siri has semantic understanding
 /// that this is an in-app search action.
-@AssistantIntent(schema: .system.search)
+@AppIntent(schema: .system.search)
 struct AskLanternIntent: ShowInAppSearchResultsIntent {
     static let title: LocalizedStringResource = "Ask Lantern"
     static let description = IntentDescription(

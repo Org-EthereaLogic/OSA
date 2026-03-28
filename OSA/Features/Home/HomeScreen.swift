@@ -6,8 +6,10 @@ struct HomeScreen: View {
     @Environment(\.inventoryRepository) private var inventoryRepository
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.rssDiscoveryService) private var rssDiscoveryService
+    @Environment(\.connectivityService) private var connectivityService
 
     @State private var spotlightMode: SpotlightMode = .quickCards
+    @State private var connectivity: ConnectivityState = .offline
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
     @State private var feedState: HomeSectionState<[DiscoveredArticle]> = .loading
     @State private var checklistsState: HomeSectionState<[ChecklistRun]> = .loading
@@ -30,9 +32,8 @@ struct HomeScreen: View {
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: loadDashboard)
-        .refreshable {
-            loadDashboard()
-        }
+        .task { await observeConnectivity() }
+        .refreshable { await refreshDashboard() }
     }
 
     private var header: some View {
@@ -68,7 +69,7 @@ struct HomeScreen: View {
                 Spacer(minLength: Spacing.md)
 
                 VStack(alignment: .trailing, spacing: Spacing.sm) {
-                    ConnectivityBadge(state: .offline)
+                    ConnectivityBadge(state: connectivity)
                     BrandMarkView(size: 68)
                 }
             }
@@ -250,12 +251,23 @@ struct HomeScreen: View {
     }
 
     private func loadDashboard() {
+        reloadLocalSections()
+        if spotlightMode == .feed, case .loading = feedState {
+            Task { await loadFeed() }
+        }
+    }
+
+    private func reloadLocalSections() {
         loadQuickCards()
         loadActiveChecklists()
         loadInventoryReminders()
         loadRecentNotes()
+    }
+
+    private func refreshDashboard() async {
+        reloadLocalSections()
         if spotlightMode == .feed {
-            Task { await loadFeed() }
+            await loadFeed()
         }
     }
 
@@ -308,6 +320,14 @@ struct HomeScreen: View {
             notesState = notes.isEmpty ? .empty : .loaded(notes)
         } catch {
             notesState = .failed("Recent notes could not be loaded.")
+        }
+    }
+
+    private func observeConnectivity() async {
+        guard let service = connectivityService else { return }
+        connectivity = service.currentState
+        for await state in service.stateStream() {
+            connectivity = state
         }
     }
 

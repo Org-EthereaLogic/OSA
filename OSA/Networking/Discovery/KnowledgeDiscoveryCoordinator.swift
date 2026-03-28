@@ -9,7 +9,7 @@ import Foundation
 /// Tier 3 sources land as `.pending` for review.
 final class KnowledgeDiscoveryCoordinator: @unchecked Sendable {
     private let rssDiscoveryService: any RSSDiscoveryService
-    private let webSearchClient: (any WebSearchClient)?
+    private let webSearchClientProvider: @Sendable () -> (any WebSearchClient)?
     private let httpClient: any TrustedSourceHTTPClient
     private let importPipeline: ImportedKnowledgeImportPipeline
     private let importedKnowledgeRepository: any ImportedKnowledgeRepository
@@ -19,7 +19,7 @@ final class KnowledgeDiscoveryCoordinator: @unchecked Sendable {
 
     init(
         rssDiscoveryService: any RSSDiscoveryService,
-        webSearchClient: (any WebSearchClient)?,
+        webSearchClientProvider: @escaping @Sendable () -> (any WebSearchClient)? = { nil },
         httpClient: any TrustedSourceHTTPClient,
         importPipeline: ImportedKnowledgeImportPipeline,
         importedKnowledgeRepository: any ImportedKnowledgeRepository,
@@ -28,7 +28,7 @@ final class KnowledgeDiscoveryCoordinator: @unchecked Sendable {
         now: @escaping @Sendable () -> Date = { Date() }
     ) {
         self.rssDiscoveryService = rssDiscoveryService
-        self.webSearchClient = webSearchClient
+        self.webSearchClientProvider = webSearchClientProvider
         self.httpClient = httpClient
         self.importPipeline = importPipeline
         self.importedKnowledgeRepository = importedKnowledgeRepository
@@ -64,7 +64,7 @@ final class KnowledgeDiscoveryCoordinator: @unchecked Sendable {
         }
 
         // Brave Search discovery (optional)
-        if let searchClient = webSearchClient {
+        if let searchClient = webSearchClientProvider() {
             let queries = [
                 "PNW earthquake preparedness",
                 "Cascadia emergency kit checklist",

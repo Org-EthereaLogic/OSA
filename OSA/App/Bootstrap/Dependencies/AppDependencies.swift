@@ -70,17 +70,15 @@ struct AppDependencies {
         )
 
         let rssDiscoveryService = LiveRSSDiscoveryService()
-        let webSearchClient: (any WebSearchClient)? = {
-            let apiKey = UserDefaults.standard.string(
-                forKey: DiscoverySettings.braveSearchAPIKeyKey
-            )
-            guard let key = apiKey, !key.isEmpty else { return nil }
-            return BraveSearchClient(apiKey: key)
-        }()
+        let braveSearchCredentialStore = BraveSearchCredentialStore()
 
         let discoveryCoordinator = KnowledgeDiscoveryCoordinator(
             rssDiscoveryService: rssDiscoveryService,
-            webSearchClient: webSearchClient,
+            webSearchClientProvider: {
+                guard let key = braveSearchCredentialStore.loadStoredAPIKey(),
+                      !key.isEmpty else { return nil }
+                return BraveSearchClient(apiKey: key)
+            },
             httpClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,
             importedKnowledgeRepository: importedKnowledgeRepository,
