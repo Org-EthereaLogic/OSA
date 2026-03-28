@@ -21,6 +21,8 @@ Pods/
 
 # Test artifacts
 test_output.txt
+.artifacts/
+*.xcresult
 
 # Ignore insiders AI rules
 .github/instructions/codacy.instructions.md
