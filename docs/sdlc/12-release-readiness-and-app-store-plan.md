@@ -7,7 +7,7 @@ Related docs: [PRD](./02-prd.md), [Quality Strategy](./11-quality-strategy-test-
 
 - The app is privacy-sensitive and safety-sensitive enough that release quality depends on more than UI completeness.
 - The release plan must account for offline behavior, Ask guardrails, and clear user disclosures.
-- Milestones 1–6 are complete. 337 unit tests + 1 UI test pass across 36 suites.
+- Milestones 1–6 are complete. The most recent full `xcodebuild test` run on 2026-03-28 passed 423 tests total: 399 unit and 24 UI.
 - M5P4 App Store materials (name, descriptions, review notes, privacy disclosures) are authored.
 - M5P5 TestFlight feedback loop (3 tester stages, triage rubric) is documented.
 - M5P7 release-readiness evidence pack is at `report/2026-03-26-m5-release-readiness.md`.
@@ -63,7 +63,7 @@ Suggested feedback prompts:
 
 | ID | Criterion | Status |
 | --- | --- | --- |
-| RC-1 | No open high-severity defects affecting offline core flows | **Passed** — 337 unit + 1 UI test, offline stress suite, schema migration suite all green |
+| RC-1 | No open high-severity defects affecting offline core flows | **Passed** — 2026-03-28 full `xcodebuild test` run green (423 tests total: 399 unit, 24 UI), plus offline stress and schema migration suites |
 | RC-2 | No open high-severity privacy or safety issues | **Passed** — 53 safety regression tests, no permission keys, no ATS exceptions |
 | RC-3 | Ask passes citation and refusal regression suite | **Passed** — `SafetyRegressionTests` (53 tests) cover jailbreak, scope override, privacy pressure, stale-source boundaries |
 | RC-4 | Imported-source flow works end to end and remains available offline afterward | **Passed** — M4P4 import pipeline + M4P6 Ask online-offer UX + M6P5 discovery all tested |

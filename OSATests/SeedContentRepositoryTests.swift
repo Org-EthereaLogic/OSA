@@ -5,6 +5,23 @@ import XCTest
 
 @MainActor
 final class SeedContentRepositoryTests: XCTestCase {
+    func testBundledSeedContentLoadsFromAppBundle() throws {
+        let candidateBundles = [Bundle.main] + Bundle.allBundles + Bundle.allFrameworks
+        let appBundle = try XCTUnwrap(
+            candidateBundles.first {
+                $0.bundleURL.pathExtension == "app"
+                    && $0.url(forResource: "SeedContent", withExtension: nil) != nil
+            },
+            "Expected an app bundle that contains the SeedContent resource directory."
+        )
+
+        let bundle = try SeedContentLoader.bundled(in: appBundle).loadBundle()
+
+        XCTAssertFalse(bundle.chapters.isEmpty)
+        XCTAssertFalse(bundle.quickCards.isEmpty)
+        XCTAssertFalse(bundle.checklistTemplates.isEmpty)
+    }
+
     func testSeedContentLoaderDecodesManifestAndPackFiles() throws {
         let fixtures = try SeedContentFixtures()
         defer { fixtures.cleanup() }

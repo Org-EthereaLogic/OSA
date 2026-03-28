@@ -60,7 +60,7 @@ flowchart TD
 
 ### Presentation Layer
 
-- `Home`: emergency-first dashboard with Spotlight section (segmented picker toggling Quick Cards and Feed tabs), offline state, recent activity. Quick cards are randomized (shuffled top 3); Feed shows top 5 RSS-discovered articles sorted by publish date via `RSSDiscoveryService` injected through `RepositoryEnvironment`.
+- `Home`: emergency-first dashboard with Spotlight section (segmented picker toggling Quick Cards and Feed tabs), offline state, recent activity. Quick cards are randomized from the full repository set, with 3 shown per load or pull-to-refresh. Feed shows the top 5 RSS-discovered articles sorted by publish date via `RSSDiscoveryService` injected through `RepositoryEnvironment`; rows display source host and publish date when available and open article URLs through the system URL handler.
 - `Library`: handbook chapter browsing, local search entry, citations into source material.
 - `Ask`: grounded local assistant with clear scope boundaries and citations.
 - `Inventory`, `Checklists`, `Quick Cards`, `Notes`, `Settings`: first-class product areas.

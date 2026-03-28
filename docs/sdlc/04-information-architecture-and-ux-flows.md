@@ -170,8 +170,8 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 - top header with app state and offline badge
 - Spotlight section with segmented picker (Quick Cards / Feed tabs):
-  - Quick Cards tab: randomized selection of top 3 quick cards from repository
-  - Feed tab: top 5 most recent RSS-discovered articles sorted by publish date (lazy-loaded on first tab switch)
+  - Quick Cards tab: randomized selection of 3 quick cards from the full local repository set on load and pull-to-refresh
+  - Feed tab: top 5 most recent RSS-discovered articles sorted by publish date (lazy-loaded on first tab switch), with source host and publish date shown when available and article URLs opened through the system URL handler
 - section for active checklist runs (loaded from checklist repository)
 - section for inventory reminders (loaded from inventory repository, filtered by expiry)
 - recent notes (loaded from notes repository)
@@ -243,4 +243,3 @@ Under stress, the app should bias toward direct card opening and simple checklis
 1. ~~Convert these flows into low-fidelity wireframes before writing UI code.~~ **Done:** All core screens are implemented as SwiftUI views.
 2. ~~Decide which destinations get permanent tab presence versus Home or overflow access.~~ **Resolved by implementation:** 4 primary tabs (Home, Library, Ask, Inventory) plus a More section for Checklists, Quick Cards, Notes, and Settings.
 3. Prototype the Quick Cards large-type presentation early; it is central to the product identity.
-
