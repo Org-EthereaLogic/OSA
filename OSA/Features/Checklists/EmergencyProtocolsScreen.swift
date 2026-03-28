@@ -35,6 +35,7 @@ struct EmergencyProtocolsScreen: View {
                         .padding(.vertical, Spacing.xs)
                     }
                     .listRowBackground(Color.osaSurface)
+                    .hapticTap(.prominentNavigation)
                 }
                 .listStyle(.insetGrouped)
                 .scrollContentBackground(.hidden)

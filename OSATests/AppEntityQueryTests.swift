@@ -300,6 +300,7 @@ private func makeTestDependencies(
         inventoryCompletionService: LocalInventoryCompletionService(
             capabilityDetector: StubCapabilityDetector(mode: .extractiveOnly)
         ),
+        hapticFeedbackService: StubHapticFeedbackService(),
         rssDiscoveryService: StubRSSDiscoveryService(),
         discoveryCoordinator: KnowledgeDiscoveryCoordinator(
             rssDiscoveryService: StubRSSDiscoveryService(),
@@ -323,6 +324,11 @@ private func makeTestDependencies(
 
 private struct StubRSSDiscoveryService: RSSDiscoveryService {
     func discoverArticles() async -> [DiscoveredArticle] { [] }
+}
+
+private final class StubHapticFeedbackService: HapticFeedbackService {
+    @MainActor func play(_ event: AppHapticEvent) {}
+    @MainActor func prepare(_ event: AppHapticEvent) {}
 }
 
 private final class StubWeatherForecastRepository: WeatherForecastRepository, @unchecked Sendable {

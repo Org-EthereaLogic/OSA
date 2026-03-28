@@ -10,6 +10,7 @@ struct NoteEditorView: View {
     let onSave: (NoteRecord) throws -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var title = ""
     @State private var bodyMarkdown = ""
@@ -91,8 +92,10 @@ struct NoteEditorView: View {
 
         do {
             try onSave(note)
+            hapticFeedbackService?.play(.success)
             dismiss()
         } catch {
+            hapticFeedbackService?.play(.error)
             showSaveError = true
         }
     }

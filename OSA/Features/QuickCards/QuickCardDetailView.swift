@@ -4,6 +4,7 @@ struct QuickCardDetailView: View {
     let card: QuickCard
 
     @Environment(\.handbookRepository) private var handbookRepository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
     private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
@@ -130,6 +131,7 @@ struct QuickCardDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     pinnedQuickCardIDsRawValue = PinnedContentSettings.toggled(card.id, rawValue: pinnedQuickCardIDsRawValue)
+                    hapticFeedbackService?.play(.pinToggle)
                 } label: {
                     Image(systemName: isPinned ? "pin.fill" : "pin")
                 }

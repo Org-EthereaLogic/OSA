@@ -11,6 +11,7 @@ struct InventoryItemFormView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.inventoryCompletionService) private var completionService
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var name: String = ""
     @State private var category: InventoryCategory = .other
@@ -189,8 +190,10 @@ struct InventoryItemFormView: View {
 
         do {
             try onSave(item)
+            hapticFeedbackService?.play(.success)
             dismiss()
         } catch {
+            hapticFeedbackService?.play(.error)
             showSaveError = true
         }
     }

@@ -13,6 +13,7 @@ struct HomeScreen: View {
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.weatherAlertService) private var weatherAlertService
     @Environment(\.locationService) private var locationService
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @AppStorage(UserProfileSettings.regionKey)
     private var regionRawValue = UserProfileSettings.regionDefault.rawValue
@@ -111,6 +112,7 @@ struct HomeScreen: View {
                     }
 
                     Button {
+                        hapticFeedbackService?.play(.emergencyEntry)
                         showEmergencyMode = true
                     } label: {
                         Label("Emergency Mode", systemImage: "exclamationmark.triangle.fill")
@@ -209,6 +211,7 @@ struct HomeScreen: View {
                                 )
                             }
                             .buttonStyle(.plain)
+                            .hapticTap(.prominentNavigation)
                         case .handbookSection(let section):
                             NavigationLink {
                                 HandbookSectionDetailView(sectionID: section.id)
@@ -220,6 +223,7 @@ struct HomeScreen: View {
                                 )
                             }
                             .buttonStyle(.plain)
+                            .hapticTap(.prominentNavigation)
                         }
                     }
                 }
@@ -280,6 +284,7 @@ struct HomeScreen: View {
                             HomeQuickCardRow(card: card)
                         }
                         .buttonStyle(.plain)
+                        .hapticTap(.prominentNavigation)
                     }
                 }
             }
@@ -357,6 +362,7 @@ struct HomeScreen: View {
                                 HomeSuggestionRow(suggestion: suggestion)
                             }
                             .buttonStyle(.plain)
+                            .hapticTap(.prominentNavigation)
                         case .handbookSection(let section):
                             NavigationLink {
                                 HandbookSectionDetailView(sectionID: section.id)
@@ -364,6 +370,7 @@ struct HomeScreen: View {
                                 HomeSuggestionRow(suggestion: suggestion)
                             }
                             .buttonStyle(.plain)
+                            .hapticTap(.prominentNavigation)
                         }
                     }
                 }
@@ -640,17 +647,20 @@ struct HomeScreen: View {
 
     private func composeSafeMessage() {
         guard !emergencyContacts.isEmpty else {
+            hapticFeedbackService?.play(.warning)
             safeMessageAlertText = "Add at least one emergency contact in Settings before using the I’m Safe shortcut."
             showSafeMessageAlert = true
             return
         }
 
         guard MFMessageComposeViewController.canSendText() else {
+            hapticFeedbackService?.play(.warning)
             safeMessageAlertText = "Text messaging is not available on this device."
             showSafeMessageAlert = true
             return
         }
 
+        hapticFeedbackService?.play(.emergencyPrimaryAction)
         showEmergencyMode = false
         showSafeMessageComposer = true
     }

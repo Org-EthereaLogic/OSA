@@ -1,13 +1,11 @@
 import SwiftUI
-import UIKit
 
 struct EmergencyProtocolView: View {
     let template: ChecklistTemplate
 
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
-    @AppStorage(AccessibilitySettings.criticalHapticsKey)
-    private var criticalHaptics = AccessibilitySettings.criticalHapticsDefault
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var currentIndex = 0
     @State private var metronomeRunning = false
@@ -27,10 +25,7 @@ struct EmergencyProtocolView: View {
         .onReceive(metronomeTimer) { _ in
             guard metronomeRunning, template.timerProfile == .cprMetronome else { return }
             beatCount += 1
-            if criticalHaptics {
-                let generator = UIImpactFeedbackGenerator(style: .rigid)
-                generator.impactOccurred(intensity: 0.9)
-            }
+            hapticFeedbackService?.play(.cprMetronomeBeat)
         }
     }
 
@@ -100,7 +95,7 @@ struct EmergencyProtocolView: View {
                 CPRMetronomeCard(
                     isRunning: metronomeRunning,
                     beatCount: beatCount,
-                    onToggle: { metronomeRunning.toggle() }
+                    onToggle: toggleMetronome
                 )
             }
         }
@@ -118,7 +113,7 @@ struct EmergencyProtocolView: View {
     private var controls: some View {
         HStack(spacing: Spacing.md) {
             Button {
-                currentIndex = max(currentIndex - 1, 0)
+                stepBackward()
             } label: {
                 Label("Back", systemImage: "arrow.left")
                     .frame(maxWidth: .infinity)
@@ -127,7 +122,7 @@ struct EmergencyProtocolView: View {
             .disabled(currentIndex == 0)
 
             Button {
-                currentIndex = min(currentIndex + 1, template.items.count - 1)
+                stepForward()
             } label: {
                 Label(currentIndex == template.items.count - 1 ? "Review Again" : "Next", systemImage: "arrow.right")
                     .frame(maxWidth: .infinity)
@@ -137,6 +132,27 @@ struct EmergencyProtocolView: View {
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.bottom, Spacing.lg)
+    }
+
+    private func stepBackward() {
+        guard currentIndex > 0 else { return }
+        currentIndex = max(currentIndex - 1, 0)
+        hapticFeedbackService?.play(.protocolStepBackward)
+    }
+
+    private func stepForward() {
+        guard !template.items.isEmpty else { return }
+        currentIndex = min(currentIndex + 1, template.items.count - 1)
+        hapticFeedbackService?.play(.protocolStepForward)
+    }
+
+    private func toggleMetronome() {
+        metronomeRunning.toggle()
+        beatCount = metronomeRunning ? 0 : beatCount
+        hapticFeedbackService?.play(.prominentNavigation)
+        if metronomeRunning {
+            hapticFeedbackService?.prepare(.cprMetronomeBeat)
+        }
     }
 }
 

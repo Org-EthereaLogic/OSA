@@ -4,6 +4,7 @@ struct CreateChecklistView: View {
     let onSave: (ChecklistRun) throws -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var title = ""
     @State private var contextNote = ""
@@ -91,8 +92,10 @@ struct CreateChecklistView: View {
 
         do {
             try onSave(run)
+            hapticFeedbackService?.play(.success)
             dismiss()
         } catch {
+            hapticFeedbackService?.play(.error)
             showSaveError = true
         }
     }

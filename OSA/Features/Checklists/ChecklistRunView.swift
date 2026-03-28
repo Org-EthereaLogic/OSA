@@ -5,6 +5,7 @@ struct ChecklistRunView: View {
 
     @Environment(\.checklistRepository) private var repository
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var run: ChecklistRun?
     @State private var loadFailed = false
     @State private var showAbandonConfirmation = false
@@ -131,7 +132,9 @@ struct ChecklistRunView: View {
         do {
             try repository?.updateRun(updatedRun)
             self.run = updatedRun
+            hapticFeedbackService?.play(.checklistItemToggle)
         } catch {
+            hapticFeedbackService?.play(.error)
             loadFailed = true
         }
     }
@@ -155,7 +158,9 @@ struct ChecklistRunView: View {
         do {
             try repository?.updateRun(completedRun)
             self.run = completedRun
+            hapticFeedbackService?.play(.success)
         } catch {
+            hapticFeedbackService?.play(.error)
             loadFailed = true
         }
     }
@@ -176,8 +181,10 @@ struct ChecklistRunView: View {
 
         do {
             try repository?.updateRun(abandonedRun)
+            hapticFeedbackService?.play(.warning)
             dismiss()
         } catch {
+            hapticFeedbackService?.play(.error)
             loadFailed = true
         }
     }

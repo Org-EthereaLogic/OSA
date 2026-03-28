@@ -46,6 +46,7 @@ struct OSAApp: App {
                 .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
                 .environment(\.importPipeline, dependencies.importPipeline)
                 .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
+                .environment(\.hapticFeedbackService, dependencies.hapticFeedbackService)
                 .environment(\.onscreenContentManager, onscreenContentManager)
                 .environment(\.rssDiscoveryService, dependencies.rssDiscoveryService)
                 .environment(\.discoveryCoordinator, dependencies.discoveryCoordinator)

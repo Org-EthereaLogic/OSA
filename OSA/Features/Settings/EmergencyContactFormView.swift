@@ -10,6 +10,7 @@ struct EmergencyContactFormView: View {
     let onSave: (EmergencyContact) throws -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var name = ""
     @State private var relationship = ""
@@ -81,10 +82,11 @@ struct EmergencyContactFormView: View {
 
         do {
             try onSave(contact)
+            hapticFeedbackService?.play(.success)
             dismiss()
         } catch {
+            hapticFeedbackService?.play(.error)
             showSaveError = true
         }
     }
 }
-

@@ -69,6 +69,7 @@
 		5201BFBD368C93A2F4E5E174 /* OSARotationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570193DEE58B3253DCF265CD /* OSARotationUITests.swift */; };
 		525473FDC2F4D1AF96B8ECAA /* EmergencyContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691EE708EE63CE5507A76C75 /* EmergencyContact.swift */; };
 		543315F34EDF80133CF4EECB /* InventoryCompletionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */; };
+		548FF8BBF7FCA22FBB4DC50E /* HapticFeedbackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BF67B069EAA28DBFF745A4A /* HapticFeedbackService.swift */; };
 		5560BFD3FA98826DBB068337 /* TrustedSourceAllowlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402FD29050530886B6101E1A /* TrustedSourceAllowlist.swift */; };
 		569E76F0139E6EE1C5C9B74A /* PersistedDailyForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA83C798F26803B6D0873ED /* PersistedDailyForecast.swift */; };
 		5778777D30E4A8DD8B7E77D4 /* KnowledgeChunker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F198F590CA450AF4BC48E5B /* KnowledgeChunker.swift */; };
@@ -187,6 +188,7 @@
 		C728D1C2B93B9C441E9A33D2 /* URLSessionTrustedSourceHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD55384CAC331FA9818CCF6 /* URLSessionTrustedSourceHTTPClient.swift */; };
 		C8DD863BF82818902AF1FE03 /* SettingsValueCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2F12D241A6CFB985F69CFD /* SettingsValueCoding.swift */; };
 		C9EAA5D38F0FDBFB761850AD /* PinnedContentSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBC59C726AD5908DEABE901 /* PinnedContentSettings.swift */; };
+		CAF5772C981750AD900AD0E1 /* HapticFeedbackServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BE5040B998758A9B6804D3 /* HapticFeedbackServiceTests.swift */; };
 		CCC8E2911A1A99E71EBDBEDD /* RefreshRetryPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A45F48ED7EEDD8AA5FCF5D7 /* RefreshRetryPolicyTests.swift */; };
 		CF92FFC2E313B4895EBAED99 /* SwiftDataImportedKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775021C2C8E85C8F405973A9 /* SwiftDataImportedKnowledgeRepository.swift */; };
 		D0685A9E71888700A230E1CF /* GroundedPromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7749A787B8DFAA402840D46 /* GroundedPromptBuilder.swift */; };
@@ -330,6 +332,7 @@
 		4A67BCDB1F0D91CBC3F6DA2C /* ConnectivityRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityRepositories.swift; sourceTree = "<group>"; };
 		4BE814B35308E6D518E762B4 /* ConnectivityServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityServiceTests.swift; sourceTree = "<group>"; };
 		4BEA2EA38CAF74AE4F395331 /* NoteRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRepositoryTests.swift; sourceTree = "<group>"; };
+		4BF67B069EAA28DBFF745A4A /* HapticFeedbackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackService.swift; sourceTree = "<group>"; };
 		4C82E64972EE24054EC14BC3 /* ChecklistTemplateRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistTemplateRouteView.swift; sourceTree = "<group>"; };
 		4D3DBF170B8902A9BD54A600 /* QuickCardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCardEntity.swift; sourceTree = "<group>"; };
 		4F841CBCB3B6783193ED0F6A /* NWSAlertParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWSAlertParserTests.swift; sourceTree = "<group>"; };
@@ -376,6 +379,7 @@
 		7F3E0AD8B88CD5C1F59EB282 /* SwiftDataContentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataContentRepository.swift; sourceTree = "<group>"; };
 		7F3F3F9A0CC6B353A0F6892C /* PersistedQuickCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedQuickCard.swift; sourceTree = "<group>"; };
 		80D70A07C356E213913683FD /* WeatherAlertMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAlertMappings.swift; sourceTree = "<group>"; };
+		81BE5040B998758A9B6804D3 /* HapticFeedbackServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackServiceTests.swift; sourceTree = "<group>"; };
 		81F41C4DA63B7F4013E88894 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
 		83984303840EAE257E726D6F /* TrustedSourceHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedSourceHTTPClient.swift; sourceTree = "<group>"; };
 		8656E38BC827294A36CFCE64 /* InventoryRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryRepositoryTests.swift; sourceTree = "<group>"; };
@@ -626,6 +630,14 @@
 				22675AEFAC8EF498F3FF0B05 /* Typography.swift */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		3190E7608549F90121D27DA5 /* Haptics */ = {
+			isa = PBXGroup;
+			children = (
+				4BF67B069EAA28DBFF745A4A /* HapticFeedbackService.swift */,
+			);
+			path = Haptics;
 			sourceTree = "<group>";
 		};
 		3319BFD0C5B0219E1D9B9780 /* Repositories */ = {
@@ -1234,6 +1246,7 @@
 				CB8EE2B529135016E79F7BEB /* EmergencyContactRepositoryTests.swift */,
 				C56E11FB54DBE3E760677EF1 /* EvidenceRankerTests.swift */,
 				D58CAD005A560B565BB294B3 /* GroundedPromptBuilderTests.swift */,
+				81BE5040B998758A9B6804D3 /* HapticFeedbackServiceTests.swift */,
 				6B3CA1CA96C7E12EDA338829 /* ImportedKnowledgeImportPipelineTests.swift */,
 				6B3FEEA5607ECB6111E3D1DB /* ImportedKnowledgeNormalizerTests.swift */,
 				AD5615AE0AD017A91EE8D376 /* ImportedKnowledgeRefreshCoordinatorTests.swift */,
@@ -1314,6 +1327,7 @@
 			isa = PBXGroup;
 			children = (
 				0413FE60D4B9EE0C41BD6C05 /* Connectivity */,
+				3190E7608549F90121D27DA5 /* Haptics */,
 				CBCDF459839F6C3363926404 /* AppBrand.swift */,
 				2D988FE417870599E03FAA42 /* HomeSectionState.swift */,
 				E7CA069DB20461C0374F150A /* MarkdownPreprocessor.swift */,
@@ -1529,6 +1543,7 @@
 				25E4EA42F74A85FA28BDD12E /* EmergencyContactRepositoryTests.swift in Sources */,
 				9499A6ED7C6DBD753DEFB450 /* EvidenceRankerTests.swift in Sources */,
 				90468528CB98BDA7B848B178 /* GroundedPromptBuilderTests.swift in Sources */,
+				CAF5772C981750AD900AD0E1 /* HapticFeedbackServiceTests.swift in Sources */,
 				EF7F7F855E758AEE7428DF2C /* ImportedKnowledgeImportPipelineTests.swift in Sources */,
 				F7CF6B22B5E27A29EFA4C526 /* ImportedKnowledgeNormalizerTests.swift in Sources */,
 				8FE7934359D28CB6C623E3EA /* ImportedKnowledgeRefreshCoordinatorTests.swift in Sources */,
@@ -1631,6 +1646,7 @@
 				9EE5B6A747C78FFFF4558E83 /* HandbookModels.swift in Sources */,
 				9FB61E422C08CE62675BA00B /* HandbookSectionDetailView.swift in Sources */,
 				33B4900229C25F4D6F8E7ECB /* HandbookSectionEntity.swift in Sources */,
+				548FF8BBF7FCA22FBB4DC50E /* HapticFeedbackService.swift in Sources */,
 				E92EB4578EEB4BAFBFADCC72 /* HomeScreen.swift in Sources */,
 				EF84BC046ECD7ECB70148983 /* HomeSectionState.swift in Sources */,
 				AA9D6A0A9D44CCFBB247CDE9 /* ImportedKnowledgeDocument.swift in Sources */,

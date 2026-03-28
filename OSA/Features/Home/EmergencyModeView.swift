@@ -7,6 +7,7 @@ struct EmergencyModeView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     var body: some View {
         NavigationStack {
@@ -67,6 +68,7 @@ struct EmergencyModeView: View {
                 )
             }
             .buttonStyle(.plain)
+            .hapticTap(.prominentNavigation)
 
             NavigationLink {
                 QuickCardsScreen()
@@ -79,6 +81,7 @@ struct EmergencyModeView: View {
                 )
             }
             .buttonStyle(.plain)
+            .hapticTap(.prominentNavigation)
 
             Button(action: onComposeSafeMessage) {
                 EmergencyActionCard(
@@ -92,6 +95,7 @@ struct EmergencyModeView: View {
             .disabled(!safeMessageAvailable || !MFMessageComposeViewController.canSendText())
 
             Button {
+                hapticFeedbackService?.play(.emergencyPrimaryAction)
                 if let url = URL(string: "tel://911") {
                     openURL(url)
                 }
@@ -122,6 +126,7 @@ struct EmergencyModeView: View {
                 )
             }
             .buttonStyle(.plain)
+            .hapticTap(.prominentNavigation)
 
             NavigationLink {
                 MapScreen(initialCategory: .shelter)
@@ -133,6 +138,7 @@ struct EmergencyModeView: View {
                 )
             }
             .buttonStyle(.plain)
+            .hapticTap(.prominentNavigation)
         }
     }
 }

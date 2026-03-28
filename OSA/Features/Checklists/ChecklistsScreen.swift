@@ -57,6 +57,7 @@ struct ChecklistsScreen: View {
                             ActiveRunRow(run: run)
                         }
                         .listRowBackground(Color.osaSurface)
+                        .hapticTap(.prominentNavigation)
                     }
                 } header: {
                     Label("Active", systemImage: "play.circle.fill")
@@ -76,6 +77,7 @@ struct ChecklistsScreen: View {
                                 TemplateRow(template: template)
                             }
                             .listRowBackground(Color.osaSurface)
+                            .hapticTap(.prominentNavigation)
                         }
                     } header: {
                         Label("Emergency Protocols", systemImage: "cross.case.fill")
@@ -94,6 +96,7 @@ struct ChecklistsScreen: View {
                                 TemplateRow(template: template)
                             }
                             .listRowBackground(Color.osaSurface)
+                            .hapticTap(.prominentNavigation)
                         }
                     } header: {
                         Text(category.capitalized.replacingOccurrences(of: "-", with: " "))

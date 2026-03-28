@@ -2,6 +2,7 @@ import SwiftUI
 
 struct NotesScreen: View {
     @Environment(\.noteRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var notes: [NoteRecord] = []
     @State private var loadFailed = false
     @State private var filterType: NoteType?
@@ -81,6 +82,9 @@ struct NotesScreen: View {
             .onDelete { offsets in
                 for index in offsets {
                     try? repository?.deleteNote(id: notes[index].id)
+                }
+                if !offsets.isEmpty {
+                    hapticFeedbackService?.play(.warning)
                 }
                 loadNotes()
             }

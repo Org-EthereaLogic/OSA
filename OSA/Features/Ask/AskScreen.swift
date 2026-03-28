@@ -5,6 +5,7 @@ struct AskScreen: View {
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.trustedSourceHTTPClient) private var trustedSourceHTTPClient
     @Environment(\.importPipeline) private var importPipeline
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
 
@@ -203,6 +204,7 @@ struct AskScreen: View {
         guard !trimmed.isEmpty else { return }
 
         lastSubmittedQuery = trimmed
+        hapticFeedbackService?.play(.askSubmit)
         askState = .loading
 
         guard let service = retrievalService else {

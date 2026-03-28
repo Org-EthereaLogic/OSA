@@ -4,6 +4,7 @@ struct NoteDetailView: View {
     let noteID: UUID
 
     @Environment(\.noteRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var note: NoteRecord?
     @State private var loadFailed = false
     @State private var showingEdit = false
@@ -63,6 +64,7 @@ struct NoteDetailView: View {
             Button("Delete", role: .destructive) {
                 if let note {
                     try? repository?.deleteNote(id: note.id)
+                    hapticFeedbackService?.play(.warning)
                     dismiss()
                 }
             }

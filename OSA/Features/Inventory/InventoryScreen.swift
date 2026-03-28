@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InventoryScreen: View {
     @Environment(\.inventoryRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var items: [InventoryItem] = []
     @State private var loadFailed = false
     @State private var showArchived = false
@@ -96,6 +97,9 @@ struct InventoryScreen: View {
         for index in offsets {
             let item = categoryItems[index]
             try? repository?.deleteItem(id: item.id)
+        }
+        if !offsets.isEmpty {
+            hapticFeedbackService?.play(.warning)
         }
         loadItems()
     }

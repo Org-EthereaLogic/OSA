@@ -4,6 +4,7 @@ struct InventoryItemDetailView: View {
     let itemID: UUID
 
     @Environment(\.inventoryRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var item: InventoryItem?
     @State private var loadFailed = false
     @State private var showingEdit = false
@@ -146,7 +147,9 @@ struct InventoryItemDetailView: View {
                 try repository?.archiveItem(id: item.id)
             }
             loadItem()
+            hapticFeedbackService?.play(.success)
         } catch {
+            hapticFeedbackService?.play(.error)
             loadFailed = true
         }
     }
@@ -154,6 +157,7 @@ struct InventoryItemDetailView: View {
     private func deleteItem() {
         guard let item else { return }
         try? repository?.deleteItem(id: item.id)
+        hapticFeedbackService?.play(.warning)
     }
 }
 

@@ -20,6 +20,7 @@ struct AppDependencies {
     let importPipeline: ImportedKnowledgeImportPipeline
     let refreshCoordinator: ImportedKnowledgeRefreshCoordinator
     let inventoryCompletionService: any InventoryCompletionService
+    let hapticFeedbackService: any HapticFeedbackService
     let rssDiscoveryService: any RSSDiscoveryService
     let discoveryCoordinator: KnowledgeDiscoveryCoordinator
     let weatherForecastRepository: any WeatherForecastRepository
@@ -78,6 +79,7 @@ struct AppDependencies {
         let inventoryCompletionService = LocalInventoryCompletionService(
             capabilityDetector: capabilityDetector
         )
+        let hapticFeedbackService = LiveHapticFeedbackService()
 
         let weatherForecastRepository = SwiftDataWeatherForecastRepository(
             modelContext: modelContainer.mainContext
@@ -123,6 +125,7 @@ struct AppDependencies {
             importPipeline: importPipeline,
             refreshCoordinator: refreshCoordinator,
             inventoryCompletionService: inventoryCompletionService,
+            hapticFeedbackService: hapticFeedbackService,
             rssDiscoveryService: rssDiscoveryService,
             discoveryCoordinator: discoveryCoordinator,
             weatherForecastRepository: weatherForecastRepository,

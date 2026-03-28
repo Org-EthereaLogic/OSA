@@ -4,6 +4,7 @@ struct ChecklistTemplateDetailView: View {
     let slug: String
 
     @Environment(\.checklistRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var template: ChecklistTemplate?
     @State private var loadFailed = false
     @State private var showStartConfirmation = false
@@ -62,6 +63,7 @@ struct ChecklistTemplateDetailView: View {
             Section {
                 Button {
                     if template.presentationStyle == .emergencyProtocol {
+                        hapticFeedbackService?.play(.emergencyPrimaryAction)
                         showProtocol = true
                     } else {
                         startRun(from: template)
@@ -100,10 +102,12 @@ struct ChecklistTemplateDetailView: View {
                 contextNote: nil
             )
             if run != nil {
+                hapticFeedbackService?.play(.prominentNavigation)
                 // Navigation to run view will happen via the active runs list
                 loadTemplate()
             }
         } catch {
+            hapticFeedbackService?.play(.error)
             loadFailed = true
         }
     }

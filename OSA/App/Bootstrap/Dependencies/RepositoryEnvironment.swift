@@ -64,6 +64,10 @@ private struct InventoryCompletionServiceKey: EnvironmentKey {
     static let defaultValue: (any InventoryCompletionService)? = nil
 }
 
+private struct HapticFeedbackServiceKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any HapticFeedbackService)? = nil
+}
+
 private struct OnscreenContentManagerKey: EnvironmentKey {
     static let defaultValue: OnscreenContentManager? = nil
 }
@@ -179,6 +183,11 @@ extension EnvironmentValues {
     var inventoryCompletionService: (any InventoryCompletionService)? {
         get { self[InventoryCompletionServiceKey.self] }
         set { self[InventoryCompletionServiceKey.self] = newValue }
+    }
+
+    var hapticFeedbackService: (any HapticFeedbackService)? {
+        get { self[HapticFeedbackServiceKey.self] }
+        set { self[HapticFeedbackServiceKey.self] = newValue }
     }
 
     var onscreenContentManager: OnscreenContentManager? {

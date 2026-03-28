@@ -6,6 +6,7 @@ struct HandbookSectionDetailView: View {
     @Environment(\.handbookRepository) private var repository
     @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.onscreenContentManager) private var onscreenContentManager
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
     private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
@@ -39,6 +40,7 @@ struct HandbookSectionDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     pinnedSectionIDsRawValue = PinnedContentSettings.toggled(sectionID, rawValue: pinnedSectionIDsRawValue)
+                    hapticFeedbackService?.play(.pinToggle)
                 } label: {
                     Image(systemName: isPinned ? "pin.fill" : "pin")
                 }

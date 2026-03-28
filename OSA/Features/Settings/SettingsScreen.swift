@@ -5,6 +5,7 @@ struct SettingsScreen: View {
     @Environment(\.discoveryCoordinator) private var discoveryCoordinator
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.emergencyContactRepository) private var emergencyContactRepository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
     @AppStorage(UserProfileSettings.regionKey)
@@ -275,6 +276,9 @@ struct SettingsScreen: View {
         for index in offsets {
             let contact = contacts[index]
             try? emergencyContactRepository?.deleteContact(id: contact.id)
+        }
+        if !offsets.isEmpty {
+            hapticFeedbackService?.play(.warning)
         }
         loadContacts()
     }

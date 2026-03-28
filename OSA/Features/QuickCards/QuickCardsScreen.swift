@@ -32,6 +32,7 @@ struct QuickCardsScreen: View {
                                     QuickCardRow(card: card)
                                 }
                                 .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
                             }
                         }
                     }
