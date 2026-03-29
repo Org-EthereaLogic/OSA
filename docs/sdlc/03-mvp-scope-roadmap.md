@@ -32,12 +32,13 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 ### Included
 
 - native iPhone app shell
-- Home, Library, Ask, Inventory, Checklists, Quick Cards, Notes, Settings
+- Home, Library, Ask, Inventory, Tools, Checklists, Quick Cards, Notes, Settings
 - curated seed handbook chapters in all initial domains
 - offline local search across handbook and user data
 - offline inventory CRUD
 - offline checklist templates and checklist runs
 - offline personal notes
+- offline survival and communication tools for signaling, timing, and reference
 - bounded Ask over local approved content and app data
 - citations in Ask answers
 - model capability fallback behavior

@@ -54,6 +54,7 @@ OSA is a local-first preparedness handbook and organizer. It combines curated of
 - When I need preparedness guidance with no signal, help me find the right local information quickly.
 - When I maintain supplies, help me track what I have, what is missing, and what expires.
 - When I need step-by-step reminders, give me concise checklists and quick cards.
+- When I need a simple field utility under stress, give me an offline local tool without extra permissions or connectivity.
 - When I ask a question, answer only from trustworthy local material and show where the answer came from.
 - When local information is insufficient and I am online, help me search trusted sources and save approved material for later offline use.
 
@@ -66,6 +67,7 @@ OSA is a local-first preparedness handbook and organizer. It combines curated of
 - As a user, I can create, edit, and search inventory items offline.
 - As a user, I can complete checklist runs offline and keep history locally.
 - As a user, I can write personal notes and link them to topics or supplies.
+- As a user, I can open offline survival tools for Morse, screen signaling, timing, conversion, radio notes, and approximate declination reference.
 - As a user, when connected, I can search trusted sources and import selected knowledge for future offline use.
 
 ## Functional Requirements
@@ -105,6 +107,12 @@ OSA is a local-first preparedness handbook and organizer. It combines curated of
 - Open from Home with minimal taps.
 - Provide links to deeper handbook sections.
 
+### Tools
+
+- Provide bounded offline survival and communication utilities such as Morse encoding, screen-based SOS signaling, whistle playback, timer or stopwatch, unit conversion, static radio notes, and approximate declination reference.
+- Keep tool behavior local-only, permission-stable, and honest about screen-aid or precision limits.
+- Avoid persistence, account, or networking dependencies for transient utility behavior.
+
 ### Notes
 
 - Create and edit notes offline.
@@ -132,6 +140,7 @@ Core offline features must include:
 - searching local content
 - using the local Ask feature over local data
 - viewing quick cards
+- using offline survival tools
 - viewing and editing inventory
 - viewing and editing checklists
 - personal notes
@@ -208,4 +217,3 @@ Online behavior requirements:
 1. Freeze the MVP chapter list and quick-card set before UI implementation.
 2. Decide the minimum Ask capability on unsupported devices so the UX can be designed consistently.
 3. Translate these requirements into milestone acceptance criteria in the roadmap and QA plan.
-

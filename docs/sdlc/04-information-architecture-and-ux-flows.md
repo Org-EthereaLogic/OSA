@@ -32,7 +32,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 Recommended root model:
 
-- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, and a root overflow surface or route list for `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
+- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, and a root overflow surface or route list for `Tools`, `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
 - Home acts as the launch screen and emergency-first dashboard.
 - Global search entry from Home, Library, and Ask.
 - A persistent offline/online status indicator in the navigation chrome or Home header.
@@ -67,6 +67,11 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 
 - High-priority large-type cards optimized for one-handed reading and low-light or stress use.
 
+### Tools
+
+- Offline utility surface for Morse signaling, bright-screen light and mirror aids, whistle playback, foreground timing, deterministic conversions, radio quick reference, and approximate declination.
+- Reached from the overflow navigation list and from Emergency Mode as a bounded local-only shortcut.
+
 ### Notes
 
 - User-created notes and local references, optionally linked to handbook topics or inventory items.
@@ -81,6 +86,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 Recommended v1 shortcuts:
 
 - Home header card: `Open Quick Cards`
+- Emergency Mode shortcut: `Open Survival Tools`
 - pinned "urgent topics" row on Home
 - one-tap access to recent or starred quick cards
 - large-type quick card mode with no dense chrome
