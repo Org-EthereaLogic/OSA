@@ -140,6 +140,22 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     @MainActor
+    func testQuickCardsSearch() {
+        navigateToMoreItem("Quick Cards")
+
+        let searchField = app.searchFields.firstMatch
+        XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Quick Cards search field should appear")
+
+        searchField.tap()
+        searchField.typeText("water")
+
+        XCTAssertTrue(
+            app.staticTexts["Water Rotation Check"].waitForExistence(timeout: 3),
+            "Quick Cards search for 'water' should show the water card"
+        )
+    }
+
+    @MainActor
     func testLibrarySearch() {
         tapTab("Library")
 
@@ -153,6 +169,34 @@ final class OSAContentAndInputTests: XCTestCase {
             app.staticTexts["Water"].waitForExistence(timeout: 3)
                 || app.cells.firstMatch.waitForExistence(timeout: 3),
             "Library search for 'water' should show results"
+        )
+    }
+
+    @MainActor
+    func testLibraryShowsRecentlyViewedAfterOpeningSection() {
+        tapTab("Library")
+
+        let chapter = app.staticTexts["Preparedness Foundations"]
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
+        chapter.tap()
+
+        let section = app.staticTexts["Start With The Risks You Actually Face"]
+        XCTAssertTrue(section.waitForExistence(timeout: 3), "Expected handbook section missing from Preparedness Foundations")
+        section.tap()
+
+        XCTAssertTrue(
+            app.navigationBars.buttons.firstMatch.waitForExistence(timeout: 3),
+            "Section detail should allow navigation back"
+        )
+
+        navigateBack()
+        if !app.staticTexts["Recently Viewed"].exists {
+            navigateBack()
+        }
+
+        XCTAssertTrue(
+            app.staticTexts["Recently Viewed"].waitForExistence(timeout: 3),
+            "Library should show Recently Viewed after opening a handbook section"
         )
     }
 
@@ -206,6 +250,14 @@ final class OSAContentAndInputTests: XCTestCase {
         }
 
         app.swipeDown()
+    }
+
+    @MainActor
+    private func navigateBack() {
+        let backButton = app.navigationBars.buttons.firstMatch
+        if backButton.waitForExistence(timeout: 2) {
+            backButton.tap()
+        }
     }
 
     @MainActor

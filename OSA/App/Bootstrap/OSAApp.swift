@@ -18,6 +18,7 @@ struct OSAApp: App {
 
         if isUITesting {
             UserDefaults.standard.set(true, forKey: UserProfileSettings.onboardingCompletedKey)
+            UserDefaults.standard.removeObject(forKey: RecentLibraryHistorySettings.recentSectionIDsKey)
         }
 
         let container = AppModelContainer.makeShared()

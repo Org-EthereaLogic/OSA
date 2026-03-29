@@ -50,6 +50,12 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
 
         let callButton = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Call 911")).firstMatch
         XCTAssertTrue(callButton.exists, "Emergency Mode should expose the Call 911 action")
+
+        let nightVisionButton = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Night Vision")).firstMatch
+        XCTAssertTrue(nightVisionButton.exists, "Emergency Mode should expose a night vision control")
+
+        let sosButton = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "SOS")).firstMatch
+        XCTAssertTrue(sosButton.exists, "Emergency Mode should expose an SOS alert control")
     }
 
     @MainActor

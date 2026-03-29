@@ -12,14 +12,15 @@ struct HomeHeaderView: View {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("OFFLINE-FIRST PREPAREDNESS")
                         .font(.brandEyebrow)
-                        .foregroundStyle(Color.white.opacity(0.72))
+                        .foregroundStyle(Color.white.opacity(0.95))
                         .tracking(1.2)
+                        .accessibilityAddTraits(.isHeader)
 
                     BrandWordmarkView(variant: .reversed, height: 34)
 
                     Text(AppBrand.reassurance)
                         .font(.brandSubheadline)
-                        .foregroundStyle(Color.white.opacity(0.82))
+                        .foregroundStyle(Color.white.opacity(0.95))
                         .fixedSize(horizontal: false, vertical: true)
 
                     let chipLayout = dynamicTypeSize.isAccessibilitySize

@@ -2,10 +2,14 @@ import SwiftUI
 
 struct ChecklistsScreen: View {
     @Environment(\.checklistRepository) private var repository
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var templates: [ChecklistTemplateSummary] = []
+    @State private var templateDetails: [UUID: ChecklistTemplate] = [:]
     @State private var activeRuns: [ChecklistRun] = []
     @State private var loadFailed = false
+    @State private var searchText = ""
     @State private var showingCreateAdhoc = false
+    @State private var runPendingDeletion: ChecklistRun?
 
     var body: some View {
         Group {
@@ -16,16 +20,15 @@ struct ChecklistsScreen: View {
                     description: Text("Checklists could not be loaded. Try restarting the app.")
                 )
             } else if templates.isEmpty && activeRuns.isEmpty {
-                ContentUnavailableView(
-                    "No Checklists Yet",
-                    systemImage: "checklist",
-                    description: Text("Checklist templates will appear here once seed content is imported.")
-                )
+                zeroStateView
+            } else if filteredTemplates.isEmpty && filteredRuns.isEmpty {
+                noResultsView
             } else {
                 list
             }
         }
         .navigationTitle("Checklists")
+        .searchable(text: $searchText, prompt: "Search checklists")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -38,6 +41,13 @@ struct ChecklistsScreen: View {
                 .accessibilityLabel("Add checklist")
                 .accessibilityHint("Creates a new ad hoc checklist.")
             }
+        }
+        .confirmationDialog("Delete Active Run", isPresented: runDeletionBinding) {
+            Button("Delete Run", role: .destructive) {
+                deletePendingRun()
+            }
+        } message: {
+            Text("This removes the active checklist run from the list.")
         }
         .sheet(isPresented: $showingCreateAdhoc) {
             NavigationStack {
@@ -52,9 +62,9 @@ struct ChecklistsScreen: View {
 
     private var list: some View {
         List {
-            if !activeRuns.isEmpty {
+            if !filteredRuns.isEmpty {
                 Section {
-                    ForEach(activeRuns) { run in
+                    ForEach(filteredRuns) { run in
                         NavigationLink {
                             ChecklistRunView(runID: run.id)
                         } label: {
@@ -63,15 +73,22 @@ struct ChecklistsScreen: View {
                         .listRowBackground(Color.osaSurface)
                         .hapticTap(.prominentNavigation)
                         .accessibilityHint("Opens the active checklist run.")
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                runPendingDeletion = run
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                     }
                 } header: {
                     Label("Active", systemImage: "play.circle.fill")
                 }
             }
 
-            if !templates.isEmpty {
-                let protocolTemplates = templates.filter { $0.presentationStyle == .emergencyProtocol }
-                let standardTemplates = templates.filter { $0.presentationStyle == .standard }
+            if !filteredTemplates.isEmpty {
+                let protocolTemplates = filteredTemplates.filter { $0.presentationStyle == .emergencyProtocol }
+                let standardTemplates = filteredTemplates.filter { $0.presentationStyle == .standard }
 
                 if !protocolTemplates.isEmpty {
                     Section {
@@ -104,6 +121,14 @@ struct ChecklistsScreen: View {
                             .listRowBackground(Color.osaSurface)
                             .hapticTap(.prominentNavigation)
                             .accessibilityHint("Opens the checklist template.")
+                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                Button {
+                                    startRun(from: template)
+                                } label: {
+                                    Label("Start", systemImage: "play.fill")
+                                }
+                                .tint(.osaPrimary)
+                            }
                         }
                     } header: {
                         Text(category.capitalized.replacingOccurrences(of: "-", with: " "))
@@ -111,27 +136,130 @@ struct ChecklistsScreen: View {
                 }
             }
 
-            NavigationLink {
-                ChecklistRunHistoryView()
-            } label: {
-                Label("Run History", systemImage: "clock.arrow.circlepath")
-                    .foregroundStyle(.secondary)
+            if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                NavigationLink {
+                    ChecklistRunHistoryView()
+                } label: {
+                    Label("Run History", systemImage: "clock.arrow.circlepath")
+                        .foregroundStyle(.secondary)
+                }
+                .listRowBackground(Color.osaSurface)
+                .accessibilityHint("Opens completed and abandoned checklist runs.")
             }
-            .listRowBackground(Color.osaSurface)
-            .accessibilityHint("Opens completed and abandoned checklist runs.")
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(.osaBackground)
     }
 
+    private var filteredTemplates: [ChecklistTemplateSummary] {
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return templates }
+
+        return templates.filter { template in
+            [template.title, template.description, template.category]
+                .contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
+                || template.tags.contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
+                || templateDetails[template.id]?.items.contains(where: { item in
+                    item.text.localizedCaseInsensitiveContains(trimmed)
+                        || (item.detail?.localizedCaseInsensitiveContains(trimmed) ?? false)
+                }) == true
+        }
+    }
+
+    private var filteredRuns: [ChecklistRun] {
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return activeRuns }
+
+        return activeRuns.filter { run in
+            run.title.localizedCaseInsensitiveContains(trimmed)
+                || (run.contextNote?.localizedCaseInsensitiveContains(trimmed) ?? false)
+        }
+    }
+
+    private var zeroStateView: some View {
+        ContentUnavailableView {
+            Label("No Checklists Yet", systemImage: "checklist")
+        } description: {
+            Text("Start from seeded templates when available, or create an ad hoc checklist for drills, trips, and supply reviews.")
+        } actions: {
+            Button("Create Ad Hoc Checklist") {
+                showingCreateAdhoc = true
+            }
+        }
+    }
+
+    private var noResultsView: some View {
+        ContentUnavailableView {
+            Label("No Matching Checklists", systemImage: "magnifyingglass")
+        } description: {
+            Text("No active runs or templates match \"\(searchText)\". Try words like water, outage, family, or kit.")
+        } actions: {
+            Button("Clear Search") {
+                searchText = ""
+            }
+        }
+    }
+
     private func loadContent() {
         do {
-            templates = try repository?.listTemplates() ?? []
+            let loadedTemplates = try repository?.listTemplates() ?? []
+            templates = loadedTemplates
+
+            if let repository {
+                templateDetails = try Dictionary(
+                    uniqueKeysWithValues: loadedTemplates.compactMap { template in
+                        guard let detail = try repository.template(id: template.id) else {
+                            return nil
+                        }
+                        return (template.id, detail)
+                    }
+                )
+            } else {
+                templateDetails = [:]
+            }
+
             activeRuns = try repository?.activeRuns() ?? []
+            loadFailed = false
         } catch {
             loadFailed = true
         }
+    }
+
+    private func startRun(from template: ChecklistTemplateSummary) {
+        do {
+            _ = try repository?.startRun(from: template.id, title: template.title, contextNote: nil)
+            hapticFeedbackService?.play(.prominentNavigation)
+            loadContent()
+        } catch {
+            hapticFeedbackService?.play(.error)
+            loadFailed = true
+        }
+    }
+
+    private func deletePendingRun() {
+        guard let runPendingDeletion else { return }
+
+        do {
+            try repository?.deleteRun(id: runPendingDeletion.id)
+            hapticFeedbackService?.play(.warning)
+            self.runPendingDeletion = nil
+            loadContent()
+        } catch {
+            hapticFeedbackService?.play(.error)
+            loadFailed = true
+        }
+    }
+
+    private var runDeletionBinding: Binding<Bool> {
+        Binding(
+            get: { runPendingDeletion != nil },
+            set: { isPresented in
+                if !isPresented {
+                    runPendingDeletion = nil
+                }
+            }
+        )
     }
 }
 

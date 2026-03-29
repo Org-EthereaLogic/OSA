@@ -26,3 +26,29 @@ enum PinnedContentSettings {
         return encode(ids: values)
     }
 }
+
+enum RecentLibraryHistorySettings {
+    static let recentSectionIDsKey = "settings.library.recentSections"
+    static let maxRecentSections = 6
+
+    static func ids(from rawValue: String) -> [UUID] {
+        SettingsValueCoding.decodeUUIDs(from: rawValue)
+    }
+
+    static func encode(ids: [UUID]) -> String {
+        SettingsValueCoding.encode(ids)
+    }
+
+    static func recorded(_ id: UUID, rawValue: String, limit: Int = maxRecentSections) -> String {
+        var values = ids(from: rawValue)
+        values.removeAll { $0 == id }
+        values.insert(id, at: 0)
+        return encode(ids: Array(values.prefix(limit)))
+    }
+
+    static func prune(rawValue: String, keeping resolvableIDs: some Sequence<UUID>) -> String {
+        let resolvableSet = Set(resolvableIDs)
+        let filtered = ids(from: rawValue).filter { resolvableSet.contains($0) }
+        return encode(ids: filtered)
+    }
+}

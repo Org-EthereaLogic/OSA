@@ -3,11 +3,15 @@ import SwiftUI
 struct LibraryScreen: View {
     @Environment(\.handbookRepository) private var repository
     @Environment(\.searchService) private var searchService
+    @AppStorage(RecentLibraryHistorySettings.recentSectionIDsKey)
+    private var recentSectionIDsRawValue = RecentLibraryHistorySettings.encode(ids: [])
     @State private var chapters: [HandbookChapterSummary] = []
+    @State private var recentEntries: [RecentlyViewedEntry] = []
     @State private var loadFailed = false
     @State private var searchText = ""
     @State private var suggestions: [SearchSuggestion] = []
     @State private var selectedScenario: HazardScenario?
+    @State private var selectedTopic: String?
 
     var body: some View {
         Group {
@@ -32,13 +36,37 @@ struct LibraryScreen: View {
                             .listRowSeparator(.hidden)
                     }
 
-                    ForEach(filteredChapters) { chapter in
-                        NavigationLink {
-                            ChapterDetailView(slug: chapter.slug)
-                        } label: {
-                            ChapterRow(chapter: chapter)
+                    if !browseTopics.isEmpty {
+                        Section("Browse By Topic") {
+                            topicBrowseBar
+                                .listRowInsets(EdgeInsets())
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                         }
-                        .listRowBackground(Color.osaSurface)
+                    }
+
+                    if !recentEntries.isEmpty && !isDiscoveryOverlayVisible {
+                        Section("Recently Viewed") {
+                            ForEach(recentEntries) { entry in
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: entry.section.id)
+                                } label: {
+                                    RecentlyViewedRow(entry: entry)
+                                }
+                                .listRowBackground(Color.osaSurface)
+                            }
+                        }
+                    }
+
+                    Section(chaptersHeaderTitle) {
+                        ForEach(filteredChapters) { chapter in
+                            NavigationLink {
+                                ChapterDetailView(slug: chapter.slug)
+                            } label: {
+                                ChapterRow(chapter: chapter)
+                            }
+                            .listRowBackground(Color.osaSurface)
+                        }
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -64,50 +92,127 @@ struct LibraryScreen: View {
             }
         }
         .overlay {
-            if !searchText.isEmpty || selectedScenario != nil {
+            if isDiscoveryOverlayVisible {
                 SearchResultsView(
                     query: !searchText.isEmpty ? searchText : (selectedScenario?.displayName ?? ""),
                     forcedTag: selectedScenario?.tag
                 )
             }
         }
-        .task { loadChapters() }
+        .task {
+            loadChapters()
+            refreshRecentEntries()
+        }
+        .onAppear {
+            refreshRecentEntries()
+        }
         .onChange(of: searchText) { _, newValue in
             loadSuggestions(for: newValue)
             if !newValue.isEmpty {
                 selectedScenario = nil
+                selectedTopic = nil
             }
         }
+        .onChange(of: recentSectionIDsRawValue) { _, _ in
+            refreshRecentEntries()
+        }
+    }
+
+    private var filteredChapters: [HandbookChapterSummary] {
+        chapters.filter { chapter in
+            matchesScenarioFilter(chapter) && matchesTopicFilter(chapter)
+        }
+    }
+
+    private var browseTopics: [String] {
+        let excluded = Set(["essentials", "home", "offline-first", "outage", "power-outage"])
+        let topicCounts = chapters
+            .flatMap(\.tags)
+            .filter { tag in
+                !tag.hasPrefix("scenario:")
+                    && !tag.hasPrefix("region:")
+                    && !tag.hasPrefix("season:")
+                    && !excluded.contains(tag)
+            }
+            .reduce(into: [String: Int]()) { counts, tag in
+                counts[tag, default: 0] += 1
+            }
+
+        return topicCounts
+            .sorted { lhs, rhs in
+                if lhs.value == rhs.value {
+                    return formatTagText(lhs.key) < formatTagText(rhs.key)
+                }
+                return lhs.value > rhs.value
+            }
+            .map(\.key)
+            .prefix(10)
+            .map { $0 }
+    }
+
+    private var chaptersHeaderTitle: String {
+        if let selectedTopic {
+            return "Topic: \(formatTagText(selectedTopic))"
+        }
+        return "Handbook Chapters"
+    }
+
+    private var isDiscoveryOverlayVisible: Bool {
+        !searchText.isEmpty || selectedScenario != nil
     }
 
     private func loadChapters() {
         do {
             chapters = try repository?.listChapters() ?? []
+            loadFailed = false
         } catch {
             loadFailed = true
         }
     }
 
-    private var filteredChapters: [HandbookChapterSummary] {
-        guard let selectedScenario else { return chapters }
-        return chapters.filter { $0.tags.contains(selectedScenario.tag) }
+    private func refreshRecentEntries() {
+        guard let repository else {
+            recentEntries = []
+            return
+        }
+
+        let recentIDs = RecentLibraryHistorySettings.ids(from: recentSectionIDsRawValue)
+        let resolvedEntries = recentIDs.compactMap { id -> RecentlyViewedEntry? in
+            guard let section = (try? repository.section(id: id)) ?? nil else {
+                return nil
+            }
+
+            let chapterTitle = ((try? repository.chapter(id: section.chapterID)) ?? nil)?.title ?? "Handbook"
+            return RecentlyViewedEntry(section: section, chapterTitle: chapterTitle)
+        }
+
+        recentEntries = Array(resolvedEntries.prefix(RecentLibraryHistorySettings.maxRecentSections))
+
+        let prunedRawValue = RecentLibraryHistorySettings.prune(
+            rawValue: recentSectionIDsRawValue,
+            keeping: recentEntries.map(\.section.id)
+        )
+        if prunedRawValue != recentSectionIDsRawValue {
+            recentSectionIDsRawValue = prunedRawValue
+        }
     }
 
     private var scenarioBrowseBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: Spacing.sm) {
-                ScenarioChip(
-                    title: "All Topics",
+                BrowseChip(
+                    title: "All Scenarios",
                     isSelected: selectedScenario == nil
                 ) {
                     selectedScenario = nil
                 }
 
                 ForEach(HazardScenario.allCases) { scenario in
-                    ScenarioChip(
+                    BrowseChip(
                         title: scenario.displayName,
                         isSelected: selectedScenario == scenario
                     ) {
+                        selectedTopic = nil
                         selectedScenario = selectedScenario == scenario ? nil : scenario
                     }
                 }
@@ -115,6 +220,41 @@ struct LibraryScreen: View {
             .padding(.horizontal, Spacing.sm)
             .padding(.vertical, Spacing.sm)
         }
+    }
+
+    private var topicBrowseBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: Spacing.sm) {
+                BrowseChip(
+                    title: "All Topics",
+                    isSelected: selectedTopic == nil
+                ) {
+                    selectedTopic = nil
+                }
+
+                ForEach(browseTopics, id: \.self) { topic in
+                    BrowseChip(
+                        title: formatTagText(topic),
+                        isSelected: selectedTopic == topic
+                    ) {
+                        selectedScenario = nil
+                        selectedTopic = selectedTopic == topic ? nil : topic
+                    }
+                }
+            }
+            .padding(.horizontal, Spacing.sm)
+            .padding(.vertical, Spacing.sm)
+        }
+    }
+
+    private func matchesScenarioFilter(_ chapter: HandbookChapterSummary) -> Bool {
+        guard let selectedScenario else { return true }
+        return chapter.tags.contains(selectedScenario.tag)
+    }
+
+    private func matchesTopicFilter(_ chapter: HandbookChapterSummary) -> Bool {
+        guard let selectedTopic else { return true }
+        return chapter.tags.contains(selectedTopic)
     }
 
     private func loadSuggestions(for text: String) {
@@ -167,13 +307,7 @@ private struct ChapterRow: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        LibraryScreen()
-    }
-}
-
-private struct ScenarioChip: View {
+private struct BrowseChip: View {
     let title: String
     let isSelected: Bool
     let action: () -> Void
@@ -192,6 +326,42 @@ private struct ScenarioChip: View {
                 .foregroundStyle(isSelected ? Color.osaPrimary : .secondary)
         }
         .buttonStyle(.plain)
+    }
+}
+
+private struct RecentlyViewedEntry: Identifiable {
+    let section: HandbookSection
+    let chapterTitle: String
+
+    var id: UUID { section.id }
+}
+
+private struct RecentlyViewedRow: View {
+    let entry: RecentlyViewedEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text(entry.section.heading)
+                .font(.cardTitle)
+
+            Text(entry.chapterTitle)
+                .font(.metadataCaption)
+                .foregroundStyle(.secondary)
+
+            Text(String(entry.section.plainText.prefix(110)) + (entry.section.plainText.count > 110 ? "..." : ""))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+        }
+        .padding(.vertical, Spacing.xs)
+        .accessibilityElement(children: .combine)
+        .accessibilityHint("Opens the recently viewed handbook section.")
+    }
+}
+
+#Preview {
+    NavigationStack {
+        LibraryScreen()
     }
 }
 

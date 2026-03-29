@@ -215,16 +215,23 @@ final class OSAFullE2EVisualTests: XCTestCase {
         let hasSections = app.cells.count > 0 || app.staticTexts.count > 2
         XCTAssertTrue(hasSections, "Chapter detail should show sections or content")
 
-        // Tap into a section if available
-        let firstCell = app.cells.firstMatch
-        if firstCell.waitForExistence(timeout: 2) {
-            firstCell.tap()
+        let section = app.staticTexts["Start With The Risks You Actually Face"]
+        if section.waitForExistence(timeout: 2) {
+            section.tap()
             sleep(1)
             screenshot("Library-Section-Detail")
             navigateBack()
         }
 
-        navigateBack()
+        if !app.staticTexts["Recently Viewed"].exists {
+            navigateBack()
+        }
+
+        XCTAssertTrue(
+            app.staticTexts["Recently Viewed"].waitForExistence(timeout: 3),
+            "Library should show Recently Viewed after opening a handbook section"
+        )
+        screenshot("Library-Recently-Viewed")
     }
 
     @MainActor
@@ -232,6 +239,8 @@ final class OSAFullE2EVisualTests: XCTestCase {
         tapTab("Library")
         sleep(1)
 
+        app.swipeUp()
+        sleep(1)
         app.swipeUp()
         sleep(1)
         screenshot("Library-Scrolled")
@@ -331,7 +340,17 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
         screenshot("QuickCards-Screen")
 
-        let firstCard = app.cells.firstMatch
+        let searchField = app.searchFields.firstMatch
+        if searchField.waitForExistence(timeout: 3) {
+            searchField.tap()
+            searchField.typeText("water")
+            sleep(1)
+            screenshot("QuickCards-Search")
+        }
+
+        let firstCard = app.buttons.matching(
+            NSPredicate(format: "label CONTAINS[c] 'Quick' OR label CONTAINS[c] 'Water' OR label CONTAINS[c] 'Power'")
+        ).firstMatch
         if firstCard.waitForExistence(timeout: 3) {
             firstCard.tap()
             sleep(1)

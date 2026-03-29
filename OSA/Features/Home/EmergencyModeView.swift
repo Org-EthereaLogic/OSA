@@ -8,6 +8,10 @@ struct EmergencyModeView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+    @State private var isNightVisionEnabled = false
+    @State private var isSOSAlarmActive = false
+
+    private let sosTimer = Timer.publish(every: 1.2, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationStack {
@@ -19,6 +23,9 @@ struct EmergencyModeView: View {
                 }
                 .padding(Spacing.lg)
             }
+            .safeAreaInset(edge: .bottom) {
+                emergencyActionBar
+            }
             .background(.osaBackground)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -27,22 +34,37 @@ struct EmergencyModeView: View {
                 }
             }
         }
+        .background(.osaBackground)
+        .overlay {
+            Color.red
+                .opacity(isNightVisionEnabled ? 0.2 : 0)
+                .ignoresSafeArea()
+                .allowsHitTesting(false)
+        }
+        .onReceive(sosTimer) { _ in
+            guard isSOSAlarmActive else { return }
+            hapticFeedbackService?.play(.emergencyPrimaryAction)
+        }
+        .onDisappear {
+            isSOSAlarmActive = false
+        }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("EMERGENCY MODE")
                 .font(.brandEyebrow)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white.opacity(0.95))
                 .tracking(1.2)
+                .accessibilityAddTraits(.isHeader)
 
             Text("Large targets, reviewed protocols, and local shortcuts for high-stress moments.")
                 .font(.brandSubheadline)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.white.opacity(0.96))
 
             Text("Call emergency services whenever the situation is immediately life-threatening.")
                 .font(.metadataCaption)
-                .foregroundStyle(Color.white.opacity(0.92))
+                .foregroundStyle(Color.white.opacity(0.96))
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -70,6 +92,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityLabel("Read Protocols")
             .accessibilityHint("Opens reviewed step-by-step emergency protocols.")
 
             NavigationLink {
@@ -84,6 +107,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityLabel("View Quick Cards")
             .accessibilityHint("Opens large-type emergency quick cards.")
 
             Button(action: onComposeSafeMessage) {
@@ -96,27 +120,26 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .disabled(!safeMessageAvailable || !MFMessageComposeViewController.canSendText())
+            .accessibilityLabel("Send I’m Safe message")
+            .accessibilityValue(safeMessageAvailable ? "Available" : "Unavailable")
             .accessibilityHint(
                 safeMessageAvailable
                     ? "Opens a pre-filled text message to your saved emergency contacts."
                     : "Unavailable until you add at least one emergency contact in Settings."
             )
 
-            Button {
-                hapticFeedbackService?.play(.emergencyPrimaryAction)
-                if let url = URL(string: "tel://911") {
-                    openURL(url)
-                }
-            } label: {
+            Button(action: toggleNightVision) {
                 EmergencyActionCard(
-                    title: "Call 911",
-                    subtitle: "Open the system dialer",
-                    systemImage: "phone.fill",
-                    tint: .osaCritical
+                    title: "Night Vision",
+                    subtitle: isNightVisionEnabled ? "Red tint enabled for low-light use" : "Add a red tint for low-light use",
+                    systemImage: isNightVisionEnabled ? "moon.stars.fill" : "moon.stars",
+                    tint: isNightVisionEnabled ? .osaEmergency : .osaWarning
                 )
             }
             .buttonStyle(.plain)
-            .accessibilityHint("Opens the system dialer for emergency services.")
+            .accessibilityLabel(isNightVisionEnabled ? "Disable Night Vision" : "Enable Night Vision")
+            .accessibilityValue(isNightVisionEnabled ? "On" : "Off")
+            .accessibilityHint("Adds a red tint over the screen for low-light reading.")
         }
     }
 
@@ -137,6 +160,7 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityLabel("Find nearby hospitals")
             .accessibilityHint("Opens the map filtered to nearby hospitals.")
 
             NavigationLink {
@@ -150,7 +174,66 @@ struct EmergencyModeView: View {
             }
             .buttonStyle(.plain)
             .hapticTap(.prominentNavigation)
+            .accessibilityLabel("Find nearby shelters")
             .accessibilityHint("Opens the map filtered to nearby shelters.")
+        }
+    }
+
+    private var emergencyActionBar: some View {
+        HStack(spacing: Spacing.md) {
+            Button(action: callEmergencyServices) {
+                EmergencyBottomBarButton(
+                    title: "Call 911",
+                    subtitle: "Emergency services",
+                    systemImage: "phone.fill",
+                    tint: .osaCritical
+                )
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Call 911")
+            .accessibilityHint("Opens the system dialer for emergency services.")
+
+            Button(action: toggleSOSAlarm) {
+                EmergencyBottomBarButton(
+                    title: isSOSAlarmActive ? "Pause SOS" : "Audible SOS",
+                    subtitle: isSOSAlarmActive ? "Stop haptic alert loop" : "Start haptic alert loop",
+                    systemImage: isSOSAlarmActive ? "pause.fill" : "speaker.wave.3.fill",
+                    tint: .osaEmergency
+                )
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(isSOSAlarmActive ? "Pause Audible SOS" : "Start Audible SOS")
+            .accessibilityValue(isSOSAlarmActive ? "Active" : "Inactive")
+            .accessibilityHint("Uses repeating haptics until full audio playback is implemented.")
+        }
+        .padding(.horizontal, Spacing.lg)
+        .padding(.top, Spacing.sm)
+        .padding(.bottom, Spacing.sm)
+        .background(.ultraThinMaterial)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(Color.osaHairline)
+                .frame(height: 1)
+        }
+    }
+
+    private func callEmergencyServices() {
+        hapticFeedbackService?.play(.emergencyPrimaryAction)
+        if let url = URL(string: "tel://911") {
+            openURL(url)
+        }
+    }
+
+    private func toggleNightVision() {
+        isNightVisionEnabled.toggle()
+        hapticFeedbackService?.play(.prominentNavigation)
+    }
+
+    private func toggleSOSAlarm() {
+        isSOSAlarmActive.toggle()
+        hapticFeedbackService?.play(isSOSAlarmActive ? .warning : .prominentNavigation)
+        if isSOSAlarmActive {
+            hapticFeedbackService?.prepare(.emergencyPrimaryAction)
         }
     }
 }
@@ -184,6 +267,48 @@ private struct EmergencyActionCard: View {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct EmergencyBottomBarButton: View {
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: Spacing.sm) {
+            Image(systemName: systemImage)
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(width: 42, height: 42)
+                .background(tint, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .minimumScaleFactor(0.8)
+
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, Spacing.md)
+        .padding(.vertical, Spacing.sm)
+        .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
+        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.lg)
+                .stroke(tint.opacity(0.28), lineWidth: 1)
+        }
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 }

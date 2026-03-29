@@ -7,6 +7,8 @@ struct InventoryScreen: View {
     @State private var loadFailed = false
     @State private var showArchived = false
     @State private var showingAddItem = false
+    @State private var editingItem: InventoryItem?
+    @State private var pendingDeleteItem: InventoryItem?
 
     var body: some View {
         Group {
@@ -20,7 +22,7 @@ struct InventoryScreen: View {
                 ContentUnavailableView(
                     "No Items Yet",
                     systemImage: "archivebox",
-                    description: Text("Tap + to add your first supply item.")
+                    description: Text("Add water, food, lighting, and first aid supplies so you can track what is already on hand offline.")
                 )
             } else {
                 list
@@ -53,10 +55,25 @@ struct InventoryScreen: View {
                 .accessibilityHint("Shows or hides archived inventory items.")
             }
         }
+        .confirmationDialog("Delete Item", isPresented: deleteConfirmationBinding) {
+            Button("Delete", role: .destructive) {
+                deletePendingItem()
+            }
+        } message: {
+            Text("This item will be permanently deleted.")
+        }
         .sheet(isPresented: $showingAddItem) {
             NavigationStack {
                 InventoryItemFormView(mode: .create) { newItem in
                     try repository?.createItem(newItem)
+                    loadItems()
+                }
+            }
+        }
+        .sheet(item: $editingItem) { item in
+            NavigationStack {
+                InventoryItemFormView(mode: .edit(item)) { updatedItem in
+                    try repository?.updateItem(updatedItem)
                     loadItems()
                 }
             }
@@ -78,9 +95,43 @@ struct InventoryScreen: View {
                             InventoryItemRow(item: item)
                         }
                         .listRowBackground(Color.osaSurface)
-                    }
-                    .onDelete { offsets in
-                        deleteItems(in: grouped[category] ?? [], at: offsets)
+                        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                            Button {
+                                toggleArchive(for: item)
+                            } label: {
+                                Label(item.isArchived ? "Unarchive" : "Archive", systemImage: item.isArchived ? "tray.and.arrow.up" : "archivebox")
+                            }
+                            .tint(.osaPrimary)
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                pendingDeleteItem = item
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        .contextMenu {
+                            Button {
+                                editingItem = item
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+
+                            Button {
+                                toggleArchive(for: item)
+                            } label: {
+                                Label(
+                                    item.isArchived ? "Unarchive" : "Archive",
+                                    systemImage: item.isArchived ? "tray.and.arrow.up" : "archivebox"
+                                )
+                            }
+
+                            Button(role: .destructive) {
+                                pendingDeleteItem = item
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                     }
                 } header: {
                     Label(category.displayName, systemImage: category.systemImage)
@@ -95,20 +146,53 @@ struct InventoryScreen: View {
     private func loadItems() {
         do {
             items = try repository?.listItems(includeArchived: showArchived) ?? []
+            loadFailed = false
         } catch {
             loadFailed = true
         }
     }
 
-    private func deleteItems(in categoryItems: [InventoryItem], at offsets: IndexSet) {
-        for index in offsets {
-            let item = categoryItems[index]
-            try? repository?.deleteItem(id: item.id)
+    private func toggleArchive(for item: InventoryItem) {
+        do {
+            if item.isArchived {
+                var unarchived = item
+                unarchived.isArchived = false
+                unarchived.updatedAt = Date()
+                try repository?.updateItem(unarchived)
+            } else {
+                try repository?.archiveItem(id: item.id)
+            }
+            hapticFeedbackService?.play(.success)
+            loadItems()
+        } catch {
+            hapticFeedbackService?.play(.error)
+            loadFailed = true
         }
-        if !offsets.isEmpty {
+    }
+
+    private func deletePendingItem() {
+        guard let pendingDeleteItem else { return }
+
+        do {
+            try repository?.deleteItem(id: pendingDeleteItem.id)
             hapticFeedbackService?.play(.warning)
+            self.pendingDeleteItem = nil
+            loadItems()
+        } catch {
+            hapticFeedbackService?.play(.error)
+            loadFailed = true
         }
-        loadItems()
+    }
+
+    private var deleteConfirmationBinding: Binding<Bool> {
+        Binding(
+            get: { pendingDeleteItem != nil },
+            set: { isPresented in
+                if !isPresented {
+                    pendingDeleteItem = nil
+                }
+            }
+        )
     }
 }
 

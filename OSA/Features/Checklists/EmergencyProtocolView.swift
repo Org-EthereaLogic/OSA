@@ -10,7 +10,8 @@ struct EmergencyProtocolView: View {
     @State private var currentIndex = 0
     @State private var metronomeRunning = false
     @State private var beatCount = 0
-    @AccessibilityFocusState private var focusedElement: EmergencyProtocolAccessibilityTarget?
+    @State private var stepTransitionDirection: StepTransitionDirection = .forward
+    @AccessibilityFocusState private var focusedStep: UUID?
 
     private let metronomeTimer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
 
@@ -31,18 +32,26 @@ struct EmergencyProtocolView: View {
         .onAppear {
             focusCurrentStep()
         }
+        .onChange(of: currentIndex) { _, _ in
+            focusCurrentStep()
+        }
+        .onDisappear {
+            metronomeRunning = false
+        }
     }
 
     private var protocolHeader: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("EMERGENCY PROTOCOL")
                 .font(.brandEyebrow)
-                .foregroundStyle(Color.white.opacity(0.72))
+                .foregroundStyle(Color.white.opacity(0.95))
                 .tracking(1.1)
+                .accessibilityAddTraits(.isHeader)
 
             Text(template.description)
                 .font(.brandSubheadline)
-                .foregroundStyle(Color.white.opacity(0.84))
+                .foregroundStyle(Color.white.opacity(0.95))
+                .minimumScaleFactor(0.7)
 
             HStack(spacing: Spacing.sm) {
                 Label("Step \(currentIndex + 1) of \(template.items.count)", systemImage: "list.number")
@@ -77,38 +86,46 @@ struct EmergencyProtocolView: View {
     private var stepCard: some View {
         let item = template.items[currentIndex]
 
-        return VStack(alignment: .leading, spacing: Spacing.lg) {
+        return ZStack {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                Text(item.text)
-                    .font(largePrintReadingMode ? .system(size: 34, weight: .bold, design: .rounded) : .stressTitle)
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityFocused($focusedElement, equals: .stepSummary)
-
-                if let detail = item.detail, !detail.isEmpty {
-                    Text(detail)
-                        .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
-                        .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: Spacing.lg) {
+                    Text(item.text)
+                        .font(largePrintReadingMode ? .system(size: 34, weight: .bold, design: .rounded) : .stressTitle)
+                        .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
+                        .minimumScaleFactor(0.7)
+                        .accessibilityAddTraits(.isHeader)
+
+                    if let detail = item.detail, !detail.isEmpty {
+                        Text(detail)
+                            .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .minimumScaleFactor(0.7)
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(stepAccessibilityLabel(for: item))
+                .accessibilityValue(stepSummaryValue(for: item))
+                .accessibilityFocused($focusedStep, equals: item.id)
+
+                if item.riskLevel == "high" {
+                    Label("High priority", systemImage: "exclamationmark.triangle.fill")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaEmergency)
+                        .minimumScaleFactor(0.7)
+                }
+
+                if template.timerProfile == .cprMetronome {
+                    CPRMetronomeCard(
+                        isRunning: metronomeRunning,
+                        beatCount: beatCount,
+                        onToggle: toggleMetronome
+                    )
                 }
             }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("Step \(currentIndex + 1) of \(template.items.count)")
-            .accessibilityValue(stepSummaryValue(for: item))
-
-            if item.riskLevel == "high" {
-                Label("High priority", systemImage: "exclamationmark.triangle.fill")
-                    .font(.metadataCaption)
-                    .foregroundStyle(.osaEmergency)
-            }
-
-            if template.timerProfile == .cprMetronome {
-                CPRMetronomeCard(
-                    isRunning: metronomeRunning,
-                    beatCount: beatCount,
-                    onToggle: toggleMetronome
-                )
-            }
+            .id(item.id)
+            .transition(stepTransitionDirection.transition)
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -119,6 +136,7 @@ struct EmergencyProtocolView: View {
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, Spacing.lg)
+        .animation(.easeInOut(duration: 0.22), value: currentIndex)
     }
 
     private var controls: some View {
@@ -153,16 +171,20 @@ struct EmergencyProtocolView: View {
 
     private func stepBackward() {
         guard currentIndex > 0 else { return }
-        currentIndex = max(currentIndex - 1, 0)
+        stepTransitionDirection = .backward
+        withAnimation(.easeInOut(duration: 0.22)) {
+            currentIndex = max(currentIndex - 1, 0)
+        }
         hapticFeedbackService?.play(.protocolStepBackward)
-        focusCurrentStep()
     }
 
     private func stepForward() {
         guard !template.items.isEmpty else { return }
-        currentIndex = min(currentIndex + 1, template.items.count - 1)
+        stepTransitionDirection = .forward
+        withAnimation(.easeInOut(duration: 0.22)) {
+            currentIndex = min(currentIndex + 1, template.items.count - 1)
+        }
         hapticFeedbackService?.play(.protocolStepForward)
-        focusCurrentStep()
     }
 
     private func toggleMetronome() {
@@ -175,9 +197,16 @@ struct EmergencyProtocolView: View {
     }
 
     private func focusCurrentStep() {
-        DispatchQueue.main.async {
-            focusedElement = .stepSummary
+        guard template.items.indices.contains(currentIndex) else { return }
+        let itemID = template.items[currentIndex].id
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            focusedStep = itemID
         }
+    }
+
+    private func stepAccessibilityLabel(for item: ChecklistTemplateItem) -> String {
+        "Step \(currentIndex + 1) of \(template.items.count). \(item.text)"
     }
 
     private func stepSummaryValue(for item: ChecklistTemplateItem) -> String {
@@ -189,8 +218,24 @@ struct EmergencyProtocolView: View {
     }
 }
 
-private enum EmergencyProtocolAccessibilityTarget: Hashable {
-    case stepSummary
+private enum StepTransitionDirection {
+    case forward
+    case backward
+
+    var transition: AnyTransition {
+        switch self {
+        case .forward:
+            return .asymmetric(
+                insertion: .move(edge: .trailing).combined(with: .opacity),
+                removal: .move(edge: .leading).combined(with: .opacity)
+            )
+        case .backward:
+            return .asymmetric(
+                insertion: .move(edge: .leading).combined(with: .opacity),
+                removal: .move(edge: .trailing).combined(with: .opacity)
+            )
+        }
+    }
 }
 
 private struct CPRMetronomeCard: View {

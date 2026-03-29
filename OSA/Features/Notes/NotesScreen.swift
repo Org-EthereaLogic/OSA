@@ -6,6 +6,7 @@ struct NotesScreen: View {
     @State private var notes: [NoteRecord] = []
     @State private var loadFailed = false
     @State private var filterType: NoteType?
+    @State private var searchText = ""
     @State private var showingCreateNote = false
 
     var body: some View {
@@ -17,16 +18,15 @@ struct NotesScreen: View {
                     description: Text("Notes could not be loaded. Try restarting the app.")
                 )
             } else if notes.isEmpty {
-                ContentUnavailableView(
-                    "No Notes Yet",
-                    systemImage: "note.text",
-                    description: Text("Tap + to create your first note.")
-                )
+                zeroStateView
+            } else if filteredNotes.isEmpty {
+                noResultsView
             } else {
                 list
             }
         }
         .navigationTitle("Notes")
+        .searchable(text: $searchText, prompt: "Search notes")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -44,7 +44,6 @@ struct NotesScreen: View {
                 Menu {
                     Button {
                         filterType = nil
-                        loadNotes()
                     } label: {
                         Label("All", systemImage: filterType == nil ? "checkmark" : "")
                     }
@@ -52,7 +51,6 @@ struct NotesScreen: View {
                     ForEach(NoteType.allCases, id: \.self) { type in
                         Button {
                             filterType = type
-                            loadNotes()
                         } label: {
                             Label(type.displayName, systemImage: filterType == type ? "checkmark" : "")
                         }
@@ -79,7 +77,7 @@ struct NotesScreen: View {
 
     private var list: some View {
         List {
-            ForEach(notes) { note in
+            ForEach(filteredNotes) { note in
                 NavigationLink {
                     NoteDetailView(noteID: note.id)
                 } label: {
@@ -89,7 +87,7 @@ struct NotesScreen: View {
             }
             .onDelete { offsets in
                 for index in offsets {
-                    try? repository?.deleteNote(id: notes[index].id)
+                    try? repository?.deleteNote(id: filteredNotes[index].id)
                 }
                 if !offsets.isEmpty {
                     hapticFeedbackService?.play(.warning)
@@ -102,12 +100,81 @@ struct NotesScreen: View {
         .background(.osaBackground)
     }
 
+    private var filteredNotes: [NoteRecord] {
+        notes.filter { note in
+            matchesTypeFilter(note) && matchesSearch(note)
+        }
+    }
+
+    private var zeroStateView: some View {
+        ContentUnavailableView {
+            Label("No Notes Yet", systemImage: "note.text")
+        } description: {
+            Text("Create a family plan, emergency contacts list, or local reference note so it stays readable offline.")
+        } actions: {
+            Button("Create First Note") {
+                showingCreateNote = true
+            }
+        }
+    }
+
+    private var noResultsView: some View {
+        ContentUnavailableView {
+            Label("No Matching Notes", systemImage: "magnifyingglass")
+        } description: {
+            Text(noResultsDescription)
+        } actions: {
+            if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Button("Clear Search") {
+                    searchText = ""
+                }
+            } else if filterType != nil {
+                Button("Show All Notes") {
+                    filterType = nil
+                }
+            }
+        }
+    }
+
     private func loadNotes() {
         do {
-            notes = try repository?.listNotes(type: filterType) ?? []
+            notes = try repository?.listNotes(type: nil) ?? []
+            loadFailed = false
         } catch {
             loadFailed = true
         }
+    }
+
+    private func matchesTypeFilter(_ note: NoteRecord) -> Bool {
+        guard let filterType else { return true }
+        return note.noteType == filterType
+    }
+
+    private func matchesSearch(_ note: NoteRecord) -> Bool {
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return true }
+
+        return [note.title, note.plainText]
+            .contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
+            || note.tags.contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
+    }
+
+    private var noResultsDescription: String {
+        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let filterType, !trimmed.isEmpty {
+            return "No \(filterType.displayName.lowercased()) notes match \"\(trimmed)\". Try another title, tag, or clear the filter."
+        }
+
+        if !trimmed.isEmpty {
+            return "No notes match \"\(trimmed)\". Try terms like water, contacts, meeting, or medication."
+        }
+
+        if let filterType {
+            return "No \(filterType.displayName.lowercased()) notes are available yet. Switch to All or create one now."
+        }
+
+        return "No notes match the current filters."
     }
 }
 

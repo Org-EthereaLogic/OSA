@@ -172,3 +172,47 @@ final class InventoryRepositoryTests: XCTestCase {
         )
     }
 }
+
+final class RecentLibraryHistorySettingsTests: XCTestCase {
+    func testRecordedPlacesNewestIDFirstAndDeduplicates() {
+        let first = UUID(uuidString: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")!
+        let second = UUID(uuidString: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")!
+        let third = UUID(uuidString: "cccccccc-cccc-cccc-cccc-cccccccccccc")!
+
+        var rawValue = RecentLibraryHistorySettings.encode(ids: [first, second])
+        rawValue = RecentLibraryHistorySettings.recorded(third, rawValue: rawValue)
+        rawValue = RecentLibraryHistorySettings.recorded(second, rawValue: rawValue)
+
+        XCTAssertEqual(
+            RecentLibraryHistorySettings.ids(from: rawValue),
+            [second, third, first]
+        )
+    }
+
+    func testRecordedHonorsConfiguredLimit() {
+        let ids = (0..<8).map { index in
+            UUID(uuidString: String(format: "00000000-0000-0000-0000-%012d", index))!
+        }
+
+        let rawValue = ids.reduce(RecentLibraryHistorySettings.encode(ids: [])) { partial, id in
+            RecentLibraryHistorySettings.recorded(id, rawValue: partial, limit: 4)
+        }
+
+        XCTAssertEqual(RecentLibraryHistorySettings.ids(from: rawValue), Array(ids.suffix(4).reversed()))
+    }
+
+    func testIDsReturnsEmptyArrayForInvalidRawValue() {
+        XCTAssertTrue(RecentLibraryHistorySettings.ids(from: "not-json").isEmpty)
+    }
+
+    func testPruneRemovesUnresolvableIDsButPreservesOrder() {
+        let first = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
+        let second = UUID(uuidString: "22222222-2222-2222-2222-222222222222")!
+        let third = UUID(uuidString: "33333333-3333-3333-3333-333333333333")!
+
+        let rawValue = RecentLibraryHistorySettings.encode(ids: [first, second, third])
+        let pruned = RecentLibraryHistorySettings.prune(rawValue: rawValue, keeping: [third, first])
+
+        XCTAssertEqual(RecentLibraryHistorySettings.ids(from: pruned), [first, third])
+    }
+}

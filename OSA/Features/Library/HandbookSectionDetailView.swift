@@ -9,6 +9,8 @@ struct HandbookSectionDetailView: View {
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
     private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(RecentLibraryHistorySettings.recentSectionIDsKey)
+    private var recentSectionIDsRawValue = RecentLibraryHistorySettings.encode(ids: [])
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @State private var section: HandbookSection?
@@ -192,6 +194,10 @@ struct HandbookSectionDetailView: View {
             }
 
             section = loadedSection
+            recentSectionIDsRawValue = RecentLibraryHistorySettings.recorded(
+                loadedSection.id,
+                rawValue: recentSectionIDsRawValue
+            )
             chapter = try repository?.chapter(id: loadedSection.chapterID)
             loadRelatedContent(for: loadedSection)
             onscreenContentManager?.publishHandbookSection(
