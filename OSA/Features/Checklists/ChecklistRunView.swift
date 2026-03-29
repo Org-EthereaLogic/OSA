@@ -12,6 +12,8 @@ struct ChecklistRunView: View {
     @State private var showAbandonConfirmation = false
     @State private var recentlyUpdatedItemID: UUID?
     @State private var recentItemResetTask: Task<Void, Never>?
+    @State private var sharePayload: ActivitySharePayload?
+    @State private var showExportError = false
 
     var body: some View {
         Group {
@@ -30,34 +32,54 @@ struct ChecklistRunView: View {
         .navigationTitle(run?.title ?? "Checklist")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if let run, run.status == .inProgress {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Button {
-                            completeRun()
-                        } label: {
-                            Label("Mark Complete", systemImage: "checkmark.circle.fill")
-                        }
-
-                        Button(role: .destructive) {
-                            showAbandonConfirmation = true
-                        } label: {
-                            Label("Abandon", systemImage: "xmark.circle")
-                        }
+            if run != nil {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        exportRunPDF()
                     } label: {
-                        Image(systemName: "ellipsis.circle")
+                        Image(systemName: "square.and.arrow.up")
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityLabel("Checklist actions")
-                    .accessibilityHint("Shows actions for this checklist run.")
+                    .accessibilityLabel("Export checklist run as PDF")
+                    .accessibilityHint("Exports this checklist run as a print-friendly PDF.")
+
+                    if let run, run.status == .inProgress {
+                        Menu {
+                            Button {
+                                completeRun()
+                            } label: {
+                                Label("Mark Complete", systemImage: "checkmark.circle.fill")
+                            }
+
+                            Button(role: .destructive) {
+                                showAbandonConfirmation = true
+                            } label: {
+                                Label("Abandon", systemImage: "xmark.circle")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .accessibilityLabel("Checklist actions")
+                        .accessibilityHint("Shows actions for this checklist run.")
+                    }
                 }
             }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
         }
         .confirmationDialog("Abandon Checklist", isPresented: $showAbandonConfirmation) {
             Button("Abandon", role: .destructive) { abandonRun() }
         } message: {
             Text("This checklist run will be marked as abandoned.")
+        }
+        .alert("Export Failed", isPresented: $showExportError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This checklist run could not be exported as a PDF.")
         }
         .task { loadRun() }
         .onDisappear {
@@ -248,6 +270,21 @@ struct ChecklistRunView: View {
         accessibilityReduceMotion
             ? .easeOut(duration: 0.12)
             : .easeInOut(duration: 0.18)
+    }
+
+    private func exportRunPDF() {
+        guard let run else { return }
+
+        do {
+            let fileURL = try ChecklistPDFExporter.exportRun(run)
+            sharePayload = ActivitySharePayload(
+                items: [fileURL],
+                subject: run.title
+            )
+        } catch {
+            hapticFeedbackService?.play(.error)
+            showExportError = true
+        }
     }
 }
 

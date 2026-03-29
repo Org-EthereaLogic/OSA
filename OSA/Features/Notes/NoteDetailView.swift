@@ -9,6 +9,7 @@ struct NoteDetailView: View {
     @State private var loadFailed = false
     @State private var showingEdit = false
     @State private var showDeleteConfirmation = false
+    @State private var sharePayload: ActivitySharePayload?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -32,12 +33,24 @@ struct NoteDetailView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
                         Button {
+                            exportMarkdown()
+                        } label: {
+                            Label("Export as Markdown", systemImage: "square.and.arrow.up")
+                        }
+
+                        Button {
+                            exportPlainText()
+                        } label: {
+                            Label("Export as Plain Text", systemImage: "doc.plaintext")
+                        }
+
+                        Divider()
+
+                        Button {
                             showingEdit = true
                         } label: {
                             Label("Edit", systemImage: "pencil")
                         }
-
-                        Divider()
 
                         Button(role: .destructive) {
                             showDeleteConfirmation = true
@@ -57,12 +70,15 @@ struct NoteDetailView: View {
         .sheet(isPresented: $showingEdit) {
             if let note {
                 NavigationStack {
-                    NoteEditorView(mode: .edit(note)) { updatedNote in
+                    NoteEditorView(mode: .edit(note), initialTemplate: nil) { updatedNote in
                         try repository?.updateNote(updatedNote)
                         loadNote()
                     }
                 }
             }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
         }
         .confirmationDialog("Delete Note", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
@@ -122,6 +138,22 @@ struct NoteDetailView: View {
         } catch {
             loadFailed = true
         }
+    }
+
+    private func exportMarkdown() {
+        guard let note else { return }
+        sharePayload = ActivitySharePayload(
+            items: [NoteExportFormatter.markdownContent(for: note)],
+            subject: note.title
+        )
+    }
+
+    private func exportPlainText() {
+        guard let note else { return }
+        sharePayload = ActivitySharePayload(
+            items: [NoteExportFormatter.plainTextContent(for: note)],
+            subject: note.title
+        )
     }
 }
 

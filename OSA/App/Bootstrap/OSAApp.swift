@@ -43,6 +43,7 @@ struct OSAApp: App {
                 .environment(\.searchService, dependencies.searchService)
                 .environment(\.capabilityDetector, dependencies.capabilityDetector)
                 .environment(\.retrievalService, dependencies.retrievalService)
+                .environment(\.inventoryExpiryNotificationService, dependencies.inventoryExpiryNotificationService)
                 .environment(\.connectivityService, dependencies.connectivityService)
                 .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
                 .environment(\.importPipeline, dependencies.importPipeline)
@@ -65,6 +66,7 @@ struct OSAApp: App {
                         return
                     }
 
+                    try? await dependencies.inventoryExpiryNotificationService.rescheduleNotifications()
                     await dependencies.refreshCoordinator.start()
                     await dependencies.discoveryCoordinator.startIfDue()
                 }

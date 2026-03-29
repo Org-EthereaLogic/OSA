@@ -40,6 +40,10 @@ private struct RetrievalServiceKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any RetrievalService)? = nil
 }
 
+private struct InventoryExpiryNotificationServiceKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any InventoryExpiryNotificationServicing)? = nil
+}
+
 private struct ImportedKnowledgeRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any ImportedKnowledgeRepository)? = nil
 }
@@ -153,6 +157,11 @@ extension EnvironmentValues {
     var retrievalService: (any RetrievalService)? {
         get { self[RetrievalServiceKey.self] }
         set { self[RetrievalServiceKey.self] = newValue }
+    }
+
+    var inventoryExpiryNotificationService: (any InventoryExpiryNotificationServicing)? {
+        get { self[InventoryExpiryNotificationServiceKey.self] }
+        set { self[InventoryExpiryNotificationServiceKey.self] = newValue }
     }
 
     var importedKnowledgeRepository: (any ImportedKnowledgeRepository)? {

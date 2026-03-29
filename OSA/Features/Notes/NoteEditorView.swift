@@ -7,6 +7,7 @@ struct NoteEditorView: View {
     }
 
     let mode: Mode
+    let initialTemplate: NoteDraftTemplate?
     let onSave: (NoteRecord) throws -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -67,18 +68,24 @@ struct NoteEditorView: View {
     }
 
     private func populateFromExisting() {
-        guard let note = existingNote else { return }
-        title = note.title
-        bodyMarkdown = note.bodyMarkdown
-        noteType = note.noteType
+        if let note = existingNote {
+            title = note.title
+            bodyMarkdown = note.bodyMarkdown
+            noteType = note.noteType
+            return
+        }
+
+        guard let initialTemplate else { return }
+        title = initialTemplate.title
+        bodyMarkdown = initialTemplate.bodyMarkdown
+        noteType = initialTemplate.noteType
     }
 
     private func saveNote() {
         let now = Date()
         let trimmedTitle = title.trimmingCharacters(in: .whitespaces)
         let trimmedBody = bodyMarkdown.trimmingCharacters(in: .whitespacesAndNewlines)
-        let plainText = trimmedBody
-            .replacingOccurrences(of: #"[*_~`#>\[\]()!]"#, with: "", options: .regularExpression)
+        let plainText = NoteExportFormatter.storedPlainText(fromMarkdown: trimmedBody)
 
         let note = NoteRecord(
             id: existingNote?.id ?? UUID(),
@@ -106,6 +113,6 @@ struct NoteEditorView: View {
 
 #Preview {
     NavigationStack {
-        NoteEditorView(mode: .create) { _ in }
+        NoteEditorView(mode: .create, initialTemplate: nil) { _ in }
     }
 }

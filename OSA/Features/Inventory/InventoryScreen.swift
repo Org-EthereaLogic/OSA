@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InventoryScreen: View {
     @Environment(\.inventoryRepository) private var repository
+    @Environment(\.inventoryExpiryNotificationService) private var inventoryExpiryNotificationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var items: [InventoryItem] = []
     @State private var loadFailed = false
@@ -9,6 +10,8 @@ struct InventoryScreen: View {
     @State private var showingAddItem = false
     @State private var editingItem: InventoryItem?
     @State private var pendingDeleteItem: InventoryItem?
+    @State private var sharePayload: ActivitySharePayload?
+    @State private var showExportError = false
 
     var body: some View {
         Group {
@@ -30,7 +33,18 @@ struct InventoryScreen: View {
         }
         .navigationTitle("Inventory")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    exportInventory()
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .disabled(items.isEmpty)
+                .accessibilityLabel("Export inventory")
+                .accessibilityHint("Exports the currently visible inventory list as a CSV file.")
+
                 Button {
                     showingAddItem = true
                 } label: {
@@ -62,11 +76,15 @@ struct InventoryScreen: View {
         } message: {
             Text("This item will be permanently deleted.")
         }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
+        }
         .sheet(isPresented: $showingAddItem) {
             NavigationStack {
                 InventoryItemFormView(mode: .create) { newItem in
                     try repository?.createItem(newItem)
                     loadItems()
+                    rescheduleInventoryAlerts()
                 }
             }
         }
@@ -75,8 +93,14 @@ struct InventoryScreen: View {
                 InventoryItemFormView(mode: .edit(item)) { updatedItem in
                     try repository?.updateItem(updatedItem)
                     loadItems()
+                    rescheduleInventoryAlerts()
                 }
             }
+        }
+        .alert("Export Failed", isPresented: $showExportError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The visible inventory list could not be exported right now.")
         }
         .task { loadItems() }
     }
@@ -164,6 +188,7 @@ struct InventoryScreen: View {
             }
             hapticFeedbackService?.play(.success)
             loadItems()
+            rescheduleInventoryAlerts()
         } catch {
             hapticFeedbackService?.play(.error)
             loadFailed = true
@@ -178,6 +203,7 @@ struct InventoryScreen: View {
             hapticFeedbackService?.play(.warning)
             self.pendingDeleteItem = nil
             loadItems()
+            rescheduleInventoryAlerts()
         } catch {
             hapticFeedbackService?.play(.error)
             loadFailed = true
@@ -193,6 +219,28 @@ struct InventoryScreen: View {
                 }
             }
         )
+    }
+
+    private func exportInventory() {
+        do {
+            let fileURL = try InventoryCSVExporter.exportFile(
+                for: items,
+                filename: showArchived ? "inventory-with-archived.csv" : "inventory-visible.csv"
+            )
+            sharePayload = ActivitySharePayload(
+                items: [fileURL],
+                subject: "OSA Inventory Export"
+            )
+        } catch {
+            hapticFeedbackService?.play(.error)
+            showExportError = true
+        }
+    }
+
+    private func rescheduleInventoryAlerts() {
+        Task {
+            try? await inventoryExpiryNotificationService?.rescheduleNotifications()
+        }
     }
 }
 

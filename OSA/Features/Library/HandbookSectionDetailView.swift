@@ -5,6 +5,7 @@ struct HandbookSectionDetailView: View {
 
     @Environment(\.handbookRepository) private var repository
     @Environment(\.quickCardRepository) private var quickCardRepository
+    @Environment(\.noteRepository) private var noteRepository
     @Environment(\.onscreenContentManager) private var onscreenContentManager
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
@@ -17,7 +18,9 @@ struct HandbookSectionDetailView: View {
     @State private var chapter: HandbookChapter?
     @State private var relatedCards: [QuickCard] = []
     @State private var relatedSections: [HandbookSection] = []
+    @State private var relatedNotes: [NoteRecord] = []
     @State private var loadFailed = false
+    @State private var sharePayload: ActivitySharePayload?
 
     var body: some View {
         Group {
@@ -39,7 +42,21 @@ struct HandbookSectionDetailView: View {
         .task { loadSection() }
         .onDisappear { onscreenContentManager?.clear() }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    guard let section else { return }
+                    sharePayload = ActivitySharePayload(
+                        items: [ContentShareFormatter.handbookSectionText(for: section, chapterTitle: chapter?.title)],
+                        subject: section.heading
+                    )
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("Share handbook section")
+                .accessibilityHint("Shares this handbook section as text with local attribution.")
+
                 PinToolbarButton(
                     isPinned: isPinned,
                     pinLabel: "Pin handbook section",
@@ -50,6 +67,9 @@ struct HandbookSectionDetailView: View {
                     hapticFeedbackService?.play(.pinToggle)
                 }
             }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
         }
     }
 
@@ -135,7 +155,7 @@ struct HandbookSectionDetailView: View {
                         }
                     }
 
-                    if !relatedCards.isEmpty || !relatedSections.isEmpty {
+                    if !relatedCards.isEmpty || !relatedSections.isEmpty || !relatedNotes.isEmpty {
                         Divider()
 
                         VStack(alignment: .leading, spacing: Spacing.sm) {
@@ -169,6 +189,20 @@ struct HandbookSectionDetailView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the related handbook section.")
+                            }
+
+                            ForEach(relatedNotes) { note in
+                                NavigationLink {
+                                    NoteDetailView(noteID: note.id)
+                                } label: {
+                                    Label(note.title, systemImage: "note.text")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, Spacing.md)
+                                        .padding(.vertical, Spacing.sm)
+                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityHint("Opens the linked note.")
                             }
                         }
                     }
@@ -240,6 +274,14 @@ struct HandbookSectionDetailView: View {
             .map { $0 }
         } else {
             relatedSections = []
+        }
+
+        if let noteRepository {
+            relatedNotes = ((try? noteRepository.notesLinkedToSection(id: loadedSection.id)) ?? [])
+                .prefix(3)
+                .map { $0 }
+        } else {
+            relatedNotes = []
         }
     }
 }

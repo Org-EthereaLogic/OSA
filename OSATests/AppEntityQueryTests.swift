@@ -281,6 +281,7 @@ private func makeTestDependencies(
         capabilityDetector: StubCapabilityDetector(mode: .extractiveOnly),
         searchService: searchService,
         retrievalService: nil,
+        inventoryExpiryNotificationService: StubInventoryExpiryNotificationService(),
         connectivityService: StubConnectivityService(),
         trustedSourceHTTPClient: StubTrustedSourceHTTPClient(),
         importPipeline: ImportedKnowledgeImportPipeline(
@@ -324,6 +325,13 @@ private func makeTestDependencies(
 
 private struct StubRSSDiscoveryService: RSSDiscoveryService {
     func discoverArticles() async -> [DiscoveredArticle] { [] }
+}
+
+@MainActor
+private final class StubInventoryExpiryNotificationService: InventoryExpiryNotificationServicing {
+    func authorizationStatus() async -> InventoryNotificationAuthorizationStatus { .notDetermined }
+    func requestAuthorization() async throws -> InventoryNotificationAuthorizationStatus { .notDetermined }
+    func rescheduleNotifications() async throws {}
 }
 
 private final class StubHapticFeedbackService: HapticFeedbackService {

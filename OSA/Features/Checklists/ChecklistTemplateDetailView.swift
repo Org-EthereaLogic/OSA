@@ -9,6 +9,8 @@ struct ChecklistTemplateDetailView: View {
     @State private var loadFailed = false
     @State private var showStartConfirmation = false
     @State private var showProtocol = false
+    @State private var sharePayload: ActivitySharePayload?
+    @State private var showExportError = false
 
     var body: some View {
         Group {
@@ -26,6 +28,29 @@ struct ChecklistTemplateDetailView: View {
         }
         .navigationTitle(template?.title ?? "Template")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            if template != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        exportTemplatePDF()
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Export checklist template as PDF")
+                    .accessibilityHint("Exports this checklist template as a print-friendly PDF.")
+                }
+            }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
+        }
+        .alert("Export Failed", isPresented: $showExportError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This checklist template could not be exported as a PDF.")
+        }
         .task { loadTemplate() }
         .navigationDestination(isPresented: $showProtocol) {
             if let template {
@@ -114,6 +139,21 @@ struct ChecklistTemplateDetailView: View {
         } catch {
             hapticFeedbackService?.play(.error)
             loadFailed = true
+        }
+    }
+
+    private func exportTemplatePDF() {
+        guard let template else { return }
+
+        do {
+            let fileURL = try ChecklistPDFExporter.exportTemplate(template)
+            sharePayload = ActivitySharePayload(
+                items: [fileURL],
+                subject: template.title
+            )
+        } catch {
+            hapticFeedbackService?.play(.error)
+            showExportError = true
         }
     }
 }

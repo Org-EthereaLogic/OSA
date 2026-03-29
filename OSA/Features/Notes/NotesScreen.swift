@@ -7,7 +7,7 @@ struct NotesScreen: View {
     @State private var loadFailed = false
     @State private var filterType: NoteType?
     @State private var searchText = ""
-    @State private var showingCreateNote = false
+    @State private var composerState: NoteComposerState?
 
     var body: some View {
         Group {
@@ -29,15 +29,25 @@ struct NotesScreen: View {
         .searchable(text: $searchText, prompt: "Search notes")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingCreateNote = true
+                Menu {
+                    Button {
+                        composerState = NoteComposerState(template: nil)
+                    } label: {
+                        Label("New Note", systemImage: "square.and.pencil")
+                    }
+
+                    Button {
+                        composerState = NoteComposerState(template: FamilyEmergencyPlanTemplate.draft())
+                    } label: {
+                        Label("Family Emergency Plan", systemImage: "person.2.fill")
+                    }
                 } label: {
                     Image(systemName: "plus")
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
-                .accessibilityLabel("Add note")
-                .accessibilityHint("Creates a new note.")
+                .accessibilityLabel("Create note")
+                .accessibilityHint("Shows options for a blank note or a family emergency plan.")
             }
 
             ToolbarItem(placement: .topBarLeading) {
@@ -64,9 +74,9 @@ struct NotesScreen: View {
                 .accessibilityHint("Filters notes by note type.")
             }
         }
-        .sheet(isPresented: $showingCreateNote) {
+        .sheet(item: $composerState) { state in
             NavigationStack {
-                NoteEditorView(mode: .create) { newNote in
+                NoteEditorView(mode: .create, initialTemplate: state.template) { newNote in
                     try repository?.createNote(newNote)
                     loadNotes()
                 }
@@ -113,7 +123,11 @@ struct NotesScreen: View {
             Text("Create a family plan, emergency contacts list, or local reference note so it stays readable offline.")
         } actions: {
             Button("Create First Note") {
-                showingCreateNote = true
+                composerState = NoteComposerState(template: nil)
+            }
+
+            Button("Create Family Emergency Plan") {
+                composerState = NoteComposerState(template: FamilyEmergencyPlanTemplate.draft())
             }
         }
     }
@@ -243,4 +257,9 @@ extension NoteType {
     NavigationStack {
         NotesScreen()
     }
+}
+
+private struct NoteComposerState: Identifiable {
+    let id = UUID()
+    let template: NoteDraftTemplate?
 }

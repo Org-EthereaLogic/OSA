@@ -7,8 +7,13 @@ struct SettingsScreen: View {
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+    @Environment(\.inventoryExpiryNotificationService) private var inventoryExpiryNotificationService
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
+    @AppStorage(InventoryAlertSettings.isEnabledKey)
+    private var inventoryAlertsEnabled = InventoryAlertSettings.isEnabledDefault
+    @AppStorage(InventoryAlertSettings.leadTimeKey)
+    private var inventoryAlertLeadTimeRawValue = InventoryAlertSettings.leadTimeDefault.rawValue
     @AppStorage(UserProfileSettings.regionKey)
     private var regionRawValue = UserProfileSettings.regionDefault.rawValue
     @AppStorage(UserProfileSettings.householdSizeKey)
@@ -33,6 +38,8 @@ struct SettingsScreen: View {
     @State private var contactEditor: EmergencyContactEditorState?
     @State private var connectivityNotice: ConnectivityStatusNotice?
     @State private var connectivityNoticeDismissTask: Task<Void, Never>?
+    @State private var inventoryAlertAuthorizationStatus: InventoryNotificationAuthorizationStatus = .notDetermined
+    @State private var isUpdatingInventoryAlerts = false
     private let braveSearchCredentialStore: BraveSearchCredentialStore
 
     init(braveSearchCredentialStore: BraveSearchCredentialStore = BraveSearchCredentialStore()) {
@@ -48,6 +55,7 @@ struct SettingsScreen: View {
             emergencyContactsSection
             accessibilityFeedbackSection
             assistantSection
+            inventoryAlertsSection
             connectivitySection
             knowledgeDiscoverySection
             privacySection
@@ -60,10 +68,14 @@ struct SettingsScreen: View {
         .navigationTitle("Settings")
         .task {
             loadContacts()
+            await refreshInventoryAlertAuthorizationStatus()
             await observeConnectivity()
         }
         .onChange(of: braveSearchAPIKey) { _, newValue in
             persistBraveSearchAPIKey(newValue)
+        }
+        .onChange(of: inventoryAlertLeadTimeRawValue) { _, _ in
+            Task { await handleInventoryAlertLeadTimeChange() }
         }
         .sheet(item: $contactEditor, onDismiss: loadContacts) { editor in
             NavigationStack {
@@ -195,6 +207,36 @@ struct SettingsScreen: View {
             }
             Toggle("Include personal notes in Ask", isOn: $includePersonalNotes)
                 .accessibilityHint("Allows Ask to search personal notes stored on this device.")
+        }
+    }
+
+    @ViewBuilder
+    private var inventoryAlertsSection: some View {
+        Section("Inventory Expiry Alerts") {
+            LabeledContent("Authorization") {
+                Text(inventoryAlertAuthorizationStatus.displayName)
+                    .foregroundStyle(inventoryAlertAuthorizationStatus.canSchedule ? .osaTrust : .secondary)
+            }
+
+            Toggle("Local expiry reminders", isOn: inventoryAlertToggleBinding)
+                .disabled(isUpdatingInventoryAlerts)
+                .accessibilityHint("Schedules device-local reminders before tracked inventory items expire.")
+
+            Picker("Lead Time", selection: $inventoryAlertLeadTimeRawValue) {
+                ForEach(InventoryAlertLeadTime.allCases) { leadTime in
+                    Text(leadTime.displayName).tag(leadTime.rawValue)
+                }
+            }
+            .disabled(isUpdatingInventoryAlerts || !inventoryAlertAuthorizationStatus.canSchedule)
+            .accessibilityHint("Sets how many days before expiry a local reminder should appear.")
+
+            Text(inventoryAlertAuthorizationStatus.detailText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Text("Notifications are local-only and scheduled from the inventory already stored on this iPhone.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -379,6 +421,73 @@ struct SettingsScreen: View {
             connectivity = newState
         }
         presentConnectivityNotice(settingsConnectivityNotice(for: newState, previousState: previousState))
+    }
+
+    private func refreshInventoryAlertAuthorizationStatus() async {
+        guard let inventoryExpiryNotificationService else {
+            inventoryAlertAuthorizationStatus = .notDetermined
+            inventoryAlertsEnabled = false
+            return
+        }
+
+        inventoryAlertAuthorizationStatus = await inventoryExpiryNotificationService.authorizationStatus()
+        if !inventoryAlertAuthorizationStatus.canSchedule && inventoryAlertsEnabled {
+            inventoryAlertsEnabled = false
+        }
+    }
+
+    private func handleInventoryAlertToggleChange(_ isEnabled: Bool) async {
+        guard let inventoryExpiryNotificationService else {
+            inventoryAlertsEnabled = false
+            return
+        }
+
+        isUpdatingInventoryAlerts = true
+        defer { isUpdatingInventoryAlerts = false }
+
+        if isEnabled {
+            do {
+                var status = await inventoryExpiryNotificationService.authorizationStatus()
+                if status == .notDetermined {
+                    status = try await inventoryExpiryNotificationService.requestAuthorization()
+                }
+
+                inventoryAlertAuthorizationStatus = status
+                guard status.canSchedule else {
+                    inventoryAlertsEnabled = false
+                    hapticFeedbackService?.play(.warning)
+                    return
+                }
+
+                inventoryAlertsEnabled = true
+                try await inventoryExpiryNotificationService.rescheduleNotifications()
+                hapticFeedbackService?.play(.success)
+            } catch {
+                inventoryAlertsEnabled = false
+                hapticFeedbackService?.play(.error)
+            }
+        } else {
+            inventoryAlertsEnabled = false
+
+            do {
+                try await inventoryExpiryNotificationService.rescheduleNotifications()
+                hapticFeedbackService?.play(.warning)
+            } catch {
+                hapticFeedbackService?.play(.error)
+            }
+
+            inventoryAlertAuthorizationStatus = await inventoryExpiryNotificationService.authorizationStatus()
+        }
+    }
+
+    private func handleInventoryAlertLeadTimeChange() async {
+        guard inventoryAlertsEnabled, let inventoryExpiryNotificationService else { return }
+
+        do {
+            try await inventoryExpiryNotificationService.rescheduleNotifications()
+        } catch {
+            hapticFeedbackService?.play(.error)
+        }
     }
 
     private func presentConnectivityNotice(_ notice: ConnectivityStatusNotice?) {
@@ -606,6 +715,15 @@ struct SettingsScreen: View {
             hazards.remove(hazard)
         }
         hazardsRawValue = UserProfileSettings.encode(hazards: Array(hazards).sorted { $0.rawValue < $1.rawValue })
+    }
+
+    private var inventoryAlertToggleBinding: Binding<Bool> {
+        Binding(
+            get: { inventoryAlertsEnabled },
+            set: { newValue in
+                Task { await handleInventoryAlertToggleChange(newValue) }
+            }
+        )
     }
 }
 

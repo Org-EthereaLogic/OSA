@@ -12,6 +12,7 @@ struct LibraryScreen: View {
     @State private var suggestions: [SearchSuggestion] = []
     @State private var selectedScenario: HazardScenario?
     @State private var selectedTopic: String?
+    @State private var selectedSearchKind: SearchResultKind?
 
     var body: some View {
         Group {
@@ -93,10 +94,15 @@ struct LibraryScreen: View {
         }
         .overlay {
             if isDiscoveryOverlayVisible {
-                SearchResultsView(
-                    query: !searchText.isEmpty ? searchText : (selectedScenario?.displayName ?? ""),
-                    forcedTag: selectedScenario?.tag
-                )
+                VStack(spacing: 0) {
+                    searchOverlaySummary
+
+                    SearchResultsView(
+                        query: !searchText.isEmpty ? searchText : (selectedScenario?.displayName ?? ""),
+                        forcedTag: selectedScenario?.tag,
+                        selectedKind: $selectedSearchKind
+                    )
+                }
             }
         }
         .task {
@@ -159,6 +165,20 @@ struct LibraryScreen: View {
 
     private var isDiscoveryOverlayVisible: Bool {
         !searchText.isEmpty || selectedScenario != nil
+    }
+
+    private var searchOverlaySummary: some View {
+        HStack {
+            Text("Content Type: \(selectedSearchKind?.displayName ?? "All Content")")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.osaPrimary)
+
+            Spacer()
+        }
+        .padding(.horizontal, Spacing.lg)
+        .padding(.top, Spacing.sm)
+        .padding(.bottom, Spacing.xs)
+        .background(.osaBackground)
     }
 
     private func loadChapters() {

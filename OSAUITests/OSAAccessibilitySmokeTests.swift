@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class OSAAccessibilitySmokeTests: XCTestCase {
     private var app: XCUIApplication!
 
@@ -16,7 +17,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testHomeEmergencyEntryIsAccessible() {
         tapTab("Home")
 
@@ -25,7 +25,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         XCTAssertTrue(emergencyButton.isHittable, "Emergency Mode button should be hittable")
     }
 
-    @MainActor
     func testAskInputAndSubmitControlsAreAccessible() {
         tapTab("Ask")
 
@@ -37,7 +36,14 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         XCTAssertTrue(submit.isHittable, "Submit question button should be hittable")
     }
 
-    @MainActor
+    func testInventoryExportActionIsAccessible() {
+        tapTab("Inventory")
+
+        let exportButton = app.buttons["Export inventory"]
+        XCTAssertTrue(exportButton.waitForExistence(timeout: 3), "Inventory should expose an export action")
+        XCTAssertTrue(exportButton.isHittable, "Inventory export action should be hittable")
+    }
+
     func testEmergencyModeExitAndPrimaryActionAreAccessible() {
         tapTab("Home")
 
@@ -58,7 +64,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         XCTAssertTrue(sosButton.exists, "Emergency Mode should expose an SOS alert control")
     }
 
-    @MainActor
     func testQuickCardDetailPinControlIsAccessible() {
         navigateToMoreItem("Quick Cards")
 
@@ -76,7 +81,37 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         )
     }
 
-    @MainActor
+    func testQuickCardAndHandbookShareControlsAreAccessible() {
+        navigateToMoreItem("Quick Cards")
+
+        guard let quickCard = firstQuickCardButton() else {
+            XCTFail("Quick Cards list should contain at least one seeded card")
+            return
+        }
+        quickCard.tap()
+
+        let quickCardShare = app.buttons["Share quick card"]
+        XCTAssertTrue(quickCardShare.waitForExistence(timeout: 3), "Quick card detail should expose a share action")
+        XCTAssertTrue(quickCardShare.isHittable, "Quick card share action should be hittable")
+
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 2), "Quick card detail should expose a back button")
+        backButton.tap()
+
+        tapTab("Library")
+        let chapter = app.staticTexts["Preparedness Foundations"]
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
+        chapter.tap()
+
+        let section = app.staticTexts["Start With The Risks You Actually Face"]
+        XCTAssertTrue(section.waitForExistence(timeout: 3), "Expected handbook section missing")
+        section.tap()
+
+        let handbookShare = app.buttons["Share handbook section"]
+        XCTAssertTrue(handbookShare.waitForExistence(timeout: 3), "Handbook detail should expose a share action")
+        XCTAssertTrue(handbookShare.isHittable, "Handbook share action should be hittable")
+    }
+
     func testEmergencyModeSurvivalToolsShortcutIsAccessible() {
         tapTab("Home")
 
@@ -92,7 +127,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         XCTAssertTrue(toolsButton.isHittable, "Survival Tools shortcut should be hittable")
     }
 
-    @MainActor
     func testSettingsAccessibilityControlsExist() {
         navigateToMoreItem("Settings")
 
@@ -127,9 +161,32 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
             scrollToElement(discoveryButton),
             "Settings should expose Discover New Content"
         )
+
+        let inventoryAlertsToggle = app.switches["Local expiry reminders"]
+        XCTAssertTrue(
+            scrollToElement(inventoryAlertsToggle),
+            "Settings should expose local expiry reminder controls"
+        )
     }
 
-    @MainActor
+    func testLibraryContentTypeFiltersAreAccessible() {
+        tapTab("Library")
+
+        let searchField = app.searchFields.firstMatch
+        XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Library should expose a search field")
+        searchField.tap()
+        searchField.typeText("water")
+
+        let quickCardsChip = app.buttons["Quick Cards"]
+        XCTAssertTrue(quickCardsChip.waitForExistence(timeout: 3), "Library search should expose a Quick Cards filter chip")
+        XCTAssertTrue(quickCardsChip.isHittable, "Quick Cards filter chip should be hittable")
+
+        quickCardsChip.tap()
+
+        let summary = app.staticTexts["Content Type: Quick Cards"]
+        XCTAssertTrue(summary.waitForExistence(timeout: 3), "Library should expose the active content-type summary")
+    }
+
     private func tapTab(_ name: String) {
         let button = app.tabBars.firstMatch.buttons[name]
         if button.waitForExistence(timeout: 3) {
@@ -137,7 +194,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         }
     }
 
-    @MainActor
     private func navigateToMoreItem(_ label: String) {
         tapTab("More")
 
@@ -153,7 +209,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         }
     }
 
-    @MainActor
     private func firstQuickCardButton() -> XCUIElement? {
         let quickCardLabels = [
             "Earthquake Drop-Cover-Hold",
@@ -182,7 +237,6 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         return nil
     }
 
-    @MainActor
     private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
         if element.waitForExistence(timeout: 1) {
             return true

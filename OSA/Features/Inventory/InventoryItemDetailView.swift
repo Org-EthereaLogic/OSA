@@ -4,8 +4,11 @@ struct InventoryItemDetailView: View {
     let itemID: UUID
 
     @Environment(\.inventoryRepository) private var repository
+    @Environment(\.noteRepository) private var noteRepository
+    @Environment(\.inventoryExpiryNotificationService) private var inventoryExpiryNotificationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var item: InventoryItem?
+    @State private var linkedNotes: [NoteRecord] = []
     @State private var loadFailed = false
     @State private var showingEdit = false
     @State private var showDeleteConfirmation = false
@@ -68,6 +71,7 @@ struct InventoryItemDetailView: View {
                     InventoryItemFormView(mode: .edit(item)) { updatedItem in
                         try repository?.updateItem(updatedItem)
                         loadItem()
+                        rescheduleInventoryAlerts()
                     }
                 }
             }
@@ -116,6 +120,25 @@ struct InventoryItemDetailView: View {
                 }
             }
 
+            if !linkedNotes.isEmpty {
+                Section("Linked Notes") {
+                    ForEach(linkedNotes) { note in
+                        NavigationLink {
+                            NoteDetailView(noteID: note.id)
+                        } label: {
+                            VStack(alignment: .leading, spacing: Spacing.xs) {
+                                Text(note.title)
+                                    .font(.headline)
+                                Text(note.plainText)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
+                        }
+                    }
+                }
+            }
+
             Section {
                 LabeledContent("Created", value: item.createdAt.formatted(date: .abbreviated, time: .shortened))
                 LabeledContent("Updated", value: item.updatedAt.formatted(date: .abbreviated, time: .shortened))
@@ -134,6 +157,7 @@ struct InventoryItemDetailView: View {
         do {
             item = try repository?.item(id: itemID)
             if item == nil { loadFailed = true }
+            linkedNotes = try noteRepository?.notesLinkedToInventoryItem(id: itemID) ?? []
         } catch {
             loadFailed = true
         }
@@ -152,6 +176,7 @@ struct InventoryItemDetailView: View {
             }
             loadItem()
             hapticFeedbackService?.play(.success)
+            rescheduleInventoryAlerts()
         } catch {
             hapticFeedbackService?.play(.error)
             loadFailed = true
@@ -162,6 +187,13 @@ struct InventoryItemDetailView: View {
         guard let item else { return }
         try? repository?.deleteItem(id: item.id)
         hapticFeedbackService?.play(.warning)
+        rescheduleInventoryAlerts()
+    }
+
+    private func rescheduleInventoryAlerts() {
+        Task {
+            try? await inventoryExpiryNotificationService?.rescheduleNotifications()
+        }
     }
 }
 

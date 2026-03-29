@@ -7,8 +7,8 @@ struct SearchResultsView: View {
     @Environment(\.searchService) private var searchService
     @State private var results: [SearchResult] = []
     @State private var searchFailed = false
-    @State private var selectedKind: SearchResultKind?
     @State private var selectedTag: String?
+    @Binding var selectedKind: SearchResultKind?
 
     var body: some View {
         Group {
@@ -18,18 +18,20 @@ struct SearchResultsView: View {
                     systemImage: "magnifyingglass",
                     description: Text("Enter a term to search across all content.")
                 )
-            } else if searchFailed {
-                ContentUnavailableView(
-                    "Search Failed",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text("An error occurred while searching.")
-                )
-            } else if results.isEmpty {
-                ContentUnavailableView.search(text: query)
             } else {
                 VStack(spacing: 0) {
                     filterBar
-                    list
+                    if searchFailed {
+                        ContentUnavailableView(
+                            "Search Failed",
+                            systemImage: "exclamationmark.triangle",
+                            description: Text("An error occurred while searching.")
+                        )
+                    } else if results.isEmpty {
+                        ContentUnavailableView.search(text: query)
+                    } else {
+                        list
+                    }
                 }
             }
         }
@@ -96,7 +98,7 @@ struct SearchResultsView: View {
                     selectedKind = nil
                 }
 
-                ForEach(Array(Set(results.map(\.kind))).sorted { $0.rawValue < $1.rawValue }, id: \.self) { kind in
+                ForEach(SearchResultKind.allCases, id: \.self) { kind in
                     FilterChip(
                         title: kind.displayName,
                         isSelected: selectedKind == kind
@@ -120,9 +122,12 @@ struct SearchResultsView: View {
     }
 
     private var availableTags: [String] {
-        let tags = Set(results.flatMap(\.tags).filter {
+        var tags = Set(results.flatMap(\.tags).filter {
             $0.hasPrefix("scenario:") || $0.hasPrefix("season:") || $0.hasPrefix("region:")
         })
+        if let forcedTag {
+            tags.insert(forcedTag)
+        }
         return tags.sorted().prefix(8).map { $0 }
     }
 }
@@ -218,7 +223,7 @@ extension SearchResultKind {
 }
 
 #Preview {
-    SearchResultsView(query: "water")
+    SearchResultsView(query: "water", selectedKind: .constant(nil))
 }
 
 private func formatTagText(_ rawTag: String) -> String {

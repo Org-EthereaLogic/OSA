@@ -70,8 +70,10 @@ struct ChecklistsScreen: View {
                         } label: {
                             ActiveRunRow(run: run)
                         }
+                        .buttonStyle(.plain)
                         .listRowBackground(Color.osaSurface)
                         .hapticTap(.prominentNavigation)
+                        .accessibilityIdentifier("checklist-run-\(run.title)")
                         .accessibilityHint("Opens the active checklist run.")
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
@@ -98,8 +100,10 @@ struct ChecklistsScreen: View {
                             } label: {
                                 TemplateRow(template: template)
                             }
+                            .buttonStyle(.plain)
                             .listRowBackground(Color.osaSurface)
                             .hapticTap(.prominentNavigation)
+                            .accessibilityIdentifier("checklist-template-\(template.slug)")
                             .accessibilityHint("Opens the emergency protocol details.")
                         }
                     } header: {
@@ -118,8 +122,10 @@ struct ChecklistsScreen: View {
                             } label: {
                                 TemplateRow(template: template)
                             }
+                            .buttonStyle(.plain)
                             .listRowBackground(Color.osaSurface)
                             .hapticTap(.prominentNavigation)
+                            .accessibilityIdentifier("checklist-template-\(template.slug)")
                             .accessibilityHint("Opens the checklist template.")
                             .swipeActions(edge: .leading, allowsFullSwipe: false) {
                                 Button {
@@ -290,6 +296,7 @@ private struct ActiveRunRow: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, Spacing.xs)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(run.title)
         .accessibilityValue("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete. \(Int(run.completionFraction * 100)) percent.")
@@ -328,6 +335,7 @@ private struct TemplateRow: View {
             }
         }
         .padding(.vertical, Spacing.xs)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 }

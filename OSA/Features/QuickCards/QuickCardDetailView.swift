@@ -10,6 +10,7 @@ struct QuickCardDetailView: View {
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @State private var relatedSections: [HandbookSection] = []
+    @State private var sharePayload: ActivitySharePayload?
 
     var body: some View {
         ScrollView {
@@ -132,7 +133,20 @@ struct QuickCardDetailView: View {
         .navigationTitle(card.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    sharePayload = ActivitySharePayload(
+                        items: [ContentShareFormatter.quickCardText(for: card)],
+                        subject: card.title
+                    )
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("Share quick card")
+                .accessibilityHint("Shares this quick card as text with local attribution.")
+
                 PinToolbarButton(
                     isPinned: isPinned,
                     pinLabel: "Pin quick card",
@@ -143,6 +157,9 @@ struct QuickCardDetailView: View {
                     hapticFeedbackService?.play(.pinToggle)
                 }
             }
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityShareSheet(payload: payload)
         }
         .task { loadRelatedSections() }
     }

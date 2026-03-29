@@ -15,6 +15,7 @@ struct AppDependencies {
     let capabilityDetector: any CapabilityDetector
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
+    let inventoryExpiryNotificationService: any InventoryExpiryNotificationServicing
     let connectivityService: any ConnectivityService
     let trustedSourceHTTPClient: any TrustedSourceHTTPClient
     let importPipeline: ImportedKnowledgeImportPipeline
@@ -55,6 +56,10 @@ struct AppDependencies {
                 answerGenerator: answerGenerator
             )
         }
+
+        let inventoryExpiryNotificationService = InventoryExpiryNotificationService(
+            inventoryRepository: inventoryRepository
+        )
 
         let connectivityService = NWPathMonitorConnectivityService()
         connectivityService.start()
@@ -120,6 +125,7 @@ struct AppDependencies {
             capabilityDetector: capabilityDetector,
             searchService: searchService,
             retrievalService: retrievalService,
+            inventoryExpiryNotificationService: inventoryExpiryNotificationService,
             connectivityService: connectivityService,
             trustedSourceHTTPClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,
