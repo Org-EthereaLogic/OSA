@@ -34,14 +34,41 @@ struct AppDependencies {
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
-        let inventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
+        let baseInventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
         let supplyTemplateRepository = BundledSupplyTemplateRepository()
         let checklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
         let emergencyContactRepository = SwiftDataEmergencyContactRepository(modelContext: modelContainer.mainContext)
-        let noteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
+        let baseNoteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let importedKnowledgeRepository = SwiftDataImportedKnowledgeRepository(modelContext: modelContainer.mainContext)
         let pendingOperationRepository = SwiftDataPendingOperationRepository(modelContext: modelContainer.mainContext)
         let searchService = try? LocalSearchService.makeDefault()
+        let inventoryRepository: any InventoryRepository
+        let noteRepository: any NoteRepository
+
+        if let searchService {
+            inventoryRepository = SearchIndexedInventoryRepository(
+                base: baseInventoryRepository,
+                searchService: searchService
+            )
+            noteRepository = SearchIndexedNoteRepository(
+                base: baseNoteRepository,
+                searchService: searchService
+            )
+
+            try? SearchIndexRebuilder(
+                searchService: searchService,
+                handbookRepository: contentRepository,
+                quickCardRepository: contentRepository,
+                inventoryRepository: inventoryRepository,
+                checklistRepository: checklistRepository,
+                noteRepository: noteRepository,
+                importedKnowledgeRepository: importedKnowledgeRepository
+            )
+            .rebuild()
+        } else {
+            inventoryRepository = baseInventoryRepository
+            noteRepository = baseNoteRepository
+        }
 
         let capabilityDetector = DeviceCapabilityDetector()
         let answerGenerator = Self.makeAnswerGenerator(

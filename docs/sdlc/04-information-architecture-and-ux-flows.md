@@ -44,7 +44,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 ### Home
 
 - Launch surface.
-- Shows offline status, top quick cards from the local repository, most important checklists, recent notes, and inventory reminders.
+- Shows offline status, top quick cards from the local repository, most important checklists, recent notes, inventory reminders, and contextual suggestions blended from region, season, recent Ask topics, and saved study-guide notes.
 - Contains the fastest route to emergency quick cards.
 
 ### Library
@@ -53,7 +53,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 
 ### Ask
 
-- Bounded local assistant with citation-focused results, capability state, and navigation routing to source content. Optional online search offer planned for M4.
+- Bounded local assistant with citation-focused results, capability state, region-aware retrieval hints, session-only follow-up context, recent-question rerun affordances, study-guide save action, and navigation routing to source content. Optional online search offer remains conditional on insufficient local evidence plus usable connectivity.
 
 ### Inventory
 
@@ -135,7 +135,9 @@ Under stress, the app should bias toward direct card opening and simple checklis
    - cited answer
    - not found locally
    - blocked out-of-scope response
-5. If not found locally and offline, UI offers search inside local library instead of online fallback.
+5. After a successful grounded answer, Ask can expose a bounded recent-question list and a local `Save Study Guide` action without turning the screen into a transcript UI.
+6. If the next question is a short follow-up, Ask may use only the immediately previous grounded answer as fresh retrieval context for the current screen session.
+7. If not found locally and offline, UI offers search inside local library instead of online fallback.
 
 ### Inventory Add, Edit, And Search
 

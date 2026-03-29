@@ -54,4 +54,33 @@ final class EvidenceRankerTests: XCTestCase {
         let ranked = EvidenceRanker.rank([], query: "water")
         XCTAssertTrue(ranked.isEmpty)
     }
+
+    func testPreferredRegionTagsBoostMatchingContent() {
+        let universal = EvidenceItem(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "Winter Storm Supplies",
+            snippet: "Pack blankets and lights.",
+            score: 5.0,
+            sourceLabel: "Handbook",
+            tags: []
+        )
+        let regional = EvidenceItem(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "Mountain Winter Storm Supplies",
+            snippet: "Pack traction gear and extra insulation.",
+            score: 4.8,
+            sourceLabel: "Handbook",
+            tags: ["region:mountain"]
+        )
+
+        let ranked = EvidenceRanker.rank(
+            [universal, regional],
+            query: "winter storm supplies",
+            preferredTags: ["region:mountain"]
+        )
+
+        XCTAssertEqual(ranked.first?.id, regional.id)
+    }
 }

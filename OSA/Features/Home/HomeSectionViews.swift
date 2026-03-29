@@ -325,6 +325,15 @@ struct HomeSuggestionsSectionView: View {
                                 .buttonStyle(.plain)
                                 .hapticTap(.prominentNavigation)
                                 .accessibilityHint("Opens the suggested handbook section.")
+                            case .note(let note):
+                                NavigationLink {
+                                    NoteDetailView(noteID: note.id)
+                                } label: {
+                                    HomeSuggestionRow(suggestion: suggestion)
+                                }
+                                .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens the saved study guide.")
                             }
                         }
                     }
@@ -709,6 +718,8 @@ struct HomeSuggestionRow: View {
             "bolt.fill"
         case .handbookSection:
             "book.closed.fill"
+        case .note:
+            "note.text"
         }
     }
 }

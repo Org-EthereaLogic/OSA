@@ -315,6 +315,50 @@ final class OSAContentAndInputTests: XCTestCase {
         )
     }
 
+    func testAskShowsRecentQuestionsAndStudyGuideActionAfterAnswer() {
+        tapTab("Ask")
+
+        submitAskQuestion("Boil Water Advisory Steps")
+
+        XCTAssertTrue(
+            app.staticTexts["Recent Questions"].waitForExistence(timeout: 8),
+            "Ask should show recent questions after a successful answer"
+        )
+        XCTAssertTrue(
+            app.buttons["Save Study Guide"].waitForExistence(timeout: 8),
+            "Ask should expose a study-guide action after a grounded answer"
+        )
+    }
+
+    func testAskRecentQuestionCanBeTappedToRerun() {
+        tapTab("Ask")
+
+        let question = "Boil Water Advisory Steps"
+        submitAskQuestion(question)
+
+        let textField = app.textFields["Ask a question..."]
+        XCTAssertTrue(textField.waitForExistence(timeout: 3), "Ask screen should keep its input visible")
+        textField.tap()
+        textField.typeText(" later")
+
+        let recentQuestion = app.buttons.matching(identifier: "recent-question").firstMatch
+        XCTAssertTrue(
+            recentQuestion.waitForExistence(timeout: 5),
+            "Ask should show the previous question as a recent-question shortcut"
+        )
+        recentQuestion.tap()
+
+        XCTAssertEqual(
+            textField.value as? String,
+            question,
+            "Tapping a recent question should restore that question for a fresh local search"
+        )
+        XCTAssertTrue(
+            app.buttons["Save Study Guide"].waitForExistence(timeout: 8),
+            "Rerunning a recent question should return to an answered state"
+        )
+    }
+
     func testQuickCardAndHandbookDetailShowShareActions() {
         navigateToMoreItem("Quick Cards")
 
@@ -493,6 +537,28 @@ final class OSAContentAndInputTests: XCTestCase {
         let createFirstNoteButton = app.buttons["Create First Note"]
         if createFirstNoteButton.waitForExistence(timeout: 2) {
             createFirstNoteButton.tap()
+        }
+    }
+
+    private func submitAskQuestion(_ question: String) {
+        let textField = app.textFields["Ask a question..."]
+        XCTAssertTrue(textField.waitForExistence(timeout: 3), "Ask screen should show a query field")
+        textField.tap()
+        textField.typeText(question)
+
+        let submitButton = app.buttons["Submit question"]
+        if submitButton.exists {
+            submitButton.tap()
+            return
+        }
+
+        if app.keyboards.buttons["Return"].exists {
+            app.keyboards.buttons["Return"].tap()
+            return
+        }
+
+        if app.keyboards.buttons["return"].exists {
+            app.keyboards.buttons["return"].tap()
         }
     }
 

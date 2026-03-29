@@ -10,15 +10,22 @@ struct AskLanternIntentExecutor {
 
     private let retrievalService: any RetrievalService
     private let includePersonalNotes: () -> Bool
+    private let preferredTagsProvider: () -> Set<String>
 
     init(
         retrievalService: any RetrievalService,
         includePersonalNotes: @escaping () -> Bool = {
             UserDefaults.standard.bool(forKey: AskScopeSettings.includePersonalNotesKey)
+        },
+        preferredTagsProvider: @escaping () -> Set<String> = {
+            let storedRegion = UserDefaults.standard.string(forKey: UserProfileSettings.regionKey)
+                ?? UserProfileSettings.regionDefault.rawValue
+            return [UserProfileSettings.region(from: storedRegion).tag]
         }
     ) {
         self.retrievalService = retrievalService
         self.includePersonalNotes = includePersonalNotes
+        self.preferredTagsProvider = preferredTagsProvider
     }
 
     /// Execute a question and return Siri-formatted result text.
@@ -37,7 +44,12 @@ struct AskLanternIntentExecutor {
 
         do {
             nonisolated(unsafe) let service = retrievalService
-            let outcome = try await service.retrieve(query: trimmed, scopes: scopes)
+            let context = RetrievalContext(preferredTags: preferredTagsProvider())
+            let outcome = try await service.retrieve(
+                query: trimmed,
+                scopes: scopes,
+                context: context.isEmpty ? nil : context
+            )
             return format(outcome)
         } catch {
             return LanternAnswerResult(

@@ -89,6 +89,30 @@ final class GroundedPromptBuilderTests: XCTestCase {
         XCTAssertTrue(prompt.queryBlock.hasPrefix("Question:"))
     }
 
+    func testContextBlockOmittedWhenAbsent() {
+        let prompt = build()
+        XCTAssertTrue(prompt.contextBlock.isEmpty)
+        XCTAssertFalse(prompt.fullPrompt.contains("Context:"))
+    }
+
+    func testContextBlockIncludesFollowUpAndPreferenceTags() {
+        let context = RetrievalContext(
+            followUp: FollowUpContext(
+                previousQuery: "how do I purify water",
+                previousAnswerSummary: "Boil or treat water before drinking.",
+                previousCitationLabels: ["Handbook: Water Purification"],
+                previousCitationIDs: [UUID()]
+            ),
+            preferredTags: ["region:pacific-northwest"]
+        )
+        let prompt = build(context: context)
+
+        XCTAssertTrue(prompt.contextBlock.contains("Previous question: how do I purify water"))
+        XCTAssertTrue(prompt.contextBlock.contains("Boil or treat water"))
+        XCTAssertTrue(prompt.contextBlock.contains("Handbook: Water Purification"))
+        XCTAssertTrue(prompt.contextBlock.contains("region:pacific-northwest"))
+    }
+
     // MARK: - Confidence Guidance
 
     func testHighConfidenceGuidance() {
@@ -143,14 +167,16 @@ final class GroundedPromptBuilderTests: XCTestCase {
         query: String = "test query",
         evidence: [EvidenceItem] = [],
         citations: [CitationReference] = [],
-        confidence: ConfidenceLevel = .groundedHigh
+        confidence: ConfidenceLevel = .groundedHigh,
+        context: RetrievalContext? = nil
     ) -> GroundedPrompt {
         let items = evidence.isEmpty && citations.isEmpty ? evidence : evidence
         return builder.build(
             query: query,
             evidence: items,
             citations: citations,
-            confidence: confidence
+            confidence: confidence,
+            context: context
         )
     }
 

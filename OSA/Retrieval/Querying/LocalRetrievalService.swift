@@ -20,7 +20,11 @@ final class LocalRetrievalService: RetrievalService {
         self.answerGenerator = answerGenerator
     }
 
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
+    func retrieve(
+        query: String,
+        scopes: Set<RetrievalScope>?,
+        context: RetrievalContext?
+    ) async throws -> RetrievalOutcome {
         // 1. Normalize query
         guard let normalized = QueryNormalizer.normalize(query) else {
             return .refused(.emptyQuery)
@@ -39,10 +43,11 @@ final class LocalRetrievalService: RetrievalService {
         let kindFilter = mapScopesToKinds(scopes, sensitivity: sensitivity)
 
         // 4. Search local index
-        let searchResults = try searchService.search(
-            query: normalized,
+        let searchResults = try searchResults(
+            for: normalized,
+            originalQuery: query,
             scopes: kindFilter,
-            limit: maxEvidenceItems * 2 // over-fetch for re-ranking
+            context: context
         )
 
         // 5. Convert to evidence items
@@ -59,7 +64,11 @@ final class LocalRetrievalService: RetrievalService {
         }
 
         // 6. Re-rank
-        let ranked = EvidenceRanker.rank(evidence, query: normalized)
+        let ranked = EvidenceRanker.rank(
+            evidence,
+            query: normalized,
+            preferredTags: context?.preferredTags ?? []
+        )
         let topEvidence = Array(ranked.prefix(maxEvidenceItems))
 
         // 7. Check evidence sufficiency
@@ -87,7 +96,8 @@ final class LocalRetrievalService: RetrievalService {
             evidence: topEvidence,
             citations: citations,
             mode: answerMode,
-            confidence: confidence
+            confidence: confidence,
+            context: context?.isEmpty == true ? nil : context
         )
 
         // 11. Build suggested actions
@@ -142,6 +152,126 @@ final class LocalRetrievalService: RetrievalService {
         }
     }
 
+    private func searchResults(
+        for normalizedQuery: String,
+        originalQuery: String,
+        scopes: Set<SearchResultKind>?,
+        context: RetrievalContext?
+    ) throws -> [SearchResult] {
+        let baseResults = try searchService.search(
+            query: normalizedQuery,
+            scopes: scopes,
+            limit: maxEvidenceItems * 2
+        )
+
+        guard let contextualQuery = contextualQuery(
+            for: normalizedQuery,
+            originalQuery: originalQuery,
+            context: context
+        ) else {
+            return baseResults
+        }
+
+        let contextualResults = try searchService.search(
+            query: contextualQuery,
+            scopes: scopes,
+            limit: maxEvidenceItems * 2
+        )
+
+        var merged = baseResults
+        var seenIDs = Set(baseResults.map(\.id))
+
+        for result in contextualResults where !seenIDs.contains(result.id) {
+            seenIDs.insert(result.id)
+            merged.append(SearchResult(
+                id: result.id,
+                kind: result.kind,
+                title: result.title,
+                snippet: result.snippet,
+                score: result.score * 0.85,
+                tags: result.tags
+            ))
+        }
+
+        return merged
+    }
+
+    private func contextualQuery(
+        for normalizedQuery: String,
+        originalQuery: String,
+        context: RetrievalContext?
+    ) -> String? {
+        guard let followUp = context?.followUp,
+              shouldApplyFollowUpContext(
+                  normalizedQuery: normalizedQuery,
+                  originalQuery: originalQuery
+              )
+        else {
+            return nil
+        }
+
+        let contextualTerms = [
+            normalizedQuery,
+            QueryNormalizer.normalize(followUp.previousQuery),
+            QueryNormalizer.normalize(followUp.previousAnswerSummary),
+            QueryNormalizer.normalize(followUp.previousCitationLabels.joined(separator: " "))
+        ]
+        .compactMap { $0 }
+        .flatMap { value in
+            value.components(separatedBy: .whitespacesAndNewlines)
+        }
+        .filter { !$0.isEmpty }
+
+        let mergedTerms = deduplicatedTerms(contextualTerms)
+        guard !mergedTerms.isEmpty else { return nil }
+
+        let combinedQuery = mergedTerms
+            .prefix(12)
+            .joined(separator: " ")
+        return combinedQuery == normalizedQuery ? nil : combinedQuery
+    }
+
+    private func shouldApplyFollowUpContext(
+        normalizedQuery: String,
+        originalQuery: String
+    ) -> Bool {
+        let normalizedWordCount = normalizedQuery.split(separator: " ").count
+        if normalizedWordCount <= 2 {
+            return true
+        }
+
+        let lowered = originalQuery.lowercased()
+        if [
+            "what about",
+            "how about",
+            "what if",
+            "and ",
+            "also ",
+            "instead",
+            "that",
+            "those",
+            "them",
+            "they",
+            "this"
+        ].contains(where: lowered.contains) {
+            return true
+        }
+
+        return normalizedWordCount <= 4 && lowered.hasSuffix("?")
+    }
+
+    private func deduplicatedTerms(_ terms: [String]) -> [String] {
+        var seen: Set<String> = []
+        var orderedTerms: [String] = []
+
+        for term in terms {
+            guard seen.insert(term).inserted else { continue }
+            orderedTerms.append(term)
+        }
+
+        return orderedTerms
+    }
+
     private func determineConfidence(evidence: [EvidenceItem]) -> ConfidenceLevel {
         let approvedSourceCount = evidence.filter {
             $0.kind == .handbookSection || $0.kind == .quickCard || $0.kind == .importedKnowledge
@@ -161,7 +291,8 @@ final class LocalRetrievalService: RetrievalService {
         evidence: [EvidenceItem],
         citations: [CitationReference],
         mode: AnswerMode,
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext?
     ) async -> String {
         switch mode {
         case .groundedGeneration:
@@ -171,7 +302,8 @@ final class LocalRetrievalService: RetrievalService {
                         query: query,
                         evidence: evidence,
                         citations: citations,
-                        confidence: confidence
+                        confidence: confidence,
+                        context: context
                     )
                 } catch {
                     // Generation failed — fall back to extractive assembly

@@ -100,7 +100,7 @@ final class AskLanternIntentExecutorTests: XCTestCase {
 
     func testPersonalNotesExcludedWhenSettingIsFalse() async {
         var capturedScopes: Set<RetrievalScope>?
-        let service = CapturingRetrievalService { scopes in
+        let service = CapturingRetrievalService { scopes, _ in
             capturedScopes = scopes
             return .refused(.insufficientEvidence)
         }
@@ -114,7 +114,7 @@ final class AskLanternIntentExecutorTests: XCTestCase {
 
     func testPersonalNotesIncludedWhenSettingIsTrue() async {
         var capturedScopes: Set<RetrievalScope>?
-        let service = CapturingRetrievalService { scopes in
+        let service = CapturingRetrievalService { scopes, _ in
             capturedScopes = scopes
             return .refused(.insufficientEvidence)
         }
@@ -124,6 +124,24 @@ final class AskLanternIntentExecutorTests: XCTestCase {
 
         XCTAssertNotNil(capturedScopes)
         XCTAssertTrue(capturedScopes!.contains(.notes))
+    }
+
+    func testIntentPathPassesPreferenceTagsWithoutFollowUpHistory() async {
+        var capturedContext: RetrievalContext?
+        let service = CapturingRetrievalService { _, context in
+            capturedContext = context
+            return .refused(.insufficientEvidence)
+        }
+        let executor = AskLanternIntentExecutor(
+            retrievalService: service,
+            includePersonalNotes: { false },
+            preferredTagsProvider: { ["region:coastal"] }
+        )
+
+        _ = await executor.execute(question: "water storage")
+
+        XCTAssertEqual(capturedContext?.preferredTags, Set(["region:coastal"]))
+        XCTAssertNil(capturedContext?.followUp)
     }
 }
 
@@ -136,25 +154,37 @@ private final class StubRetrievalService: RetrievalService, @unchecked Sendable 
         self.outcome = outcome
     }
 
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
+    func retrieve(
+        query: String,
+        scopes: Set<RetrievalScope>?,
+        context: RetrievalContext?
+    ) async throws -> RetrievalOutcome {
         outcome
     }
 }
 
 private final class ThrowingRetrievalService: RetrievalService, @unchecked Sendable {
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
+    func retrieve(
+        query: String,
+        scopes: Set<RetrievalScope>?,
+        context: RetrievalContext?
+    ) async throws -> RetrievalOutcome {
         throw NSError(domain: "test", code: -1)
     }
 }
 
 private final class CapturingRetrievalService: RetrievalService, @unchecked Sendable {
-    let handler: (Set<RetrievalScope>?) -> RetrievalOutcome
+    let handler: (Set<RetrievalScope>?, RetrievalContext?) -> RetrievalOutcome
 
-    init(handler: @escaping (Set<RetrievalScope>?) -> RetrievalOutcome) {
+    init(handler: @escaping (Set<RetrievalScope>?, RetrievalContext?) -> RetrievalOutcome) {
         self.handler = handler
     }
 
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
-        handler(scopes)
+    func retrieve(
+        query: String,
+        scopes: Set<RetrievalScope>?,
+        context: RetrievalContext?
+    ) async throws -> RetrievalOutcome {
+        handler(scopes, context)
     }
 }

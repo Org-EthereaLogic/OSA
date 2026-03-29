@@ -25,7 +25,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 
 - Will future trusted web search require a server-side proxy or can it rely on public fetches alone?
 - Does the app need an explicit local passcode or screen-lock feature beyond device security?
-- Should AI session history be user-clearable from day one?
+- ~~Should AI session history be user-clearable from day one?~~ **Resolved by current implementation:** full Ask session history is not persisted. The only local Ask history retained is a bounded recent-question list; it can be cleared by resetting app settings data, and recent-question storage is isolated from Siri or other system surfaces.
 
 ## Local Data Protection Strategy
 
@@ -46,10 +46,12 @@ By default in v1:
 - inventory
 - checklists and checklist history
 - personal notes
-- Ask prompts and responses
-- AI session logs
+- recent Ask question strings
+- saved study-guide notes
 - search index
 - local diagnostics
+
+Current implementation does not persist full Ask prompts, answers, or AI session logs. Ask follow-up context is memory-only for the current screen session.
 
 ## What Data May Ever Leave The Device In Online Modes
 
@@ -61,14 +63,14 @@ Potentially, and only when the user invokes online features:
 
 V1 recommendation:
 
-- do not transmit full note bodies, inventory contents, or Ask conversation history for remote processing
+- do not transmit full note bodies, inventory contents, recent Ask question history, or Ask follow-up context for remote processing
 - do not upload retrieved evidence or citations
 - do not include hidden analytics SDKs
 
 ## Network Security Assumptions
 
 - Use App Transport Security-compliant TLS connections only (HTTPS scheme required by `TrustedSourceHTTPClient`).
-- Restrict network calls to trusted source domains via `TrustedSourceAllowlist` (exact host matching against 15 approved publishers, no wildcard rules).
+- Restrict network calls to trusted source domains via `TrustedSourceAllowlist` (exact host matching against 17 approved publishers, no wildcard rules).
 - Validate HTTPS scheme, allowlist membership, HTTP status (2xx), Content-Type (text/html, text/plain, application/xhtml+xml), payload size (≤2 MB), and post-redirect host before accepting a fetch response.
 - Treat all remote content as untrusted until normalized and approved locally; raw fetch responses (`TrustedSourceFetchResponse`) carry bytes and metadata only and do not claim approval or indexing.
 
@@ -94,6 +96,7 @@ V1 should avoid broad system permissions.
 - Local knowledge and personal data remain device-local by default.
 - Ask uses local retrieval and on-device generation or extractive fallback where available.
 - Users should be able to understand when an online request is about to happen.
+- Ask recent-question history is limited to bounded local question strings and is not exposed to Siri, Spotlight, widgets, or other system surfaces.
 - Siri and Spotlight entity exposure (M6P2) follows privacy-bounded rules: inventory entities exclude archived items and never expose free-form `notes` in display representations or `CSSearchableItemAttributeSet` metadata. Checklist entities resolve templates only, not active runs. No notes or imported-knowledge entities are exposed to system surfaces.
 
 ## Future Sync And Privacy Implications

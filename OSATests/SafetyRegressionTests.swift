@@ -398,7 +398,8 @@ private struct ThrowingGenerator: GroundedAnswerGenerator {
         query: String,
         evidence: [EvidenceItem],
         citations: [CitationReference],
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext?
     ) async throws -> String {
         throw GeneratorError.shouldNotBeCalled
     }

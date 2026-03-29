@@ -79,6 +79,18 @@ enum HomePinnedItem: Identifiable {
 enum HomeSuggestionDestination {
     case quickCard(QuickCard)
     case handbookSection(HandbookSection)
+    case note(NoteRecord)
+
+    var key: String {
+        switch self {
+        case .quickCard(let card):
+            "quick-card-\(card.id.uuidString)"
+        case .handbookSection(let section):
+            "handbook-section-\(section.id.uuidString)"
+        case .note(let note):
+            "note-\(note.id.uuidString)"
+        }
+    }
 }
 
 struct HomeSuggestion: Identifiable {
@@ -87,7 +99,7 @@ struct HomeSuggestion: Identifiable {
     let reason: String
     let destination: HomeSuggestionDestination
 
-    var id: String { title + reason }
+    var id: String { destination.key }
 }
 
 struct HomeSuggestionCandidate {

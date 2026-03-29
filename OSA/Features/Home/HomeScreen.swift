@@ -5,6 +5,7 @@ struct HomeScreen: View {
     @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @Environment(\.handbookRepository) private var handbookRepository
     @Environment(\.quickCardRepository) private var quickCardRepository
+    @Environment(\.searchService) private var searchService
     @Environment(\.checklistRepository) private var checklistRepository
     @Environment(\.inventoryRepository) private var inventoryRepository
     @Environment(\.supplyTemplateRepository) private var supplyTemplateRepository
@@ -26,6 +27,8 @@ struct HomeScreen: View {
     private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
     private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(RecentAskHistorySettings.recentQuestionsKey)
+    private var recentAskQuestionsRawValue = RecentAskHistorySettings.encode(questions: [])
 
     @State private var spotlightMode: SpotlightMode = .quickCards
     @State private var connectivity: ConnectivityState = .offline
@@ -215,64 +218,220 @@ struct HomeScreen: View {
         let region = UserProfileSettings.region(from: regionRawValue)
         let targetTags = Set(selectedHazards.map(\.tag) + [region.tag, homeCurrentSeasonTag()])
 
-        guard !targetTags.isEmpty else {
-            suggestionsState = .empty
-            return
-        }
-
         var candidates: [HomeSuggestionCandidate] = []
 
         do {
             let cards = try quickCardRepository?.listQuickCards() ?? []
-            candidates.append(contentsOf: cards.compactMap { card in
-                let matchedTags = targetTags.intersection(Set(card.tags))
-                guard !matchedTags.isEmpty else { return nil }
-                return HomeSuggestionCandidate(
-                    suggestion: HomeSuggestion(
-                        title: card.title,
-                        subtitle: card.summary,
-                        reason: "Relevant for \(formatHomeTagText(matchedTags.sorted().first ?? ""))",
-                        destination: .quickCard(card)
-                    ),
-                    score: matchedTags.count + 2
-                )
-            })
+            let handbookSections = try loadHandbookSections()
 
-            let chapterSummaries = try handbookRepository?.listChapters() ?? []
-            for summary in chapterSummaries {
-                guard let chapter = try handbookRepository?.chapter(id: summary.id) else { continue }
-                let chapterTags = Set(summary.tags)
-                for section in chapter.sections {
-                    let matchedTags = targetTags.intersection(Set(section.tags).union(chapterTags))
-                    guard !matchedTags.isEmpty else { continue }
-                    candidates.append(
-                        HomeSuggestionCandidate(
-                            suggestion: HomeSuggestion(
-                                title: section.heading,
-                                subtitle: section.plainText,
-                                reason: "Relevant for \(formatHomeTagText(matchedTags.sorted().first ?? ""))",
-                                destination: .handbookSection(section)
-                            ),
-                            score: matchedTags.count
-                        )
-                    )
-                }
-            }
+            candidates.append(contentsOf: makeTagSuggestionCandidates(
+                cards: cards,
+                handbookSections: handbookSections,
+                targetTags: targetTags
+            ))
+            candidates.append(contentsOf: try makeRecentAskSuggestionCandidates())
+            candidates.append(contentsOf: try makeStudyGuideSuggestionCandidates(region: region))
 
-            let suggestions = candidates
-                .sorted {
-                    if $0.score == $1.score {
-                        return $0.suggestion.title.localizedCaseInsensitiveCompare($1.suggestion.title) == .orderedAscending
-                    }
-                    return $0.score > $1.score
-                }
-                .prefix(4)
-                .map(\.suggestion)
+            let suggestions = mergedSuggestions(from: candidates)
 
             suggestionsState = suggestions.isEmpty ? .empty : .loaded(suggestions)
         } catch {
             suggestionsState = .failed("Suggestions could not be loaded.")
         }
+    }
+
+    private func loadHandbookSections() throws -> [(section: HandbookSection, tags: Set<String>)] {
+        let chapterSummaries = try handbookRepository?.listChapters() ?? []
+        var sections: [(section: HandbookSection, tags: Set<String>)] = []
+
+        for summary in chapterSummaries {
+            guard let chapter = try handbookRepository?.chapter(id: summary.id) else { continue }
+            let chapterTags = Set(summary.tags)
+            for section in chapter.sections {
+                sections.append((section: section, tags: Set(section.tags).union(chapterTags)))
+            }
+        }
+
+        return sections
+    }
+
+    private func makeTagSuggestionCandidates(
+        cards: [QuickCard],
+        handbookSections: [(section: HandbookSection, tags: Set<String>)],
+        targetTags: Set<String>
+    ) -> [HomeSuggestionCandidate] {
+        guard !targetTags.isEmpty else { return [] }
+
+        var candidates: [HomeSuggestionCandidate] = []
+
+        candidates.append(contentsOf: cards.compactMap { card in
+            let matchedTags = targetTags.intersection(Set(card.tags))
+            guard !matchedTags.isEmpty else { return nil }
+
+            return HomeSuggestionCandidate(
+                suggestion: HomeSuggestion(
+                    title: card.title,
+                    subtitle: card.summary,
+                    reason: "Relevant for \(formatHomeTagText(matchedTags.sorted().first ?? ""))",
+                    destination: .quickCard(card)
+                ),
+                score: matchedTags.count + 2
+            )
+        })
+
+        candidates.append(contentsOf: handbookSections.compactMap { item in
+            let matchedTags = targetTags.intersection(item.tags)
+            guard !matchedTags.isEmpty else { return nil }
+
+            return HomeSuggestionCandidate(
+                suggestion: HomeSuggestion(
+                    title: item.section.heading,
+                    subtitle: item.section.plainText,
+                    reason: "Relevant for \(formatHomeTagText(matchedTags.sorted().first ?? ""))",
+                    destination: .handbookSection(item.section)
+                ),
+                score: matchedTags.count
+            )
+        })
+
+        return candidates
+    }
+
+    private func makeRecentAskSuggestionCandidates() throws -> [HomeSuggestionCandidate] {
+        guard let searchService else { return [] }
+
+        var candidates: [HomeSuggestionCandidate] = []
+
+        for (index, question) in RecentAskHistorySettings.questions(from: recentAskQuestionsRawValue)
+            .prefix(3)
+            .enumerated()
+        {
+            guard let normalized = QueryNormalizer.normalize(question) else { continue }
+
+            let searchResults = try searchService.search(
+                query: normalized,
+                scopes: [.handbookSection, .quickCard],
+                limit: 1
+            )
+
+            for result in searchResults {
+                if let candidate = try makeSearchBackedSuggestionCandidate(
+                    from: result,
+                    reason: "Recent Ask: \(boundedQuestionLabel(question))",
+                    score: max(1, 3 - index)
+                ) {
+                    candidates.append(candidate)
+                }
+            }
+        }
+
+        return candidates
+    }
+
+    private func makeSearchBackedSuggestionCandidate(
+        from searchResult: SearchResult,
+        reason: String,
+        score: Int
+    ) throws -> HomeSuggestionCandidate? {
+        switch searchResult.kind {
+        case .quickCard:
+            guard let card = try quickCardRepository?.quickCard(id: searchResult.id) else {
+                return nil
+            }
+
+            return HomeSuggestionCandidate(
+                suggestion: HomeSuggestion(
+                    title: card.title,
+                    subtitle: card.summary,
+                    reason: reason,
+                    destination: .quickCard(card)
+                ),
+                score: score + 1
+            )
+
+        case .handbookSection:
+            guard let section = try handbookRepository?.section(id: searchResult.id) else {
+                return nil
+            }
+
+            return HomeSuggestionCandidate(
+                suggestion: HomeSuggestion(
+                    title: section.heading,
+                    subtitle: section.plainText,
+                    reason: reason,
+                    destination: .handbookSection(section)
+                ),
+                score: score
+            )
+
+        case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
+            return nil
+        }
+    }
+
+    private func makeStudyGuideSuggestionCandidates(
+        region: PreparednessRegion
+    ) throws -> [HomeSuggestionCandidate] {
+        let notes = try noteRepository?.listNotes(type: .localReference) ?? []
+
+        return notes
+            .filter { $0.tags.contains("study-guide") }
+            .prefix(2)
+            .map { note in
+                let isRegionSpecific = note.tags.contains(region.tag)
+                let reason = isRegionSpecific
+                    ? "Saved study guide for \(region.displayName)"
+                    : "Saved study guide"
+
+                return HomeSuggestionCandidate(
+                    suggestion: HomeSuggestion(
+                        title: note.title,
+                        subtitle: boundedPreview(note.plainText),
+                        reason: reason,
+                        destination: .note(note)
+                    ),
+                    score: isRegionSpecific ? 5 : 4
+                )
+            }
+    }
+
+    private func mergedSuggestions(
+        from candidates: [HomeSuggestionCandidate]
+    ) -> [HomeSuggestion] {
+        var bestByDestination: [String: HomeSuggestionCandidate] = [:]
+
+        for candidate in candidates {
+            let key = candidate.suggestion.destination.key
+            if let existing = bestByDestination[key] {
+                if candidate.score > existing.score {
+                    bestByDestination[key] = candidate
+                }
+            } else {
+                bestByDestination[key] = candidate
+            }
+        }
+
+        return bestByDestination.values
+            .sorted {
+                if $0.score == $1.score {
+                    return $0.suggestion.title.localizedCaseInsensitiveCompare($1.suggestion.title) == .orderedAscending
+                }
+                return $0.score > $1.score
+            }
+            .prefix(4)
+            .map(\.suggestion)
+    }
+
+    private func boundedQuestionLabel(_ question: String, limit: Int = 48) -> String {
+        let trimmed = question.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.count > limit else { return trimmed }
+        return String(trimmed.prefix(limit)).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+    }
+
+    private func boundedPreview(_ text: String, limit: Int = 96) -> String {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.count > limit else { return trimmed }
+        return String(trimmed.prefix(limit)).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 
     private func loadReadinessSnapshot() {

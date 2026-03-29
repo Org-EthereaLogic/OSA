@@ -21,14 +21,16 @@ struct FoundationModelAdapter: GroundedAnswerGenerator {
         query: String,
         evidence: [EvidenceItem],
         citations: [CitationReference],
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext?
     ) async throws -> String {
         let session = LanguageModelSession()
         let groundedPrompt = promptBuilder.build(
             query: query,
             evidence: evidence,
             citations: citations,
-            confidence: confidence
+            confidence: confidence,
+            context: context
         )
         let response = try await session.respond(to: groundedPrompt.fullPrompt)
         return response.content

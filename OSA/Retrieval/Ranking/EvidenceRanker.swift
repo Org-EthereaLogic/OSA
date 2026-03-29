@@ -2,7 +2,11 @@ import Foundation
 
 enum EvidenceRanker {
     /// Re-rank search results using deterministic heuristics on top of FTS5 BM25 scores.
-    static func rank(_ items: [EvidenceItem], query: String) -> [EvidenceItem] {
+    static func rank(
+        _ items: [EvidenceItem],
+        query: String,
+        preferredTags: Set<String> = []
+    ) -> [EvidenceItem] {
         let queryWords = Set(
             query.lowercased()
                 .components(separatedBy: .alphanumerics.inverted)
@@ -38,6 +42,10 @@ enum EvidenceRanker {
             })
             let tagOverlap = Double(queryWords.intersection(tagWords).count)
             boost += tagOverlap * 3.0
+
+            // Preference tags are a ranking hint only. Untagged universal content remains eligible.
+            let preferredTagMatches = preferredTags.intersection(Set(item.tags))
+            boost += Double(preferredTagMatches.count) * 4.0
 
             return (item, boost)
         }

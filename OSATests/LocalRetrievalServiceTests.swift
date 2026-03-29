@@ -4,12 +4,13 @@ import XCTest
 final class LocalRetrievalServiceTests: XCTestCase {
     private func makeService(
         searchResults: [SearchResult] = [],
+        searchService: (any SearchService)? = nil,
         sensitivity: SensitivityResult = .allowed,
         answerMode: AnswerMode = .extractiveOnly,
         answerGenerator: (any GroundedAnswerGenerator)? = nil
     ) -> LocalRetrievalService {
         LocalRetrievalService(
-            searchService: StubSearchService(results: searchResults),
+            searchService: searchService ?? StubSearchService(results: searchResults),
             sensitivityClassifier: StubClassifier(result: sensitivity),
             capabilityDetector: StubCapabilityDetector(mode: answerMode),
             answerGenerator: answerGenerator
@@ -217,12 +218,139 @@ final class LocalRetrievalServiceTests: XCTestCase {
             XCTFail("Expected answered outcome")
         }
     }
+
+    func testShortFollowUpUsesPreviousContextWhenNeeded() async throws {
+        let waterFilters = SearchResult(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "Water Filters",
+            snippet: "Use an approved water filter after pre-filtering debris.",
+            score: 10.0,
+            tags: ["water", "filters"]
+        )
+        let searchService = StubSearchService(results: []) { query, scopes, _, limit in
+            if query.contains("filters") && query.contains("purify") {
+                return Array([waterFilters].prefix(limit))
+            }
+
+            if let scopes, !scopes.contains(.handbookSection) {
+                return []
+            }
+
+            return []
+        }
+        let service = makeService(searchService: searchService)
+        let context = RetrievalContext(
+            followUp: FollowUpContext(
+                previousQuery: "how do I purify water",
+                previousAnswerSummary: "Use boiling or treatment methods for safer water.",
+                previousCitationLabels: ["Handbook: Water Purification"],
+                previousCitationIDs: [UUID()]
+            )
+        )
+
+        let outcome = try await service.retrieve(
+            query: "What about filters?",
+            scopes: nil,
+            context: context
+        )
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.evidence.first?.title, "Water Filters")
+        } else {
+            XCTFail("Expected answered outcome when follow-up context is provided")
+        }
+    }
+
+    func testShortFollowUpRefusesWithoutContext() async throws {
+        let searchService = StubSearchService(results: []) { query, _, _, _ in
+            query == "filters" ? [] : []
+        }
+        let service = makeService(searchService: searchService)
+
+        let outcome = try await service.retrieve(
+            query: "What about filters?",
+            scopes: nil,
+            context: nil
+        )
+
+        if case .refused(.insufficientEvidence) = outcome {
+            // pass
+        } else {
+            XCTFail("Expected insufficientEvidence refusal without follow-up context, got \(outcome)")
+        }
+    }
+
+    func testPreferredRegionTagsBoostMatchingContent() async throws {
+        let generic = SearchResult(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "Winter Storm Supplies",
+            snippet: "Pack light sources and blankets.",
+            score: 6.0,
+            tags: []
+        )
+        let regional = SearchResult(
+            id: UUID(),
+            kind: .handbookSection,
+            title: "Mountain Winter Storm Supplies",
+            snippet: "Pack traction gear and extra insulation.",
+            score: 5.5,
+            tags: ["region:mountain"]
+        )
+        let service = makeService(searchResults: [generic, regional])
+        let context = RetrievalContext(preferredTags: ["region:mountain"])
+
+        let outcome = try await service.retrieve(
+            query: "winter storm supplies",
+            scopes: nil,
+            context: context
+        )
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.evidence.first?.id, regional.id)
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
+    func testNilContextPreservesCurrentOneShotBehavior() async throws {
+        let results = [
+            SearchResult(
+                id: UUID(),
+                kind: .handbookSection,
+                title: "Water Storage",
+                snippet: "Store one gallon per person.",
+                score: 5.0,
+                tags: []
+            )
+        ]
+        let service = makeService(searchResults: results)
+
+        let defaultOutcome = try await service.retrieve(query: "water storage", scopes: nil)
+        let explicitNilOutcome = try await service.retrieve(
+            query: "water storage",
+            scopes: nil,
+            context: nil
+        )
+
+        XCTAssertEqual(defaultOutcome, explicitNilOutcome)
+    }
 }
 
 // MARK: - Test Doubles
 
 struct StubSearchService: SearchService {
     let results: [SearchResult]
+    let queryHandler: ((String, Set<SearchResultKind>?, Set<String>, Int) throws -> [SearchResult])?
+
+    init(
+        results: [SearchResult],
+        queryHandler: ((String, Set<SearchResultKind>?, Set<String>, Int) throws -> [SearchResult])? = nil
+    ) {
+        self.results = results
+        self.queryHandler = queryHandler
+    }
 
     func search(
         query: String,
@@ -230,6 +358,10 @@ struct StubSearchService: SearchService {
         requiredTags: Set<String>,
         limit: Int
     ) throws -> [SearchResult] {
+        if let queryHandler {
+            return try queryHandler(query, scopes, requiredTags, limit)
+        }
+
         var filtered = results
 
         if let scopes {
@@ -273,7 +405,8 @@ struct StubAnswerGenerator: GroundedAnswerGenerator {
         query: String,
         evidence: [EvidenceItem],
         citations: [CitationReference],
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext?
     ) async throws -> String {
         if shouldFail {
             throw StubGeneratorError.simulatedFailure

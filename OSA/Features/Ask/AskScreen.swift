@@ -2,25 +2,36 @@ import SwiftUI
 
 struct AskScreen: View {
     @Environment(\.retrievalService) private var retrievalService
+    @Environment(\.noteRepository) private var noteRepository
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.trustedSourceHTTPClient) private var trustedSourceHTTPClient
     @Environment(\.importPipeline) private var importPipeline
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
+    @AppStorage(RecentAskHistorySettings.recentQuestionsKey)
+    private var recentQuestionsRawValue = RecentAskHistorySettings.encode(questions: [])
+    @AppStorage(UserProfileSettings.regionKey)
+    private var regionRawValue = UserProfileSettings.regionDefault.rawValue
 
     @State private var query = ""
     @State private var askState: AskViewState = .idle
     @State private var connectivity: ConnectivityState = .offline
     @State private var showImportSheet = false
     @State private var lastSubmittedQuery = ""
+    @State private var followUpContext: FollowUpContext?
+    @State private var lastAppliedPreferredTags: Set<String> = []
+    @State private var studyGuideStatus: AskStudyGuideStatus?
     @AccessibilityFocusState private var focusedElement: AskAccessibilityTarget?
+
+    private let studyGuideBuilder = StudyGuideBuilder()
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: Spacing.lg) {
                     scopeCard
+                    recentQuestionsSection
 
                     switch askState {
                     case .idle:
@@ -39,7 +50,9 @@ struct AskScreen: View {
                             },
                             destinationForAction: { action in
                                 destination(for: action)
-                            }
+                            },
+                            onSaveStudyGuide: saveStudyGuide,
+                            studyGuideStatus: studyGuideStatus
                         )
                         .accessibilityFocused($focusedElement, equals: .answer)
 
@@ -108,6 +121,12 @@ struct AskScreen: View {
                 }
             }
             .accessibilityHint("Allows Ask to search notes stored locally on this device.")
+
+            Text(
+                "Region preference: \(currentRegion.displayName). Follow-up context refines only this session's local retrieval. Recent questions stay on this device only."
+            )
+            .font(.metadataCaption)
+            .foregroundStyle(.tertiary)
         }
         .padding(Spacing.lg)
         .padding(.top, Spacing.md)
@@ -121,10 +140,50 @@ struct AskScreen: View {
 
     private var scopeSummary: String {
         if includePersonalNotes {
-            return "Searching handbook, quick cards, inventory, checklists, and your notes."
+            return "Searching handbook, quick cards, inventory, checklists, and your notes for \(currentRegion.displayName)."
         }
 
-        return "Searching handbook, quick cards, inventory, and checklists only."
+        return "Searching handbook, quick cards, inventory, and checklists for \(currentRegion.displayName)."
+    }
+
+    private var currentRegion: PreparednessRegion {
+        UserProfileSettings.region(from: regionRawValue)
+    }
+
+    private var currentPreferredTags: Set<String> {
+        [currentRegion.tag]
+    }
+
+    private var recentQuestions: [String] {
+        RecentAskHistorySettings.questions(from: recentQuestionsRawValue)
+    }
+
+    @ViewBuilder
+    private var recentQuestionsSection: some View {
+        if !recentQuestions.isEmpty {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
+                Text("Recent Questions")
+                    .font(.sectionHeader)
+                    .accessibilityAddTraits(.isHeader)
+
+                ForEach(recentQuestions, id: \.self) { recentQuestion in
+                    RecentQuestionButton(question: recentQuestion) {
+                        rerunRecentQuestion(recentQuestion)
+                    }
+                }
+
+                Text("Session context is used only to refine fresh local retrieval. Full chat history is not stored.")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(Spacing.lg)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+            .overlay {
+                RoundedRectangle(cornerRadius: CornerRadius.xl)
+                    .stroke(Color.osaHairline, lineWidth: 1)
+            }
+        }
     }
 
     private var zeroState: some View {
@@ -164,11 +223,11 @@ struct AskScreen: View {
                     RoundedRectangle(cornerRadius: CornerRadius.md)
                         .stroke(Color.osaHairline, lineWidth: 1)
                 }
-                .onSubmit(submitQuery)
+                .onSubmit { submitQuery() }
                 .accessibilityLabel("Ask a question...")
                 .accessibilityHint("Search approved local content with citations.")
 
-            Button(action: submitQuery) {
+            Button(action: { submitQuery() }) {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)
             }
@@ -205,11 +264,18 @@ struct AskScreen: View {
         submitQuery()
     }
 
-    private func submitQuery() {
-        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+    private func rerunRecentQuestion(_ question: String) {
+        query = question
+        submitQuery(question)
+    }
+
+    private func submitQuery(_ submittedQuery: String? = nil) {
+        let trimmed = (submittedQuery ?? query).trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
+        query = trimmed
         lastSubmittedQuery = trimmed
+        studyGuideStatus = nil
         focusedElement = nil
         hapticFeedbackService?.play(.askSubmit)
         askState = .loading
@@ -220,15 +286,30 @@ struct AskScreen: View {
         }
 
         let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: includePersonalNotes)
+        let preferredTags = currentPreferredTags
+        let context = RetrievalContext(
+            followUp: followUpContext,
+            preferredTags: preferredTags
+        )
         nonisolated(unsafe) let sendableService = service
 
         Task {
             do {
-                let outcome = try await sendableService.retrieve(query: trimmed, scopes: scopes)
+                let outcome = try await sendableService.retrieve(
+                    query: trimmed,
+                    scopes: scopes,
+                    context: context.isEmpty ? nil : context
+                )
                 await MainActor.run {
                     switch outcome {
                     case .answered(let result):
                         askState = .answered(result)
+                        followUpContext = result.makeFollowUpContext()
+                        lastAppliedPreferredTags = preferredTags
+                        recentQuestionsRawValue = RecentAskHistorySettings.recorded(
+                            trimmed,
+                            rawValue: recentQuestionsRawValue
+                        )
                         DispatchQueue.main.async {
                             focusedElement = .answer
                         }
@@ -241,6 +322,30 @@ struct AskScreen: View {
                     askState = .refused(.insufficientEvidence)
                 }
             }
+        }
+    }
+
+    private func saveStudyGuide() {
+        guard case .answered(let result) = askState,
+              !result.citations.isEmpty,
+              let noteRepository
+        else {
+            studyGuideStatus = .failed("Study guide saving is unavailable right now.")
+            return
+        }
+
+        let note = studyGuideBuilder.makeNote(
+            from: result,
+            preferredTags: lastAppliedPreferredTags
+        )
+
+        do {
+            try noteRepository.createNote(note)
+            hapticFeedbackService?.play(.success)
+            studyGuideStatus = .saved(note.title)
+        } catch {
+            hapticFeedbackService?.play(.error)
+            studyGuideStatus = .failed("Study guide could not be saved locally.")
         }
     }
 
@@ -287,6 +392,8 @@ private struct AnswerView: View {
     let result: AnswerResult
     let destinationForCitation: (CitationReference) -> AskDestination?
     let destinationForAction: (SuggestedAction) -> AskDestination?
+    let onSaveStudyGuide: () -> Void
+    let studyGuideStatus: AskStudyGuideStatus?
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
@@ -340,6 +447,31 @@ private struct AnswerView: View {
                 }
             }
 
+            if !result.citations.isEmpty {
+                VStack(alignment: .leading, spacing: Spacing.sm) {
+                    Text("Study Guide")
+                        .font(.sectionHeader)
+                        .accessibilityAddTraits(.isHeader)
+
+                    Button(action: onSaveStudyGuide) {
+                        Label("Save Study Guide", systemImage: "note.text.badge.plus")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .accessibilityHint("Saves a grounded local reference note on this device.")
+
+                    Text("Creates a local reference note with linked sources. This does not save a full chat transcript.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    if let studyGuideStatus {
+                        Text(studyGuideStatus.message)
+                            .font(.caption)
+                            .foregroundStyle(studyGuideStatus.color)
+                    }
+                }
+            }
+
             if !result.suggestedActions.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("Related")
@@ -379,6 +511,66 @@ private struct AnswerView: View {
         case .groundedMedium: "Limited local evidence"
         case .insufficientLocalEvidence: "Insufficient evidence"
         }
+    }
+}
+
+private enum AskStudyGuideStatus {
+    case saved(String)
+    case failed(String)
+
+    var message: String {
+        switch self {
+        case .saved(let title):
+            "Saved locally as \"\(title)\"."
+        case .failed(let message):
+            message
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .saved:
+            .osaLocal
+        case .failed:
+            .osaCritical
+        }
+    }
+}
+
+private struct RecentQuestionButton: View {
+    let question: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: Spacing.sm) {
+                Image(systemName: "arrow.counterclockwise")
+                    .foregroundStyle(.osaPrimary)
+                    .accessibilityHidden(true)
+
+                Text(question)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.leading)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, Spacing.md)
+            .padding(.vertical, Spacing.sm)
+            .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+            .overlay {
+                RoundedRectangle(cornerRadius: CornerRadius.md)
+                    .stroke(Color.osaHairline, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("recent-question")
+        .accessibilityHint("Runs this question again using fresh local retrieval.")
     }
 }
 

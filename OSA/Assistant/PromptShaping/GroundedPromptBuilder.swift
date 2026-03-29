@@ -12,6 +12,8 @@ struct GroundedPrompt: Equatable, Sendable {
     let evidenceBlock: String
     /// The user's query framed for the model.
     let queryBlock: String
+    /// Optional bounded follow-up or preference context for the current answer.
+    let contextBlock: String
     /// Confidence-specific guidance for the model.
     let confidenceGuidance: String
     /// The full composed prompt ready for model input.
@@ -31,11 +33,13 @@ struct GroundedPromptBuilder {
         query: String,
         evidence: [EvidenceItem],
         citations: [CitationReference],
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext? = nil
     ) -> GroundedPrompt {
         let system = buildSystemInstructions()
         let evidenceSection = buildEvidenceBlock(evidence: evidence)
         let querySection = buildQueryBlock(query: query)
+        let contextSection = buildContextBlock(context: context)
         let guidance = buildConfidenceGuidance(confidence: confidence)
 
         let full = [
@@ -44,14 +48,19 @@ struct GroundedPromptBuilder {
             evidenceSection,
             "",
             querySection,
+            contextSection.isEmpty ? nil : "",
+            contextSection.isEmpty ? nil : contextSection,
             "",
             guidance
-        ].joined(separator: "\n")
+        ]
+        .compactMap { $0 }
+        .joined(separator: "\n")
 
         return GroundedPrompt(
             systemInstructions: system,
             evidenceBlock: evidenceSection,
             queryBlock: querySection,
+            contextBlock: contextSection,
             confidenceGuidance: guidance,
             fullPrompt: full
         )
@@ -87,6 +96,34 @@ struct GroundedPromptBuilder {
 
     private func buildQueryBlock(query: String) -> String {
         "Question: \(query)"
+    }
+
+    private func buildContextBlock(context: RetrievalContext?) -> String {
+        guard let context, !context.isEmpty else {
+            return ""
+        }
+
+        var lines = [
+            "Context:",
+            "Use this context only to interpret the current question. The final answer must still be supported by the current evidence."
+        ]
+
+        if let followUp = context.followUp {
+            lines.append("Previous question: \(followUp.previousQuery)")
+            lines.append("Previous grounded summary: \(followUp.previousAnswerSummary)")
+
+            if !followUp.previousCitationLabels.isEmpty {
+                lines.append(
+                    "Previous cited sources: \(followUp.previousCitationLabels.joined(separator: "; "))"
+                )
+            }
+        }
+
+        if !context.preferredTags.isEmpty {
+            lines.append("Preference tags: \(context.preferredTags.sorted().joined(separator: ", "))")
+        }
+
+        return lines.joined(separator: "\n")
     }
 
     private func buildConfidenceGuidance(confidence: ConfidenceLevel) -> String {

@@ -4,7 +4,17 @@ import Foundation
 
 protocol RetrievalService {
     /// Submit a user query and get a grounded retrieval outcome.
-    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome
+    func retrieve(
+        query: String,
+        scopes: Set<RetrievalScope>?,
+        context: RetrievalContext?
+    ) async throws -> RetrievalOutcome
+}
+
+extension RetrievalService {
+    func retrieve(query: String, scopes: Set<RetrievalScope>?) async throws -> RetrievalOutcome {
+        try await retrieve(query: query, scopes: scopes, context: nil)
+    }
 }
 
 // MARK: - Sensitivity Classifier Protocol
@@ -37,6 +47,24 @@ protocol GroundedAnswerGenerator {
         query: String,
         evidence: [EvidenceItem],
         citations: [CitationReference],
-        confidence: ConfidenceLevel
+        confidence: ConfidenceLevel,
+        context: RetrievalContext?
     ) async throws -> String
+}
+
+extension GroundedAnswerGenerator {
+    func generate(
+        query: String,
+        evidence: [EvidenceItem],
+        citations: [CitationReference],
+        confidence: ConfidenceLevel
+    ) async throws -> String {
+        try await generate(
+            query: query,
+            evidence: evidence,
+            citations: citations,
+            confidence: confidence,
+            context: nil
+        )
+    }
 }

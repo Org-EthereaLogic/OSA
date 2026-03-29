@@ -25,7 +25,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 ## Open Questions
 
 - Should user notes always be in Ask scope, or only when the user explicitly enables personal-data retrieval?
-- How much answer history should be kept locally for privacy and storage reasons?
+- ~~How much answer history should be kept locally for privacy and storage reasons?~~ **Resolved by Sprint 6:** store only a bounded recent-question list locally via `RecentAskHistorySettings`; keep follow-up context in memory for the current Ask screen session only; do not persist answer transcripts or multi-turn message objects.
 - Should the app expose a "search only" mode for unsupported devices instead of templated extractive answers?
 
 ## Assistant Scope
@@ -66,7 +66,7 @@ Siri and Spotlight can also resolve named domain objects (M6P2): handbook sectio
 
 1. Classify query intent and sensitivity.
 2. Enforce scope and guardrails before retrieval.
-3. Retrieve relevant local evidence from handbook, quick cards, imported knowledge, and allowed user data.
+3. Retrieve relevant local evidence from handbook, quick cards, imported knowledge, and allowed user data, optionally using bounded session follow-up context and preferred profile tags as retrieval hints.
 4. Score evidence for trust, freshness, urgency, and relevance.
 5. If evidence is insufficient, return a grounded "not found locally" response.
 6. If evidence is sufficient:
@@ -166,6 +166,15 @@ Prompt inputs should include:
 - `KnowledgeDiscoveryCoordinator` discovers new content from RSS feeds (primary, zero cost) and optionally Brave Search free tier (user-provided API key). Both sources produce candidate URLs filtered to `TrustedSourceAllowlist` domains.
 - Discovered URLs are deduplicated against already-imported sources, then fetched and imported through the existing `ImportedKnowledgeImportPipeline`. The existing trust model is preserved: tier 1/2 auto-approve, tier 3 lands as `.pending`.
 - Discovery is connectivity-gated, schedule-limited (once per day), and has a manual trigger in Settings. No content bypasses the editorial gate.
+
+**Current implementation (Sprint 6):**
+
+- `RetrievalContext` and `FollowUpContext` in `OSA/Domain/Ask/Models/ConversationModels.swift` carry two bounded hints only: the immediately previous grounded answer summary or citation labels for short follow-ups, and profile-derived preferred tags such as the current region tag.
+- `LocalRetrievalService` always performs a fresh local search. For short follow-up wording, it may run one additional contextual search using the immediately previous grounded answer, discount contextual-only hits, and then apply deterministic ranking.
+- `GroundedPromptBuilder` includes a bounded `Context` block when follow-up context or preferred tags are present.
+- `RecentAskHistorySettings` stores recent question strings only via `@AppStorage`. No transcript, answer body, or multi-turn message persistence is introduced.
+- `StudyGuideBuilder` converts a grounded `AnswerResult` into a local-reference `NoteRecord` with linked section IDs and source-backed markdown.
+- `AskLanternIntentExecutor` may pass preference tags into retrieval, but Siri and App Intent execution remain single-turn and do not inherit Ask-screen follow-up state or recent-question history.
 
 This keeps UI and retrieval logic independent of the underlying model choice.
 

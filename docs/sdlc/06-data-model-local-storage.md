@@ -7,10 +7,10 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 
 - Core functionality must work fully offline from locally stored content and user data.
 - Imported web knowledge must become locally available for future offline use.
-- The product requires local handbook content, quick cards, checklists, inventory, notes, citations, AI sessions, and settings.
+- The product requires local handbook content, quick cards, checklists, inventory, notes, citations, bounded Ask-session context, and settings.
 - The first editorial-content persistence slice is now implemented: SwiftData models for `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
 - User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
-- A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types.
+- A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types. `SearchIndexRebuilder` repopulates the index from repository truth at bootstrap, and note or inventory writes update the index incrementally through repository decorators.
 - Imported knowledge persistence is now implemented: `PersistedSourceRecord`, `PersistedImportedKnowledgeDocument`, `PersistedKnowledgeChunk`, and `PersistedPendingOperation` SwiftData models with cascade relationships; domain value types and enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`); `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations; repository-contract tests for both repositories. M4P4 adds `ImportedKnowledgeNormalizer` (HTML/text → `NormalizedDocument` with title, content-hash, publisher domain), `KnowledgeChunker` (heading-aware chunking with paragraph fallback), and `ImportedKnowledgeImportPipeline` (orchestrates normalize → chunk → persist to repository → extend FTS5 index with dedupe and document versioning). `SearchService.indexImportedChunk` extends the FTS5 index for imported knowledge chunks.
 
 ## Assumptions
@@ -188,6 +188,8 @@ erDiagram
 - `createdAt`
 - `updatedAt`
 
+Sprint 6 study guides reuse `NoteRecord` with `noteType = .localReference`, tag `study-guide`, and `linkedSectionIDs` derived from grounded citations.
+
 ### SourceRecord
 
 Required metadata for imported knowledge:
@@ -256,7 +258,7 @@ Required metadata for imported knowledge:
 - `scope` such as handbook-only or handbook-plus-user-data
 - `lastAnswerStatus`
 
-The current implementation does not persist conversation history. Session and message models are deferred to a future milestone.
+The current implementation does not persist conversation history. Session and message models are deferred to a future milestone. Ask follow-up uses transient `RetrievalContext` and `FollowUpContext` value types in memory only.
 
 ### AIMessage _(deferred beyond M3)_
 
@@ -292,6 +294,16 @@ Lightweight settings for recently viewed Handbook Sections using `@AppStorage` (
 - `recorded(_:rawValue:limit:)`: inserts newest-first, deduplicates, caps at limit
 - `prune(rawValue:keeping:)`: removes stale IDs when sections are deleted
 - Surfaced as "Recently Viewed" section in LibraryScreen
+
+### RecentAskHistorySettings _(Sprint 6 — Live)_
+
+Lightweight settings for recent Ask questions using `@AppStorage` (not SwiftData). Lives in `OSA/Domain/Settings/RecentAskHistorySettings.swift`.
+
+- `recentQuestionsKey`: encoded ordered list of recent question strings
+- `recorded(_:rawValue:limit:)`: inserts newest-first, deduplicates, caps at limit
+- `prune(rawValue:keeping:)`: removes invalid or stale values while preserving order
+- Used by AskScreen and Home contextual suggestions
+- Stores question strings only. Full answers, transcripts, and multi-turn message objects are not persisted
 
 ### AppSetting _(deferred to M4 — Online Enrichment)_
 
@@ -423,4 +435,3 @@ Caches/
 1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** All core entity schemas are implemented — editorial content (chapters, sections, quick cards) and user data (inventory, checklists, notes) — with SwiftData models, domain value types, repository protocols, and environment-key DI. Feature UI layers read from these models through protocol injection.
 2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`, extended to include checklist template seed data.
 3. Decide whether attachments and map assets belong in v1 before freezing the first schema version.
-
