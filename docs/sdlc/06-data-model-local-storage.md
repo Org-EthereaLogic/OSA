@@ -276,6 +276,23 @@ Lightweight settings layer using `@AppStorage` (not SwiftData). Lives in `OSA/Do
 - Controls the `RetrievalScope` set passed to the retrieval pipeline
 - Surfaced as a toggle in both AskScreen and SettingsScreen
 
+### PinnedContentSettings _(Sprint 2 — Live)_
+
+Lightweight settings for pinned Quick Cards and Handbook Sections using `@AppStorage` (not SwiftData). Lives in `OSA/Domain/Settings/PinnedContentSettings.swift`.
+
+- `pinnedQuickCardIDsKey`: encoded UUID array for pinned quick cards
+- `pinnedSectionIDsKey`: encoded UUID array for pinned handbook sections
+- Surfaced via toolbar buttons and context menus in QuickCardsScreen, QuickCardDetailView, HandbookSectionDetailView
+
+### RecentLibraryHistorySettings _(Sprint 2 — Live)_
+
+Lightweight settings for recently viewed Handbook Sections using `@AppStorage` (not SwiftData). Nested enum in `OSA/Domain/Settings/PinnedContentSettings.swift`.
+
+- `recentSectionIDsKey`: ordered list of last 6 viewed section IDs
+- `recorded(_:rawValue:limit:)`: inserts newest-first, deduplicates, caps at limit
+- `prune(rawValue:keeping:)`: removes stale IDs when sections are deleted
+- Surfaced as "Recently Viewed" section in LibraryScreen
+
 ### AppSetting _(deferred to M4 — Online Enrichment)_
 
 The more general SwiftData-backed settings entity remains deferred. `AskScopeSettings` above covers the one live setting using `@AppStorage`.

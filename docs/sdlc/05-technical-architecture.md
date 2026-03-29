@@ -61,9 +61,9 @@ flowchart TD
 ### Presentation Layer
 
 - `Home`: emergency-first dashboard decomposed into HomeScreen (coordinator) and discrete section views (HomeHeaderView, HomeReadinessSectionView, HomePinnedContentSectionView, HomeSpotlightSectionView, HomeSuggestionsSectionView, HomeActiveChecklistsSectionView, HomeInventorySectionView, HomeRecentNotesSectionView) in HomeSectionViews.swift. Spotlight section (segmented picker toggling Quick Cards and Feed tabs), offline state, recent activity. Quick cards are randomized from the full repository set, with 3 shown per load or pull-to-refresh. Feed shows the top 5 RSS-discovered articles sorted by publish date via `RSSDiscoveryService` injected through `RepositoryEnvironment`; rows display source host and publish date when available and open article URLs through the system URL handler. Accessibility: Dynamic Type adaptive layouts (AnyLayout VStack fallback at accessibility sizes), combined accessibility elements for VoiceOver, header traits on section labels.
-- `Library`: handbook chapter browsing, local search entry, citations into source material.
+- `Library`: handbook chapter browsing, local search entry, topic-browse, recently viewed sections (tracked via `RecentLibraryHistorySettings`), citations into source material.
 - `Ask`: grounded local assistant with clear scope boundaries and citations.
-- `Inventory`, `Checklists`, `Quick Cards`, `Notes`, `Settings`: first-class product areas.
+- `Inventory`, `Checklists`, `Quick Cards`, `Notes`, `Settings`: first-class product areas. Sprint 2 list ergonomics: local `.searchable()` filtering on Quick Cards, Notes, and Checklists; swipe actions (archive/delete) on Inventory and Checklists; context menus on Quick Cards (pin/open) and Inventory (edit); pin/unpin on Quick Cards and Handbook sections via `PinnedContentSettings`; zero-state and no-results-state messaging.
 
 ### Application Services
 

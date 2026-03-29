@@ -16,9 +16,7 @@ Audit documentation, update for drift, commit changes, push to GitHub, and sync 
 - Run `swift test` to ensure tests pass
 
 ### Phase 3: Commit & Push
-- Stage updated files with `git add`
-- Generate conventional commit: `docs(sync): update documentation for codebase drift`
-- Push to remote: `git push`
+- Clean up any remaining untracked files, then push or sync them to the GitHub remote following industry standards and best practices for commit conventions. Ensure full compliance with these standards to maintain the stability and integrity of the codebase.
 - Safety: Never force push. Never skip hooks.
 
 ### Phase 4: Notion Sync
