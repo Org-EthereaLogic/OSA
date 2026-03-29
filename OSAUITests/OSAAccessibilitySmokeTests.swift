@@ -77,6 +77,22 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testEmergencyModeSurvivalToolsShortcutIsAccessible() {
+        tapTab("Home")
+
+        let emergencyButton = app.buttons["Emergency Mode"]
+        XCTAssertTrue(emergencyButton.waitForExistence(timeout: 3), "Emergency Mode button missing")
+        emergencyButton.tap()
+
+        let toolsButton = app.buttons["Open Survival Tools"]
+        XCTAssertTrue(
+            toolsButton.waitForExistence(timeout: 3),
+            "Emergency Mode should expose an accessible Survival Tools shortcut"
+        )
+        XCTAssertTrue(toolsButton.isHittable, "Survival Tools shortcut should be hittable")
+    }
+
+    @MainActor
     func testSettingsAccessibilityControlsExist() {
         navigateToMoreItem("Settings")
 

@@ -19,6 +19,7 @@ struct EmergencyModeView: View {
                 VStack(alignment: .leading, spacing: Spacing.xl) {
                     header
                     actionGrid
+                    toolsShortcut
                     locationActions
                 }
                 .padding(Spacing.lg)
@@ -176,6 +177,28 @@ struct EmergencyModeView: View {
             .hapticTap(.prominentNavigation)
             .accessibilityLabel("Find nearby shelters")
             .accessibilityHint("Opens the map filtered to nearby shelters.")
+        }
+    }
+
+    private var toolsShortcut: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Text("Local Tools")
+                .font(.sectionHeader)
+                .accessibilityAddTraits(.isHeader)
+
+            NavigationLink {
+                SurvivalToolsScreen()
+            } label: {
+                EmergencyWideActionRow(
+                    title: "Survival Tools",
+                    subtitle: "Morse, screen light, whistle, timer, converter, and field references",
+                    systemImage: "flashlight.on.fill"
+                )
+            }
+            .buttonStyle(.plain)
+            .hapticTap(.prominentNavigation)
+            .accessibilityLabel("Open Survival Tools")
+            .accessibilityHint("Opens offline survival tools and communication utilities.")
         }
     }
 

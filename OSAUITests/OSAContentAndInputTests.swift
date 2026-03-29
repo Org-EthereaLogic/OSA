@@ -156,6 +156,40 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     @MainActor
+    func testToolsScreenShowsMorseConverterAndDeclination() {
+        navigateToMoreItem("Tools")
+
+        XCTAssertTrue(
+            app.navigationBars["Tools"].waitForExistence(timeout: 3)
+                || app.staticTexts["Morse Signal"].waitForExistence(timeout: 3),
+            "Tools screen should open from More"
+        )
+
+        XCTAssertTrue(
+            app.staticTexts["Morse Signal"].exists,
+            "Tools screen should expose the Morse section"
+        )
+
+        let sosButton = app.buttons["Use SOS"]
+        XCTAssertTrue(
+            sosButton.exists || app.buttons["Play Signal"].exists,
+            "Tools screen should expose Morse controls"
+        )
+
+        let converter = app.staticTexts["Unit Converter"]
+        XCTAssertTrue(
+            scrollToElement(converter),
+            "Tools screen should expose the unit converter"
+        )
+
+        let declination = app.staticTexts["Declination"]
+        XCTAssertTrue(
+            scrollToElement(declination),
+            "Tools screen should expose the declination section"
+        )
+    }
+
+    @MainActor
     func testLibrarySearch() {
         tapTab("Library")
 

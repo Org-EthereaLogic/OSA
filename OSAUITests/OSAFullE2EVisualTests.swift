@@ -359,6 +359,39 @@ final class OSAFullE2EVisualTests: XCTestCase {
         }
     }
 
+    // MARK: - More Tab > Tools
+
+    @MainActor
+    func testToolsScreen() {
+        navigateToMoreItem("Tools")
+
+        screenshot("Tools-Screen")
+
+        let morseSection = app.staticTexts["Morse Signal"]
+        let timerSection = app.staticTexts["Timer / Stopwatch"]
+        let converterSection = app.staticTexts["Unit Converter"]
+        let declinationSection = app.staticTexts["Declination"]
+
+        XCTAssertTrue(
+            morseSection.waitForExistence(timeout: 3),
+            "Tools should show the Morse section"
+        )
+        XCTAssertTrue(
+            timerSection.exists || app.buttons["Start Stopwatch"].exists,
+            "Tools should show timer controls"
+        )
+
+        if !converterSection.exists {
+            app.swipeUp()
+            sleep(1)
+        }
+
+        XCTAssertTrue(
+            converterSection.exists || declinationSection.exists,
+            "Tools should show converter and declination references after scrolling"
+        )
+    }
+
     // MARK: - More Tab > Notes
 
     @MainActor

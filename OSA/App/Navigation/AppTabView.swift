@@ -42,6 +42,12 @@ struct AppTabView: View {
             }
 
             TabSection {
+                Tab(AppTab.tools.title, systemImage: AppTab.tools.icon, value: AppTab.tools) {
+                    NavigationStack {
+                        SurvivalToolsScreen()
+                    }
+                }
+
                 Tab(AppTab.weather.title, systemImage: AppTab.weather.icon, value: AppTab.weather) {
                     NavigationStack {
                         WeatherScreen()
