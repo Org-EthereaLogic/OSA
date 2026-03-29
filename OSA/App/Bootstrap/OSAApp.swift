@@ -45,6 +45,7 @@ struct OSAApp: App {
                 .environment(\.capabilityDetector, dependencies.capabilityDetector)
                 .environment(\.retrievalService, dependencies.retrievalService)
                 .environment(\.inventoryExpiryNotificationService, dependencies.inventoryExpiryNotificationService)
+                .environment(\.widgetSnapshotCoordinator, dependencies.widgetSnapshotCoordinator)
                 .environment(\.connectivityService, dependencies.connectivityService)
                 .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
                 .environment(\.importPipeline, dependencies.importPipeline)
@@ -67,9 +68,15 @@ struct OSAApp: App {
                         return
                     }
 
+                    await dependencies.widgetSnapshotCoordinator.refreshSnapshot()
+                    await dependencies.protocolLiveActivityCoordinator.syncActiveProtocol()
                     try? await dependencies.inventoryExpiryNotificationService.rescheduleNotifications()
                     await dependencies.refreshCoordinator.start()
                     await dependencies.discoveryCoordinator.startIfDue()
+                }
+                .onOpenURL { url in
+                    guard let deepLink = SystemSurfaceDeepLink(url: url) else { return }
+                    navigationCoordinator.handle(deepLink)
                 }
                 .fullScreenCover(isPresented: onboardingBinding) {
                     OnboardingFlowView {

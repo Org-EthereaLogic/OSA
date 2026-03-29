@@ -31,6 +31,8 @@ targets:
         type: folder
     entitlements:
       path: OSA/OSA.entitlements
+    dependencies:
+      - target: OSAWidgetsExtension
     settings:
       base:
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
@@ -39,10 +41,37 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_CFBundleDisplayName: Lantern
+        INFOPLIST_KEY_CFBundleURLTypes:
+          - CFBundleURLName: com.etherealogic.osa
+            CFBundleURLSchemes:
+              - lantern
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map."
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+  OSAWidgetsExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: OSAWidgetsExtension
+        excludes:
+          - "**/*.md"
+      - path: OSA/App/SystemSurfaces
+        includes:
+          - "SystemSurfaceConfiguration.swift"
+          - "SystemSurfaceDeepLink.swift"
+          - "WidgetSnapshotModels.swift"
+          - "WidgetSnapshotStore.swift"
+          - "ActiveProtocolActivityAttributes.swift"
+    entitlements:
+      path: OSAWidgetsExtension/OSAWidgetsExtension.entitlements
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: OSAWidgetsExtension/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Lantern Widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.etherealogic.OSA.OSAWidgetsExtension
   OSATests:
     type: bundle.unit-test
     platform: iOS

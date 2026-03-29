@@ -2,16 +2,23 @@ import MessageUI
 import SwiftUI
 
 struct EmergencyModeView: View {
-    let safeMessageAvailable: Bool
-    let onComposeSafeMessage: () -> Void
-
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @Environment(\.emergencyContactRepository) private var emergencyContactRepository
+    @Environment(\.locationService) private var locationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var isNightVisionEnabled = false
     @State private var isSOSAlarmActive = false
+    @State private var emergencyContacts: [EmergencyContact] = []
+    @State private var showSafeMessageComposer = false
+    @State private var showSafeMessageAlert = false
+    @State private var safeMessageAlertText = ""
 
     private let sosTimer = Timer.publish(every: 1.2, on: .main, in: .common).autoconnect()
+
+    private var safeMessageAvailable: Bool {
+        !emergencyContacts.isEmpty
+    }
 
     var body: some View {
         NavigationStack {
@@ -36,6 +43,18 @@ struct EmergencyModeView: View {
             }
         }
         .background(.osaBackground)
+        .task { loadEmergencyContacts() }
+        .sheet(isPresented: $showSafeMessageComposer) {
+            MessageComposeView(
+                recipients: emergencyContacts.map(\.phoneNumber),
+                body: safeMessageBody
+            )
+        }
+        .alert("I’m Safe Unavailable", isPresented: $showSafeMessageAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(safeMessageAlertText)
+        }
         .overlay {
             Color.red
                 .opacity(isNightVisionEnabled ? 0.2 : 0)
@@ -111,7 +130,7 @@ struct EmergencyModeView: View {
             .accessibilityLabel("View Quick Cards")
             .accessibilityHint("Opens large-type emergency quick cards.")
 
-            Button(action: onComposeSafeMessage) {
+            Button(action: composeSafeMessage) {
                 EmergencyActionCard(
                     title: "I'm Safe",
                     subtitle: safeMessageAvailable ? "Pre-filled SMS to local contacts" : "Add contacts in Settings first",
@@ -258,6 +277,44 @@ struct EmergencyModeView: View {
         if isSOSAlarmActive {
             hapticFeedbackService?.prepare(.emergencyPrimaryAction)
         }
+    }
+
+    private func loadEmergencyContacts() {
+        do {
+            emergencyContacts = try emergencyContactRepository?.listContacts() ?? []
+        } catch {
+            emergencyContacts = []
+        }
+    }
+
+    private func composeSafeMessage() {
+        guard !emergencyContacts.isEmpty else {
+            hapticFeedbackService?.play(.warning)
+            safeMessageAlertText = "Add at least one emergency contact in Settings before using the I’m Safe shortcut."
+            showSafeMessageAlert = true
+            return
+        }
+
+        guard MFMessageComposeViewController.canSendText() else {
+            hapticFeedbackService?.play(.warning)
+            safeMessageAlertText = "Text messaging is not available on this device."
+            showSafeMessageAlert = true
+            return
+        }
+
+        hapticFeedbackService?.play(.emergencyPrimaryAction)
+        showSafeMessageComposer = true
+    }
+
+    private var safeMessageBody: String {
+        var body = "I am safe."
+
+        if let coordinate = locationService?.currentLocation {
+            body += " My location is \(String(format: "%.4f", coordinate.latitude)), \(String(format: "%.4f", coordinate.longitude))."
+        }
+
+        body += " I will contact you when I can."
+        return body
     }
 }
 

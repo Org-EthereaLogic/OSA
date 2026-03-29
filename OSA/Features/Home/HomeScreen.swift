@@ -1,4 +1,3 @@
-import MessageUI
 import SwiftUI
 
 struct HomeScreen: View {
@@ -9,12 +8,10 @@ struct HomeScreen: View {
     @Environment(\.checklistRepository) private var checklistRepository
     @Environment(\.inventoryRepository) private var inventoryRepository
     @Environment(\.supplyTemplateRepository) private var supplyTemplateRepository
-    @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.rssDiscoveryService) private var rssDiscoveryService
     @Environment(\.connectivityService) private var connectivityService
     @Environment(\.weatherAlertService) private var weatherAlertService
-    @Environment(\.locationService) private var locationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @AppStorage(UserProfileSettings.regionKey)
@@ -40,11 +37,7 @@ struct HomeScreen: View {
     @State private var inventoryState: HomeSectionState<[HomeInventoryReminder]> = .loading
     @State private var notesState: HomeSectionState<[NoteRecord]> = .loading
     @State private var readinessSnapshot: SupplyReadinessSnapshot?
-    @State private var emergencyContacts: [EmergencyContact] = []
     @State private var showEmergencyMode = false
-    @State private var showSafeMessageComposer = false
-    @State private var showSafeMessageAlert = false
-    @State private var safeMessageAlertText = ""
     @State private var connectivityNotice: ConnectivityStatusNotice?
     @State private var connectivityNoticeDismissTask: Task<Void, Never>?
 
@@ -78,21 +71,7 @@ struct HomeScreen: View {
         .task { await observeConnectivity() }
         .refreshable { await refreshDashboard() }
         .fullScreenCover(isPresented: $showEmergencyMode) {
-            EmergencyModeView(
-                safeMessageAvailable: !emergencyContacts.isEmpty,
-                onComposeSafeMessage: composeSafeMessage
-            )
-        }
-        .sheet(isPresented: $showSafeMessageComposer) {
-            MessageComposeView(
-                recipients: emergencyContacts.map(\.phoneNumber),
-                body: safeMessageBody
-            )
-        }
-        .alert("I’m Safe Unavailable", isPresented: $showSafeMessageAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(safeMessageAlertText)
+            EmergencyModeView()
         }
         .onDisappear {
             connectivityNoticeDismissTask?.cancel()
@@ -112,7 +91,6 @@ struct HomeScreen: View {
         loadContextualSuggestions()
         loadActiveChecklists()
         loadReadinessSnapshot()
-        loadEmergencyContacts()
         loadInventoryReminders()
         loadRecentNotes()
     }
@@ -454,14 +432,6 @@ struct HomeScreen: View {
         }
     }
 
-    private func loadEmergencyContacts() {
-        do {
-            emergencyContacts = try emergencyContactRepository?.listContacts() ?? []
-        } catch {
-            emergencyContacts = []
-        }
-    }
-
     private func loadInventoryReminders() {
         do {
             let expiring = try inventoryRepository?.itemsExpiringSoon(within: 30) ?? []
@@ -480,37 +450,6 @@ struct HomeScreen: View {
         } catch {
             notesState = .failed("Recent notes could not be loaded.")
         }
-    }
-
-    private func composeSafeMessage() {
-        guard !emergencyContacts.isEmpty else {
-            hapticFeedbackService?.play(.warning)
-            safeMessageAlertText = "Add at least one emergency contact in Settings before using the I’m Safe shortcut."
-            showSafeMessageAlert = true
-            return
-        }
-
-        guard MFMessageComposeViewController.canSendText() else {
-            hapticFeedbackService?.play(.warning)
-            safeMessageAlertText = "Text messaging is not available on this device."
-            showSafeMessageAlert = true
-            return
-        }
-
-        hapticFeedbackService?.play(.emergencyPrimaryAction)
-        showEmergencyMode = false
-        showSafeMessageComposer = true
-    }
-
-    private var safeMessageBody: String {
-        var body = "I am safe."
-
-        if let coordinate = locationService?.currentLocation {
-            body += " My location is \(String(format: "%.4f", coordinate.latitude)), \(String(format: "%.4f", coordinate.longitude))."
-        }
-
-        body += " I will contact you when I can."
-        return body
     }
 
     private func observeConnectivity() async {

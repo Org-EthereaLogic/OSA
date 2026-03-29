@@ -5,6 +5,8 @@ struct AppTabView: View {
 
     @State private var libraryDeepLinkSectionID: UUID?
     @State private var quickCardDeepLinkID: UUID?
+    @State private var checklistRunDeepLinkID: UUID?
+    @State private var showEmergencyMode = false
 
     var body: some View {
         TabView(selection: $coordinator.selectedTab) {
@@ -57,6 +59,9 @@ struct AppTabView: View {
                 Tab(AppTab.checklists.title, systemImage: AppTab.checklists.icon, value: AppTab.checklists) {
                     NavigationStack {
                         ChecklistsScreen()
+                            .navigationDestination(item: $checklistRunDeepLinkID) { runID in
+                                ChecklistRunView(runID: runID)
+                            }
                     }
                 }
 
@@ -88,14 +93,21 @@ struct AppTabView: View {
         .tabViewStyle(.sidebarAdaptable)
         .toolbarBackground(.visible, for: .tabBar)
         .toolbarBackground(.osaSurface, for: .tabBar)
+        .fullScreenCover(isPresented: $showEmergencyMode) {
+            EmergencyModeView()
+        }
         .onChange(of: coordinator.pendingRoute) { _, route in
             guard let route else { return }
             _ = coordinator.consumePendingRoute()
             switch route {
+            case .emergencyMode:
+                showEmergencyMode = true
             case .quickCard(let id):
                 quickCardDeepLinkID = id
             case .handbookSection(let id):
                 libraryDeepLinkSectionID = id
+            case .checklistRun(let id):
+                checklistRunDeepLinkID = id
             }
         }
     }

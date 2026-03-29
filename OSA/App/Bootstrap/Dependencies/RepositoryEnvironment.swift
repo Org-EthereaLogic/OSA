@@ -44,6 +44,10 @@ private struct InventoryExpiryNotificationServiceKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any InventoryExpiryNotificationServicing)? = nil
 }
 
+private struct WidgetSnapshotCoordinatorKey: EnvironmentKey {
+    static let defaultValue: (any WidgetSnapshotRefreshing)? = nil
+}
+
 private struct ImportedKnowledgeRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any ImportedKnowledgeRepository)? = nil
 }
@@ -162,6 +166,11 @@ extension EnvironmentValues {
     var inventoryExpiryNotificationService: (any InventoryExpiryNotificationServicing)? {
         get { self[InventoryExpiryNotificationServiceKey.self] }
         set { self[InventoryExpiryNotificationServiceKey.self] = newValue }
+    }
+
+    var widgetSnapshotCoordinator: (any WidgetSnapshotRefreshing)? {
+        get { self[WidgetSnapshotCoordinatorKey.self] }
+        set { self[WidgetSnapshotCoordinatorKey.self] = newValue }
     }
 
     var importedKnowledgeRepository: (any ImportedKnowledgeRepository)? {

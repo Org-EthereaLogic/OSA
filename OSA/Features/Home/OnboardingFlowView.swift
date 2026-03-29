@@ -6,6 +6,7 @@ struct OnboardingFlowView: View {
     @Environment(\.handbookRepository) private var handbookRepository
     @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.checklistRepository) private var checklistRepository
+    @Environment(\.widgetSnapshotCoordinator) private var widgetSnapshotCoordinator
 
     @AppStorage(UserProfileSettings.regionKey) private var regionRawValue = UserProfileSettings.regionDefault.rawValue
     @AppStorage(UserProfileSettings.householdSizeKey) private var householdSize = UserProfileSettings.householdSizeDefault
@@ -116,6 +117,7 @@ struct OnboardingFlowView: View {
             seedPinnedContent(for: hazards)
             seedGettingStartedChecklist()
             onboardingCompleted = true
+            Task { await widgetSnapshotCoordinator?.refreshSnapshot() }
             onComplete()
         } label: {
             Label("Finish Setup", systemImage: "checkmark.circle.fill")

@@ -8,6 +8,7 @@ struct SettingsScreen: View {
     @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @Environment(\.inventoryExpiryNotificationService) private var inventoryExpiryNotificationService
+    @Environment(\.widgetSnapshotCoordinator) private var widgetSnapshotCoordinator
     @AppStorage(AskScopeSettings.includePersonalNotesKey)
     private var includePersonalNotes = AskScopeSettings.includePersonalNotesDefault
     @AppStorage(InventoryAlertSettings.isEnabledKey)
@@ -73,6 +74,15 @@ struct SettingsScreen: View {
         }
         .onChange(of: braveSearchAPIKey) { _, newValue in
             persistBraveSearchAPIKey(newValue)
+        }
+        .onChange(of: regionRawValue) { _, _ in
+            refreshSystemSurfaceSnapshot()
+        }
+        .onChange(of: householdSize) { _, _ in
+            refreshSystemSurfaceSnapshot()
+        }
+        .onChange(of: hazardsRawValue) { _, _ in
+            refreshSystemSurfaceSnapshot()
         }
         .onChange(of: inventoryAlertLeadTimeRawValue) { _, _ in
             Task { await handleInventoryAlertLeadTimeChange() }
@@ -715,6 +725,10 @@ struct SettingsScreen: View {
             hazards.remove(hazard)
         }
         hazardsRawValue = UserProfileSettings.encode(hazards: Array(hazards).sorted { $0.rawValue < $1.rawValue })
+    }
+
+    private func refreshSystemSurfaceSnapshot() {
+        Task { await widgetSnapshotCoordinator?.refreshSnapshot() }
     }
 
     private var inventoryAlertToggleBinding: Binding<Bool> {

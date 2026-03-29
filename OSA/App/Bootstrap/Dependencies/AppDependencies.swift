@@ -16,6 +16,8 @@ struct AppDependencies {
     let searchService: (any SearchService)?
     let retrievalService: (any RetrievalService)?
     let inventoryExpiryNotificationService: any InventoryExpiryNotificationServicing
+    let widgetSnapshotCoordinator: any WidgetSnapshotRefreshing
+    let protocolLiveActivityCoordinator: ProtocolLiveActivityCoordinator
     let connectivityService: any ConnectivityService
     let trustedSourceHTTPClient: any TrustedSourceHTTPClient
     let importPipeline: ImportedKnowledgeImportPipeline
@@ -36,17 +38,17 @@ struct AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
         let baseInventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
         let supplyTemplateRepository = BundledSupplyTemplateRepository()
-        let checklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
+        let baseChecklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
         let emergencyContactRepository = SwiftDataEmergencyContactRepository(modelContext: modelContainer.mainContext)
         let baseNoteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let importedKnowledgeRepository = SwiftDataImportedKnowledgeRepository(modelContext: modelContainer.mainContext)
         let pendingOperationRepository = SwiftDataPendingOperationRepository(modelContext: modelContainer.mainContext)
         let searchService = try? LocalSearchService.makeDefault()
-        let inventoryRepository: any InventoryRepository
+        let inventoryReadRepository: any InventoryRepository
         let noteRepository: any NoteRepository
 
         if let searchService {
-            inventoryRepository = SearchIndexedInventoryRepository(
+            inventoryReadRepository = SearchIndexedInventoryRepository(
                 base: baseInventoryRepository,
                 searchService: searchService
             )
@@ -59,16 +61,33 @@ struct AppDependencies {
                 searchService: searchService,
                 handbookRepository: contentRepository,
                 quickCardRepository: contentRepository,
-                inventoryRepository: inventoryRepository,
-                checklistRepository: checklistRepository,
+                inventoryRepository: inventoryReadRepository,
+                checklistRepository: baseChecklistRepository,
                 noteRepository: noteRepository,
                 importedKnowledgeRepository: importedKnowledgeRepository
             )
             .rebuild()
         } else {
-            inventoryRepository = baseInventoryRepository
+            inventoryReadRepository = baseInventoryRepository
             noteRepository = baseNoteRepository
         }
+
+        let widgetSnapshotCoordinator = WidgetSnapshotCoordinator(
+            quickCardRepository: contentRepository,
+            inventoryRepository: inventoryReadRepository,
+            supplyTemplateRepository: supplyTemplateRepository
+        )
+        let liveActivityCoordinator = ProtocolLiveActivityCoordinator(
+            checklistRepository: baseChecklistRepository
+        )
+        let inventoryRepository: any InventoryRepository = SystemSurfaceInventoryRepository(
+            base: inventoryReadRepository,
+            widgetSnapshotCoordinator: widgetSnapshotCoordinator
+        )
+        let checklistRepository: any ChecklistRepository = SystemSurfaceChecklistRepository(
+            base: baseChecklistRepository,
+            liveActivityCoordinator: liveActivityCoordinator
+        )
 
         let capabilityDetector = DeviceCapabilityDetector()
         let answerGenerator = Self.makeAnswerGenerator(
@@ -153,6 +172,8 @@ struct AppDependencies {
             searchService: searchService,
             retrievalService: retrievalService,
             inventoryExpiryNotificationService: inventoryExpiryNotificationService,
+            widgetSnapshotCoordinator: widgetSnapshotCoordinator,
+            protocolLiveActivityCoordinator: liveActivityCoordinator,
             connectivityService: connectivityService,
             trustedSourceHTTPClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,

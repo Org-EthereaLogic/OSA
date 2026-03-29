@@ -253,6 +253,7 @@ final class AppEntityQueryTests: XCTestCase {
 
 // MARK: - Test Dependency Builder
 
+@MainActor
 private func makeTestDependencies(
     chapters: [HandbookChapter] = [],
     sections: [HandbookSection] = [],
@@ -266,6 +267,11 @@ private func makeTestDependencies(
     let checklistRepo = StubChecklistRepository(templates: templates)
     let inventoryRepo = StubInventoryRepository(items: inventoryItems)
     let searchService = StubSearchService(results: searchResults)
+    let widgetSnapshotCoordinator = StubWidgetSnapshotCoordinator()
+    let liveActivityCoordinator = ProtocolLiveActivityCoordinator(
+        checklistRepository: checklistRepo,
+        client: StubProtocolLiveActivityClient()
+    )
 
     return AppDependencies(
         handbookRepository: handbookRepo,
@@ -282,6 +288,8 @@ private func makeTestDependencies(
         searchService: searchService,
         retrievalService: nil,
         inventoryExpiryNotificationService: StubInventoryExpiryNotificationService(),
+        widgetSnapshotCoordinator: widgetSnapshotCoordinator,
+        protocolLiveActivityCoordinator: liveActivityCoordinator,
         connectivityService: StubConnectivityService(),
         trustedSourceHTTPClient: StubTrustedSourceHTTPClient(),
         importPipeline: ImportedKnowledgeImportPipeline(
@@ -337,6 +345,15 @@ private final class StubInventoryExpiryNotificationService: InventoryExpiryNotif
 private final class StubHapticFeedbackService: HapticFeedbackService {
     @MainActor func play(_ event: AppHapticEvent) {}
     @MainActor func prepare(_ event: AppHapticEvent) {}
+}
+
+@MainActor
+private final class StubWidgetSnapshotCoordinator: WidgetSnapshotRefreshing {
+    func refreshSnapshot() async {}
+}
+
+private final class StubProtocolLiveActivityClient: ProtocolLiveActivityClient, @unchecked Sendable {
+    func apply(_ payload: ActiveProtocolActivityPayload?) async {}
 }
 
 private final class StubWeatherForecastRepository: WeatherForecastRepository, @unchecked Sendable {

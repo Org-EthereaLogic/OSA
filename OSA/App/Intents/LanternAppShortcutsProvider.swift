@@ -33,5 +33,15 @@ struct LanternAppShortcutsProvider: AppShortcutsProvider {
             shortTitle: "Open Handbook Section",
             systemImageName: "book.closed.fill"
         )
+
+        AppShortcut(
+            intent: OpenEmergencyModeIntent(),
+            phrases: [
+                "Open emergency mode in \(.applicationName)",
+                "Show emergency mode in \(.applicationName)"
+            ],
+            shortTitle: "Emergency Mode",
+            systemImageName: "exclamationmark.triangle.fill"
+        )
     }
 }

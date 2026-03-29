@@ -3,8 +3,10 @@ import Observation
 
 /// A deep-link destination requested by an App Intent.
 enum DeepLinkRoute: Equatable, Sendable {
+    case emergencyMode
     case quickCard(id: UUID)
     case handbookSection(id: UUID)
+    case checklistRun(id: UUID)
 }
 
 /// App-owned navigation coordinator that mediates between App Intents
@@ -24,9 +26,30 @@ final class AppNavigationCoordinator {
         pendingRoute = .quickCard(id: id)
     }
 
+    func openEmergencyMode() {
+        selectedTab = .home
+        pendingRoute = .emergencyMode
+    }
+
     func openHandbookSection(id: UUID) {
         selectedTab = .library
         pendingRoute = .handbookSection(id: id)
+    }
+
+    func openChecklistRun(id: UUID) {
+        selectedTab = .checklists
+        pendingRoute = .checklistRun(id: id)
+    }
+
+    func handle(_ deepLink: SystemSurfaceDeepLink) {
+        switch deepLink {
+        case .emergencyMode:
+            openEmergencyMode()
+        case .quickCard(let id):
+            openQuickCard(id: id)
+        case .checklistRun(let id):
+            openChecklistRun(id: id)
+        }
     }
 
     func consumePendingRoute() -> DeepLinkRoute? {
