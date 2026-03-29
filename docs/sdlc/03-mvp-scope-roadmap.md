@@ -61,8 +61,8 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - richer inventory alerts such as expiring supplies and low-stock reminders
 - improved Ask explanation quality and better result grouping
 - optional export of notes, inventory, and checklist data
-- widgets or app shortcuts for emergency quick cards
-- Apple Intelligence surface: Siri integration, FM-powered inventory completion, and App Intents (see Milestone 6)
+- ~~widgets or app shortcuts for emergency quick cards~~ **Done:** Sprint 7 — four Home Screen widgets plus Lock Screen Live Activity landed in `OSAWidgetsExtension`.
+- ~~Apple Intelligence surface: Siri integration, FM-powered inventory completion, and App Intents~~ **Done:** Milestone 6 complete.
 
 ## Future Stretch Ideas
 
@@ -92,7 +92,8 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 6. ~~Foundation Models integration on supported devices.~~ **Done:** `FoundationModelAdapter` with real capability detection and async generation routing. Extractive fallback on unsupported hardware or generation failure.
 7. ~~Trusted-source search, import, normalization, and local persistence.~~ **Done:** M4P1 (ConnectivityService), M4P2 (imported knowledge domain models and persistence), M4P3 (trusted-source allowlist and HTTP client), M4P4 (normalization, chunking, local commit, and index extension), M4P5 (refresh and retry coordination), and M4P6 (Ask online-offer UX and trusted-source import sheet) are complete.
 8. ~~Hardening, migration tests, and release preparation.~~ **Done:** `SchemaMigrationTests` (7), `SeedContentMigrationTests` (6), `OfflineStressTests` (7), `SafetyRegressionTests` expanded (+14 to 53 total). App Store materials, TestFlight feedback plan, and release-readiness evidence pack created.
-9. Apple Intelligence surface: App Intents and Siri integration, FM-powered inventory completion, AssistantSchema, and knowledge-base discovery.
+9. ~~Apple Intelligence surface: App Intents and Siri integration, FM-powered inventory completion, AssistantSchema, and knowledge-base discovery.~~ **Done:** Milestone 6 complete — M6P1 App Intents foundation, M6P2 App Entities and Spotlight indexing, M6P3 FM-powered inventory completion, M6P4 AssistantSchema with navigation intents and onscreen content, M6P5 RSS-based knowledge discovery with optional Brave Search enrichment.
+10. ~~Widgets and system integration: WidgetKit extension, bounded widget-safe snapshot store, Home Screen and Lock Screen widgets, Live Activity for active protocol progress.~~ **Done:** Sprint 7 complete — `OSAWidgetsExtension` target added via `project.yml`; four Home Screen widgets (readiness, expiry, rotating tip, emergency quick access); `ActiveProtocolLiveActivity` on Lock Screen and Dynamic Island; `WidgetSnapshotCoordinator` + `WidgetSnapshotStore` (App Group) derive bounded snapshots from existing repositories; `ProtocolLiveActivityCoordinator` drives Live Activity from `ChecklistRun` updates; deep-links route through existing `AppNavigationCoordinator`; privacy enforced — Ask history, notes, and free-form content never exposed to system surfaces.
 
 ## Milestone-Based Roadmap
 
@@ -172,6 +173,21 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - **M6P5 — Knowledge-base discovery step** _(Complete)_: RSS-first discovery from trusted sources with optional Brave Search free tier enrichment. `RSSFeedParser` (Foundation XMLParser-based RSS 2.0/Atom), `RSSFeedRegistry` (5 trusted sources with known feeds), `LiveRSSDiscoveryService`, `BraveSearchClient` (user-provided API key, monthly budget tracking, trusted-domain filtering), and `KnowledgeDiscoveryCoordinator` (unified: RSS + Brave → dedup → existing ImportPipeline). Connectivity-gated, schedule-limited (once per day), manual trigger in Settings. Tier 1/2 auto-approve; tier 3 lands as `.pending`. `RSSFeedParserTests` and `KnowledgeDiscoveryCoordinatorTests` cover parser correctness, schedule enforcement, connectivity gating, deduplication, and partial-failure resilience.
 
 - Exit criteria: "Hey Siri, ask Lantern how to purify water" returns a grounded, cited answer from the local knowledge base. Inventory form suggests completions via FM. New trusted-source content can be discovered and imported through the existing approval pipeline.
+
+### Sprint 7: Widgets And System Integration _(Complete)_
+
+- Add bounded Home Screen and Lock Screen surfaces that expose time-sensitive local data without widening privacy boundaries or replicating the app's persistence stack in the extension.
+- One `OSAWidgetsExtension` WidgetKit target added via `project.yml` with App Group entitlements.
+- **Shared snapshot pipeline**: `WidgetSnapshotModels` defines bounded snapshot types (readiness, expiry, rotating tip, emergency actions); `WidgetSnapshotStore` writes to App Group container; `WidgetSnapshotCoordinator` derives snapshots from existing repositories at appropriate update points.
+- **ReadinessScoreWidget**: Home Screen widget showing supply readiness percentage and summary state backed by the same `SupplyReadinessSnapshot` logic used in HomeScreen.
+- **NextExpiringItemWidget**: Home Screen widget showing the soonest-expiring inventory item using the same local expiry rules as inventory notifications.
+- **RotatingTipWidget**: Home Screen widget cycling through approved quick-card tips with deep-link taps into full quick-card detail.
+- **EmergencyAccessWidget**: Lock Screen widget providing direct Emergency Mode access via `SystemSurfaceDeepLink`.
+- **ActiveProtocolLiveActivity**: Lock Screen and Dynamic Island Live Activity reflecting in-progress emergency protocol completion. `ActiveProtocolActivityAttributes` and `ActiveProtocolActivityMapper` define state; `ProtocolLiveActivityCoordinator` starts, updates, and ends activities in response to `ChecklistRun` progress updates.
+- Deep-links route through existing `AppNavigationCoordinator` and `OpenEmergencyModeIntent`.
+- Privacy enforced: system surfaces expose only bounded snapshots from approved sources; Ask history, notes, and free-form content are never visible on the Home Screen or Lock Screen.
+- Tests: `WidgetSnapshotBuilderTests`, `SystemSurfaceDeepLinkTests`, `ActiveProtocolActivityMapperTests` cover snapshot logic, routing, and Live Activity state mapping.
+- Exit criteria: Home Screen widgets show correct local data without opening the app; tapping a widget opens the correct in-app surface; Live Activity reflects active protocol progress in real time; all sensitive content remains in-app.
 
 ## Dependency Map
 

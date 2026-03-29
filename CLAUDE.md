@@ -33,7 +33,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 - Deployment target: iOS 18.0
 - Swift version: 6.0
 - Persistence recommendation: SwiftData in `OSA/Persistence` behind repository protocols in `OSA/Domain`
-- Architecture shape: single Xcode app target with disciplined folder boundaries
+- Architecture shape: main `OSA` app target plus one `OSAWidgetsExtension` WidgetKit extension target, both with disciplined folder boundaries; extension shares bounded snapshot models via App Group
 
 ## Verification Notes
 
@@ -56,6 +56,8 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/Networking/` | M4P1 ConnectivityService in Clients/; M4P3 TrustedSourceAllowlist (17 publishers) and HTTPClient in Clients/; M4P4 ImportPipeline/ (normalization, chunking, pipeline); M4P5 Refresh/ (RefreshRetryPolicy, RefreshCoordinator); M6P5 Discovery/ (RSSFeedParser, RSSFeedRegistry, RSSDiscoveryService, BraveSearchClient, BraveSearchCredentialStore for Keychain-based API key storage, KnowledgeDiscoveryCoordinator with lazy webSearchClientProvider); Weather/ (WeatherKitForecastService, NWSAlertParser for ATOM+CAP feeds, LiveWeatherAlertService); Location/ (CLLocationManagerService); Maps/ (OSMTileCacheService, BundledMapAnnotationProvider with pnw-map-annotations.json); DTOs/ for fetch response types |
 | `OSA/App/Intents/` | M6P1 AskLanternIntent (Siri App Intent with AssistantSchema search conformance) and LanternAppShortcutsProvider; M6P4 OpenQuickCardIntent, OpenHandbookSectionIntent, and OnscreenContentManager |
 | `OSA/App/Intents/Entities/` | M6P2 App Entities (HandbookSectionEntity, QuickCardEntity, ChecklistEntity, InventoryItemEntity) with EntityStringQuery, IndexedEntity, and shared EntityQueryResolver |
+| `OSA/App/SystemSurfaces/` | Sprint 7 widget-safe shared models and coordination layer: WidgetSnapshotModels, WidgetSnapshotStore (App Group), WidgetSnapshotCoordinator, ActiveProtocolActivityAttributes, ActiveProtocolActivityMapper, ProtocolLiveActivityCoordinator, SystemSurfaceDeepLink, SystemSurfaceConfiguration, SystemSurfaceRepositories |
+| `OSAWidgetsExtension/` | Sprint 7 WidgetKit extension target: ReadinessScoreWidget, NextExpiringItemWidget, RotatingTipWidget, EmergencyAccessWidget, ActiveProtocolLiveActivity, OSAWidgetsBundle, WidgetSupport |
 | `OSA/Assistant/InventoryCompletion/` | M6P3 InventoryCompletionService (FM structured output + heuristic fallback) and InventoryCompletionMerger for inventory form suggestions |
 | `OSA/Assistant/Orchestration/` | M6P1 AskLanternIntentExecutor — intent-facing retrieval executor with citation formatting; Sprint 6 StudyGuideBuilder for notes-backed study guide generation from Ask results |
 | `.github/workflows/` | CI (build, test, Codecov and Codacy coverage) and CodeQL security analysis workflows |
