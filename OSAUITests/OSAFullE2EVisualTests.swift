@@ -388,11 +388,19 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
         screenshot("Settings-Screen")
 
-        // Look for About section or Version label
+        // Look for reorganized setup and status sections plus About/Version fallback
+        let emergencyContacts = app.staticTexts["Emergency Contacts"]
+        let accessibilitySection = app.staticTexts["Accessibility & Feedback"]
+        let safeShortcutCopy = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
+            .firstMatch
         let aboutSection = app.staticTexts["About"]
         let versionLabel = app.staticTexts["Version"]
         let lanternLabel = app.staticTexts[AppBrand.subtitle]
-        let anySettingsContent = aboutSection.waitForExistence(timeout: 3)
+        let anySettingsContent = emergencyContacts.waitForExistence(timeout: 3)
+            || accessibilitySection.exists
+            || safeShortcutCopy.exists
+            || aboutSection.exists
             || versionLabel.exists
             || lanternLabel.exists
             || app.switches.count > 0

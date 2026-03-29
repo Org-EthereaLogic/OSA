@@ -3,12 +3,15 @@ import SwiftUI
 struct ChecklistRunView: View {
     let runID: UUID
 
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @Environment(\.checklistRepository) private var repository
     @Environment(\.dismiss) private var dismiss
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var run: ChecklistRun?
     @State private var loadFailed = false
     @State private var showAbandonConfirmation = false
+    @State private var recentlyUpdatedItemID: UUID?
+    @State private var recentItemResetTask: Task<Void, Never>?
 
     var body: some View {
         Group {
@@ -57,26 +60,50 @@ struct ChecklistRunView: View {
             Text("This checklist run will be marked as abandoned.")
         }
         .task { loadRun() }
+        .onDisappear {
+            recentItemResetTask?.cancel()
+        }
     }
 
     @ViewBuilder
     private func content(_ run: ChecklistRun) -> some View {
+        let completedCount = run.items.filter(\.isComplete).count
+        let completionPercent = Int(run.completionFraction * 100)
+
         List {
             Section {
-                ProgressView(value: run.completionFraction)
-                    .tint(run.completionFraction >= 1.0 ? .osaLocal : .osaPrimary)
-                    .accessibilityLabel("Checklist progress")
-                    .accessibilityValue("\(Int(run.completionFraction * 100)) percent complete")
+                VStack(alignment: .leading, spacing: Spacing.md) {
+                    ProgressView(value: run.completionFraction)
+                        .tint(run.completionFraction >= 1.0 ? .osaLocal : .osaPrimary)
+                        .accessibilityLabel("Checklist progress")
+                        .accessibilityValue("\(completionPercent) percent complete")
 
-                HStack {
-                    Text("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    HStack(alignment: .firstTextBaseline) {
+                        VStack(alignment: .leading, spacing: Spacing.xxs) {
+                            Text("\(completedCount) of \(run.items.count) complete")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .contentTransition(.numericText())
 
-                    Spacer()
+                            if run.status == .inProgress, run.completionFraction >= 1.0 {
+                                Label("All items checked. Mark complete when you're ready.", systemImage: "flag.checkered.circle.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(.osaLocal)
+                            }
+                        }
 
-                    StatusBadge(status: run.status)
+                        Spacer()
+
+                        VStack(alignment: .trailing, spacing: Spacing.xxs) {
+                            StatusBadge(status: run.status)
+                            Text("\(completionPercent)%")
+                                .font(.metadataCaption)
+                                .foregroundStyle(run.completionFraction >= 1.0 ? .osaLocal : .secondary)
+                                .contentTransition(.numericText())
+                        }
+                    }
                 }
+                .animation(checklistAnimation, value: run.items.map(\.isComplete))
             }
 
             if let note = run.contextNote, !note.isEmpty {
@@ -89,7 +116,7 @@ struct ChecklistRunView: View {
 
             Section("Items") {
                 ForEach(run.items) { item in
-                    RunItemRow(item: item) {
+                    RunItemRow(item: item, isRecentlyUpdated: recentlyUpdatedItemID == item.id) {
                         toggleItem(item, in: run)
                     }
                 }
@@ -138,7 +165,18 @@ struct ChecklistRunView: View {
         do {
             try repository?.updateRun(updatedRun)
             self.run = updatedRun
-            hapticFeedbackService?.play(.checklistItemToggle)
+            highlightRecentlyUpdatedItem(item.id)
+
+            let wasFullyComplete = run.items.allSatisfy(\.isComplete)
+            let isNowFullyComplete = updatedItems.allSatisfy(\.isComplete)
+
+            if isNowFullyComplete && !wasFullyComplete {
+                hapticFeedbackService?.play(.success)
+            } else if wasFullyComplete && !isNowFullyComplete {
+                hapticFeedbackService?.play(.warning)
+            } else {
+                hapticFeedbackService?.play(.checklistItemToggle)
+            }
         } catch {
             hapticFeedbackService?.play(.error)
             loadFailed = true
@@ -194,23 +232,43 @@ struct ChecklistRunView: View {
             loadFailed = true
         }
     }
+
+    private func highlightRecentlyUpdatedItem(_ itemID: UUID) {
+        recentItemResetTask?.cancel()
+        recentlyUpdatedItemID = itemID
+
+        recentItemResetTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(1.2))
+            guard !Task.isCancelled else { return }
+            recentlyUpdatedItemID = nil
+        }
+    }
+
+    private var checklistAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.18)
+    }
 }
 
 // MARK: - Run Item Row
 
 private struct RunItemRow: View {
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
+
     let item: ChecklistRunItem
+    let isRecentlyUpdated: Bool
     let onToggle: () -> Void
 
     var body: some View {
         Button(action: onToggle) {
-            HStack {
+            HStack(alignment: .top, spacing: Spacing.md) {
                 Image(systemName: item.isComplete ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(item.isComplete ? .osaLocal : .secondary)
                     .font(.title3)
                     .accessibilityHidden(true)
 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: Spacing.xxs) {
                     Text(item.text)
                         .font(.body)
                         .strikethrough(item.isComplete)
@@ -222,13 +280,65 @@ private struct RunItemRow: View {
                             .foregroundStyle(.tertiary)
                     }
                 }
+
+                Spacer(minLength: 0)
+
+                if item.isComplete {
+                    Text("Done")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.osaLocal)
+                        .padding(.horizontal, Spacing.xs)
+                        .padding(.vertical, Spacing.xxs)
+                        .background(Color.osaLocal.opacity(0.12), in: Capsule())
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.vertical, Spacing.sm)
+            .padding(.horizontal, Spacing.sm)
+            .background(rowBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+            .overlay {
+                RoundedRectangle(cornerRadius: CornerRadius.md)
+                    .stroke(rowBorder, lineWidth: 1)
             }
         }
         .buttonStyle(.plain)
+        .scaleEffect(scaleEffect)
+        .animation(rowAnimation, value: animationKey)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(item.text)
         .accessibilityValue(item.isComplete ? "Complete" : "Incomplete")
         .accessibilityHint(item.isComplete ? "Double-tap to mark incomplete." : "Double-tap to mark complete.")
+    }
+
+    private var rowBackground: Color {
+        if item.isComplete {
+            return Color.osaLocal.opacity(0.08)
+        }
+
+        return isRecentlyUpdated ? Color.osaPrimary.opacity(0.08) : Color.clear
+    }
+
+    private var rowBorder: Color {
+        if item.isComplete {
+            return .osaLocal.opacity(0.2)
+        }
+
+        return isRecentlyUpdated ? .osaPrimary.opacity(0.25) : .osaHairline
+    }
+
+    private var scaleEffect: CGFloat {
+        guard isRecentlyUpdated, !accessibilityReduceMotion else { return 1 }
+        return 1.01
+    }
+
+    private var animationKey: String {
+        "\(item.id.uuidString)-\(item.isComplete)-\(isRecentlyUpdated)"
+    }
+
+    private var rowAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.18)
     }
 }
 

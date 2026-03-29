@@ -217,6 +217,31 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     @MainActor
+    func testSettingsShowsEmergencyContactPurposeAndDiscoveryControls() {
+        navigateToMoreItem("Settings")
+
+        let safeShortcutCopy = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
+            .firstMatch
+        XCTAssertTrue(
+            scrollToElement(safeShortcutCopy),
+            "Settings should explain how emergency contacts support the I'm Safe shortcut"
+        )
+
+        let criticalHaptics = app.switches["Critical haptics"]
+        XCTAssertTrue(
+            scrollToElement(criticalHaptics),
+            "Settings should surface critical haptics controls"
+        )
+
+        let discoveryButton = app.buttons["Discover New Content"]
+        XCTAssertTrue(
+            scrollToElement(discoveryButton),
+            "Settings should surface the discovery action"
+        )
+    }
+
+    @MainActor
     private func tapTab(_ name: String) {
         let tabBar = app.tabBars.firstMatch
         let button = tabBar.buttons[name]
@@ -270,5 +295,21 @@ final class OSAContentAndInputTests: XCTestCase {
         if button.exists { return button }
 
         return nil
+    }
+
+    @MainActor
+    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
     }
 }

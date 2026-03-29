@@ -5,6 +5,7 @@ struct EmergencyProtocolView: View {
 
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var currentIndex = 0
@@ -64,6 +65,12 @@ struct EmergencyProtocolView: View {
                         .foregroundStyle(.osaPaperGlow)
                 }
             }
+
+            ProgressView(
+                value: Double(currentIndex + 1),
+                total: Double(max(template.items.count, 1))
+            )
+            .tint(.osaPrimary)
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -81,6 +88,7 @@ struct EmergencyProtocolView: View {
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.top, Spacing.md)
+        .animation(stepAnimation, value: currentIndex)
     }
 
     private var stepCard: some View {
@@ -125,7 +133,7 @@ struct EmergencyProtocolView: View {
                 }
             }
             .id(item.id)
-            .transition(stepTransitionDirection.transition)
+            .transition(stepTransitionDirection.transition(reducedMotion: accessibilityReduceMotion))
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -136,7 +144,7 @@ struct EmergencyProtocolView: View {
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, Spacing.lg)
-        .animation(.easeInOut(duration: 0.22), value: currentIndex)
+        .animation(stepAnimation, value: currentIndex)
     }
 
     private var controls: some View {
@@ -154,14 +162,17 @@ struct EmergencyProtocolView: View {
             Button {
                 stepForward()
             } label: {
-                Label(currentIndex == template.items.count - 1 ? "Review Again" : "Next", systemImage: "arrow.right")
+                Label(
+                    currentIndex == template.items.count - 1 ? "Start Over" : "Next",
+                    systemImage: currentIndex == template.items.count - 1 ? "arrow.counterclockwise" : "arrow.right"
+                )
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .tint(.osaPrimary)
             .accessibilityHint(
                 currentIndex == template.items.count - 1
-                    ? "Returns to the final step for review."
+                    ? "Returns to the first protocol step."
                     : "Moves to the next protocol step."
             )
         }
@@ -172,7 +183,7 @@ struct EmergencyProtocolView: View {
     private func stepBackward() {
         guard currentIndex > 0 else { return }
         stepTransitionDirection = .backward
-        withAnimation(.easeInOut(duration: 0.22)) {
+        withAnimation(stepAnimation) {
             currentIndex = max(currentIndex - 1, 0)
         }
         hapticFeedbackService?.play(.protocolStepBackward)
@@ -180,15 +191,26 @@ struct EmergencyProtocolView: View {
 
     private func stepForward() {
         guard !template.items.isEmpty else { return }
+        if currentIndex == template.items.count - 1 {
+            stepTransitionDirection = .backward
+            withAnimation(stepAnimation) {
+                currentIndex = 0
+            }
+            hapticFeedbackService?.play(.prominentNavigation)
+            return
+        }
+
         stepTransitionDirection = .forward
-        withAnimation(.easeInOut(duration: 0.22)) {
+        withAnimation(stepAnimation) {
             currentIndex = min(currentIndex + 1, template.items.count - 1)
         }
         hapticFeedbackService?.play(.protocolStepForward)
     }
 
     private func toggleMetronome() {
-        metronomeRunning.toggle()
+        withAnimation(stepAnimation) {
+            metronomeRunning.toggle()
+        }
         beatCount = metronomeRunning ? 0 : beatCount
         hapticFeedbackService?.play(.prominentNavigation)
         if metronomeRunning {
@@ -200,7 +222,8 @@ struct EmergencyProtocolView: View {
         guard template.items.indices.contains(currentIndex) else { return }
         let itemID = template.items[currentIndex].id
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        let delay = accessibilityReduceMotion ? 0.0 : 0.1
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             focusedStep = itemID
         }
     }
@@ -216,13 +239,21 @@ struct EmergencyProtocolView: View {
 
         return item.riskLevel == "high" ? "High priority." : ""
     }
+
+    private var stepAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.2)
+    }
 }
 
 private enum StepTransitionDirection {
     case forward
     case backward
 
-    var transition: AnyTransition {
+    func transition(reducedMotion: Bool) -> AnyTransition {
+        guard !reducedMotion else { return .opacity }
+
         switch self {
         case .forward:
             return .asymmetric(
@@ -239,6 +270,8 @@ private enum StepTransitionDirection {
 }
 
 private struct CPRMetronomeCard: View {
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
+
     let isRunning: Bool
     let beatCount: Int
     let onToggle: () -> Void
@@ -252,9 +285,18 @@ private struct CPRMetronomeCard: View {
                 .foregroundStyle(.secondary)
 
             HStack {
+                Text(isRunning ? "Pace active" : "Pace paused")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(isRunning ? .osaEmergency : .secondary)
+                    .padding(.horizontal, Spacing.xs)
+                    .padding(.vertical, Spacing.xxs)
+                    .background((isRunning ? Color.osaEmergency : Color.secondary).opacity(0.12), in: Capsule())
+                    .accessibilityHidden(true)
+
                 Text("Beats: \(beatCount)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .contentTransition(.numericText())
                 Spacer()
                 Button(action: onToggle) {
                     Label(isRunning ? "Pause Pace" : "Start Pace", systemImage: isRunning ? "pause.fill" : "play.fill")
@@ -265,5 +307,12 @@ private struct CPRMetronomeCard: View {
         }
         .padding(Spacing.lg)
         .background(Color.osaEmergency.opacity(0.08), in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .animation(cardAnimation, value: isRunning)
+    }
+
+    private var cardAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.18)
     }
 }

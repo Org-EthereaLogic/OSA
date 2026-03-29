@@ -80,6 +80,8 @@ struct HomeHeaderView: View {
 struct HomeReadinessSectionView: View {
     let readinessSnapshot: SupplyReadinessSnapshot?
 
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
+
     var body: some View {
         HomeSectionCard(title: "Readiness", systemImage: "gauge.with.dots.needle.50percent") {
             if let readinessSnapshot {
@@ -96,6 +98,7 @@ struct HomeReadinessSectionView: View {
                         Text("\(readinessSnapshot.readinessPercent)%")
                             .font(.stressTitle)
                             .foregroundStyle(readinessSnapshot.readinessPercent >= 75 ? .osaLocal : .osaWarning)
+                            .contentTransition(.numericText())
                     }
 
                     HStack(spacing: Spacing.md) {
@@ -116,10 +119,17 @@ struct HomeReadinessSectionView: View {
                 .accessibilityValue(
                     "\(readinessSnapshot.readinessPercent) percent. Based on your \(readinessSnapshot.scenario.displayName.lowercased()) profile and current inventory."
                 )
+                .animation(readinessAnimation, value: readinessSnapshot.readinessPercent)
             } else {
                 HomeSectionEmptyView(message: "Add inventory items to start tracking readiness.")
             }
         }
+    }
+
+    private var readinessAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.18)
     }
 }
 
@@ -128,43 +138,45 @@ struct HomePinnedContentSectionView: View {
 
     var body: some View {
         HomeSectionCard(title: "Pinned Content", systemImage: "pin.fill") {
-            switch state {
-            case .loading:
-                HomeSectionLoadingView(label: "Loading pinned items...")
-            case .empty:
-                HomeSectionEmptyView(message: "Pin quick cards or handbook sections for one-tap access.")
-            case .failed(let message):
-                HomeSectionFailureView(message: message)
-            case .loaded(let items):
-                VStack(spacing: Spacing.sm) {
-                    ForEach(items) { item in
-                        switch item {
-                        case .quickCard(let card):
-                            NavigationLink {
-                                QuickCardDetailView(card: card)
-                            } label: {
-                                HomePinnedRow(
-                                    icon: "bolt.fill",
-                                    title: card.title,
-                                    subtitle: card.summary
-                                )
+            HomeAnimatedStateContainer(identity: state.motionKey { joinedMotionIDs($0) }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Loading pinned items...")
+                case .empty:
+                    HomeSectionEmptyView(message: "Pin quick cards or handbook sections for one-tap access.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let items):
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(items) { item in
+                            switch item {
+                            case .quickCard(let card):
+                                NavigationLink {
+                                    QuickCardDetailView(card: card)
+                                } label: {
+                                    HomePinnedRow(
+                                        icon: "bolt.fill",
+                                        title: card.title,
+                                        subtitle: card.summary
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens pinned quick card details.")
+                            case .handbookSection(let section):
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: section.id)
+                                } label: {
+                                    HomePinnedRow(
+                                        icon: "book.closed.fill",
+                                        title: section.heading,
+                                        subtitle: section.plainText
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens pinned handbook section.")
                             }
-                            .buttonStyle(.plain)
-                            .hapticTap(.prominentNavigation)
-                            .accessibilityHint("Opens pinned quick card details.")
-                        case .handbookSection(let section):
-                            NavigationLink {
-                                HandbookSectionDetailView(sectionID: section.id)
-                            } label: {
-                                HomePinnedRow(
-                                    icon: "book.closed.fill",
-                                    title: section.heading,
-                                    subtitle: section.plainText
-                                )
-                            }
-                            .buttonStyle(.plain)
-                            .hapticTap(.prominentNavigation)
-                            .accessibilityHint("Opens pinned handbook section.")
                         }
                     }
                 }
@@ -197,11 +209,13 @@ struct HomeSpotlightSectionView: View {
             .accessibilityValue(spotlightMode.title)
             .accessibilityHint("Switches between quick cards and the local feed.")
 
-            switch spotlightMode {
-            case .quickCards:
-                quickCardsContent
-            case .feed:
-                feedContent
+            HomeAnimatedStateContainer(identity: spotlightMotionKey) {
+                switch spotlightMode {
+                case .quickCards:
+                    quickCardsContent
+                case .feed:
+                    feedContent
+                }
             }
         }
         .padding(Spacing.lg)
@@ -215,6 +229,15 @@ struct HomeSpotlightSectionView: View {
             if newValue == .feed {
                 onFeedRequested()
             }
+        }
+    }
+
+    private var spotlightMotionKey: String {
+        switch spotlightMode {
+        case .quickCards:
+            "spotlight-quick-\(quickCardsState.motionKey { joinedMotionIDs($0) })"
+        case .feed:
+            "spotlight-feed-\(feedState.motionKey { joinedMotionIDs($0) })"
         }
     }
 
@@ -272,35 +295,37 @@ struct HomeSuggestionsSectionView: View {
 
     var body: some View {
         HomeSectionCard(title: "Suggested For You", systemImage: "sparkles") {
-            switch state {
-            case .loading:
-                HomeSectionLoadingView(label: "Finding relevant content...")
-            case .empty:
-                HomeSectionEmptyView(message: "Finish onboarding or pin a hazard profile to see contextual suggestions.")
-            case .failed(let message):
-                HomeSectionFailureView(message: message)
-            case .loaded(let suggestions):
-                VStack(spacing: Spacing.sm) {
-                    ForEach(suggestions) { suggestion in
-                        switch suggestion.destination {
-                        case .quickCard(let card):
-                            NavigationLink {
-                                QuickCardDetailView(card: card)
-                            } label: {
-                                HomeSuggestionRow(suggestion: suggestion)
+            HomeAnimatedStateContainer(identity: state.motionKey { joinedMotionIDs($0) }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Finding relevant content...")
+                case .empty:
+                    HomeSectionEmptyView(message: "Finish onboarding or pin a hazard profile to see contextual suggestions.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let suggestions):
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(suggestions) { suggestion in
+                            switch suggestion.destination {
+                            case .quickCard(let card):
+                                NavigationLink {
+                                    QuickCardDetailView(card: card)
+                                } label: {
+                                    HomeSuggestionRow(suggestion: suggestion)
+                                }
+                                .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens the suggested quick card.")
+                            case .handbookSection(let section):
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: section.id)
+                                } label: {
+                                    HomeSuggestionRow(suggestion: suggestion)
+                                }
+                                .buttonStyle(.plain)
+                                .hapticTap(.prominentNavigation)
+                                .accessibilityHint("Opens the suggested handbook section.")
                             }
-                            .buttonStyle(.plain)
-                            .hapticTap(.prominentNavigation)
-                            .accessibilityHint("Opens the suggested quick card.")
-                        case .handbookSection(let section):
-                            NavigationLink {
-                                HandbookSectionDetailView(sectionID: section.id)
-                            } label: {
-                                HomeSuggestionRow(suggestion: suggestion)
-                            }
-                            .buttonStyle(.plain)
-                            .hapticTap(.prominentNavigation)
-                            .accessibilityHint("Opens the suggested handbook section.")
                         }
                     }
                 }
@@ -314,23 +339,25 @@ struct HomeActiveChecklistsSectionView: View {
 
     var body: some View {
         HomeSectionCard(title: "Active Checklists", systemImage: "checklist") {
-            switch state {
-            case .loading:
-                HomeSectionLoadingView(label: "Loading active runs...")
-            case .empty:
-                HomeSectionEmptyView(message: "No checklist runs are currently in progress.")
-            case .failed(let message):
-                HomeSectionFailureView(message: message)
-            case .loaded(let runs):
-                VStack(spacing: Spacing.sm) {
-                    ForEach(runs) { run in
-                        NavigationLink {
-                            ChecklistRunView(runID: run.id)
-                        } label: {
-                            HomeChecklistRow(run: run)
+            HomeAnimatedStateContainer(identity: state.motionKey { joinedMotionIDs($0) }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Loading active runs...")
+                case .empty:
+                    HomeSectionEmptyView(message: "No checklist runs are currently in progress.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let runs):
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(runs) { run in
+                            NavigationLink {
+                                ChecklistRunView(runID: run.id)
+                            } label: {
+                                HomeChecklistRow(run: run)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Opens the active checklist run.")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityHint("Opens the active checklist run.")
                     }
                 }
             }
@@ -343,23 +370,25 @@ struct HomeInventorySectionView: View {
 
     var body: some View {
         HomeSectionCard(title: "Inventory", systemImage: "archivebox.fill") {
-            switch state {
-            case .loading:
-                HomeSectionLoadingView(label: "Loading reminders...")
-            case .empty:
-                HomeSectionEmptyView(message: "No low-stock or expiring items need attention.")
-            case .failed(let message):
-                HomeSectionFailureView(message: message)
-            case .loaded(let reminders):
-                VStack(spacing: Spacing.sm) {
-                    ForEach(reminders) { reminder in
-                        NavigationLink {
-                            InventoryItemDetailView(itemID: reminder.itemID)
-                        } label: {
-                            HomeInventoryRow(reminder: reminder)
+            HomeAnimatedStateContainer(identity: state.motionKey { joinedMotionIDs($0) }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Loading reminders...")
+                case .empty:
+                    HomeSectionEmptyView(message: "No low-stock or expiring items need attention.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let reminders):
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(reminders) { reminder in
+                            NavigationLink {
+                                InventoryItemDetailView(itemID: reminder.itemID)
+                            } label: {
+                                HomeInventoryRow(reminder: reminder)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Opens inventory item details.")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityHint("Opens inventory item details.")
                     }
                 }
             }
@@ -372,23 +401,25 @@ struct HomeRecentNotesSectionView: View {
 
     var body: some View {
         HomeSectionCard(title: "Recent Notes", systemImage: "note.text") {
-            switch state {
-            case .loading:
-                HomeSectionLoadingView(label: "Loading recent notes...")
-            case .empty:
-                HomeSectionEmptyView(message: "No notes yet. Add one from the Notes tab.")
-            case .failed(let message):
-                HomeSectionFailureView(message: message)
-            case .loaded(let notes):
-                VStack(spacing: Spacing.sm) {
-                    ForEach(notes) { note in
-                        NavigationLink {
-                            NoteDetailView(noteID: note.id)
-                        } label: {
-                            HomeNoteRow(note: note)
+            HomeAnimatedStateContainer(identity: state.motionKey { joinedMotionIDs($0) }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Loading recent notes...")
+                case .empty:
+                    HomeSectionEmptyView(message: "No notes yet. Add one from the Notes tab.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let notes):
+                    VStack(spacing: Spacing.sm) {
+                        ForEach(notes) { note in
+                            NavigationLink {
+                                NoteDetailView(noteID: note.id)
+                            } label: {
+                                HomeNoteRow(note: note)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityHint("Opens note details.")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityHint("Opens note details.")
                     }
                 }
             }
@@ -529,6 +560,7 @@ struct HomeChecklistRow: View {
                 Text("\(run.items.filter(\.isComplete).count) of \(run.items.count) complete")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .contentTransition(.numericText())
             }
 
             Spacer(minLength: 0)
@@ -536,6 +568,7 @@ struct HomeChecklistRow: View {
             Text("\(Int(run.completionFraction * 100))%")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
+                .contentTransition(.numericText())
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(run.title)
@@ -587,6 +620,7 @@ struct ReadinessBadge: View {
             Text(value)
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(tint)
+                .contentTransition(.numericText())
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -677,6 +711,51 @@ struct HomeSuggestionRow: View {
             "book.closed.fill"
         }
     }
+}
+
+private struct HomeAnimatedStateContainer<Content: View>: View {
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
+
+    let identity: String
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        content()
+            .id(identity)
+            .transition(contentTransition)
+            .animation(contentAnimation, value: identity)
+    }
+
+    private var contentTransition: AnyTransition {
+        accessibilityReduceMotion
+            ? .opacity
+            : .move(edge: .bottom).combined(with: .opacity)
+    }
+
+    private var contentAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.18)
+    }
+}
+
+private extension HomeSectionState {
+    func motionKey(loadedKey: (Value) -> String) -> String {
+        switch self {
+        case .loading:
+            "loading"
+        case .empty:
+            "empty"
+        case .failed(let message):
+            "failed-\(message)"
+        case .loaded(let value):
+            "loaded-\(loadedKey(value))"
+        }
+    }
+}
+
+private func joinedMotionIDs<T: Identifiable>(_ items: [T]) -> String {
+    items.map { String(describing: $0.id) }.joined(separator: "|")
 }
 
 struct HomeNoteRow: View {

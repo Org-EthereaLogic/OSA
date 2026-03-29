@@ -92,6 +92,20 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
             "Settings should expose Add Emergency Contact"
         )
 
+        let safeShortcutCopy = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
+            .firstMatch
+        XCTAssertTrue(
+            scrollToElement(safeShortcutCopy),
+            "Settings should explain how emergency contacts support the I'm Safe shortcut"
+        )
+
+        let criticalHapticsToggle = app.switches["Critical haptics"]
+        XCTAssertTrue(
+            scrollToElement(criticalHapticsToggle),
+            "Settings should expose Critical haptics"
+        )
+
         let discoveryButton = app.buttons["Discover New Content"]
         XCTAssertTrue(
             scrollToElement(discoveryButton),

@@ -2,6 +2,7 @@ import MessageUI
 import SwiftUI
 
 struct HomeScreen: View {
+    @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @Environment(\.handbookRepository) private var handbookRepository
     @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.checklistRepository) private var checklistRepository
@@ -41,11 +42,16 @@ struct HomeScreen: View {
     @State private var showSafeMessageComposer = false
     @State private var showSafeMessageAlert = false
     @State private var safeMessageAlertText = ""
+    @State private var connectivityNotice: ConnectivityStatusNotice?
+    @State private var connectivityNoticeDismissTask: Task<Void, Never>?
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
                 HomeHeaderView(connectivity: connectivity, onEmergencyModeTapped: openEmergencyMode)
+                if let connectivityNotice {
+                    ConnectivityStatusCallout(notice: connectivityNotice)
+                }
                 HomeReadinessSectionView(readinessSnapshot: readinessSnapshot)
                 HomePinnedContentSectionView(state: pinnedState)
                 HomeSpotlightSectionView(
@@ -84,6 +90,9 @@ struct HomeScreen: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(safeMessageAlertText)
+        }
+        .onDisappear {
+            connectivityNoticeDismissTask?.cancel()
         }
     }
 
@@ -347,10 +356,82 @@ struct HomeScreen: View {
 
     private func observeConnectivity() async {
         guard let service = connectivityService else { return }
-        connectivity = service.currentState
+        var previousState: ConnectivityState?
         for await state in service.stateStream() {
-            connectivity = state
+            handleConnectivityChange(from: previousState, to: state)
+            previousState = state
         }
+    }
+
+    private func handleConnectivityChange(from previousState: ConnectivityState?, to newState: ConnectivityState) {
+        guard previousState != newState else { return }
+        withAnimation(connectivityAnimation) {
+            connectivity = newState
+        }
+        presentConnectivityNotice(homeConnectivityNotice(for: newState, previousState: previousState))
+    }
+
+    private func presentConnectivityNotice(_ notice: ConnectivityStatusNotice?) {
+        connectivityNoticeDismissTask?.cancel()
+
+        withAnimation(connectivityAnimation) {
+            connectivityNotice = notice
+        }
+
+        guard let notice, notice.autoDismisses else { return }
+
+        connectivityNoticeDismissTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled, connectivityNotice == notice else { return }
+            withAnimation(connectivityAnimation) {
+                connectivityNotice = nil
+            }
+        }
+    }
+
+    private func homeConnectivityNotice(
+        for state: ConnectivityState,
+        previousState: ConnectivityState?
+    ) -> ConnectivityStatusNotice? {
+        switch state {
+        case .offline:
+            return ConnectivityStatusNotice(
+                state: state,
+                title: "Offline mode active",
+                message: "Quick cards, checklists, and notes stay available locally while feed updates pause.",
+                autoDismisses: false
+            )
+        case .onlineConstrained:
+            return ConnectivityStatusNotice(
+                state: state,
+                title: "Connection limited",
+                message: "Local content stays ready. Feed and trusted-source refreshes may pause until the signal improves.",
+                autoDismisses: false
+            )
+        case .onlineUsable:
+            guard let previousState, previousState != .onlineUsable else { return nil }
+            return ConnectivityStatusNotice(
+                state: state,
+                title: previousState == .syncInProgress ? "Refresh complete" : "Connection restored",
+                message: previousState == .syncInProgress
+                    ? "Approved-source updates finished. Local content remained available throughout."
+                    : "Online enrichment is available again while local content remains ready.",
+                autoDismisses: true
+            )
+        case .syncInProgress:
+            return ConnectivityStatusNotice(
+                state: state,
+                title: "Refreshing approved sources",
+                message: "New feed items and trusted-source updates are loading without blocking local tools.",
+                autoDismisses: false
+            )
+        }
+    }
+
+    private var connectivityAnimation: Animation {
+        accessibilityReduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.2)
     }
 }
 
