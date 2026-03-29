@@ -73,7 +73,8 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 
 ### Settings
 
-- Model capability status, trusted-source preferences, privacy posture, Ask scope controls, and storage diagnostics.
+- Organized into focused sections: Preparedness Profile, Emergency Contacts, Accessibility & Feedback, Assistant, Connectivity, Knowledge Discovery, Privacy, and About.
+- Model capability status, trusted-source preferences, privacy posture, Ask scope controls, accessibility toggles (large print, critical haptics), emergency contact management, connectivity status with inline callouts, and knowledge discovery controls.
 
 ## Emergency-First Shortcuts
 
@@ -89,7 +90,8 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 ## Offline And Online State Handling In UI
 
-- Show current mode as `Offline`, `Online`, or `Refreshing`.
+- Show current mode as `Offline`, `Online (constrained)`, `Online (usable)`, or `Refreshing` via `ConnectivityBadge` in the Home header.
+- Connectivity state changes trigger inline `ConnectivityStatusCallout` notices on Home and Settings: offline and constrained notices persist until state improves; reconnection notices auto-dismiss after 4 seconds. All transitions respect `accessibilityReduceMotion`.
 - Never gray out local features because network is unavailable.
 - Online-only actions should remain visible but clearly labeled.
 - When Ask lacks local evidence, the UX should say that plainly and optionally offer `Search trusted web sources` only if connected.
@@ -218,10 +220,14 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 ### Settings
 
-- Ask scope settings (personal notes toggle via `AskScopeSettings`)
-- model capability status (live from `DeviceCapabilityDetector`)
-- source trust and refresh settings _(not yet implemented — M4)_
-- storage and privacy section _(not yet implemented — M4/M5)_
+- Preparedness Profile: region picker, household size stepper, hazard toggles
+- Emergency Contacts: CRUD with I'm Safe shortcut integration
+- Accessibility & Feedback: large print reading mode, critical haptics toggle
+- Assistant: model capability status (live from `DeviceCapabilityDetector`), personal notes scope toggle
+- Connectivity: inline status callout with connectivity state stream, reduce-motion-aware transitions
+- Knowledge Discovery: Brave Search API key management, discover action with status feedback
+- Privacy: data storage explanation, reset option
+- About: version, branding
 
 ## Major UI States
 
