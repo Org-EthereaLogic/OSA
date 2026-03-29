@@ -14,7 +14,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 
 ## CI And Quality Automation
 
-- GitHub Actions CI (`.github/workflows/ci.yml`) runs on every push and PR to `main`: build, full test suite with coverage, and Codecov upload.
+- GitHub Actions CI (`.github/workflows/ci.yml`) runs on every push and PR to `main`: build, full test suite with coverage, and Codecov and Codacy coverage upload.
 - GitHub Actions CodeQL (`.github/workflows/codeql.yml`) runs weekly and on push/PR: Swift security analysis.
 - Codacy CLI available locally via `.codacy/cli.sh` for on-demand code quality checks.
 - Coverage badge and Codacy grade badge are in `README.md`.
@@ -58,7 +58,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 | `OSA/App/Intents/Entities/` | M6P2 App Entities (HandbookSectionEntity, QuickCardEntity, ChecklistEntity, InventoryItemEntity) with EntityStringQuery, IndexedEntity, and shared EntityQueryResolver |
 | `OSA/Assistant/InventoryCompletion/` | M6P3 InventoryCompletionService (FM structured output + heuristic fallback) and InventoryCompletionMerger for inventory form suggestions |
 | `OSA/Assistant/Orchestration/` | M6P1 AskLanternIntentExecutor — intent-facing retrieval executor with citation formatting |
-| `.github/workflows/` | CI (build, test, Codecov coverage) and CodeQL security analysis workflows |
+| `.github/workflows/` | CI (build, test, Codecov and Codacy coverage) and CodeQL security analysis workflows |
 | `.codacy/` | Codacy CLI bootstrap script for local quality checks |
 | `OSA/Shared/` | Reusable UI (BrandMarkView, BrandWordmarkView, ConnectivityBadge with ConnectivityStatusNotice and ConnectivityStatusCallout, MessageComposeView, ActivityShareSheet), design system (ColorTokens, Typography), cross-cutting helpers (MarkdownPreprocessor, AppBrand), Support/ (HomeSectionState, SettingsValueCoding), Support/Export/ (ChecklistPDFExporter, InventoryCSVExporter, NoteExportFormatter, ContentShareFormatter), Support/Templates/ (FamilyEmergencyPlanTemplate), Support/Tools/ (`SurvivalToolKit` for Morse, conversion, radio-reference, and declination logic), Support/Haptics/ (HapticFeedbackService protocol, LiveHapticFeedbackService with UIKitHapticEngine cached generators, AppHapticEvent enum, `.hapticTap()` view modifier) |
 | `OSAUITests/` | UI tests: launch (OSAAppLaunchUITests), E2E visual navigation (OSAFullE2EVisualTests), content/input (OSAContentAndInputTests), rotation (OSARotationUITests), accessibility smoke (OSAAccessibilitySmokeTests) — 44 UI tests total |

@@ -184,7 +184,7 @@ Minimum device coverage should include:
 
 ## CI And Quality Automation
 
-- **GitHub Actions CI** (`.github/workflows/ci.yml`): runs on every push and pull request to `main`. Builds the project, runs the full test suite with code coverage enabled, converts the `.xcresult` bundle to Cobertura XML, and uploads to Codecov.
+- **GitHub Actions CI** (`.github/workflows/ci.yml`): runs on every push and pull request to `main`. Builds the project, runs the full test suite with code coverage enabled, converts the `.xcresult` bundle to Cobertura XML, and uploads to Codecov and Codacy.
 - **GitHub Actions CodeQL** (`.github/workflows/codeql.yml`): runs weekly and on push/PR to `main`. Performs Swift security analysis with the `security-extended` query suite.
 - **Codecov**: tracks code coverage trends and provides PR-level coverage diffs. Badge in `README.md`.
 - **Codacy**: code quality analysis. Local CLI available via `.codacy/cli.sh`. Grade badge in `README.md`.

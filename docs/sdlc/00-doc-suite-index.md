@@ -24,7 +24,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 - Milestone 4 Phase 4 (Import pipeline) is implemented: `ImportedKnowledgeNormalizer`, `KnowledgeChunker`, and `ImportedKnowledgeImportPipeline` in `ImportPipeline/`. FTS5 search index extended with `.importedKnowledge` kind. Ask retrieval extended for approved imported knowledge. `ImportedKnowledgeNormalizerTests` (6 tests), `KnowledgeChunkerTests` (8 tests), `ImportedKnowledgeImportPipelineTests` (6 tests).
 - Milestone 4 Phase 5 (Refresh and retry coordination) is implemented: `RefreshRetryPolicy` and `ImportedKnowledgeRefreshCoordinator` in `Refresh/`. `RefreshRetryPolicyTests` (6 tests) and `ImportedKnowledgeRefreshCoordinatorTests` (6 tests) verify backoff, connectivity gating, and idempotent startup.
 - Milestone 4 Phase 6 (Ask online-offer UX and import sheet) is implemented: `TrustedSourceImportViewModel` and `TrustedSourceImportSheet` in `Features/Ask/` provide user-driven import from approved publishers when local evidence is insufficient and connectivity is usable. `AskScreen` `RefusalView` shows conditional import offer. `AskTrustedSourceImportFlowTests` (16 tests) verify URL validation, source filtering, preview/import lifecycle, and state management.
-- CI and quality automation: GitHub Actions CI workflow (`.github/workflows/ci.yml`) runs build, test, and Codecov coverage upload on push/PR to main. CodeQL security analysis (`.github/workflows/codeql.yml`) runs weekly and on push/PR. Codacy CLI available locally via `.codacy/cli.sh`.
+- CI and quality automation: GitHub Actions CI workflow (`.github/workflows/ci.yml`) runs build, test, and Codecov and Codacy coverage upload on push/PR to main. CodeQL security analysis (`.github/workflows/codeql.yml`) runs weekly and on push/PR. Codacy CLI available locally via `.codacy/cli.sh`.
 - M6P1 App Intents foundation is complete: `AskLanternIntent` and `LanternAppShortcutsProvider` for Siri question-answering, `SharedRuntime` for non-SwiftUI dependency access, `AskLanternIntentExecutor` for intent-facing retrieval with citation formatting. 8 focused tests.
 - M6P2 App Entities and Spotlight indexing is complete: `HandbookSectionEntity`, `QuickCardEntity`, `ChecklistEntity`, and `InventoryItemEntity` (`AppEntity` + `IndexedEntity` + `EntityStringQuery`) backed by `EntityQueryResolver`. Privacy rules enforce archived-item exclusion and notes redaction. 19 focused tests.
 - M6P3 FM-powered inventory completion is complete: `LocalInventoryCompletionService` in `OSA/Assistant/InventoryCompletion/` uses Foundation Models `@Generable` structured output to suggest inventory fields, with deterministic heuristic fallback. `InventoryCompletionMerger` enforces conservative merge rules. User-triggered "Suggest Details" in `InventoryItemFormView`. 33 focused tests.
@@ -88,8 +88,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 23. [M6P3 FM-Powered Inventory Completion Enhanced Prompt](../prompt/enhanced/35-m6p3-fm-powered-inventory-completion-enhanced-prompt.md) _(implementation task prompt)_
 24. [M6P4 AssistantSchema, Onscreen Content, And Navigation Intents Enhanced Prompt](../prompt/enhanced/36-m6p4-assistant-schema-onscreen-content-and-navigation-intents-enhanced-prompt.md) _(implementation task prompt)_
 25. [Sprint 5 Notifications, Export, Sharing, And Library Cross-Links Enhanced Prompt](../prompt/enhanced/40-sprint-5-notifications-export-sharing-enhanced-prompt.md) _(implementation task prompt)_
-26. ADRs in [docs/adr](../adr/)
-27. [Risk Register](./risk-register.md)
+26. [Sprint 6 Assistant Intelligence And Bounded Conversation Enhanced Prompt](../prompt/enhanced/41-sprint-6-assistant-intelligence-and-conversation-enhanced-prompt.md) _(implementation task prompt)_
+27. ADRs in [docs/adr](../adr/)
+28. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -129,6 +130,7 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [38-sprint-3-motion-haptics-settings-polish-enhanced-prompt.md](../prompt/enhanced/38-sprint-3-motion-haptics-settings-polish-enhanced-prompt.md) | Sprint 3 motion, haptics, connectivity feedback, and Settings polish. | Executed |
 | [39-sprint-4-survival-tools-and-communication-utilities-enhanced-prompt.md](../prompt/enhanced/39-sprint-4-survival-tools-and-communication-utilities-enhanced-prompt.md) | Sprint 4 offline survival tools: Morse, screen SOS, whistle, timer, converter, radio reference, signal mirror, and declination. | Executed |
 | [40-sprint-5-notifications-export-sharing-enhanced-prompt.md](../prompt/enhanced/40-sprint-5-notifications-export-sharing-enhanced-prompt.md) | Sprint 5 post-M5 productivity slice: local inventory-expiry alerts, export and sharing flows, family emergency plan notes, related-content links, and Library content-type filtering. | Executed |
+| [41-sprint-6-assistant-intelligence-and-conversation-enhanced-prompt.md](../prompt/enhanced/41-sprint-6-assistant-intelligence-and-conversation-enhanced-prompt.md) | Sprint 6 bounded Ask enhancement: session follow-up context, local recent-question history, notes-backed study guides, region-aware retrieval preferences, and context-aware suggestions. | Drafted |
 | [sdlc_doc_suite_prompt.md](../prompt/enhanced/sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
 
 ## Current Suite Status

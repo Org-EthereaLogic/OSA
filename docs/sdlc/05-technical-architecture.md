@@ -257,7 +257,7 @@ Named asset catalog colors (`AccentColor`, `LanternEmber`, `LanternSlate`) provi
 
 ## CI And Quality Automation
 
-- **GitHub Actions CI** (`.github/workflows/ci.yml`): build, test, and Codecov coverage upload on push/PR to `main`.
+- **GitHub Actions CI** (`.github/workflows/ci.yml`): build, test, and Codecov and Codacy coverage upload on push/PR to `main`.
 - **GitHub Actions CodeQL** (`.github/workflows/codeql.yml`): weekly and push/PR Swift security analysis.
 - **Codacy**: code quality analysis with local CLI (`.codacy/cli.sh`) and grade badge.
 - **Codecov**: code coverage tracking with PR diffs and coverage badge.
