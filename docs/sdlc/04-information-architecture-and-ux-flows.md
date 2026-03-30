@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 - The UX must work under both ordinary planning use and stress-state emergency use.
 - Core functionality must remain useful offline.
 - Required top-level screens are Home, Library, Ask, Inventory, Checklists, Quick Cards, Notes, and Settings.
-- All top-level screens are now implemented with SwiftUI feature surfaces backed by repository and retrieval protocols through environment injection. The navigation shell uses 4 primary tabs (Home, Library, Ask, Inventory) plus a More section (Checklists, Quick Cards, Notes, Settings).
+- All top-level screens are now implemented with SwiftUI feature surfaces backed by repository and retrieval protocols through environment injection. The navigation shell uses 6 primary tabs (Home, Library, Ask, Inventory, Map, Document Vault) plus a More section (Tools, Weather, Checklists, Quick Cards, Notes, Settings).
 
 ## Assumptions
 
@@ -24,7 +24,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 ## Open Questions
 
-- ~~Should Checklists or Quick Cards get a permanent tab slot in v1?~~ **Resolved by implementation:** neither gets a permanent tab slot. Both live in the `More` section of the tab bar alongside Notes and Settings, consistent with the 4-primary-tab navigation pattern.
+- ~~Should Checklists or Quick Cards get a permanent tab slot in v1?~~ **Resolved by implementation:** neither gets a permanent tab slot. Both live in the `More` section of the tab bar alongside Tools, Weather, Notes, and Settings.
 - Should first launch offer a guided setup for family contacts and core kits, or skip directly into content?
 - How much customization should Home allow before launch?
 
@@ -32,12 +32,12 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 Recommended root model:
 
-- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, and a root overflow surface or route list for `Tools`, `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
+- Primary navigation shell with persistent access to `Home`, `Library`, `Ask`, `Inventory`, `Map`, and `Document Vault`, and a root overflow surface for `Tools`, `Weather`, `Checklists`, `Quick Cards`, `Notes`, and `Settings`.
 - Home acts as the launch screen and emergency-first dashboard.
 - Global search entry from Home, Library, and Ask.
 - A persistent offline/online status indicator in the navigation chrome or Home header.
 
-This keeps the required screens first-class without overcrowding a five-slot tab bar.
+This keeps the required screens first-class without overcrowding the tab bar.
 
 ## Top-Level Screens
 
@@ -258,5 +258,5 @@ Under stress, the app should bias toward direct card opening and simple checklis
 ## Next-Step Recommendations
 
 1. ~~Convert these flows into low-fidelity wireframes before writing UI code.~~ **Done:** All core screens are implemented as SwiftUI views.
-2. ~~Decide which destinations get permanent tab presence versus Home or overflow access.~~ **Resolved by implementation:** 4 primary tabs (Home, Library, Ask, Inventory) plus a More section for Checklists, Quick Cards, Notes, and Settings.
+2. ~~Decide which destinations get permanent tab presence versus Home or overflow access.~~ **Resolved by implementation:** 6 primary tabs (Home, Library, Ask, Inventory, Map, Document Vault) plus a More section for Tools, Weather, Checklists, Quick Cards, Notes, and Settings.
 3. Prototype the Quick Cards large-type presentation early; it is central to the product identity.
