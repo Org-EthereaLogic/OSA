@@ -29,7 +29,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 
 ## Open Questions
 
-- Should attachments such as photos or scanned documents be in scope for inventory or notes in v1?
+- ~~Should attachments such as photos or scanned documents be in scope for inventory or notes in v1?~~ **Resolved:** Sprint 11 adds inventory photo attachments (`InventoryPhotoStore`) and encrypted document vault (`DocumentVaultEntry`) for scanned/imported documents.
 - ~~Should local map assets be records in the same store or a future file-backed feature?~~ **Resolved:** Waypoints and tracks are SwiftData records. OSM tile cache is file-backed (disk-based tile store managed by `OSMTileCacheService`). The two stores are independent.
 - Is user export needed before any migration strategy is considered production-ready?
 
@@ -73,10 +73,13 @@ erDiagram
     EmergencyContact }|--|| UserData : belongs_to
     SupplyTemplate ||--o{ SupplyTemplateItem : contains
     RecordedTrack ||--o{ RecordedTrackPoint : contains
+    InventoryItem ||--o{ InventoryPhotoAttachment : has_photos
+    KnowledgePackInstallState ||--o{ KnowledgePackRecordSet : tracks_installed
     %% Note: AISession, AIMessage, AppSetting, and PendingOperation are planned but not yet implemented.
     %% DailyForecast and WeatherAlert are standalone cached entities (no relationships to other domain models).
     %% EmergencyContact is a standalone user-entered entity. SupplyTemplate is bundled seed data for hazard-scenario supply kits.
     %% UserWaypoint and RecordedTrack are standalone user-created location entities.
+    %% DocumentVaultEntry is a standalone encrypted-file metadata entity. KnowledgePackInstallState tracks installed pack versions.
 ```
 
 ## Entity Schemas
@@ -448,6 +451,57 @@ Each `RecordedTrackPoint`:
 
 Persisted via `PersistedRecordedTrack` + `PersistedRecordedTrackPoint` SwiftData models with cascade relationship. Repository: `RecordedTrackRepository` protocol with `SwiftDataRecordedTrackRepository` implementation. GPX 1.1 export via `GPXExporter`.
 
+### DocumentVaultEntry _(Document Vault — Complete)_
+
+- `id`: UUID
+- `title`: String
+- `category`: DocumentVaultCategory (identity, medical, insurance, property, finance, emergencyPlan, other)
+- `captureSource`: DocumentCaptureSource (camera, photoLibrary, fileImport)
+- `encryptedFileIdentifier`: String (UUID-based file name)
+- `fileExtension`: String (validated alphanumeric)
+- `byteCount`: Int
+- `ocrSummary`: String? (optional extracted text)
+- `createdAt`: Date
+- `updatedAt`: Date
+
+Persisted via `PersistedDocumentVaultEntry` SwiftData model. Encryption key stored in Keychain via `DocumentVaultKeyStore`. File contents encrypted using CryptoKit AES-GCM in `EncryptedDocumentVaultStore`. Repository: `DocumentVaultRepository` protocol with `SwiftDataDocumentVaultRepository` implementation.
+
+### KnowledgePackInstallState _(Knowledge Packs — Complete)_
+
+- `packIdentifier`: String (unique, e.g., "water-readiness")
+- `title`: String
+- `version`: String
+- `status`: KnowledgePackInstallStatus (notInstalled, installing, installed, failed)
+- `installedAt`: Date?
+- `contentHash`: String
+- `lastError`: String?
+- `recordSet`: KnowledgePackRecordSet (JSON-serialized chapter, quick-card, checklist, field-reference IDs)
+- `lastRefreshedAt`: Date?
+
+Persisted via `PersistedKnowledgePackInstallState` SwiftData model with unique `packIdentifier`. Repository: `KnowledgePackInstallStateRepository` protocol with `SwiftDataKnowledgePackInstallStateRepository` implementation.
+
+### InventoryPhotoAttachment _(Inventory Capture — Complete)_
+
+- `id`: UUID
+- `fileName`: String (UUID-based with extension)
+- `capturedAt`: Date
+- `source`: InventoryCaptureSource (camera, photoLibrary, liveScanner)
+
+File-backed storage in `Application Support/OSA/InventoryPhotos/` with `FileProtectionType.completeUntilFirstUserAuthentication`. Repository: `InventoryPhotoStore` protocol with `FileBackedInventoryPhotoStore` implementation.
+
+### KnowledgePackCatalogEntry _(Knowledge Packs — Complete, not persisted)_
+
+- `id`: String (pack identifier)
+- `title`: String
+- `summary`: String
+- `version`: String
+- `manifestURL`: URL (file URL for bundled, HTTPS for remote)
+- `contentHash`: String
+- `isBundled`: Bool (computed from URL scheme)
+- `requiresConnectivity`: Bool (computed from isBundled)
+
+Loaded from bundled `OSA/Resources/KnowledgePacks/catalog.json` or remote catalog via `KnowledgePackCatalogClient`. Not persisted in SwiftData.
+
 ## Local File And Storage Layout
 
 Recommended layout under app container:
@@ -471,6 +525,11 @@ Application Support/
     regions.json
     tiles/
       <z>/<x>/<y>.png
+  InventoryPhotos/
+    <uuid>.jpg
+    <uuid>.png
+  DocumentVault/
+    <encrypted-file-id>.enc
 Caches/
   RefreshTemp/
   RenderedSearchSnippets/
@@ -509,4 +568,4 @@ Caches/
 
 1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** All core entity schemas are implemented — editorial content (chapters, sections, quick cards) and user data (inventory, checklists, notes) — with SwiftData models, domain value types, repository protocols, and environment-key DI. Feature UI layers read from these models through protocol injection.
 2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`, extended to include checklist template seed data.
-3. ~~Decide whether attachments and map assets belong in v1 before freezing the first schema version.~~ **Resolved:** Map assets resolved (see Open Questions). Attachments (photos, scanned documents) remain deferred to a post-v1 iteration.
+3. ~~Decide whether attachments and map assets belong in v1 before freezing the first schema version.~~ **Resolved:** Map assets resolved (see Open Questions). Attachments resolved: Sprint 11 adds inventory photo attachments and encrypted document vault for scanned documents.

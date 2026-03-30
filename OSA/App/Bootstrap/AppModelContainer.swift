@@ -17,6 +17,102 @@ private extension ProcessInfo {
     }
 }
 
+struct BundledKnowledgePackBootstrapper {
+    let catalogClient: KnowledgePackCatalogClient
+    let contentRepository: any KnowledgePackContentRepository
+    let installStateRepository: any KnowledgePackInstallStateRepository
+    let now: () -> Date
+
+    init(
+        catalogClient: KnowledgePackCatalogClient,
+        contentRepository: any KnowledgePackContentRepository,
+        installStateRepository: any KnowledgePackInstallStateRepository,
+        now: @escaping () -> Date = Date.init
+    ) {
+        self.catalogClient = catalogClient
+        self.contentRepository = contentRepository
+        self.installStateRepository = installStateRepository
+        self.now = now
+    }
+
+    @discardableResult
+    func installBundledPacksIfNeeded() -> [KnowledgePackInstallState] {
+        guard let catalog = try? catalogClient.loadLocalCatalog() else {
+            return []
+        }
+
+        return catalog.packs.compactMap { entry in
+            guard entry.isBundled else { return nil }
+            return installIfNeeded(entry)
+        }
+    }
+
+    private func installIfNeeded(_ entry: KnowledgePackCatalogEntry) -> KnowledgePackInstallState? {
+        let previousState = try? installStateRepository.state(packIdentifier: entry.id)
+        if let previousState,
+           previousState.status == .installed,
+           previousState.version == entry.version,
+           previousState.contentHash == entry.contentHash {
+            return previousState
+        }
+
+        let installTimestamp = now()
+        let installingState = KnowledgePackInstallState(
+            packIdentifier: entry.id,
+            title: entry.title,
+            version: entry.version,
+            status: .installing,
+            installedAt: previousState?.installedAt,
+            contentHash: entry.contentHash,
+            lastError: nil,
+            recordSet: previousState?.recordSet ?? .empty,
+            lastRefreshedAt: installTimestamp
+        )
+
+        do {
+            try installStateRepository.saveState(installingState)
+
+            let loader = SeedContentLoader(
+                directoryURL: entry.manifestURL.deletingLastPathComponent()
+            )
+            let bundle = try loader.loadBundle()
+            let result = try contentRepository.installKnowledgePack(
+                bundle,
+                previousRecordSet: previousState?.recordSet,
+                importedAt: installTimestamp
+            )
+
+            let installedState = KnowledgePackInstallState(
+                packIdentifier: entry.id,
+                title: entry.title,
+                version: entry.version,
+                status: .installed,
+                installedAt: installTimestamp,
+                contentHash: entry.contentHash,
+                lastError: nil,
+                recordSet: result.recordSet,
+                lastRefreshedAt: installTimestamp
+            )
+            try installStateRepository.saveState(installedState)
+            return installedState
+        } catch {
+            let failedState = KnowledgePackInstallState(
+                packIdentifier: entry.id,
+                title: entry.title,
+                version: previousState?.version ?? entry.version,
+                status: .failed,
+                installedAt: previousState?.installedAt,
+                contentHash: previousState?.contentHash ?? entry.contentHash,
+                lastError: error.localizedDescription,
+                recordSet: previousState?.recordSet ?? .empty,
+                lastRefreshedAt: installTimestamp
+            )
+            try? installStateRepository.saveState(failedState)
+            return failedState
+        }
+    }
+}
+
 /// Shared runtime for App Intents and other non-SwiftUI entry points.
 ///
 /// Lazily creates the same `AppDependencies` graph used by the main app.
@@ -85,6 +181,8 @@ enum AppModelContainer {
             PersistedPracticeProgress.self,
             PersistedSeedContentState.self,
             PersistedInventoryItem.self,
+            PersistedDocumentVaultEntry.self,
+            PersistedKnowledgePackInstallState.self,
             PersistedChecklistTemplate.self,
             PersistedChecklistTemplateItem.self,
             PersistedChecklistRun.self,
@@ -138,14 +236,22 @@ enum AppModelContainer {
                 return modelContainer
             }
 
-            let dependencies = AppDependencies.live(modelContainer: modelContainer)
+            let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
             let loader = try SeedContentLoader.bundled(in: bundle)
             let importer = SeedContentImporter(
                 loader: loader,
-                repository: dependencies.seedContentRepository
+                repository: contentRepository
             )
 
             _ = try importer.importBundledContentIfNeeded()
+            _ = BundledKnowledgePackBootstrapper(
+                catalogClient: KnowledgePackCatalogClient(bundle: bundle, connectivityService: nil),
+                contentRepository: contentRepository,
+                installStateRepository: SwiftDataKnowledgePackInstallStateRepository(
+                    modelContext: modelContainer.mainContext
+                )
+            )
+            .installBundledPacksIfNeeded()
 
             return modelContainer
         } catch {

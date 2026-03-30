@@ -33,7 +33,8 @@ Recommended baseline:
 
 - Use Apple's file protection for app data, preferably `CompleteUntilFirstUserAuthentication` unless a stricter mode is proven compatible with background behavior.
 - Keep all normalized user data and imported knowledge inside the app container.
-- Store sensitive small secrets, if any are ever needed, in Keychain rather than in the database.
+- Store sensitive small secrets, if any are ever needed, in Keychain rather than in the database. Document vault encryption key (256-bit CryptoKit SymmetricKey) is stored in Keychain with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` via `DocumentVaultKeyStore`.
+- Document vault files are encrypted at rest using AES-GCM via `EncryptedDocumentVaultStore`. Encrypted files stored in `Application Support/OSA/DocumentVault/` with UUID-based identifiers. Vault deletion removes both the SwiftData metadata entry and the encrypted file.
 - Allow local store deletion and reset from Settings for privacy recovery.
 
 ## What Data Stays On Device
@@ -48,6 +49,10 @@ By default in v1:
 - personal notes
 - recent Ask question strings
 - saved study-guide notes
+- document vault entries (encrypted files, metadata, category, capture source)
+- document vault encryption key (Keychain, never on filesystem in plaintext)
+- inventory photo attachments (file-backed with capture metadata)
+- knowledge pack install states and record sets
 - search index
 - local diagnostics
 
@@ -88,7 +93,7 @@ V1 should avoid broad system permissions.
 - Notifications: optional, only if checklist or inventory reminders are added.
 - Location: requested when-in-use for Map screen (nearby shelters, evacuation routes) and Weather screen (local forecasts). `NSLocationWhenInUseUsageDescription` configured. `CLLocationManagerService` requests `whenInUseAuthorization` only when the Map tab is accessed; no background location. WeatherKit uses a default PNW coordinate when location is unavailable.
 - Contacts: do not request; family plan data should be entered manually into notes in v1.
-- Photos/files: only if a later attachment feature is approved.
+- Photos/files: requested for inventory photo capture (`InventoryCaptureSource.photoLibrary`) and document vault file import (`DocumentCaptureSource.photoLibrary`, `DocumentCaptureSource.camera`). Camera permission requested only when user initiates capture.
 
 ## On-Device Privacy Posture
 

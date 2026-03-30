@@ -13,6 +13,9 @@ extension PersistedInventoryItem {
             expiryDate: item.expiryDate,
             reorderThreshold: item.reorderThreshold,
             tagsJSON: PersistenceValueCoding.encode(item.tags),
+            barcodeScanJSON: PersistenceValueCoding.encodeOptionalCodable(item.barcodeScan),
+            recognizedTextJSON: PersistenceValueCoding.encodeOptionalCodable(item.recognizedText),
+            photoAttachmentsJSON: PersistenceValueCoding.encodeCodable(item.photoAttachments),
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
             isArchived: item.isArchived
@@ -29,6 +32,9 @@ extension PersistedInventoryItem {
         expiryDate = item.expiryDate
         reorderThreshold = item.reorderThreshold
         tagsJSON = PersistenceValueCoding.encode(item.tags)
+        barcodeScanJSON = PersistenceValueCoding.encodeOptionalCodable(item.barcodeScan)
+        recognizedTextJSON = PersistenceValueCoding.encodeOptionalCodable(item.recognizedText)
+        photoAttachmentsJSON = PersistenceValueCoding.encodeCodable(item.photoAttachments)
         updatedAt = item.updatedAt
         isArchived = item.isArchived
     }
@@ -45,6 +51,9 @@ extension PersistedInventoryItem {
             expiryDate: expiryDate,
             reorderThreshold: reorderThreshold,
             tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
+            barcodeScan: PersistenceValueCoding.decodeOptionalCodable(InventoryBarcodeScan.self, from: barcodeScanJSON),
+            recognizedText: PersistenceValueCoding.decodeOptionalCodable(RecognizedInventoryText.self, from: recognizedTextJSON),
+            photoAttachments: PersistenceValueCoding.decodeCodable([InventoryPhotoAttachment].self, from: photoAttachmentsJSON) ?? [],
             createdAt: createdAt,
             updatedAt: updatedAt,
             isArchived: isArchived

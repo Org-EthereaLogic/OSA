@@ -128,6 +128,35 @@ final class OSAContentAndInputTests: XCTestCase {
         dismissModal()
     }
 
+    func testInventoryFormShowsSprint11CaptureAffordances() {
+        tapTab("Inventory")
+
+        let addButton = findButton(labelContaining: "Add")
+            ?? findButton(labelContaining: "plus")
+            ?? findButton(labelContaining: "New")
+        XCTAssertNotNil(addButton, "Inventory screen should provide an add button")
+        addButton?.tap()
+
+        XCTAssertTrue(
+            app.buttons["inventory-form-scan-code"].waitForExistence(timeout: 3),
+            "Inventory form should show a scan action"
+        )
+        XCTAssertTrue(
+            app.buttons["inventory-form-capture-photo"].waitForExistence(timeout: 3),
+            "Inventory form should show a camera capture action"
+        )
+        XCTAssertTrue(
+            app.buttons["inventory-form-import-photo"].waitForExistence(timeout: 3),
+            "Inventory form should show a photo import action"
+        )
+        XCTAssertTrue(
+            app.buttons["inventory-form-recognize-label"].waitForExistence(timeout: 3),
+            "Inventory form should show a local OCR action"
+        )
+
+        dismissModal()
+    }
+
     func testInventoryScreenShowsExportAction() {
         tapTab("Inventory")
 
@@ -500,6 +529,50 @@ final class OSAContentAndInputTests: XCTestCase {
         XCTAssertTrue(
             scrollToElement(discoveryButton),
             "Settings should surface the discovery action"
+        )
+    }
+
+    func testDocumentVaultOpensInLockedState() {
+        navigateToMoreItem("Document Vault")
+
+        XCTAssertTrue(
+            app.staticTexts["Vault Locked"].waitForExistence(timeout: 3)
+                || app.buttons["document-vault-unlock"].waitForExistence(timeout: 3),
+            "Document Vault should require an explicit local unlock"
+        )
+    }
+
+    func testSettingsExposeKnowledgePackManagement() {
+        navigateToMoreItem("Settings")
+
+        let knowledgePackLink = app.otherElements["settings-knowledge-packs"]
+        let knowledgePackText = app.staticTexts["Knowledge Packs"]
+        XCTAssertTrue(
+            scrollToElement(knowledgePackLink, maxSwipes: 6) || scrollToElement(knowledgePackText, maxSwipes: 6),
+            "Settings should expose Knowledge Packs inside the knowledge-discovery area"
+        )
+
+        if knowledgePackLink.exists {
+            knowledgePackLink.tap()
+        } else {
+            knowledgePackText.tap()
+        }
+
+        XCTAssertTrue(
+            app.navigationBars["Knowledge Packs"].waitForExistence(timeout: 3)
+                || app.buttons["knowledge-pack-refresh"].waitForExistence(timeout: 3),
+            "Knowledge-pack management screen should open"
+        )
+
+        let waterPackAction = app.buttons["knowledge-pack-action-water-readiness"]
+        XCTAssertTrue(
+            scrollToElement(waterPackAction, maxSwipes: 4),
+            "Bundled knowledge packs should be visible in Settings"
+        )
+        XCTAssertEqual(
+            waterPackAction.label,
+            "Installed",
+            "Bundled knowledge packs should already be installed on launch"
         )
     }
 

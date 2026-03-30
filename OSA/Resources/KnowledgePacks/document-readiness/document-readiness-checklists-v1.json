@@ -1,0 +1,64 @@
+{
+  "templates": [
+    {
+      "id": "77777777-3001-0000-0000-000000000001",
+      "title": "Critical Document Review",
+      "slug": "critical-document-review",
+      "category": "documents",
+      "description": "Review the small set of household records that should stay current, easy to find, and fast to carry.",
+      "estimatedMinutes": 20,
+      "tags": [
+        "documents",
+        "insurance",
+        "records",
+        "scenario:evacuation"
+      ],
+      "sourceType": "seeded",
+      "presentationStyle": "standard",
+      "timerProfile": null,
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "items": [
+        {
+          "id": "77777777-3101-0000-0000-000000000001",
+          "text": "Confirm the record pouch still contains identity, insurance, medical, and contact essentials",
+          "detail": "Keep the set small enough to grab fast.",
+          "sortOrder": 100,
+          "isOptional": false,
+          "riskLevel": "high"
+        },
+        {
+          "id": "77777777-3102-0000-0000-000000000001",
+          "text": "Replace outdated addresses, expired cards, and stale policy numbers",
+          "detail": "Remove confusing duplicates before they become stress-state noise.",
+          "sortOrder": 200,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "77777777-3103-0000-0000-000000000001",
+          "text": "Verify another adult knows where the pouch or vault records live",
+          "detail": "Avoid a single point of failure.",
+          "sortOrder": 300,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "77777777-3104-0000-0000-000000000001",
+          "text": "Refresh the latest home-inventory or insurance photo sweep",
+          "detail": "Capture major purchases, remodels, or changed rooms.",
+          "sortOrder": 400,
+          "isOptional": true,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "77777777-3105-0000-0000-000000000001",
+          "text": "Check that an offline contact list is still current",
+          "detail": "Do not rely on one unlocked phone being available.",
+          "sortOrder": 500,
+          "isOptional": false,
+          "riskLevel": "medium"
+        }
+      ]
+    }
+  ]
+}

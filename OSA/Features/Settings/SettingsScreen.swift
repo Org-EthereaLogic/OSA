@@ -326,6 +326,19 @@ struct SettingsScreen: View {
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }
+
+            NavigationLink {
+                KnowledgePackManagementScreen()
+            } label: {
+                VStack(alignment: .leading, spacing: Spacing.xxs) {
+                    Label("Knowledge Packs", systemImage: "shippingbox.fill")
+                        .foregroundStyle(.primary)
+                    Text("Browse curated offline topic packs that ship with the app, auto-install locally on launch, and remain searchable offline.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityIdentifier("settings-knowledge-packs")
         }
     }
 

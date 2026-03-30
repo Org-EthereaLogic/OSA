@@ -1,0 +1,82 @@
+{
+  "chapters": [
+    {
+      "id": "77777777-1000-0000-0000-000000000001",
+      "slug": "household-document-readiness",
+      "title": "Household Document Readiness",
+      "summary": "Local routines for keeping identity, insurance, and household records usable during evacuation, outage, or paperwork-heavy recovery.",
+      "sortOrder": 820,
+      "tags": [
+        "documents",
+        "insurance",
+        "evacuation",
+        "records",
+        "scenario:evacuation",
+        "scenario:flood",
+        "scenario:wildfire"
+      ],
+      "version": 1,
+      "isSeeded": true,
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "sections": [
+        {
+          "id": "77777777-1001-0000-0000-000000000001",
+          "chapterID": "77777777-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Grab-First Record Pouch",
+          "bodyMarkdown": "Choose one small set of records you would actually grab under pressure.\n\n- Keep the pouch limited to identity, insurance, medical, and contact essentials.\n- Make sure every document inside answers a real post-evacuation question.\n- Store it where adults in the household can name the location without guessing.\n- Review it after every address, insurance, or household-member change.\n\nA smaller pouch that stays current is better than a larger binder nobody can carry fast.",
+          "plainText": "Choose one small set of records you would actually grab under pressure. Keep the pouch limited to identity, insurance, medical, and contact essentials. Make sure every document inside answers a real post-evacuation question. Store it where adults in the household can name the location without guessing. Review it after every address, insurance, or household-member change. A smaller pouch that stays current is better than a larger binder nobody can carry fast.",
+          "sortOrder": 100,
+          "tags": [
+            "documents",
+            "go-bag",
+            "identity",
+            "scenario:evacuation"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "document-readiness-record-pouch",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "77777777-1002-0000-0000-000000000001",
+          "chapterID": "77777777-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Insurance And Home Photo Sweep",
+          "bodyMarkdown": "Treat home-inventory photos like maintenance, not a once-ever project.\n\n- Photograph rooms, major equipment, and high-value items from a repeatable angle.\n- Keep dates and broad item descriptions consistent so later comparison is easier.\n- Capture updates after large purchases, remodels, or moves.\n- Store the newest set where you can retrieve it without hunting through unrelated images.\n\nShort regular sweeps are easier to trust than one giant archive from years ago.",
+          "plainText": "Treat home-inventory photos like maintenance, not a once-ever project. Photograph rooms, major equipment, and high-value items from a repeatable angle. Keep dates and broad item descriptions consistent so later comparison is easier. Capture updates after large purchases, remodels, or moves. Store the newest set where you can retrieve it without hunting through unrelated images. Short regular sweeps are easier to trust than one giant archive from years ago.",
+          "sortOrder": 200,
+          "tags": [
+            "documents",
+            "insurance",
+            "photos",
+            "scenario:flood"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "document-readiness-photo-sweep",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "77777777-1003-0000-0000-000000000001",
+          "chapterID": "77777777-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Household Identity And Contact Redundancy",
+          "bodyMarkdown": "Do not make one phone the single point of failure for household records.\n\n- Keep at least one offline contact list that does not depend on battery or cellular service.\n- Make sure key policy numbers and emergency contacts appear in more than one place.\n- Review who in the household can unlock or locate the critical document set.\n- Remove stale cards, outdated contacts, and expired IDs before they create confusion.\n\nRedundancy is less about more storage and more about fewer surprises when power, signal, or time runs short.",
+          "plainText": "Do not make one phone the single point of failure for household records. Keep at least one offline contact list that does not depend on battery or cellular service. Make sure key policy numbers and emergency contacts appear in more than one place. Review who in the household can unlock or locate the critical document set. Remove stale cards, outdated contacts, and expired IDs before they create confusion. Redundancy is less about more storage and more about fewer surprises when power, signal, or time runs short.",
+          "sortOrder": 300,
+          "tags": [
+            "documents",
+            "contacts",
+            "redundancy",
+            "scenario:power-outage"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "document-readiness-contact-redundancy",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,30 @@ private struct InventoryRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any InventoryRepository)? = nil
 }
 
+private struct InventoryPhotoStoreKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any InventoryPhotoStore)? = nil
+}
+
+private struct DocumentVaultRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any DocumentVaultRepository)? = nil
+}
+
+private struct DocumentVaultFileStoreKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any DocumentVaultFileStore)? = nil
+}
+
+private struct KnowledgePackInstallStateRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any KnowledgePackInstallStateRepository)? = nil
+}
+
+private struct KnowledgePackCatalogClientKey: EnvironmentKey {
+    static let defaultValue: KnowledgePackCatalogClient? = nil
+}
+
+private struct KnowledgePackDownloadCoordinatorKey: EnvironmentKey {
+    static let defaultValue: KnowledgePackDownloadCoordinator? = nil
+}
+
 private struct ChecklistRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any ChecklistRepository)? = nil
 }
@@ -152,6 +176,36 @@ extension EnvironmentValues {
     var inventoryRepository: (any InventoryRepository)? {
         get { self[InventoryRepositoryKey.self] }
         set { self[InventoryRepositoryKey.self] = newValue }
+    }
+
+    var inventoryPhotoStore: (any InventoryPhotoStore)? {
+        get { self[InventoryPhotoStoreKey.self] }
+        set { self[InventoryPhotoStoreKey.self] = newValue }
+    }
+
+    var documentVaultRepository: (any DocumentVaultRepository)? {
+        get { self[DocumentVaultRepositoryKey.self] }
+        set { self[DocumentVaultRepositoryKey.self] = newValue }
+    }
+
+    var documentVaultFileStore: (any DocumentVaultFileStore)? {
+        get { self[DocumentVaultFileStoreKey.self] }
+        set { self[DocumentVaultFileStoreKey.self] = newValue }
+    }
+
+    var knowledgePackInstallStateRepository: (any KnowledgePackInstallStateRepository)? {
+        get { self[KnowledgePackInstallStateRepositoryKey.self] }
+        set { self[KnowledgePackInstallStateRepositoryKey.self] = newValue }
+    }
+
+    var knowledgePackCatalogClient: KnowledgePackCatalogClient? {
+        get { self[KnowledgePackCatalogClientKey.self] }
+        set { self[KnowledgePackCatalogClientKey.self] = newValue }
+    }
+
+    var knowledgePackDownloadCoordinator: KnowledgePackDownloadCoordinator? {
+        get { self[KnowledgePackDownloadCoordinatorKey.self] }
+        set { self[KnowledgePackDownloadCoordinatorKey.self] = newValue }
     }
 
     var checklistRepository: (any ChecklistRepository)? {

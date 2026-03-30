@@ -1,0 +1,44 @@
+{
+  "quickCards": [
+    {
+      "id": "66666666-2001-0000-0000-000000000001",
+      "title": "Boil-Water Notice Quick Loop",
+      "slug": "boil-water-notice-quick-loop",
+      "category": "Water",
+      "summary": "Separate untreated water, treated water, and kitchen flow before anyone starts pouring from the wrong container.",
+      "bodyMarkdown": "## Set The Lane\n- Pick one clean area for treated water only.\n- Keep untreated containers outside that lane.\n\n## Treat And Cool\n- Use one method you already trust and know how to run safely.\n- Cool treated water in covered containers.\n\n## Rejoin Household Use\n- Mark treated containers clearly.\n- Refill the daily-use area from treated water only.\n\n## Do Not\n- Mix untreated and treated containers on the same counter.\n- Assume everyone knows which jug is safe without a label.",
+      "priority": 91,
+      "relatedSectionIDs": [
+        "66666666-1002-0000-0000-000000000001"
+      ],
+      "tags": [
+        "water",
+        "boil-water",
+        "kitchen",
+        "scenario:flood"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 2
+    },
+    {
+      "id": "66666666-2002-0000-0000-000000000001",
+      "title": "Water Rotation Reset",
+      "slug": "water-rotation-reset",
+      "category": "Water",
+      "summary": "Rotate the oldest labeled water first and update the inventory record before the day ends.",
+      "bodyMarkdown": "## Start With Dates\n- Pull the oldest labeled containers first.\n- Check seals, cloudiness, and storage damage.\n\n## Refill In Order\n- Refill the containers you use most often first.\n- Re-label anything that lost its date or use tag.\n\n## Close The Loop\n- Update the Inventory tab the same day.\n- Move the newest fill dates to the back of the storage line.\n\n## Do Not\n- Leave unlabeled containers mixed into the rotation shelf.\n- Wait for the next outage to discover what is stale.",
+      "priority": 88,
+      "relatedSectionIDs": [
+        "66666666-1004-0000-0000-000000000001"
+      ],
+      "tags": [
+        "water",
+        "rotation",
+        "inventory",
+        "maintenance"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 2
+    }
+  ]
+}

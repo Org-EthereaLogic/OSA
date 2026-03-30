@@ -1,0 +1,101 @@
+{
+  "chapters": [
+    {
+      "id": "66666666-1000-0000-0000-000000000001",
+      "slug": "household-water-readiness",
+      "title": "Household Water Readiness",
+      "summary": "Practical local routines for storing, rotating, and using household water more safely when normal service is disrupted.",
+      "sortOrder": 810,
+      "tags": [
+        "water",
+        "storage",
+        "rotation",
+        "sanitation",
+        "scenario:power-outage",
+        "scenario:flood",
+        "region:pacific-northwest"
+      ],
+      "version": 1,
+      "isSeeded": true,
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "sections": [
+        {
+          "id": "66666666-1001-0000-0000-000000000001",
+          "chapterID": "66666666-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Store And Label Water By Household Use",
+          "bodyMarkdown": "Separate drinking water from utility water before you need either.\n\n- Keep the cleanest containers dedicated to drinking and food prep.\n- Label containers with fill date and intended use.\n- Store them where temperature swings and chemical exposure stay low.\n- Keep a smaller grab-fast set near the path you would actually leave with.\n\nA smaller well-labeled water plan is more usable than a large mixed stash nobody trusts under stress.",
+          "plainText": "Separate drinking water from utility water before you need either. Keep the cleanest containers dedicated to drinking and food prep. Label containers with fill date and intended use. Store them where temperature swings and chemical exposure stay low. Keep a smaller grab-fast set near the path you would actually leave with. A smaller well-labeled water plan is more usable than a large mixed stash nobody trusts under stress.",
+          "sortOrder": 100,
+          "tags": [
+            "water",
+            "storage",
+            "labels",
+            "scenario:power-outage"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "water-readiness-store-and-label",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "66666666-1002-0000-0000-000000000001",
+          "chapterID": "66666666-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Boil-Water Notice Routine",
+          "bodyMarkdown": "Treat a boil-water notice as a kitchen workflow change, not just a stove task.\n\n- Set aside one clean area for treated water containers only.\n- Use a pot, kettle, or device you already know how to run safely.\n- Cool treated water in covered containers before putting it into regular household rotation.\n- Keep untreated water and treated water physically separated so nobody guesses wrong.\n\nIf you cannot keep treatment and storage steps straight, use bottled or otherwise known-safe water until the routine is simpler.",
+          "plainText": "Treat a boil-water notice as a kitchen workflow change, not just a stove task. Set aside one clean area for treated water containers only. Use a pot, kettle, or device you already know how to run safely. Cool treated water in covered containers before putting it into regular household rotation. Keep untreated water and treated water physically separated so nobody guesses wrong. If you cannot keep treatment and storage steps straight, use bottled or otherwise known-safe water until the routine is simpler.",
+          "sortOrder": 200,
+          "tags": [
+            "water",
+            "boil-water",
+            "kitchen",
+            "scenario:flood"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "water-readiness-boil-water-notice",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "66666666-1003-0000-0000-000000000001",
+          "chapterID": "66666666-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Low-Water Sanitation Fallback",
+          "bodyMarkdown": "Save your cleanest water for drinking first, then set a clear minimum hygiene routine.\n\n- Keep one hand-cleaning station and one dish or wipe-down station instead of spreading water everywhere.\n- Use soap and friction first whenever possible.\n- Move laundry, deep cleaning, and noncritical rinsing later if water is limited.\n- Track what counts as utility water so it does not drift back into drinking use.\n\nUnder stress, simple sanitation lanes reduce waste and prevent avoidable cross-contamination.",
+          "plainText": "Save your cleanest water for drinking first, then set a clear minimum hygiene routine. Keep one hand-cleaning station and one dish or wipe-down station instead of spreading water everywhere. Use soap and friction first whenever possible. Move laundry, deep cleaning, and noncritical rinsing later if water is limited. Track what counts as utility water so it does not drift back into drinking use. Under stress, simple sanitation lanes reduce waste and prevent avoidable cross-contamination.",
+          "sortOrder": 300,
+          "tags": [
+            "water",
+            "sanitation",
+            "hygiene",
+            "scenario:power-outage"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "water-readiness-low-water-sanitation",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "66666666-1004-0000-0000-000000000001",
+          "chapterID": "66666666-1000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Quarterly Water Rotation Loop",
+          "bodyMarkdown": "Water readiness stays useful when it lives on a calendar.\n\n- Check labels and oldest dates first.\n- Rotate small containers before deep storage you rarely touch.\n- Inspect seals, odors, cloudiness, and storage locations before refilling.\n- Update the inventory record the same day so the list and the shelf still match.\n\nShort frequent checks beat occasional full resets that leave old containers forgotten in the back.",
+          "plainText": "Water readiness stays useful when it lives on a calendar. Check labels and oldest dates first. Rotate small containers before deep storage you rarely touch. Inspect seals, odors, cloudiness, and storage locations before refilling. Update the inventory record the same day so the list and the shelf still match. Short frequent checks beat occasional full resets that leave old containers forgotten in the back.",
+          "sortOrder": 400,
+          "tags": [
+            "water",
+            "rotation",
+            "inventory",
+            "maintenance"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "water-readiness-quarterly-rotation",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

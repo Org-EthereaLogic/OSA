@@ -84,7 +84,14 @@ final class LocalSearchService: SearchService {
             id: item.id,
             kind: .inventoryItem,
             title: item.name,
-            body: [item.location, item.notes, item.category.rawValue].joined(separator: " "),
+            body: [
+                item.location,
+                item.notes,
+                item.category.rawValue,
+                item.barcodeScan?.payload ?? "",
+                item.barcodeScan?.symbology ?? "",
+                item.recognizedText?.summary ?? ""
+            ].joined(separator: " "),
             tags: item.tags.joined(separator: " ")
         )
     }

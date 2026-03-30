@@ -138,6 +138,55 @@ final class InventoryRepositoryTests: XCTestCase {
         XCTAssertEqual(all.count, 2)
     }
 
+    func testCreateAndReadItemPreservesCaptureMetadata() throws {
+        let container = try makeInMemoryContainer()
+        let repository = SwiftDataInventoryRepository(modelContext: container.mainContext)
+        let now = Date(timeIntervalSince1970: 1_743_206_400)
+
+        let item = InventoryItem(
+            id: UUID(),
+            name: "Medical Kit",
+            category: .firstAid,
+            quantity: 1,
+            unit: "kit",
+            location: "Hall closet",
+            notes: "Front zipper pocket",
+            expiryDate: nil,
+            reorderThreshold: nil,
+            tags: ["medical"],
+            barcodeScan: InventoryBarcodeScan(
+                payload: "0123456789012",
+                symbology: "ean13",
+                capturedAt: now,
+                source: .liveScanner
+            ),
+            recognizedText: RecognizedInventoryText(
+                rawText: "Trauma Kit\nHall Closet",
+                summary: "Trauma Kit\nHall Closet",
+                capturedAt: now,
+                source: .photoLibrary
+            ),
+            photoAttachments: [
+                InventoryPhotoAttachment(
+                    id: UUID(),
+                    fileName: "photo-1.jpg",
+                    capturedAt: now,
+                    source: .camera
+                )
+            ],
+            createdAt: now,
+            updatedAt: now,
+            isArchived: false
+        )
+
+        try repository.createItem(item)
+
+        let fetched = try XCTUnwrap(repository.item(id: item.id))
+        XCTAssertEqual(fetched.barcodeScan, item.barcodeScan)
+        XCTAssertEqual(fetched.recognizedText, item.recognizedText)
+        XCTAssertEqual(fetched.photoAttachments, item.photoAttachments)
+    }
+
     // MARK: - Helpers
 
     private func makeInMemoryContainer() throws -> ModelContainer {

@@ -1,14 +1,17 @@
 import SwiftUI
+import UIKit
 
 struct InventoryItemDetailView: View {
     let itemID: UUID
 
     @Environment(\.inventoryRepository) private var repository
+    @Environment(\.inventoryPhotoStore) private var inventoryPhotoStore
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.inventoryExpiryNotificationService) private var inventoryExpiryNotificationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @State private var item: InventoryItem?
     @State private var linkedNotes: [NoteRecord] = []
+    @State private var photoDataByID: [UUID: Data] = [:]
     @State private var loadFailed = false
     @State private var showingEdit = false
     @State private var showDeleteConfirmation = false
@@ -24,7 +27,7 @@ struct InventoryItemDetailView: View {
             } else if let item {
                 content(item)
             } else {
-                ProgressView("Loading\u{2026}")
+                ProgressView("Loading...")
             }
         }
         .navigationTitle(item?.name ?? "Item")
@@ -97,6 +100,87 @@ struct InventoryItemDetailView: View {
                 }
             }
 
+            if !item.photoAttachments.isEmpty {
+                Section("Local Photos") {
+                    ForEach(item.photoAttachments) { attachment in
+                        VStack(alignment: .leading, spacing: Spacing.sm) {
+                            if let data = photoDataByID[attachment.id],
+                               let image = UIImage(data: data) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 180)
+                                    .clipShape(RoundedRectangle(cornerRadius: CornerRadius.md))
+                                    .accessibilityLabel("Inventory photo")
+                            } else {
+                                RoundedRectangle(cornerRadius: CornerRadius.md)
+                                    .fill(Color.osaSecondaryBackground)
+                                    .frame(height: 120)
+                                    .overlay {
+                                        Label("Photo unavailable", systemImage: "photo.badge.exclamationmark")
+                                            .foregroundStyle(.secondary)
+                                    }
+                            }
+
+                            HStack {
+                                Label(
+                                    attachment.source.displayName,
+                                    systemImage: attachment.source.systemImage
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                                Spacer()
+
+                                Text(attachment.capturedAt.formatted(date: .abbreviated, time: .shortened))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Button(role: .destructive) {
+                                removePhoto(attachment)
+                            } label: {
+                                Label("Remove Photo", systemImage: "trash")
+                            }
+                            .font(.caption)
+                        }
+                        .padding(.vertical, Spacing.xxs)
+                    }
+                }
+            }
+
+            if item.barcodeScan != nil || item.recognizedText != nil {
+                Section("Capture Metadata") {
+                    if let barcodeScan = item.barcodeScan {
+                        VStack(alignment: .leading, spacing: Spacing.xxs) {
+                            Text("Captured Code")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                            Text(barcodeScan.payload)
+                                .font(.body.monospaced())
+                                .textSelection(.enabled)
+                            Text("\(barcodeScan.symbology) via \(barcodeScan.source.displayName)")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+
+                    if let recognizedText = item.recognizedText {
+                        VStack(alignment: .leading, spacing: Spacing.xxs) {
+                            Text("Recognized Label")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                            Text(recognizedText.summary)
+                                .font(.body)
+                            Text("Local only. Not indexed into Ask or system surfaces.")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                }
+            }
+
             if item.expiryDate != nil || item.reorderThreshold != nil {
                 Section("Alerts") {
                     if let expiry = item.expiryDate {
@@ -155,11 +239,23 @@ struct InventoryItemDetailView: View {
 
     private func loadItem() {
         do {
-            item = try repository?.item(id: itemID)
-            if item == nil { loadFailed = true }
+            let loadedItem = try repository?.item(id: itemID)
+            item = loadedItem
+            loadFailed = loadedItem == nil
             linkedNotes = try noteRepository?.notesLinkedToInventoryItem(id: itemID) ?? []
+            loadPhotoData(for: loadedItem?.photoAttachments ?? [])
         } catch {
             loadFailed = true
+        }
+    }
+
+    private func loadPhotoData(for attachments: [InventoryPhotoAttachment]) {
+        photoDataByID = [:]
+
+        guard let inventoryPhotoStore else { return }
+
+        for attachment in attachments {
+            photoDataByID[attachment.id] = try? inventoryPhotoStore.photoData(for: attachment)
         }
     }
 
@@ -185,9 +281,34 @@ struct InventoryItemDetailView: View {
 
     private func deleteItem() {
         guard let item else { return }
-        try? repository?.deleteItem(id: item.id)
-        hapticFeedbackService?.play(.warning)
-        rescheduleInventoryAlerts()
+
+        do {
+            try repository?.deleteItem(id: item.id)
+            for attachment in item.photoAttachments {
+                try? inventoryPhotoStore?.deletePhoto(attachment)
+            }
+            hapticFeedbackService?.play(.warning)
+            rescheduleInventoryAlerts()
+        } catch {
+            hapticFeedbackService?.play(.error)
+        }
+    }
+
+    private func removePhoto(_ attachment: InventoryPhotoAttachment) {
+        guard var item else { return }
+
+        item.photoAttachments.removeAll { $0.id == attachment.id }
+        item.updatedAt = Date()
+
+        do {
+            try repository?.updateItem(item)
+            try inventoryPhotoStore?.deletePhoto(attachment)
+            self.item = item
+            loadPhotoData(for: item.photoAttachments)
+            hapticFeedbackService?.play(.success)
+        } catch {
+            hapticFeedbackService?.play(.error)
+        }
     }
 
     private func rescheduleInventoryAlerts() {
@@ -196,8 +317,6 @@ struct InventoryItemDetailView: View {
         }
     }
 }
-
-// MARK: - Expiry Badge
 
 private struct ExpiryBadge: View {
     let date: Date
@@ -216,6 +335,30 @@ private struct ExpiryBadge: View {
             .foregroundStyle(isExpired ? .osaCritical : isExpiringSoon ? .osaWarning : .primary)
             .accessibilityLabel(isExpired ? "Expired" : isExpiringSoon ? "Expiring soon" : "Expiry date")
             .accessibilityValue(date.formatted(date: .abbreviated, time: .omitted))
+    }
+}
+
+private extension InventoryCaptureSource {
+    var displayName: String {
+        switch self {
+        case .camera:
+            "Camera"
+        case .photoLibrary:
+            "Photo Library"
+        case .liveScanner:
+            "Live Scanner"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .camera:
+            "camera"
+        case .photoLibrary:
+            "photo.on.rectangle"
+        case .liveScanner:
+            "barcode.viewfinder"
+        }
     }
 }
 

@@ -270,6 +270,23 @@ private func makeTestDependencies(
     let inventoryRepo = StubInventoryRepository(items: inventoryItems)
     let searchService = StubSearchService(results: searchResults)
     let widgetSnapshotCoordinator = StubWidgetSnapshotCoordinator()
+    let connectivityService = StubConnectivityService()
+    let inventoryPhotoStore = StubInventoryPhotoStore()
+    let documentVaultRepository = StubDocumentVaultRepository()
+    let documentVaultFileStore = StubDocumentVaultFileStore()
+    let knowledgePackInstallStateRepository = StubKnowledgePackInstallStateRepository()
+    let knowledgePackCatalogClient = KnowledgePackCatalogClient(
+        session: URLSession(configuration: .ephemeral),
+        connectivityService: connectivityService
+    )
+    let knowledgePackDownloadCoordinator = KnowledgePackDownloadCoordinator(
+        catalogClient: knowledgePackCatalogClient,
+        session: URLSession(configuration: .ephemeral),
+        connectivityService: connectivityService,
+        contentRepository: StubKnowledgePackContentRepository(),
+        installStateRepository: knowledgePackInstallStateRepository,
+        rebuildSearchIndex: {}
+    )
     let liveActivityCoordinator = ProtocolLiveActivityCoordinator(
         checklistRepository: checklistRepo,
         client: StubProtocolLiveActivityClient()
@@ -282,6 +299,12 @@ private func makeTestDependencies(
         practiceProgressRepository: StubPracticeProgressRepository(),
         seedContentRepository: StubSeedContentRepository(),
         inventoryRepository: inventoryRepo,
+        inventoryPhotoStore: inventoryPhotoStore,
+        documentVaultRepository: documentVaultRepository,
+        documentVaultFileStore: documentVaultFileStore,
+        knowledgePackInstallStateRepository: knowledgePackInstallStateRepository,
+        knowledgePackCatalogClient: knowledgePackCatalogClient,
+        knowledgePackDownloadCoordinator: knowledgePackDownloadCoordinator,
         supplyTemplateRepository: StubSupplyTemplateRepository(),
         checklistRepository: checklistRepo,
         emergencyContactRepository: StubEmergencyContactRepository(),
@@ -294,7 +317,7 @@ private func makeTestDependencies(
         inventoryExpiryNotificationService: StubInventoryExpiryNotificationService(),
         widgetSnapshotCoordinator: widgetSnapshotCoordinator,
         protocolLiveActivityCoordinator: liveActivityCoordinator,
-        connectivityService: StubConnectivityService(),
+        connectivityService: connectivityService,
         trustedSourceHTTPClient: StubTrustedSourceHTTPClient(),
         importPipeline: ImportedKnowledgeImportPipeline(
             repository: StubImportedKnowledgeRepository(),
@@ -339,6 +362,96 @@ private func makeTestDependencies(
 
 private struct StubRSSDiscoveryService: RSSDiscoveryService {
     func discoverArticles() async -> [DiscoveredArticle] { [] }
+}
+
+private struct StubInventoryPhotoStore: InventoryPhotoStore {
+    func savePhoto(
+        data: Data,
+        preferredFileExtension: String,
+        source: InventoryCaptureSource,
+        capturedAt: Date
+    ) throws -> InventoryPhotoAttachment {
+        InventoryPhotoAttachment(
+            id: UUID(),
+            fileName: "stub.\(preferredFileExtension)",
+            capturedAt: capturedAt,
+            source: source
+        )
+    }
+
+    func photoData(for attachment: InventoryPhotoAttachment) throws -> Data {
+        _ = attachment
+        return Data()
+    }
+
+    func deletePhoto(_ attachment: InventoryPhotoAttachment) throws {
+        _ = attachment
+    }
+}
+
+private struct StubDocumentVaultRepository: DocumentVaultRepository {
+    func listEntries() throws -> [DocumentVaultEntry] { [] }
+    func entry(id: UUID) throws -> DocumentVaultEntry? {
+        _ = id
+        return nil
+    }
+    func createEntry(_ entry: DocumentVaultEntry) throws { _ = entry }
+    func updateEntry(_ entry: DocumentVaultEntry) throws { _ = entry }
+    func deleteEntry(id: UUID) throws { _ = id }
+}
+
+private struct StubDocumentVaultFileStore: DocumentVaultFileStore {
+    func storeDocument(
+        data: Data,
+        preferredFileExtension: String
+    ) throws -> DocumentVaultStoredFile {
+        _ = data
+        return DocumentVaultStoredFile(
+            encryptedFileIdentifier: "stub.\(preferredFileExtension)",
+            byteCount: 0
+        )
+    }
+
+    func decryptedData(for entry: DocumentVaultEntry) throws -> Data {
+        _ = entry
+        return Data()
+    }
+
+    func deleteDocument(for entry: DocumentVaultEntry) throws {
+        _ = entry
+    }
+}
+
+private final class StubKnowledgePackInstallStateRepository: KnowledgePackInstallStateRepository {
+    func listStates() throws -> [KnowledgePackInstallState] { [] }
+    func state(packIdentifier: String) throws -> KnowledgePackInstallState? {
+        _ = packIdentifier
+        return nil
+    }
+    func saveState(_ state: KnowledgePackInstallState) throws { _ = state }
+}
+
+private struct StubKnowledgePackContentRepository: KnowledgePackContentRepository {
+    func installKnowledgePack(
+        _ bundle: SeedContentBundle,
+        previousRecordSet: KnowledgePackRecordSet?,
+        importedAt: Date
+    ) throws -> KnowledgePackInstallResult {
+        _ = previousRecordSet
+        _ = importedAt
+        return KnowledgePackInstallResult(
+            recordSet: KnowledgePackRecordSet(
+                chapterIDs: bundle.chapters.map(\.id),
+                quickCardIDs: bundle.quickCards.map(\.id),
+                checklistTemplateIDs: bundle.checklistTemplates.map(\.id),
+                fieldReferenceIDs: bundle.fieldReferences.map(\.id)
+            ),
+            chapterCount: bundle.chapters.count,
+            quickCardCount: bundle.quickCards.count,
+            checklistTemplateCount: bundle.checklistTemplates.count,
+            fieldReferenceCount: bundle.fieldReferences.count
+        )
+    }
 }
 
 @MainActor

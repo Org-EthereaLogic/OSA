@@ -26,6 +26,9 @@ struct InventoryItem: Identifiable, Equatable, Sendable {
     var expiryDate: Date?
     var reorderThreshold: Int?
     var tags: [String]
+    var barcodeScan: InventoryBarcodeScan? = nil
+    var recognizedText: RecognizedInventoryText? = nil
+    var photoAttachments: [InventoryPhotoAttachment] = []
     let createdAt: Date
     var updatedAt: Date
     var isArchived: Bool

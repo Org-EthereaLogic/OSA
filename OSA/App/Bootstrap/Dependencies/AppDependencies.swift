@@ -8,6 +8,12 @@ struct AppDependencies {
     let practiceProgressRepository: any PracticeProgressRepository
     let seedContentRepository: any SeedContentRepository
     let inventoryRepository: any InventoryRepository
+    let inventoryPhotoStore: any InventoryPhotoStore
+    let documentVaultRepository: any DocumentVaultRepository
+    let documentVaultFileStore: any DocumentVaultFileStore
+    let knowledgePackInstallStateRepository: any KnowledgePackInstallStateRepository
+    let knowledgePackCatalogClient: KnowledgePackCatalogClient
+    let knowledgePackDownloadCoordinator: KnowledgePackDownloadCoordinator
     let supplyTemplateRepository: any SupplyTemplateRepository
     let checklistRepository: any ChecklistRepository
     let emergencyContactRepository: any EmergencyContactRepository
@@ -42,6 +48,10 @@ struct AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
         let practiceProgressRepository = SwiftDataPracticeProgressRepository(modelContext: modelContainer.mainContext)
         let baseInventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
+        let inventoryPhotoStore = FileBackedInventoryPhotoStore()
+        let documentVaultRepository = SwiftDataDocumentVaultRepository(modelContext: modelContainer.mainContext)
+        let documentVaultFileStore = EncryptedDocumentVaultStore()
+        let knowledgePackInstallStateRepository = SwiftDataKnowledgePackInstallStateRepository(modelContext: modelContainer.mainContext)
         let supplyTemplateRepository = BundledSupplyTemplateRepository()
         let baseChecklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
         let emergencyContactRepository = SwiftDataEmergencyContactRepository(modelContext: modelContainer.mainContext)
@@ -133,6 +143,38 @@ struct AppDependencies {
             importPipeline: importPipeline
         )
 
+        let rebuildSearchIndex = {
+            let rebuildSearchService: any SearchService
+            if let searchService {
+                rebuildSearchService = searchService
+            } else {
+                rebuildSearchService = try LocalSearchService.makeDefault()
+            }
+
+            try SearchIndexRebuilder(
+                searchService: rebuildSearchService,
+                handbookRepository: contentRepository,
+                quickCardRepository: contentRepository,
+                fieldReferenceRepository: contentRepository,
+                inventoryRepository: inventoryReadRepository,
+                checklistRepository: baseChecklistRepository,
+                noteRepository: noteRepository,
+                importedKnowledgeRepository: importedKnowledgeRepository
+            )
+            .rebuild()
+        }
+
+        let knowledgePackCatalogClient = KnowledgePackCatalogClient(
+            connectivityService: connectivityService
+        )
+        let knowledgePackDownloadCoordinator = KnowledgePackDownloadCoordinator(
+            catalogClient: knowledgePackCatalogClient,
+            connectivityService: connectivityService,
+            contentRepository: contentRepository,
+            installStateRepository: knowledgePackInstallStateRepository,
+            rebuildSearchIndex: rebuildSearchIndex
+        )
+
         let inventoryCompletionService = LocalInventoryCompletionService(
             capabilityDetector: capabilityDetector
         )
@@ -172,6 +214,12 @@ struct AppDependencies {
             practiceProgressRepository: practiceProgressRepository,
             seedContentRepository: contentRepository,
             inventoryRepository: inventoryRepository,
+            inventoryPhotoStore: inventoryPhotoStore,
+            documentVaultRepository: documentVaultRepository,
+            documentVaultFileStore: documentVaultFileStore,
+            knowledgePackInstallStateRepository: knowledgePackInstallStateRepository,
+            knowledgePackCatalogClient: knowledgePackCatalogClient,
+            knowledgePackDownloadCoordinator: knowledgePackDownloadCoordinator,
             supplyTemplateRepository: supplyTemplateRepository,
             checklistRepository: checklistRepository,
             emergencyContactRepository: emergencyContactRepository,

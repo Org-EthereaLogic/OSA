@@ -88,6 +88,9 @@ final class SeedContentMigrationTests: XCTestCase {
             expiryDate: nil,
             reorderThreshold: nil,
             tagsJSON: "[]",
+            barcodeScanJSON: "",
+            recognizedTextJSON: "",
+            photoAttachmentsJSON: "[]",
             createdAt: now,
             updatedAt: now,
             isArchived: false

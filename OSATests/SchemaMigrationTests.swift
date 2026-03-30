@@ -18,6 +18,8 @@ final class SchemaMigrationTests: XCTestCase {
         PersistedFieldReferenceEntry.self,
         PersistedSeedContentState.self,
         PersistedInventoryItem.self,
+        PersistedDocumentVaultEntry.self,
+        PersistedKnowledgePackInstallState.self,
         PersistedChecklistTemplate.self,
         PersistedChecklistTemplateItem.self,
         PersistedChecklistRun.self,
@@ -40,17 +42,19 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertNotNil(container)
     }
 
-    func testAllNineteenModelTypesAreRegisteredInSchema() throws {
+    func testAllTwentyOneModelTypesAreRegisteredInSchema() throws {
         let schema = Schema(Self.allModelTypes)
         let entityNames = Set(schema.entities.map(\.name))
 
-        XCTAssertEqual(entityNames.count, 19, "Expected 19 entity types in the current schema")
+        XCTAssertEqual(entityNames.count, 21, "Expected 21 entity types in the current schema")
         XCTAssertTrue(entityNames.contains("PersistedHandbookChapter"))
         XCTAssertTrue(entityNames.contains("PersistedHandbookSection"))
         XCTAssertTrue(entityNames.contains("PersistedQuickCard"))
         XCTAssertTrue(entityNames.contains("PersistedFieldReferenceEntry"))
         XCTAssertTrue(entityNames.contains("PersistedSeedContentState"))
         XCTAssertTrue(entityNames.contains("PersistedInventoryItem"))
+        XCTAssertTrue(entityNames.contains("PersistedDocumentVaultEntry"))
+        XCTAssertTrue(entityNames.contains("PersistedKnowledgePackInstallState"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistTemplate"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistTemplateItem"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistRun"))
@@ -112,6 +116,9 @@ final class SchemaMigrationTests: XCTestCase {
             expiryDate: nil,
             reorderThreshold: 1,
             tagsJSON: "[]",
+            barcodeScanJSON: "",
+            recognizedTextJSON: "",
+            photoAttachmentsJSON: "[]",
             createdAt: now,
             updatedAt: now,
             isArchived: false
@@ -197,6 +204,9 @@ final class SchemaMigrationTests: XCTestCase {
             expiryDate: nil,
             reorderThreshold: nil,
             tagsJSON: "[]",
+            barcodeScanJSON: "",
+            recognizedTextJSON: "",
+            photoAttachmentsJSON: "[]",
             createdAt: now,
             updatedAt: now,
             isArchived: false

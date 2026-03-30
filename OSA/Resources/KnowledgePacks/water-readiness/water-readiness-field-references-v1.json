@@ -1,0 +1,45 @@
+{
+  "entries": [
+    {
+      "id": "66666666-4001-0000-0000-000000000001",
+      "slug": "household-water-treatment-reference",
+      "title": "Household Water Treatment Reference",
+      "category": "water-treatment",
+      "summary": "Static household reminder for keeping untreated water, treated water, and storage containers clearly separated during disruptions.",
+      "sortOrder": 180,
+      "sections": [
+        {
+          "title": "Separate The Flow",
+          "bodyMarkdown": "- Keep untreated source water and treated water in different containers.\n- Use one clearly marked lane for cooled treated water only.",
+          "plainText": "Keep untreated source water and treated water in different containers. Use one clearly marked lane for cooled treated water only.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Protect The Containers",
+          "bodyMarkdown": "- Cover treated water while it cools.\n- Label date and intended use before it goes back into daily circulation.",
+          "plainText": "Cover treated water while it cools. Label date and intended use before it goes back into daily circulation.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Keep It Simple",
+          "bodyMarkdown": "- If the routine gets confusing, pause and simplify before more people start using the water.\n- A smaller known-safe supply is better than a larger mixed supply.",
+          "plainText": "If the routine gets confusing, pause and simplify before more people start using the water. A smaller known-safe supply is better than a larger mixed supply.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "66666666-1002-0000-0000-000000000001",
+        "66666666-1004-0000-0000-000000000001"
+      ],
+      "tags": [
+        "water",
+        "treatment",
+        "storage",
+        "scenario:flood",
+        "scenario:power-outage"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    }
+  ]
+}

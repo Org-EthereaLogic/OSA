@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "contentPackVersion": "1.0.0",
+  "generatedAt": "2026-03-29T00:00:00Z",
+  "packs": [
+    {
+      "identifier": "water-readiness-handbook",
+      "kind": "handbook-chapters",
+      "version": "1.0.0",
+      "fileName": "water-readiness-handbook-v1.json",
+      "recordCount": 1,
+      "contentHash": "fc439513b1f8bc0d267290dca1c1b4f0b6de5bb6b16f4e71fce0660c897b3599"
+    },
+    {
+      "identifier": "water-readiness-quick-cards",
+      "kind": "quick-cards",
+      "version": "1.0.0",
+      "fileName": "water-readiness-quick-cards-v1.json",
+      "recordCount": 2,
+      "contentHash": "791867622ae6a404f50bbd38fa252e110fbe1c64cc7dfeec7ebaaa62cc0c25b8"
+    },
+    {
+      "identifier": "water-readiness-checklists",
+      "kind": "checklist-templates",
+      "version": "1.0.0",
+      "fileName": "water-readiness-checklists-v1.json",
+      "recordCount": 1,
+      "contentHash": "102050b46b85553a80e9556e823a9db8143fce4e0045210fcbfa7ca77b79d0e2"
+    },
+    {
+      "identifier": "water-readiness-field-references",
+      "kind": "field-references",
+      "version": "1.0.0",
+      "fileName": "water-readiness-field-references-v1.json",
+      "recordCount": 1,
+      "contentHash": "402f121e98937bdb1b0b065cb491863474cc0629112970027e0d77cecdfc6a7e"
+    }
+  ]
+}

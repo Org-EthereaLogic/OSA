@@ -56,7 +56,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 
 ## v1.1 Enhancements
 
-- curated developer-shipped remote content packs
+- ~~curated developer-shipped remote content packs~~ **Done:** Sprint 11 — knowledge pack management with bundled and remote catalog, install tracking, and Settings UI.
 - subscribed source refresh for previously approved sources
 - richer inventory alerts such as expiring supplies and low-stock reminders
 - improved Ask explanation quality and better result grouping
@@ -96,6 +96,7 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 10. ~~Widgets and system integration: WidgetKit extension, bounded widget-safe snapshot store, Home Screen and Lock Screen widgets, Live Activity for active protocol progress.~~ **Done:** Sprint 7 complete — `OSAWidgetsExtension` target added via `project.yml`; four Home Screen widgets (readiness, expiry, rotating tip, emergency quick access); `ActiveProtocolLiveActivity` on Lock Screen and Dynamic Island; `WidgetSnapshotCoordinator` + `WidgetSnapshotStore` (App Group) derive bounded snapshots from existing repositories; `ProtocolLiveActivityCoordinator` drives Live Activity from `ChecklistRun` updates; deep-links route through existing `AppNavigationCoordinator`; privacy enforced — Ask history, notes, and free-form content never exposed to system surfaces.
 11. ~~Editorial content depth and field references.~~ **Done:** Sprint 9 complete — structured field references, infographic quick cards, deeper climate content, lookalike comparison content, and Library routing or search integration all ship from bundled seed content and existing editorial seams.
 12. ~~Multimedia and gamification.~~ **Done:** Sprint 10 complete — bundled SVG illustrations, short local MP4 clips, knot-reference and illustrated first-aid entries, local quiz flow, derived completion badges, and a weekly drill surface now extend Home, Quick Cards, Library, and local persistence without adding streaming, sync, or social gamification.
+13. ~~Knowledge packs, document vault, and inventory capture.~~ **Done:** Sprint 11 complete — knowledge pack management with bundled/remote catalog, encrypted document vault with Keychain-backed keys, and inventory photo capture with file-backed storage.
 
 ## Milestone-Based Roadmap
 
@@ -197,6 +198,13 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - Introduce `PracticeProgressRepository` and SwiftData-backed `PersistedPracticeProgress` so quiz mastery and weekly-drill completion remain local user state instead of seed-backed editorial content.
 - Extend Home, Quick Cards, and Library with a weekly drill section, offline quiz entry points, and derived completion badges while preserving existing navigation seams and search result kinds.
 - Exit criteria met: multimedia and quiz flows work fully offline, search continues routing to quick cards and field references, and no streaming, sync, leaderboard, or social-gamification dependency was introduced.
+
+### Sprint 11: Knowledge Packs, Document Vault, And Inventory Capture _(Complete)_
+
+- Add curated knowledge pack installation and management with bundled and remote pack support. `KnowledgePackCatalogClient` enforces approved-host validation; `KnowledgePackDownloadCoordinator` handles versioned install with retry; `KnowledgePackManagementScreen` in Settings displays catalog, install progress, and error messaging.
+- Introduce encrypted file storage for sensitive documents via Document Vault. `DocumentVaultKeyStore` creates and stores a 256-bit CryptoKit SymmetricKey in Keychain with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`. `EncryptedDocumentVaultStore` encrypts files at rest. New `documents` tab surfaces `DocumentVaultScreen` with category filtering, detail view, and camera/library/file-import capture.
+- Extend inventory with photo attachment support (`InventoryPhotoAttachment`) and barcode/OCR capture sources (`InventoryBarcodeScan`, `RecognizedInventoryText`). `FileBackedInventoryPhotoStore` provides atomic writes with file-protection enforcement.
+- Exit criteria met: knowledge packs install from bundled catalog, document vault stores encrypted files with Keychain-backed keys, inventory items support photo attachments, and Settings provides pack management UI with connectivity gating.
 
 ## Dependency Map
 

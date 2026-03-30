@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "contentPackVersion": "1.0.0",
+  "generatedAt": "2026-03-29T00:00:00Z",
+  "packs": [
+    {
+      "identifier": "document-readiness-handbook",
+      "kind": "handbook-chapters",
+      "version": "1.0.0",
+      "fileName": "document-readiness-handbook-v1.json",
+      "recordCount": 1,
+      "contentHash": "4a982f35516b005fe8ca2f13f37b1abfc8ef5ec797c2e5b91b0347461cd0b45d"
+    },
+    {
+      "identifier": "document-readiness-quick-cards",
+      "kind": "quick-cards",
+      "version": "1.0.0",
+      "fileName": "document-readiness-quick-cards-v1.json",
+      "recordCount": 2,
+      "contentHash": "20677e3ce69f2afdd256cc003f56959df45c1d2eff527e25f0d8d5700522f9b2"
+    },
+    {
+      "identifier": "document-readiness-checklists",
+      "kind": "checklist-templates",
+      "version": "1.0.0",
+      "fileName": "document-readiness-checklists-v1.json",
+      "recordCount": 1,
+      "contentHash": "c7a11d94a114a390a8ccab59eb5ee84e455a51d4f5ba1cb668156a7014101777"
+    }
+  ]
+}

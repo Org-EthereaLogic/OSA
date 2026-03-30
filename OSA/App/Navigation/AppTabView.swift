@@ -50,6 +50,12 @@ struct AppTabView: View {
                     }
                 }
 
+                Tab(AppTab.documents.title, systemImage: AppTab.documents.icon, value: AppTab.documents) {
+                    NavigationStack {
+                        DocumentVaultScreen()
+                    }
+                }
+
                 Tab(AppTab.weather.title, systemImage: AppTab.weather.icon, value: AppTab.weather) {
                     NavigationStack {
                         WeatherScreen()

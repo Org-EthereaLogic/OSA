@@ -1,0 +1,72 @@
+{
+  "templates": [
+    {
+      "id": "66666666-3001-0000-0000-000000000001",
+      "title": "Water Storage Reset",
+      "slug": "water-storage-reset",
+      "category": "water",
+      "description": "Rotate, relabel, and restage household water so the stored supply stays trusted and usable.",
+      "estimatedMinutes": 20,
+      "tags": [
+        "water",
+        "rotation",
+        "maintenance",
+        "scenario:power-outage"
+      ],
+      "sourceType": "seeded",
+      "presentationStyle": "standard",
+      "timerProfile": null,
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "items": [
+        {
+          "id": "66666666-3101-0000-0000-000000000001",
+          "text": "Pull the oldest labeled drinking-water containers first",
+          "detail": "Start with the containers that would be consumed soonest anyway.",
+          "sortOrder": 100,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "66666666-3102-0000-0000-000000000001",
+          "text": "Inspect seals, odors, cloudiness, and storage damage",
+          "detail": "Set aside anything you no longer trust before it mixes back into storage.",
+          "sortOrder": 200,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "66666666-3103-0000-0000-000000000001",
+          "text": "Refill or replace daily-use containers before deep storage",
+          "detail": "Keep the most-reached-for water easy to trust and easy to grab.",
+          "sortOrder": 300,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "66666666-3104-0000-0000-000000000001",
+          "text": "Relabel every refilled container with date and intended use",
+          "detail": "Separate drinking use from utility use.",
+          "sortOrder": 400,
+          "isOptional": false,
+          "riskLevel": "medium"
+        },
+        {
+          "id": "66666666-3105-0000-0000-000000000001",
+          "text": "Restage a small grab-fast water set near the exit path",
+          "detail": "Make sure it matches how your household would actually leave.",
+          "sortOrder": 500,
+          "isOptional": true,
+          "riskLevel": "low"
+        },
+        {
+          "id": "66666666-3106-0000-0000-000000000001",
+          "text": "Update the Inventory tab with current counts and notes",
+          "detail": "Close the loop so the shelf and the app still match.",
+          "sortOrder": 600,
+          "isOptional": false,
+          "riskLevel": "low"
+        }
+      ]
+    }
+  ]
+}

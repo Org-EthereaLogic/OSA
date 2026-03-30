@@ -329,6 +329,18 @@ final class SearchIndexRebuilderTests: XCTestCase {
             expiryDate: nil,
             reorderThreshold: nil,
             tags: ["water"],
+            barcodeScan: InventoryBarcodeScan(
+                payload: "9876543210",
+                symbology: "code128",
+                capturedAt: Date(),
+                source: .photoLibrary
+            ),
+            recognizedText: RecognizedInventoryText(
+                rawText: "Garage Tote",
+                summary: "Garage Tote",
+                capturedAt: Date(),
+                source: .photoLibrary
+            ),
             createdAt: Date(),
             updatedAt: Date(),
             isArchived: false
@@ -337,6 +349,14 @@ final class SearchIndexRebuilderTests: XCTestCase {
         try inventoryRepository.createItem(item)
         XCTAssertEqual(
             try searchService.search(query: "closet", scopes: [.inventoryItem], limit: 5).first?.id,
+            item.id
+        )
+        XCTAssertEqual(
+            try searchService.search(query: "9876543210", scopes: [.inventoryItem], limit: 5).first?.id,
+            item.id
+        )
+        XCTAssertEqual(
+            try searchService.search(query: "garage", scopes: [.inventoryItem], limit: 5).first?.id,
             item.id
         )
 

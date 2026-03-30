@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository, FieldReferenceRepository, SeedContentRepository {
+final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository, FieldReferenceRepository, SeedContentRepository, KnowledgePackContentRepository {
     private let modelContext: ModelContext
 
     init(modelContext: ModelContext) {
@@ -285,6 +285,142 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
             versionState: updatedState,
             chapterCount: bundle.chapters.count,
             sectionCount: bundle.chapters.reduce(into: 0) { $0 += $1.sections.count },
+            quickCardCount: bundle.quickCards.count,
+            checklistTemplateCount: bundle.checklistTemplates.count,
+            fieldReferenceCount: bundle.fieldReferences.count
+        )
+    }
+
+    @discardableResult
+    func installKnowledgePack(
+        _ bundle: SeedContentBundle,
+        previousRecordSet: KnowledgePackRecordSet?,
+        importedAt: Date
+    ) throws -> KnowledgePackInstallResult {
+        let existingChapters = try modelContext.fetch(FetchDescriptor<PersistedHandbookChapter>())
+        let existingQuickCards = try modelContext.fetch(FetchDescriptor<PersistedQuickCard>())
+        let existingFieldReferences = try modelContext.fetch(FetchDescriptor<PersistedFieldReferenceEntry>())
+        let existingTemplates = try modelContext.fetch(FetchDescriptor<PersistedChecklistTemplate>())
+
+        let existingChaptersByID = Dictionary(uniqueKeysWithValues: existingChapters.map { ($0.id, $0) })
+        let existingQuickCardsByID = Dictionary(uniqueKeysWithValues: existingQuickCards.map { ($0.id, $0) })
+        let existingFieldReferencesByID = Dictionary(uniqueKeysWithValues: existingFieldReferences.map { ($0.id, $0) })
+        let existingTemplatesByID = Dictionary(uniqueKeysWithValues: existingTemplates.map { ($0.id, $0) })
+
+        let incomingChapterIDs = Set(bundle.chapters.map(\.id))
+        let incomingQuickCardIDs = Set(bundle.quickCards.map(\.id))
+        let incomingFieldReferenceIDs = Set(bundle.fieldReferences.map(\.id))
+        let incomingTemplateIDs = Set(bundle.checklistTemplates.map(\.id))
+
+        for chapter in bundle.chapters.sorted(by: chapterSort) {
+            let chapterRecord = existingChaptersByID[chapter.id] ?? {
+                let newRecord = PersistedHandbookChapter(from: chapter)
+                modelContext.insert(newRecord)
+                return newRecord
+            }()
+
+            chapterRecord.update(from: chapter)
+
+            let existingSectionsByID = Dictionary(uniqueKeysWithValues: chapterRecord.sections.map { ($0.id, $0) })
+            let incomingSectionIDs = Set(chapter.sections.map(\.id))
+
+            for section in chapter.sections.sorted(by: sectionSort) {
+                if let existingSection = existingSectionsByID[section.id] {
+                    existingSection.update(from: section, chapter: chapterRecord)
+                } else {
+                    modelContext.insert(PersistedHandbookSection(from: section, chapter: chapterRecord))
+                }
+            }
+
+            for existingSection in Array(chapterRecord.sections) where !incomingSectionIDs.contains(existingSection.id) {
+                modelContext.delete(existingSection)
+            }
+        }
+
+        if let previousChapterIDs = previousRecordSet?.chapterIDs {
+            for chapterID in previousChapterIDs where !incomingChapterIDs.contains(chapterID) {
+                if let chapterRecord = existingChaptersByID[chapterID] {
+                    modelContext.delete(chapterRecord)
+                }
+            }
+        }
+
+        for quickCard in bundle.quickCards.sorted(by: quickCardSort) {
+            if let existingQuickCard = existingQuickCardsByID[quickCard.id] {
+                existingQuickCard.update(from: quickCard)
+            } else {
+                modelContext.insert(PersistedQuickCard(from: quickCard))
+            }
+        }
+
+        if let previousQuickCardIDs = previousRecordSet?.quickCardIDs {
+            for quickCardID in previousQuickCardIDs where !incomingQuickCardIDs.contains(quickCardID) {
+                if let quickCardRecord = existingQuickCardsByID[quickCardID] {
+                    modelContext.delete(quickCardRecord)
+                }
+            }
+        }
+
+        for fieldReference in bundle.fieldReferences.sorted(by: fieldReferenceSort) {
+            if let existingFieldReference = existingFieldReferencesByID[fieldReference.id] {
+                existingFieldReference.update(from: fieldReference)
+            } else {
+                modelContext.insert(PersistedFieldReferenceEntry(from: fieldReference))
+            }
+        }
+
+        if let previousFieldReferenceIDs = previousRecordSet?.fieldReferenceIDs {
+            for fieldReferenceID in previousFieldReferenceIDs where !incomingFieldReferenceIDs.contains(fieldReferenceID) {
+                if let fieldReferenceRecord = existingFieldReferencesByID[fieldReferenceID] {
+                    modelContext.delete(fieldReferenceRecord)
+                }
+            }
+        }
+
+        for template in bundle.checklistTemplates {
+            let templateRecord = existingTemplatesByID[template.id] ?? {
+                let newRecord = PersistedChecklistTemplate(from: template)
+                modelContext.insert(newRecord)
+                return newRecord
+            }()
+
+            templateRecord.update(from: template)
+
+            let existingItemsByID = Dictionary(uniqueKeysWithValues: templateRecord.items.map { ($0.id, $0) })
+            let incomingItemIDs = Set(template.items.map(\.id))
+
+            for item in template.items {
+                if let existingItem = existingItemsByID[item.id] {
+                    existingItem.update(from: item)
+                } else {
+                    modelContext.insert(PersistedChecklistTemplateItem(from: item, template: templateRecord))
+                }
+            }
+
+            for existingItem in Array(templateRecord.items) where !incomingItemIDs.contains(existingItem.id) {
+                modelContext.delete(existingItem)
+            }
+        }
+
+        if let previousTemplateIDs = previousRecordSet?.checklistTemplateIDs {
+            for templateID in previousTemplateIDs where !incomingTemplateIDs.contains(templateID) {
+                if let templateRecord = existingTemplatesByID[templateID] {
+                    modelContext.delete(templateRecord)
+                }
+            }
+        }
+
+        _ = importedAt
+        try modelContext.save()
+
+        return KnowledgePackInstallResult(
+            recordSet: KnowledgePackRecordSet(
+                chapterIDs: bundle.chapters.map(\.id),
+                quickCardIDs: bundle.quickCards.map(\.id),
+                checklistTemplateIDs: bundle.checklistTemplates.map(\.id),
+                fieldReferenceIDs: bundle.fieldReferences.map(\.id)
+            ),
+            chapterCount: bundle.chapters.count,
             quickCardCount: bundle.quickCards.count,
             checklistTemplateCount: bundle.checklistTemplates.count,
             fieldReferenceCount: bundle.fieldReferences.count

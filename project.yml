@@ -32,6 +32,9 @@ targets:
       - path: OSA/Resources/SeedContent
         buildPhase: resources
         type: folder
+      - path: OSA/Resources/KnowledgePacks
+        buildPhase: resources
+        type: folder
     entitlements:
       path: OSA/OSA.entitlements
     dependencies:
@@ -48,7 +51,9 @@ targets:
           - CFBundleURLName: com.etherealogic.osa
             CFBundleURLSchemes:
               - lantern
+        INFOPLIST_KEY_NSCameraUsageDescription: "Lantern uses the camera to scan inventory codes, capture inventory photos, and scan documents into your encrypted local vault."
         INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Lantern uses your photo library only when you choose local images to attach to inventory items or import into the encrypted document vault."
         INFOPLIST_KEY_NSSupportsLiveActivities: YES
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

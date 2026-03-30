@@ -13,6 +13,9 @@ final class PersistedInventoryItem {
     var expiryDate: Date?
     var reorderThreshold: Int?
     var tagsJSON: String
+    var barcodeScanJSON: String
+    var recognizedTextJSON: String
+    var photoAttachmentsJSON: String
     var createdAt: Date
     var updatedAt: Date
     var isArchived: Bool
@@ -28,6 +31,9 @@ final class PersistedInventoryItem {
         expiryDate: Date?,
         reorderThreshold: Int?,
         tagsJSON: String,
+        barcodeScanJSON: String,
+        recognizedTextJSON: String,
+        photoAttachmentsJSON: String,
         createdAt: Date,
         updatedAt: Date,
         isArchived: Bool
@@ -42,6 +48,9 @@ final class PersistedInventoryItem {
         self.expiryDate = expiryDate
         self.reorderThreshold = reorderThreshold
         self.tagsJSON = tagsJSON
+        self.barcodeScanJSON = barcodeScanJSON
+        self.recognizedTextJSON = recognizedTextJSON
+        self.photoAttachmentsJSON = photoAttachmentsJSON
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.isArchived = isArchived

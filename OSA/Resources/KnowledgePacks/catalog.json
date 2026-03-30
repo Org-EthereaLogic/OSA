@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-03-29T00:00:00Z",
+  "packs": [
+    {
+      "id": "document-readiness",
+      "title": "Document Readiness",
+      "summary": "Offline household record, insurance photo, and go-pouch guidance that complements the local document vault.",
+      "version": "1.0.0",
+      "manifestPath": "document-readiness/SeedManifest.json",
+      "contentHash": "a40be91f43805a59be83ac7671ef7aa3ba9b37e37a9482dd4545aa073e5c557c"
+    },
+    {
+      "id": "water-readiness",
+      "title": "Water Readiness",
+      "summary": "Offline household water storage, boil-water, sanitation, and rotation guidance for outages and disruptions.",
+      "version": "1.0.0",
+      "manifestPath": "water-readiness/SeedManifest.json",
+      "contentHash": "da663ba540bb7634261d343b83f6a7f422de3b737e95a94ad8129af7b7c00d49"
+    }
+  ]
+}

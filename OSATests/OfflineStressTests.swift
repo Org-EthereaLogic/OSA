@@ -17,6 +17,8 @@ final class OfflineStressTests: XCTestCase {
         PersistedFieldReferenceEntry.self,
         PersistedSeedContentState.self,
         PersistedInventoryItem.self,
+        PersistedDocumentVaultEntry.self,
+        PersistedKnowledgePackInstallState.self,
         PersistedChecklistTemplate.self,
         PersistedChecklistTemplateItem.self,
         PersistedChecklistRun.self,
@@ -62,6 +64,9 @@ final class OfflineStressTests: XCTestCase {
             expiryDate: nil,
             reorderThreshold: nil,
             tagsJSON: "[]",
+            barcodeScanJSON: "",
+            recognizedTextJSON: "",
+            photoAttachmentsJSON: "[]",
             createdAt: now,
             updatedAt: now,
             isArchived: false
