@@ -138,6 +138,31 @@ final class SeedContentMigrationTests: XCTestCase {
         XCTAssertEqual(notes.first?.plainText, "Personal evac route.")
     }
 
+    func testPracticeProgressNotAffectedBySeedImport() throws {
+        let env = try makeTestEnvironment()
+        defer { env.fixtures.cleanup() }
+
+        let progress = PersistedPracticeProgress(
+            recordKey: "quiz:1234",
+            contentID: UUID(uuidString: "12345678-1234-1234-1234-123456789012")!,
+            kindRawValue: PersistedPracticeProgressKind.quiz.rawValue,
+            bestCorrectCount: 2,
+            totalQuestionCount: 3,
+            lastCompletedAt: Date(timeIntervalSince1970: 1_742_601_700),
+            weekToken: nil
+        )
+        env.container.mainContext.insert(progress)
+        try env.container.mainContext.save()
+
+        _ = try env.importer.importBundledContentIfNeeded()
+
+        let descriptor = FetchDescriptor<PersistedPracticeProgress>()
+        let stored = try env.container.mainContext.fetch(descriptor)
+        XCTAssertEqual(stored.count, 1)
+        XCTAssertEqual(stored.first?.bestCorrectCount, 2)
+        XCTAssertEqual(stored.first?.totalQuestionCount, 3)
+    }
+
     // MARK: - Test Environment
 
     private static let baseDate = Date(timeIntervalSince1970: 1_742_601_600)
@@ -155,6 +180,7 @@ final class SeedContentMigrationTests: XCTestCase {
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
             PersistedFieldReferenceEntry.self,
+            PersistedPracticeProgress.self,
             PersistedSeedContentState.self,
             PersistedInventoryItem.self,
             PersistedChecklistTemplate.self,

@@ -2,6 +2,7 @@ import Foundation
 
 enum FieldReferenceCategory: String, Codable, CaseIterable, Equatable, Sendable, Identifiable {
     case firstAid = "first-aid"
+    case ropeAndKnots = "rope-and-knots"
     case weatherExposure = "weather-exposure"
     case waterTreatment = "water-treatment"
     case signaling = "signaling"
@@ -12,6 +13,7 @@ enum FieldReferenceCategory: String, Codable, CaseIterable, Equatable, Sendable,
     var displayName: String {
         switch self {
         case .firstAid: "First Aid"
+        case .ropeAndKnots: "Rope And Knots"
         case .weatherExposure: "Weather Exposure"
         case .waterTreatment: "Water Treatment"
         case .signaling: "Signaling"
@@ -22,6 +24,7 @@ enum FieldReferenceCategory: String, Codable, CaseIterable, Equatable, Sendable,
     var systemImage: String {
         switch self {
         case .firstAid: "cross.case.fill"
+        case .ropeAndKnots: "link"
         case .weatherExposure: "cloud.sun.fill"
         case .waterTreatment: "drop.fill"
         case .signaling: "flashlight.on.fill"
@@ -33,6 +36,8 @@ enum FieldReferenceCategory: String, Codable, CaseIterable, Equatable, Sendable,
         switch self {
         case .firstAid:
             "Reviewed, static injury-response references that stay concise and non-diagnostic."
+        case .ropeAndKnots:
+            "Simple knot references with do-not-use cautions and clear illustration support."
         case .weatherExposure:
             "Cold, heat, smoke, and exposure references tuned for household response."
         case .waterTreatment:
@@ -66,6 +71,38 @@ struct FieldReferenceEntry: Identifiable, Equatable, Sendable {
     let tags: [String]
     let safetyLevel: HandbookSafetyLevel
     let lastReviewedAt: Date?
+    let mediaAttachments: [LocalMediaAttachment]
+    let quizDefinition: QuizDefinition?
+
+    init(
+        id: UUID,
+        slug: String,
+        title: String,
+        category: FieldReferenceCategory,
+        summary: String,
+        sortOrder: Int,
+        sections: [FieldReferenceSection],
+        relatedSectionIDs: [UUID],
+        tags: [String],
+        safetyLevel: HandbookSafetyLevel,
+        lastReviewedAt: Date?,
+        mediaAttachments: [LocalMediaAttachment] = [],
+        quizDefinition: QuizDefinition? = nil
+    ) {
+        self.id = id
+        self.slug = slug
+        self.title = title
+        self.category = category
+        self.summary = summary
+        self.sortOrder = sortOrder
+        self.sections = sections
+        self.relatedSectionIDs = relatedSectionIDs
+        self.tags = tags
+        self.safetyLevel = safetyLevel
+        self.lastReviewedAt = lastReviewedAt
+        self.mediaAttachments = mediaAttachments
+        self.quizDefinition = quizDefinition
+    }
 
     var sortedSections: [FieldReferenceSection] {
         sections.sorted {
@@ -78,7 +115,12 @@ struct FieldReferenceEntry: Identifiable, Equatable, Sendable {
     }
 
     var plainText: String {
-        ([summary] + sortedSections.map { "\($0.title) \($0.plainText)" })
+        (
+            [summary]
+                + sortedSections.map { "\($0.title) \($0.plainText)" }
+                + mediaAttachments.map(\.searchableText)
+                + [quizDefinition?.searchableText].compactMap { $0 }
+        )
             .joined(separator: " ")
     }
 }

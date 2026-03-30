@@ -8,11 +8,12 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - Core functionality must work fully offline from locally stored content and user data.
 - Imported web knowledge must become locally available for future offline use.
 - The product requires local handbook content, quick cards, checklists, inventory, notes, citations, bounded Ask-session context, and settings.
-- The editorial-content persistence slice now includes `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, `PersistedFieldReferenceEntry`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `FieldReferenceRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
+- The editorial-content persistence slice now includes `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, `PersistedFieldReferenceEntry`, and `PersistedSeedContentState`; quick cards and field references persist optional bundled media, quiz, and weekly-drill metadata alongside their editorial fields; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `FieldReferenceRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
 - User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
 - A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across handbook sections, quick cards, field references, checklist templates, inventory items, notes, and imported knowledge. `SearchIndexRebuilder` repopulates the index from repository truth at bootstrap, and note or inventory writes update the index incrementally through repository decorators.
 - Imported knowledge persistence is now implemented: `PersistedSourceRecord`, `PersistedImportedKnowledgeDocument`, `PersistedKnowledgeChunk`, and `PersistedPendingOperation` SwiftData models with cascade relationships; domain value types and enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`); `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations; repository-contract tests for both repositories. M4P4 adds `ImportedKnowledgeNormalizer` (HTML/text → `NormalizedDocument` with title, content-hash, publisher domain), `KnowledgeChunker` (heading-aware chunking with paragraph fallback), and `ImportedKnowledgeImportPipeline` (orchestrates normalize → chunk → persist to repository → extend FTS5 index with dedupe and document versioning). `SearchService.indexImportedChunk` extends the FTS5 index for imported knowledge chunks.
 - Maps persistence is now implemented: `PersistedWaypoint` (id, title, note, lat/lon, category, symbolName, createdAt), `PersistedRecordedTrack` (id, title, startedAt, endedAt, totalDistanceMeters) with a cascade one-to-many relationship to `PersistedRecordedTrackPoint` (id, lat/lon, timestamp, horizontalAccuracy), and `MapRecordMappings` domain-value-type converters. `WaypointRepository` and `RecordedTrackRepository` protocols in `OSA/Domain/Maps/Repositories/` with `SwiftDataWaypointRepository` and `SwiftDataRecordedTrackRepository` implementations in `OSA/Persistence/SwiftData/Repositories/`. Repository-contract tests cover waypoint CRUD and full track create/update/delete lifecycle.
+- Practice progress persistence is now implemented: `QuizProgress`, `WeeklyDrillCompletion`, `CompletionBadge`, and `PracticeSchedule` in `OSA/Domain/Practice/Models/`; `PracticeProgressRepository` in `OSA/Domain/Practice/Repositories/`; `PersistedPracticeProgress` in `OSA/Persistence/SwiftData/Models/`; and `SwiftDataPracticeProgressRepository` in `OSA/Persistence/SwiftData/Repositories/`. Practice progress tracks best quiz scores, completion timestamps, and week-token-based drill completion separately from editorial seed content.
 
 ## Assumptions
 
@@ -49,7 +50,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 ### Data Classes
 
 - Immutable or slowly changing editorial content: chapters, sections, quick cards, field references, and checklist templates.
-- Mutable user state: notes, inventory items, checklist runs, settings, AI sessions.
+- Mutable user state: notes, inventory items, checklist runs, practice progress, settings, AI sessions.
 - Imported knowledge: source metadata, normalized documents, chunks, citations, refresh state.
 
 ## Core Entities
@@ -120,6 +121,9 @@ erDiagram
 - `tags`
 - `lastReviewedAt`
 - `largeTypeLayoutVersion`
+- `mediaAttachments`
+- `quizDefinition`
+- `weeklyDrillMetadata`
 
 `largeTypeLayoutVersion` remains the bounded presentation seam for infographic-style quick cards. Sprint 9 climate quick cards use version `2` instead of introducing a separate `InfographicCard` persistence type.
 
@@ -136,6 +140,20 @@ erDiagram
 - `tags`
 - `safetyLevel`
 - `lastReviewedAt`
+- `mediaAttachments`
+- `quizDefinition`
+
+`category` now also covers rope-and-knots reference content in addition to first-aid, weather-exposure, water-treatment, signaling, and lookalike-comparison.
+
+### PracticeProgress
+
+- `recordKey`
+- `contentID`
+- `kind` such as quiz or weekly-drill completion
+- `bestCorrectCount`
+- `totalQuestionCount`
+- `lastCompletedAt`
+- `weekToken` optional for weekly-drill completion
 
 ### InventoryItem
 

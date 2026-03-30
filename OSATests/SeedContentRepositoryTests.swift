@@ -186,6 +186,42 @@ final class SeedContentRepositoryTests: XCTestCase {
         }
     }
 
+    func testSeedContentLoaderDecodesMediaQuizAndWeeklyDrillMetadata() throws {
+        let fixtures = try EnhancedSeedContentFixtures()
+        defer { fixtures.cleanup() }
+
+        let bundle = try SeedContentLoader(directoryURL: fixtures.directoryURL).loadBundle()
+
+        let quickCard = try XCTUnwrap(bundle.quickCards.first)
+        XCTAssertEqual(quickCard.mediaAttachments.count, 2)
+        XCTAssertEqual(quickCard.mediaAttachments.first?.bundlePath, "Media/Illustrations/pressure-dressing.svg")
+        XCTAssertEqual(quickCard.quizDefinition?.questions.count, 1)
+        XCTAssertEqual(quickCard.weeklyDrillMetadata?.badgeLabel, "Drill Badge")
+
+        let fieldReference = try XCTUnwrap(bundle.fieldReferences.first)
+        XCTAssertEqual(fieldReference.mediaAttachments.count, 1)
+        XCTAssertEqual(fieldReference.quizDefinition?.title, "Bowline Drill")
+    }
+
+    func testSeedContentLoaderRejectsMissingMediaAsset() throws {
+        let fixtures = try EnhancedSeedContentFixtures()
+        defer { fixtures.cleanup() }
+
+        try fixtures.removeIllustration()
+
+        XCTAssertThrowsError(
+            try SeedContentLoader(directoryURL: fixtures.directoryURL).loadBundle()
+        ) { error in
+            XCTAssertEqual(
+                error as? SeedContentLoaderError,
+                .missingMediaAsset(
+                    contentID: UUID(uuidString: "55555555-5555-5555-5555-555555555551")!,
+                    path: "Media/Illustrations/pressure-dressing.svg"
+                )
+            )
+        }
+    }
+
     private func makeInMemoryContainer() throws -> ModelContainer {
         let schema = Schema([
             PersistedHandbookChapter.self,
@@ -202,6 +238,229 @@ final class SeedContentRepositoryTests: XCTestCase {
 
     private static let appliedAt = Date(timeIntervalSince1970: 1_742_601_600)
     private static let laterAppliedAt = Date(timeIntervalSince1970: 1_742_688_000)
+}
+
+private struct EnhancedSeedContentFixtures {
+    let rootURL: URL
+    let directoryURL: URL
+
+    init() throws {
+        rootURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        directoryURL = rootURL.appendingPathComponent("SeedContent", isDirectory: true)
+        try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(
+            at: rootURL.appendingPathComponent("Media/Illustrations", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createDirectory(
+            at: rootURL.appendingPathComponent("Media/Videos", isDirectory: true),
+            withIntermediateDirectories: true
+        )
+
+        try write("handbook-foundations-v1.json", contents: SeedContentFixtures.handbookPack)
+        try write("quick-cards-core-v1.json", contents: Self.quickCardPack)
+        try write("checklist-templates-core-v1.json", contents: SeedContentFixtures.checklistTemplatePack)
+        try write("field-references-core-v1.json", contents: Self.fieldReferencePack)
+        try writeMedia("Media/Illustrations/pressure-dressing.svg", contents: "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>")
+        try writeMedia("Media/Illustrations/bowline.svg", contents: "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>")
+        try writeMedia("Media/Videos/pressure-dressing-flow.mp4", contents: "placeholder")
+        try write(
+            "SeedManifest.json",
+            contents: Self.makeManifest(
+                handbookHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.handbookPack),
+                quickCardHash: SeedContentFixtures.sha256Hex(Self.quickCardPack),
+                checklistHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.checklistTemplatePack),
+                fieldReferenceHash: SeedContentFixtures.sha256Hex(Self.fieldReferencePack)
+            )
+        )
+    }
+
+    func cleanup() {
+        try? FileManager.default.removeItem(at: rootURL)
+    }
+
+    func removeIllustration() throws {
+        try FileManager.default.removeItem(
+            at: rootURL.appendingPathComponent("Media/Illustrations/pressure-dressing.svg")
+        )
+    }
+
+    private func write(_ fileName: String, contents: String) throws {
+        try contents.write(
+            to: directoryURL.appendingPathComponent(fileName),
+            atomically: true,
+            encoding: .utf8
+        )
+    }
+
+    private func writeMedia(_ relativePath: String, contents: String) throws {
+        try contents.write(
+            to: rootURL.appendingPathComponent(relativePath),
+            atomically: true,
+            encoding: .utf8
+        )
+    }
+
+    private static func makeManifest(
+        handbookHash: String,
+        quickCardHash: String,
+        checklistHash: String,
+        fieldReferenceHash: String
+    ) -> String {
+        """
+        {
+          "schemaVersion": 1,
+          "contentPackVersion": "0.1.0",
+          "generatedAt": "2026-03-29T00:00:00Z",
+          "packs": [
+            {
+              "identifier": "handbook-foundations",
+              "kind": "handbook-chapters",
+              "version": "2026.03.29.1",
+              "fileName": "handbook-foundations-v1.json",
+              "recordCount": 1,
+              "contentHash": "\(handbookHash)"
+            },
+            {
+              "identifier": "quick-cards-core",
+              "kind": "quick-cards",
+              "version": "2026.03.29.1",
+              "fileName": "quick-cards-core-v1.json",
+              "recordCount": 1,
+              "contentHash": "\(quickCardHash)"
+            },
+            {
+              "identifier": "checklist-templates-core",
+              "kind": "checklist-templates",
+              "version": "2026.03.29.1",
+              "fileName": "checklist-templates-core-v1.json",
+              "recordCount": 1,
+              "contentHash": "\(checklistHash)"
+            },
+            {
+              "identifier": "field-references-core",
+              "kind": "field-references",
+              "version": "2026.03.29.1",
+              "fileName": "field-references-core-v1.json",
+              "recordCount": 1,
+              "contentHash": "\(fieldReferenceHash)"
+            }
+          ]
+        }
+        """
+    }
+
+    static let quickCardPack = """
+    {
+      "quickCards": [
+        {
+          "id": "55555555-5555-5555-5555-555555555551",
+          "title": "Pressure Dressing Quick Check",
+          "slug": "pressure-dressing-quick-check",
+          "category": "first-aid",
+          "summary": "Fixture with media and quiz metadata.",
+          "bodyMarkdown": "1. Place the pad.",
+          "priority": 90,
+          "relatedSectionIDs": [
+            "11111111-1111-1111-1111-111111111112"
+          ],
+          "tags": ["first-aid"],
+          "lastReviewedAt": "2026-03-29T00:00:00Z",
+          "largeTypeLayoutVersion": 1,
+          "mediaAttachments": [
+            {
+              "kind": "inline-svg",
+              "bundlePath": "Media/Illustrations/pressure-dressing.svg",
+              "caption": "Pressure dressing illustration.",
+              "accessibilityLabel": "Pressure dressing image."
+            },
+            {
+              "kind": "short-video",
+              "bundlePath": "Media/Videos/pressure-dressing-flow.mp4",
+              "caption": "Pressure dressing video.",
+              "accessibilityLabel": "Pressure dressing video.",
+              "transcript": "Wrap path."
+            }
+          ],
+          "quizDefinition": {
+            "title": "Pressure Dressing Drill",
+            "masteryScorePercent": 100,
+            "questions": [
+              {
+                "id": "q1",
+                "prompt": "What should you keep checking below the dressing?",
+                "options": [
+                  { "id": "a", "text": "Circulation" },
+                  { "id": "b", "text": "Wallpaper" }
+                ],
+                "correctOptionID": "a",
+                "explanation": "Keep checking circulation."
+              }
+            ]
+          },
+          "weeklyDrillMetadata": {
+            "title": "Pressure Dressing Drill",
+            "prompt": "Run the dressing sequence out loud.",
+            "badgeLabel": "Drill Badge"
+          }
+        }
+      ]
+    }
+    """
+
+    static let fieldReferencePack = """
+    {
+      "entries": [
+        {
+          "id": "66666666-6666-6666-6666-666666666661",
+          "slug": "bowline-reference",
+          "title": "Bowline Reference",
+          "category": "rope-and-knots",
+          "summary": "Fixture with illustration and quiz metadata.",
+          "sortOrder": 100,
+          "sections": [
+            {
+              "title": "Tie Sequence",
+              "bodyMarkdown": "- Up through the loop.",
+              "plainText": "Up through the loop.",
+              "sortOrder": 100
+            }
+          ],
+          "relatedSectionIDs": [
+            "11111111-1111-1111-1111-111111111112"
+          ],
+          "tags": ["rope"],
+          "safetyLevel": "normal",
+          "lastReviewedAt": "2026-03-29T00:00:00Z",
+          "mediaAttachments": [
+            {
+              "kind": "inline-svg",
+              "bundlePath": "Media/Illustrations/bowline.svg",
+              "caption": "Bowline illustration.",
+              "accessibilityLabel": "Bowline image."
+            }
+          ],
+          "quizDefinition": {
+            "title": "Bowline Drill",
+            "masteryScorePercent": 100,
+            "questions": [
+              {
+                "id": "q1",
+                "prompt": "Which loop is not the goal here?",
+                "options": [
+                  { "id": "a", "text": "Fixed loop" },
+                  { "id": "b", "text": "Slip loop" }
+                ],
+                "correctOptionID": "b",
+                "explanation": "The bowline is taught as a fixed loop."
+              }
+            ]
+          }
+        }
+      ]
+    }
+    """
 }
 
 private struct SeedContentFixtures {
@@ -261,7 +520,7 @@ private struct SeedContentFixtures {
         SHA256.hash(data: Data(contents.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    private static func makeManifest(
+    fileprivate static func makeManifest(
         handbookHash: String,
         quickCardHash: String,
         checklistHash: String,

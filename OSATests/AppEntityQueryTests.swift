@@ -279,6 +279,7 @@ private func makeTestDependencies(
         handbookRepository: handbookRepo,
         quickCardRepository: quickCardRepo,
         fieldReferenceRepository: fieldReferenceRepo,
+        practiceProgressRepository: StubPracticeProgressRepository(),
         seedContentRepository: StubSeedContentRepository(),
         inventoryRepository: inventoryRepo,
         supplyTemplateRepository: StubSupplyTemplateRepository(),
@@ -497,6 +498,38 @@ private final class StubFieldReferenceRepository: FieldReferenceRepository, @unc
     }
     func entry(slug: String) throws -> FieldReferenceEntry? { entries.first { $0.slug == slug } }
     func entry(id: UUID) throws -> FieldReferenceEntry? { entries.first { $0.id == id } }
+}
+
+private final class StubPracticeProgressRepository: PracticeProgressRepository, @unchecked Sendable {
+    func quizProgress(for contentID: UUID) throws -> QuizProgress? { nil }
+    func listQuizProgress() throws -> [QuizProgress] { [] }
+    func saveQuizProgress(
+        for contentID: UUID,
+        correctCount: Int,
+        totalQuestionCount: Int,
+        completedAt: Date
+    ) throws -> QuizProgress {
+        QuizProgress(
+            contentID: contentID,
+            bestCorrectCount: correctCount,
+            totalQuestionCount: totalQuestionCount,
+            lastCompletedAt: completedAt
+        )
+    }
+
+    func weeklyDrillCompletion(for weekToken: String) throws -> WeeklyDrillCompletion? { nil }
+    func listWeeklyDrillCompletions() throws -> [WeeklyDrillCompletion] { [] }
+    func markWeeklyDrillCompleted(
+        contentID: UUID,
+        weekToken: String,
+        completedAt: Date
+    ) throws -> WeeklyDrillCompletion {
+        WeeklyDrillCompletion(
+            weekToken: weekToken,
+            contentID: contentID,
+            completedAt: completedAt
+        )
+    }
 }
 
 private final class StubChecklistRepository: ChecklistRepository, @unchecked Sendable {

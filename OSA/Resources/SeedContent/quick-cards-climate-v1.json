@@ -19,7 +19,49 @@
         "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-29T00:00:00Z",
-      "largeTypeLayoutVersion": 2
+      "largeTypeLayoutVersion": 2,
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/heat-wave-cool-room.svg",
+          "caption": "A single cool room works best when shade, airflow, water, and key supplies are staged before the hottest part of the day.",
+          "accessibilityLabel": "Illustration showing a shaded room with water, airflow, and household staging supplies.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Heat Wave Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "heat-q1",
+            "prompt": "What should happen first when the indoor temperature starts climbing quickly?",
+            "options": [
+              { "id": "a", "text": "Close sun-facing blinds and stage one cool room." },
+              { "id": "b", "text": "Open the oven to warm the kitchen less often." },
+              { "id": "c", "text": "Wait until the whole house feels dangerous." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The drill starts with a single cool room: block direct sun, move essentials there, and reduce indoor heat sources early."
+          },
+          {
+            "id": "heat-q2",
+            "prompt": "Which sign means it is time to leave early instead of stretching the cool-room plan?",
+            "options": [
+              { "id": "a", "text": "The room is quiet and shaded." },
+              { "id": "b", "text": "Someone becomes confused or stops cooling down." },
+              { "id": "c", "text": "The house is darker than usual." }
+            ],
+            "correctOptionID": "b",
+            "explanation": "Confusion or failure to cool down are escalation cues. The card stays conservative and favors transport before the home becomes unsafe."
+          }
+        ]
+      },
+      "weeklyDrillMetadata": {
+        "title": "Cool-Room Drill",
+        "prompt": "Name the room-staging sequence before indoor heat spikes.",
+        "badgeLabel": "Heat Drill"
+      }
     },
     {
       "id": "bbccddee-1002-0000-0000-000000000001",
@@ -40,7 +82,49 @@
         "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-29T00:00:00Z",
-      "largeTypeLayoutVersion": 2
+      "largeTypeLayoutVersion": 2,
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/wildfire-clean-room.svg",
+          "caption": "Seal the room, run the best filter setup you already trust, and keep smoke-covered gear outside the clean room.",
+          "accessibilityLabel": "Illustration showing a sealed window, an air filter, and staged medications and water inside a clean room.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Clean-Room Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "smoke-q1",
+            "prompt": "What belongs inside the clean room once it is staged?",
+            "options": [
+              { "id": "a", "text": "Smoky jackets and ash-covered shoes." },
+              { "id": "b", "text": "Medications, water, and chargers." },
+              { "id": "c", "text": "Only the filter and nothing else." }
+            ],
+            "correctOptionID": "b",
+            "explanation": "The card keeps the clean room practical: medications, water, and chargers stay inside so people can recover there."
+          },
+          {
+            "id": "smoke-q2",
+            "prompt": "When should the household move instead of trying to force the room to work longer?",
+            "options": [
+              { "id": "a", "text": "When indoor air keeps worsening or someone cannot recover after getting inside." },
+              { "id": "b", "text": "As soon as the sky looks hazy outside." },
+              { "id": "c", "text": "Only after the filter makes noise." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The drill is conservative: worsening indoor air or ongoing breathing distress are leave-early cues."
+          }
+        ]
+      },
+      "weeklyDrillMetadata": {
+        "title": "Clean-Room Drill",
+        "prompt": "Call out the seal-filter-protect order before smoke gets heavy indoors.",
+        "badgeLabel": "Smoke Drill"
+      }
     },
     {
       "id": "bbccddee-1003-0000-0000-000000000001",
@@ -61,7 +145,49 @@
         "region:pacific-northwest"
       ],
       "lastReviewedAt": "2026-03-29T00:00:00Z",
-      "largeTypeLayoutVersion": 2
+      "largeTypeLayoutVersion": 2,
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/flood-stop-check.svg",
+          "caption": "As water rises, pause, check hazards and exits, then move essentials toward the safest exit before footing is lost.",
+          "accessibilityLabel": "Illustration showing a rising indoor water line with supplies lifted above it and an exit direction.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Flood Exit Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "flood-q1",
+            "prompt": "What happens before you start troubleshooting where the water is coming from?",
+            "options": [
+              { "id": "a", "text": "Pause and check footing, exits, and who still needs to move." },
+              { "id": "b", "text": "Walk deeper into the water to inspect the outlet." },
+              { "id": "c", "text": "Reset appliances so they stop floating." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The drill begins with stop-check-move. Stability and exits come before troubleshooting."
+          },
+          {
+            "id": "flood-q2",
+            "prompt": "Which action belongs in the move step?",
+            "options": [
+              { "id": "a", "text": "Keep wading until the room is dry." },
+              { "id": "b", "text": "Shift go-bags, chargers, and dry layers toward the safest exit." },
+              { "id": "c", "text": "Stay put until the road is cut off." }
+            ],
+            "correctOptionID": "b",
+            "explanation": "The move step is about getting essentials and people toward a safe exit before access narrows."
+          }
+        ]
+      },
+      "weeklyDrillMetadata": {
+        "title": "Flood Exit Drill",
+        "prompt": "Run the stop-check-move sequence before the water line reaches outlets or stairs.",
+        "badgeLabel": "Flood Drill"
+      }
     }
   ]
 }

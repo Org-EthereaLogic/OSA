@@ -14,6 +14,8 @@ final class PersistedFieldReferenceEntry {
     var tagsJSON: String
     var safetyLevelRawValue: String
     var lastReviewedAt: Date?
+    var mediaAttachmentsJSON: String
+    var quizDefinitionJSON: String
 
     init(
         id: UUID,
@@ -26,7 +28,9 @@ final class PersistedFieldReferenceEntry {
         relatedSectionIDsJSON: String,
         tagsJSON: String,
         safetyLevelRawValue: String,
-        lastReviewedAt: Date?
+        lastReviewedAt: Date?,
+        mediaAttachmentsJSON: String,
+        quizDefinitionJSON: String
     ) {
         self.id = id
         self.slug = slug
@@ -39,5 +43,7 @@ final class PersistedFieldReferenceEntry {
         self.tagsJSON = tagsJSON
         self.safetyLevelRawValue = safetyLevelRawValue
         self.lastReviewedAt = lastReviewedAt
+        self.mediaAttachmentsJSON = mediaAttachmentsJSON
+        self.quizDefinitionJSON = quizDefinitionJSON
     }
 }

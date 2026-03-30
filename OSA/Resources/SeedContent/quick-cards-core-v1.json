@@ -304,6 +304,73 @@
       ],
       "lastReviewedAt": "2026-03-24T00:00:00Z",
       "largeTypeLayoutVersion": 1
+    },
+    {
+      "id": "bbccdd0d-0000-0000-0000-000000000001",
+      "title": "Pressure Dressing Quick Check",
+      "slug": "pressure-dressing-quick-check",
+      "category": "first-aid",
+      "summary": "Control bleeding with direct pressure, a secure dressing, and fast escalation when bleeding does not stop.",
+      "bodyMarkdown": "1. Expose the wound enough to place direct pressure.\n2. Put a clean absorbent pad over the source of bleeding.\n3. Wrap firmly enough to keep pressure in place without cutting off circulation.\n4. Re-check the fingers or toes below the dressing for warmth, color, and feeling.\n5. Add more material on top if bleeding continues — do not keep peeling the first layer off.\n6. Seek urgent care if bleeding soaks through, spurts, or the person shows signs of shock.",
+      "priority": 96,
+      "relatedSectionIDs": [
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "first-aid",
+        "bleeding",
+        "dressing",
+        "urgent",
+        "scenario:earthquake",
+        "scenario:home-fire"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 1,
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/pressure-dressing.svg",
+          "caption": "Place the pad, wrap firmly, and keep checking for ongoing bleeding below the dressing.",
+          "accessibilityLabel": "Illustration showing a pressure pad on a forearm with a wrap secured over it.",
+          "preferredHeight": 220
+        },
+        {
+          "kind": "short-video",
+          "bundlePath": "Media/Videos/pressure-dressing-flow.mp4",
+          "caption": "Short local clip showing the dressing pad, wrap path, and final check direction.",
+          "accessibilityLabel": "Offline video showing the sequence for placing a pressure dressing and re-checking below it.",
+          "transcript": "Place the pad over the wound. Wrap firmly enough to hold pressure. Check below the dressing for warmth, color, and feeling. Add more material on top if bleeding continues and seek urgent care if bleeding does not stop.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Pressure Dressing Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "bleed-card-q1",
+            "prompt": "What should you do if bleeding continues after the first dressing layer is in place?",
+            "options": [
+              { "id": "a", "text": "Add more material on top instead of repeatedly peeling the first layer off." },
+              { "id": "b", "text": "Take the whole dressing off every few seconds to inspect the wound." },
+              { "id": "c", "text": "Loosen the wrap until pressure is gone." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "Repeatedly removing the first layer can disrupt clotting. Add more material on top while maintaining pressure."
+          },
+          {
+            "id": "bleed-card-q2",
+            "prompt": "What should you check after the wrap is secured?",
+            "options": [
+              { "id": "a", "text": "Whether the room is warm enough." },
+              { "id": "b", "text": "Warmth, color, and feeling below the dressing." },
+              { "id": "c", "text": "Only whether the wrap looks neat." }
+            ],
+            "correctOptionID": "b",
+            "explanation": "The card stays practical: after wrapping, check circulation below the dressing so the wrap is firm but not dangerously tight."
+          }
+        ]
+      }
     }
   ]
 }

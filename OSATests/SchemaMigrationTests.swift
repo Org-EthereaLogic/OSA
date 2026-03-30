@@ -28,6 +28,7 @@ final class SchemaMigrationTests: XCTestCase {
         PersistedImportedKnowledgeDocument.self,
         PersistedKnowledgeChunk.self,
         PersistedPendingOperation.self,
+        PersistedPracticeProgress.self,
         PersistedDailyForecast.self,
         PersistedWeatherAlert.self
     ]
@@ -39,11 +40,11 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertNotNil(container)
     }
 
-    func testAllEighteenModelTypesAreRegisteredInSchema() throws {
+    func testAllNineteenModelTypesAreRegisteredInSchema() throws {
         let schema = Schema(Self.allModelTypes)
         let entityNames = Set(schema.entities.map(\.name))
 
-        XCTAssertEqual(entityNames.count, 18, "Expected 18 entity types in the current schema")
+        XCTAssertEqual(entityNames.count, 19, "Expected 19 entity types in the current schema")
         XCTAssertTrue(entityNames.contains("PersistedHandbookChapter"))
         XCTAssertTrue(entityNames.contains("PersistedHandbookSection"))
         XCTAssertTrue(entityNames.contains("PersistedQuickCard"))
@@ -60,6 +61,7 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertTrue(entityNames.contains("PersistedImportedKnowledgeDocument"))
         XCTAssertTrue(entityNames.contains("PersistedKnowledgeChunk"))
         XCTAssertTrue(entityNames.contains("PersistedPendingOperation"))
+        XCTAssertTrue(entityNames.contains("PersistedPracticeProgress"))
         XCTAssertTrue(entityNames.contains("PersistedDailyForecast"))
         XCTAssertTrue(entityNames.contains("PersistedWeatherAlert"))
     }

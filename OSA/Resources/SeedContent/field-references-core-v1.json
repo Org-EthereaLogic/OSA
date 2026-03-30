@@ -37,7 +37,52 @@
         "scenario:home-fire"
       ],
       "safetyLevel": "sensitive-static-only",
-      "lastReviewedAt": "2026-03-29T00:00:00Z"
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/pressure-dressing.svg",
+          "caption": "A pressure pad and wrap can help keep direct pressure in place while you keep checking below the dressing.",
+          "accessibilityLabel": "Illustration showing a pressure dressing wrapped over a bleeding arm injury.",
+          "preferredHeight": 220
+        },
+        {
+          "kind": "short-video",
+          "bundlePath": "Media/Videos/pressure-dressing-flow.mp4",
+          "caption": "Short local clip showing the dressing pad, wrap path, and final circulation check direction.",
+          "accessibilityLabel": "Offline video showing a pressure dressing sequence on a forearm.",
+          "transcript": "Place the pad over the wound. Wrap firmly enough to hold pressure. Check below the dressing for warmth, color, and feeling. Add more material on top if bleeding continues and seek urgent care if bleeding does not stop.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Bleeding Control Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "bleed-ref-q1",
+            "prompt": "If bleeding keeps showing through the dressing, what does this static reference tell you to do first?",
+            "options": [
+              { "id": "a", "text": "Add more absorbent material without repeatedly lifting the first layer." },
+              { "id": "b", "text": "Remove the first layer over and over to inspect the wound." },
+              { "id": "c", "text": "Stop pressure entirely and wait." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The reference keeps the response conservative: maintain direct pressure and add material on top rather than disrupting the first layer."
+          },
+          {
+            "id": "bleed-ref-q2",
+            "prompt": "Which situation is an escalation cue for urgent care?",
+            "options": [
+              { "id": "a", "text": "Spurting blood, soaking through dressings, or signs of shock." },
+              { "id": "b", "text": "The bandage looks wrinkled." },
+              { "id": "c", "text": "The person asks for water." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The field reference calls out spurting blood, soaked dressings, amputation, and shock as urgent escalation cues."
+          }
+        ]
+      }
     },
     {
       "id": "ccddee11-0002-0000-0000-000000000001",
@@ -78,6 +123,319 @@
       ],
       "safetyLevel": "sensitive-static-only",
       "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0009-0000-0000-000000000001",
+      "slug": "recovery-position-reminder",
+      "title": "Recovery Position Reminder",
+      "category": "first-aid",
+      "summary": "Static reminder for rolling an unresponsive breathing person onto their side when spinal injury is not suspected.",
+      "sortOrder": 250,
+      "sections": [
+        {
+          "title": "Before Rolling",
+          "bodyMarkdown": "- Confirm the person is breathing.\n- Check the scene and stop if a spinal injury is strongly suspected or the person cannot be moved safely.",
+          "plainText": "Confirm the person is breathing. Check the scene and stop if a spinal injury is strongly suspected or the person cannot be moved safely.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Roll To The Side",
+          "bodyMarkdown": "- Move the far arm across the chest.\n- Bend the top knee and roll the person toward you onto their side.\n- Tilt the head slightly back to help keep the airway open.",
+          "plainText": "Move the far arm across the chest. Bend the top knee and roll the person toward you onto their side. Tilt the head slightly back to help keep the airway open.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Keep Watching",
+          "bodyMarkdown": "- Keep checking breathing and responsiveness.\n- If vomiting starts or breathing changes, re-check position and seek urgent help.",
+          "plainText": "Keep checking breathing and responsiveness. If vomiting starts or breathing changes, re-check position and seek urgent help.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "first-aid",
+        "airway",
+        "recovery-position",
+        "scenario:earthquake",
+        "scenario:home-fire"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/recovery-position.svg",
+          "caption": "Roll to the side, bend the top knee, and keep the head slightly tilted back while you keep checking breathing.",
+          "accessibilityLabel": "Illustration showing the recovery position with the head tilted back and the top knee bent.",
+          "preferredHeight": 220
+        }
+      ]
+    },
+    {
+      "id": "ccddee11-0010-0000-0000-000000000001",
+      "slug": "basic-splint-stabilization-reference",
+      "title": "Basic Splint Stabilization Reference",
+      "category": "first-aid",
+      "summary": "Static reminder for padding, supporting, and securing an injured limb before transport.",
+      "sortOrder": 300,
+      "sections": [
+        {
+          "title": "Support First",
+          "bodyMarkdown": "- Support the injured limb in the position found.\n- Stop if movement sharply increases pain or meets strong resistance.",
+          "plainText": "Support the injured limb in the position found. Stop if movement sharply increases pain or meets strong resistance.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Pad And Secure",
+          "bodyMarkdown": "- Place padding between the limb and the splint.\n- Secure above and below the injury site instead of cinching directly over it.",
+          "plainText": "Place padding between the limb and the splint. Secure above and below the injury site instead of cinching directly over it.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Re-Check",
+          "bodyMarkdown": "- Re-check warmth, color, and feeling below the splint after securing it.\n- Seek urgent care for deformity, numbness, or circulation changes.",
+          "plainText": "Re-check warmth, color, and feeling below the splint after securing it. Seek urgent care for deformity, numbness, or circulation changes.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "first-aid",
+        "splint",
+        "stabilization",
+        "scenario:earthquake"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/splint-stabilization.svg",
+          "caption": "Pad the splint, secure it above and below the injury, and re-check circulation below the wrap points.",
+          "accessibilityLabel": "Illustration showing a padded splint secured above and below a forearm injury.",
+          "preferredHeight": 220
+        }
+      ]
+    },
+    {
+      "id": "ccddee11-0011-0000-0000-000000000001",
+      "slug": "square-knot-reference",
+      "title": "Square Knot Reference",
+      "category": "rope-and-knots",
+      "summary": "Starter reference for joining two rope ends of similar size when the load is stable and non-life-safety.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Use Case",
+          "bodyMarkdown": "- Join similar rope ends for bundling, lashing, or simple staging tasks.\n- Keep the load stable and easy to inspect.",
+          "plainText": "Join similar rope ends for bundling, lashing, or simple staging tasks. Keep the load stable and easy to inspect.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Tie Sequence",
+          "bodyMarkdown": "- Left over right and tuck.\n- Then right over left and tuck.\n- Dress the knot so both ends lie flat and even.",
+          "plainText": "Left over right and tuck. Then right over left and tuck. Dress the knot so both ends lie flat and even.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Do Not Use",
+          "bodyMarkdown": "- Do not use for life safety, climbing, or critical towing loads.\n- Re-tie if the finished knot capsizes or one side looks twisted.",
+          "plainText": "Do not use for life safety, climbing, or critical towing loads. Re-tie if the finished knot capsizes or one side looks twisted.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [],
+      "tags": [
+        "rope",
+        "knots",
+        "square-knot",
+        "lashing",
+        "scenario:evacuation"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/square-knot.svg",
+          "caption": "Tie left over right, then right over left, and dress the knot flat before you trust it for bundling.",
+          "accessibilityLabel": "Illustration showing the two crossing steps used to finish a square knot.",
+          "preferredHeight": 220
+        }
+      ]
+    },
+    {
+      "id": "ccddee11-0012-0000-0000-000000000001",
+      "slug": "bowline-reference",
+      "title": "Bowline Reference",
+      "category": "rope-and-knots",
+      "summary": "Starter reference for making a fixed loop that stays easy to untie after light household or staging loads.",
+      "sortOrder": 200,
+      "sections": [
+        {
+          "title": "Use Case",
+          "bodyMarkdown": "- Make a fixed loop at the end of a rope for tying around an object or clipping into a non-life-safety staging point.\n- Keep the load static and inspectable.",
+          "plainText": "Make a fixed loop at the end of a rope for tying around an object or clipping into a non-life-safety staging point. Keep the load static and inspectable.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Tie Sequence",
+          "bodyMarkdown": "- Make a small loop in the standing part.\n- Bring the tail up through the loop, around the standing part, and back down through the same loop.\n- Dress the loop and tighten the knot before loading it.",
+          "plainText": "Make a small loop in the standing part. Bring the tail up through the loop, around the standing part, and back down through the same loop. Dress the loop and tighten the knot before loading it.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Do Not Use",
+          "bodyMarkdown": "- Do not treat this as climbing or rescue instruction.\n- Re-tie if the loop size changes unexpectedly or the knot was tied in the wrong direction.",
+          "plainText": "Do not treat this as climbing or rescue instruction. Re-tie if the loop size changes unexpectedly or the knot was tied in the wrong direction.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [],
+      "tags": [
+        "rope",
+        "knots",
+        "bowline",
+        "loop",
+        "scenario:evacuation"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/bowline.svg",
+          "caption": "Make the small loop first, then bring the tail up through it, around the standing part, and back down.",
+          "accessibilityLabel": "Illustration showing the three-step bowline path and the finished fixed loop.",
+          "preferredHeight": 220
+        }
+      ],
+      "quizDefinition": {
+        "title": "Bowline Drill",
+        "masteryScorePercent": 100,
+        "questions": [
+          {
+            "id": "bowline-q1",
+            "prompt": "What kind of loop is the bowline meant to create in this starter reference?",
+            "options": [
+              { "id": "a", "text": "A fixed loop that stays the same size when dressed correctly." },
+              { "id": "b", "text": "A slip loop that keeps tightening under pull." },
+              { "id": "c", "text": "A decorative loop only." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "This reference treats the bowline as a fixed loop for light, inspectable household or staging loads."
+          },
+          {
+            "id": "bowline-q2",
+            "prompt": "Which path matches the bowline sequence in this app?",
+            "options": [
+              { "id": "a", "text": "Up through the loop, around the standing part, and back down through the same loop." },
+              { "id": "b", "text": "Wrap both ends together until the loop disappears." },
+              { "id": "c", "text": "Cross the tails twice and stop there." }
+            ],
+            "correctOptionID": "a",
+            "explanation": "The mnemonic path matters because it keeps the loop fixed and easier to inspect before light use."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ccddee11-0013-0000-0000-000000000001",
+      "slug": "clove-hitch-reference",
+      "title": "Clove Hitch Reference",
+      "category": "rope-and-knots",
+      "summary": "Starter reference for staging a rope quickly around a post when the load can be watched and adjusted.",
+      "sortOrder": 300,
+      "sections": [
+        {
+          "title": "Use Case",
+          "bodyMarkdown": "- Stage a rope quickly around a post or rail.\n- Best for temporary lashing or controlled tension that you can keep checking.",
+          "plainText": "Stage a rope quickly around a post or rail. Best for temporary lashing or controlled tension that you can keep checking.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Tie Sequence",
+          "bodyMarkdown": "- Wrap around the post once.\n- Cross over the standing part and wrap again.\n- Tuck the working end under the crossing turn and dress the wraps flat.",
+          "plainText": "Wrap around the post once. Cross over the standing part and wrap again. Tuck the working end under the crossing turn and dress the wraps flat.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Do Not Use",
+          "bodyMarkdown": "- Back it up if vibration, shaking, or repeated movement is likely.\n- Do not treat this as a life-safety anchor.",
+          "plainText": "Back it up if vibration, shaking, or repeated movement is likely. Do not treat this as a life-safety anchor.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [],
+      "tags": [
+        "rope",
+        "knots",
+        "clove-hitch",
+        "lashing",
+        "scenario:power-outage"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/clove-hitch.svg",
+          "caption": "Make two wraps around the post, cross them on the front, and dress them flat before loading.",
+          "accessibilityLabel": "Illustration showing the two wraps and front crossing of a clove hitch around a post.",
+          "preferredHeight": 220
+        }
+      ]
+    },
+    {
+      "id": "ccddee11-0014-0000-0000-000000000001",
+      "slug": "truckers-hitch-reference",
+      "title": "Trucker's Hitch Reference",
+      "category": "rope-and-knots",
+      "summary": "Starter reference for creating mechanical advantage when tensioning a load that you can re-check often.",
+      "sortOrder": 400,
+      "sections": [
+        {
+          "title": "Use Case",
+          "bodyMarkdown": "- Tension a tarp line or strap a household load that you can re-check.\n- Keep the system simple and inspectable.",
+          "plainText": "Tension a tarp line or strap a household load that you can re-check. Keep the system simple and inspectable.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Tie Sequence",
+          "bodyMarkdown": "- Anchor one end.\n- Form a small loop in the standing part.\n- Run the working end through the loop and pull to tension before securing the finish.",
+          "plainText": "Anchor one end. Form a small loop in the standing part. Run the working end through the loop and pull to tension before securing the finish.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Do Not Use",
+          "bodyMarkdown": "- Do not treat it as a rescue hauling system.\n- Re-check the load after movement or road vibration.",
+          "plainText": "Do not treat it as a rescue hauling system. Re-check the load after movement or road vibration.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [],
+      "tags": [
+        "rope",
+        "knots",
+        "truckers-hitch",
+        "tensioning",
+        "scenario:evacuation"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "mediaAttachments": [
+        {
+          "kind": "inline-svg",
+          "bundlePath": "Media/Illustrations/truckers-hitch.svg",
+          "caption": "Anchor one end, make a mid-line loop, and pull through it to tension a load you can keep inspecting.",
+          "accessibilityLabel": "Illustration showing an anchor point, a mid-line loop, and the hauling direction for a trucker's hitch.",
+          "preferredHeight": 220
+        }
+      ]
     },
     {
       "id": "ccddee11-0003-0000-0000-000000000001",

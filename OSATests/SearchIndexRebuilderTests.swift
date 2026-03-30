@@ -48,36 +48,87 @@ final class SearchIndexRebuilderTests: XCTestCase {
         )
         let quickCard = QuickCard(
             id: UUID(),
-            title: "Boil Water Advisory Steps",
-            slug: "boil-water-advisory-steps",
-            category: "water",
-            summary: "advisory-step coverage for drinking water safety",
-            bodyMarkdown: "Bring water to a rolling boil.",
+            title: "Pressure Dressing Quick Check",
+            slug: "pressure-dressing-quick-check",
+            category: "first-aid",
+            summary: "pressure-dressing coverage for fast bleeding control",
+            bodyMarkdown: "Place a clean pad and wrap firmly.",
             priority: 10,
             relatedSectionIDs: [section.id],
             tags: ["scenario:water-contamination"],
             lastReviewedAt: nil,
-            largeTypeLayoutVersion: 1
+            largeTypeLayoutVersion: 1,
+            mediaAttachments: [
+                LocalMediaAttachment(
+                    kind: .shortVideo,
+                    bundlePath: "Media/Videos/pressure-dressing-flow.mp4",
+                    caption: "wrap path and circulation check",
+                    accessibilityLabel: "Pressure dressing sequence",
+                    transcript: "Keep checking circulation below the dressing while the wrap path stays firm.",
+                    preferredHeight: 220
+                )
+            ],
+            quizDefinition: QuizDefinition(
+                title: "Pressure Dressing Drill",
+                masteryScorePercent: 100,
+                questions: [
+                    QuizQuestion(
+                        id: "bleed-q1",
+                        prompt: "What should you avoid peeling off repeatedly?",
+                        options: [
+                            QuizOption(id: "a", text: "The first layer"),
+                            QuizOption(id: "b", text: "The outer tape")
+                        ],
+                        correctOptionID: "a",
+                        explanation: "Repeated peeling disrupts clotting."
+                    )
+                ]
+            )
         )
         let fieldReference = FieldReferenceEntry(
             id: UUID(),
-            slug: "bleeding-control-basics",
-            title: "Bleeding Control Basics",
-            category: .firstAid,
-            summary: "tourniquet pressure packing reference",
+            slug: "bowline-reference",
+            title: "Bowline Reference",
+            category: .ropeAndKnots,
+            summary: "fixed loop rope reference",
             sortOrder: 100,
             sections: [
                 FieldReferenceSection(
-                    title: "Pressure",
-                    bodyMarkdown: "- Apply pressure",
-                    plainText: "Apply pressure and pack if needed.",
+                    title: "Tie Sequence",
+                    bodyMarkdown: "- Up through the loop, around the standing part, and back down.",
+                    plainText: "Up through the loop, around the standing part, and back down.",
                     sortOrder: 100
                 )
             ],
             relatedSectionIDs: [section.id],
             tags: ["scenario:earthquake"],
             safetyLevel: .sensitiveStaticOnly,
-            lastReviewedAt: nil
+            lastReviewedAt: nil,
+            mediaAttachments: [
+                LocalMediaAttachment(
+                    kind: .inlineSVG,
+                    bundlePath: "Media/Illustrations/bowline.svg",
+                    caption: "fixed loop path around the standing part",
+                    accessibilityLabel: "Bowline illustration",
+                    preferredHeight: 220
+                )
+            ],
+            quizDefinition: QuizDefinition(
+                title: "Bowline Drill",
+                masteryScorePercent: 100,
+                questions: [
+                    QuizQuestion(
+                        id: "bowline-q1",
+                        prompt: "Which option is not the goal of this knot?",
+                        options: [
+                            QuizOption(id: "a", text: "A fixed loop"),
+                            QuizOption(id: "b", text: "A slip loop")
+                        ],
+                        correctOptionID: "b",
+                        explanation: "The bowline in this app is taught as a fixed loop, not a tightening slip loop."
+                    )
+                ]
+            )
         )
         let inventoryItem = InventoryItem(
             id: UUID(),
@@ -195,11 +246,19 @@ final class SearchIndexRebuilderTests: XCTestCase {
             .handbookSection
         )
         XCTAssertEqual(
-            try searchService.search(query: "advisory", scopes: [.quickCard], limit: 5).first?.kind,
+            try searchService.search(query: "bleeding", scopes: [.quickCard], limit: 5).first?.kind,
             .quickCard
         )
         XCTAssertEqual(
-            try searchService.search(query: "tourniquet", scopes: [.fieldReference], limit: 5).first?.kind,
+            try searchService.search(query: "standing", scopes: [.fieldReference], limit: 5).first?.kind,
+            .fieldReference
+        )
+        XCTAssertEqual(
+            try searchService.search(query: "peeling", scopes: [.quickCard], limit: 5).first?.kind,
+            .quickCard
+        )
+        XCTAssertEqual(
+            try searchService.search(query: "slip", scopes: [.fieldReference], limit: 5).first?.kind,
             .fieldReference
         )
         XCTAssertEqual(

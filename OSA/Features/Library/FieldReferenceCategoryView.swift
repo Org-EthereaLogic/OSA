@@ -103,6 +103,18 @@ private struct FieldReferenceEntryRow: View {
                 .lineLimit(2)
 
             HStack(spacing: Spacing.sm) {
+                if !entry.mediaAttachments.isEmpty {
+                    Label("Illustrated", systemImage: "photo")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaPrimary)
+                }
+
+                if entry.quizDefinition != nil {
+                    Label("Quiz", systemImage: "questionmark.circle.fill")
+                        .font(.metadataCaption)
+                        .foregroundStyle(.osaPrimary)
+                }
+
                 if entry.safetyLevel == .sensitiveStaticOnly {
                     Label("Sensitive", systemImage: "exclamationmark.shield")
                         .font(.metadataCaption)

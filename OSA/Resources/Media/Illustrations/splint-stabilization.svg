@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Basic splint stabilization</title>
+  <desc id="desc">Illustration of a straight splint padded alongside a forearm with wrap points above and below the injury.</desc>
+  <rect width="640" height="360" rx="28" fill="#F6EFE2"/>
+  <rect x="48" y="42" width="544" height="276" rx="24" fill="#FFF8EB" stroke="#D8C7A0" stroke-width="4"/>
+  <path d="M132 216c60-46 122-70 196-70 70 0 136 18 198 58" fill="none" stroke="#E6C2AE" stroke-width="28" stroke-linecap="round"/>
+  <rect x="174" y="118" width="278" height="34" rx="12" fill="#C9B18A" stroke="#8B6A44" stroke-width="4"/>
+  <path d="M206 112v48M318 112v48M424 112v48" stroke="#214C40" stroke-width="8" stroke-linecap="round"/>
+  <path d="M212 232v-56M412 234v-58" stroke="#214C40" stroke-width="10" stroke-linecap="round"/>
+  <text x="92" y="102" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#214C40">Pad the splint. Secure above and below the injury. Re-check circulation.</text>
+  <text x="92" y="312" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#214C40">Do not force straightening if it sharply increases pain or resistance.</text>
+</svg>

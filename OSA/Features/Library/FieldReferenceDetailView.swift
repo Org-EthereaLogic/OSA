@@ -4,9 +4,12 @@ struct FieldReferenceDetailView: View {
     let entry: FieldReferenceEntry
 
     @Environment(\.handbookRepository) private var handbookRepository
+    @Environment(\.practiceProgressRepository) private var practiceProgressRepository
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @State private var relatedSections: [HandbookSection] = []
+    @State private var quizProgress: QuizProgress?
+    @State private var showingQuiz = false
 
     var body: some View {
         ScrollView {
@@ -14,6 +17,21 @@ struct FieldReferenceDetailView: View {
                 heroCard
 
                 VStack(alignment: .leading, spacing: Spacing.lg) {
+                    if !completionBadges.isEmpty {
+                        CompletionBadgeStripView(badges: completionBadges)
+                    }
+
+                    ContentMediaSectionView(attachments: entry.mediaAttachments)
+
+                    if let quizDefinition = entry.quizDefinition {
+                        FieldReferencePracticePanelView(
+                            quizDefinition: quizDefinition,
+                            quizProgress: quizProgress
+                        ) {
+                            showingQuiz = true
+                        }
+                    }
+
                     ForEach(entry.sortedSections) { section in
                         FieldReferenceSectionCard(
                             section: section,
@@ -58,7 +76,21 @@ struct FieldReferenceDetailView: View {
         .background(.osaBackground)
         .navigationTitle(entry.title)
         .navigationBarTitleDisplayMode(.inline)
-        .task { loadRelatedSections() }
+        .sheet(isPresented: $showingQuiz) {
+            if let quizDefinition = entry.quizDefinition {
+                QuizSessionView(
+                    contentTitle: entry.title,
+                    contentID: entry.id,
+                    quiz: quizDefinition
+                ) { progress in
+                    quizProgress = progress
+                }
+            }
+        }
+        .task {
+            loadRelatedSections()
+            loadPracticeState()
+        }
     }
 
     private var heroCard: some View {
@@ -126,6 +158,23 @@ struct FieldReferenceDetailView: View {
             try? handbookRepository.section(id: id)
         }
     }
+
+    private var completionBadges: [CompletionBadge] {
+        CompletionBadge.derive(
+            quizProgress: quizProgress,
+            quizDefinition: entry.quizDefinition,
+            weeklyDrillCompletion: nil
+        )
+    }
+
+    private func loadPracticeState() {
+        guard let practiceProgressRepository else {
+            quizProgress = nil
+            return
+        }
+
+        quizProgress = try? practiceProgressRepository.quizProgress(for: entry.id)
+    }
 }
 
 private struct FieldReferenceSectionCard: View {
@@ -153,6 +202,48 @@ private struct FieldReferenceSectionCard: View {
             RoundedRectangle(cornerRadius: CornerRadius.md)
                 .stroke(Color.osaHairline, lineWidth: 1)
         }
+    }
+}
+
+private struct FieldReferencePracticePanelView: View {
+    let quizDefinition: QuizDefinition
+    let quizProgress: QuizProgress?
+    let onStartQuiz: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Label("Practice Quiz", systemImage: "questionmark.circle.fill")
+                .font(.sectionHeader)
+                .foregroundStyle(.primary)
+                .accessibilityAddTraits(.isHeader)
+
+            Text(progressText)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button(action: onStartQuiz) {
+                Label(quizProgress == nil ? "Start Quiz" : "Retake Quiz", systemImage: "play.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.osaPrimary)
+            .accessibilityIdentifier("field-reference-start-quiz")
+        }
+        .padding(Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.md)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+    }
+
+    private var progressText: String {
+        guard let quizProgress else {
+            return "Answer \(quizDefinition.questionCount) questions locally to save completion for this reference."
+        }
+        return "Best local score: \(quizProgress.bestCorrectCount) of \(quizProgress.totalQuestionCount) correct."
     }
 }
 

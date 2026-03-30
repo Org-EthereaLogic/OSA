@@ -199,11 +199,53 @@ final class OSAContentAndInputTests: XCTestCase {
         XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Quick Cards search field should appear")
 
         searchField.tap()
-        searchField.typeText("water")
+        searchField.typeText("rotation")
 
         XCTAssertTrue(
             app.staticTexts["Water Rotation Check"].waitForExistence(timeout: 3),
-            "Quick Cards search for 'water' should show the water card"
+            "Quick Cards search for 'rotation' should show the water rotation card"
+        )
+    }
+
+    func testHomeWeeklyDrillOpensPracticeReadyQuickCard() {
+        tapTab("Home")
+
+        let weeklyDrill = app.buttons["home-weekly-drill-card"]
+        XCTAssertTrue(
+            scrollToElement(weeklyDrill, maxSwipes: 3),
+            "Home should expose the weekly drill card"
+        )
+
+        weeklyDrill.tap()
+
+        XCTAssertTrue(
+            app.buttons["quick-card-start-quiz"].waitForExistence(timeout: 3)
+                || app.staticTexts["Practice Quiz"].waitForExistence(timeout: 3),
+            "Weekly drill detail should expose the local quiz entry point"
+        )
+    }
+
+    func testLibraryShowsRopeAndKnotsReferenceQuizEntry() {
+        tapTab("Library")
+
+        let categoryCell = app.cells.containing(.staticText, identifier: "Rope And Knots").firstMatch
+        XCTAssertTrue(
+            scrollToElement(categoryCell, maxSwipes: 6),
+            "Library should show the Rope And Knots field reference category"
+        )
+        categoryCell.tap()
+
+        let entryCell = app.cells.containing(.staticText, identifier: "Bowline Reference").firstMatch
+        XCTAssertTrue(
+            scrollToElement(entryCell, maxSwipes: 4),
+            "Bowline Reference should appear in the Rope And Knots category"
+        )
+        entryCell.tap()
+
+        XCTAssertTrue(
+            app.buttons["field-reference-start-quiz"].waitForExistence(timeout: 3)
+                || app.staticTexts["Practice Quiz"].waitForExistence(timeout: 3),
+            "Bowline field reference detail should expose the local quiz entry point"
         )
     }
 

@@ -21,8 +21,21 @@ enum PersistenceValueCoding {
         encodeValue(value)
     }
 
+    static func encodeOptionalCodable<T: Encodable>(_ value: T?) -> String {
+        guard let value else { return "null" }
+        return encodeValue(value)
+    }
+
     static func decodeCodable<T: Decodable>(_ type: T.Type, from rawValue: String) -> T? {
         decodeValue(type, from: rawValue)
+    }
+
+    static func decodeOptionalCodable<T: Decodable>(_ type: T.Type, from rawValue: String) -> T? {
+        let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, trimmed != "null" else {
+            return nil
+        }
+        return decodeValue(type, from: rawValue)
     }
 
     private static func encodeValue<T: Encodable>(_ value: T) -> String {

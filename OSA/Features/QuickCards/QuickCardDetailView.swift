@@ -4,6 +4,8 @@ struct QuickCardDetailView: View {
     let card: QuickCard
 
     @Environment(\.handbookRepository) private var handbookRepository
+    @Environment(\.quickCardRepository) private var quickCardRepository
+    @Environment(\.practiceProgressRepository) private var practiceProgressRepository
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
     private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
@@ -11,6 +13,10 @@ struct QuickCardDetailView: View {
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @State private var relatedSections: [HandbookSection] = []
     @State private var sharePayload: ActivitySharePayload?
+    @State private var quizProgress: QuizProgress?
+    @State private var weeklyDrillCompletion: WeeklyDrillCompletion?
+    @State private var showingQuiz = false
+    @State private var isCurrentWeeklyDrillCard = false
 
     var body: some View {
         ScrollView {
@@ -67,6 +73,24 @@ struct QuickCardDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: Spacing.lg) {
+                    if !completionBadges.isEmpty {
+                        CompletionBadgeStripView(badges: completionBadges)
+                    }
+
+                    ContentMediaSectionView(attachments: card.mediaAttachments)
+
+                    if let quizDefinition = card.quizDefinition {
+                        QuickCardPracticePanelView(
+                            quizDefinition: quizDefinition,
+                            quizProgress: quizProgress,
+                            isCurrentWeeklyDrillCard: isCurrentWeeklyDrillCard,
+                            weeklyDrillMetadata: card.weeklyDrillMetadata,
+                            weeklyDrillCompletion: currentWeeklyDrillCompletion
+                        ) {
+                            showingQuiz = true
+                        }
+                    }
+
                     if card.largeTypeLayoutVersion >= 2 {
                         QuickCardInfographicLayout(
                             card: card,
@@ -166,11 +190,39 @@ struct QuickCardDetailView: View {
         .sheet(item: $sharePayload) { payload in
             ActivityShareSheet(payload: payload)
         }
-        .task { loadRelatedSections() }
+        .sheet(isPresented: $showingQuiz) {
+            if let quizDefinition = card.quizDefinition {
+                QuizSessionView(
+                    contentTitle: card.title,
+                    contentID: card.id,
+                    quiz: quizDefinition
+                ) { progress in
+                    quizProgress = progress
+                    completeWeeklyDrillIfNeeded(completedAt: progress.lastCompletedAt)
+                }
+            }
+        }
+        .task {
+            loadRelatedSections()
+            loadPracticeState()
+        }
     }
 
     private var isPinned: Bool {
         PinnedContentSettings.isPinned(card.id, rawValue: pinnedQuickCardIDsRawValue)
+    }
+
+    private var currentWeeklyDrillCompletion: WeeklyDrillCompletion? {
+        guard weeklyDrillCompletion?.contentID == card.id else { return nil }
+        return weeklyDrillCompletion
+    }
+
+    private var completionBadges: [CompletionBadge] {
+        CompletionBadge.derive(
+            quizProgress: quizProgress,
+            quizDefinition: card.quizDefinition,
+            weeklyDrillCompletion: currentWeeklyDrillCompletion
+        )
     }
 
     private func loadRelatedSections() {
@@ -178,6 +230,32 @@ struct QuickCardDetailView: View {
         relatedSections = card.relatedSectionIDs.compactMap { id in
             try? handbookRepository.section(id: id)
         }
+    }
+
+    private func loadPracticeState() {
+        if let practiceProgressRepository {
+            quizProgress = try? practiceProgressRepository.quizProgress(for: card.id)
+            weeklyDrillCompletion = try? practiceProgressRepository.weeklyDrillCompletion(for: PracticeSchedule.weekToken())
+        } else {
+            quizProgress = nil
+            weeklyDrillCompletion = nil
+        }
+
+        do {
+            let allCards = try quickCardRepository?.listQuickCards() ?? []
+            isCurrentWeeklyDrillCard = PracticeSchedule.currentWeeklyDrill(from: allCards)?.id == card.id
+        } catch {
+            isCurrentWeeklyDrillCard = false
+        }
+    }
+
+    private func completeWeeklyDrillIfNeeded(completedAt: Date) {
+        guard isCurrentWeeklyDrillCard, let practiceProgressRepository else { return }
+        weeklyDrillCompletion = try? practiceProgressRepository.markWeeklyDrillCompleted(
+            contentID: card.id,
+            weekToken: PracticeSchedule.weekToken(),
+            completedAt: completedAt
+        )
     }
 }
 
@@ -298,6 +376,70 @@ private func quickCardInfographicPanels(from markdown: String) -> [QuickCardInfo
     }
 
     return panels
+}
+
+private struct QuickCardPracticePanelView: View {
+    let quizDefinition: QuizDefinition
+    let quizProgress: QuizProgress?
+    let isCurrentWeeklyDrillCard: Bool
+    let weeklyDrillMetadata: WeeklyDrillMetadata?
+    let weeklyDrillCompletion: WeeklyDrillCompletion?
+    let onStartQuiz: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Label("Practice Quiz", systemImage: "questionmark.circle.fill")
+                .font(.sectionHeader)
+                .foregroundStyle(.primary)
+                .accessibilityAddTraits(.isHeader)
+
+            Text(progressText)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if let weeklyDrillMessage {
+                Label(weeklyDrillMessage, systemImage: weeklyDrillCompletion == nil ? "calendar.badge.clock" : "calendar.badge.checkmark")
+                    .font(.caption)
+                    .foregroundStyle(weeklyDrillCompletion == nil ? .osaPrimary : .osaLocal)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Button(action: onStartQuiz) {
+                Label(quizProgress == nil ? "Start Quiz" : "Retake Quiz", systemImage: "play.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.osaPrimary)
+            .accessibilityIdentifier("quick-card-start-quiz")
+        }
+        .padding(Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+        .overlay {
+            RoundedRectangle(cornerRadius: CornerRadius.md)
+                .stroke(Color.osaHairline, lineWidth: 1)
+        }
+    }
+
+    private var progressText: String {
+        guard let quizProgress else {
+            return "Answer \(quizDefinition.questionCount) questions locally to save completion on this device."
+        }
+
+        return "Best local score: \(quizProgress.bestCorrectCount) of \(quizProgress.totalQuestionCount) correct."
+    }
+
+    private var weeklyDrillMessage: String? {
+        guard let weeklyDrillMetadata else { return nil }
+        if weeklyDrillCompletion != nil {
+            return "\(weeklyDrillMetadata.badgeLabel) completed for this week."
+        }
+        if isCurrentWeeklyDrillCard {
+            return weeklyDrillMetadata.prompt
+        }
+        return "Eligible for the weekly drill rotation."
+    }
 }
 
 #Preview {

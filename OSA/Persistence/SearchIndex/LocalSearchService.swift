@@ -125,21 +125,17 @@ final class LocalSearchService: SearchService {
             id: card.id,
             kind: .quickCard,
             title: card.title,
-            body: [card.summary, card.category].joined(separator: " "),
+            body: card.searchableText,
             tags: card.tags.joined(separator: " ")
         )
     }
 
     func indexFieldReference(_ entry: FieldReferenceEntry) throws {
-        let sectionText = entry.sortedSections
-            .map { "\($0.title) \($0.plainText)" }
-            .joined(separator: " ")
-
         try store.upsert(
             id: entry.id,
             kind: .fieldReference,
             title: entry.title,
-            body: [entry.summary, entry.category.displayName, sectionText].joined(separator: " "),
+            body: [entry.category.displayName, entry.plainText].joined(separator: " "),
             tags: entry.tags.joined(separator: " ")
         )
     }

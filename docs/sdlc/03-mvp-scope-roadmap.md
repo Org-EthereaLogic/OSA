@@ -94,6 +94,8 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 8. ~~Hardening, migration tests, and release preparation.~~ **Done:** `SchemaMigrationTests` (7), `SeedContentMigrationTests` (6), `OfflineStressTests` (7), `SafetyRegressionTests` expanded (+14 to 53 total). App Store materials, TestFlight feedback plan, and release-readiness evidence pack created.
 9. ~~Apple Intelligence surface: App Intents and Siri integration, FM-powered inventory completion, AssistantSchema, and knowledge-base discovery.~~ **Done:** Milestone 6 complete — M6P1 App Intents foundation, M6P2 App Entities and Spotlight indexing, M6P3 FM-powered inventory completion, M6P4 AssistantSchema with navigation intents and onscreen content, M6P5 RSS-based knowledge discovery with optional Brave Search enrichment.
 10. ~~Widgets and system integration: WidgetKit extension, bounded widget-safe snapshot store, Home Screen and Lock Screen widgets, Live Activity for active protocol progress.~~ **Done:** Sprint 7 complete — `OSAWidgetsExtension` target added via `project.yml`; four Home Screen widgets (readiness, expiry, rotating tip, emergency quick access); `ActiveProtocolLiveActivity` on Lock Screen and Dynamic Island; `WidgetSnapshotCoordinator` + `WidgetSnapshotStore` (App Group) derive bounded snapshots from existing repositories; `ProtocolLiveActivityCoordinator` drives Live Activity from `ChecklistRun` updates; deep-links route through existing `AppNavigationCoordinator`; privacy enforced — Ask history, notes, and free-form content never exposed to system surfaces.
+11. ~~Editorial content depth and field references.~~ **Done:** Sprint 9 complete — structured field references, infographic quick cards, deeper climate content, lookalike comparison content, and Library routing or search integration all ship from bundled seed content and existing editorial seams.
+12. ~~Multimedia and gamification.~~ **Done:** Sprint 10 complete — bundled SVG illustrations, short local MP4 clips, knot-reference and illustrated first-aid entries, local quiz flow, derived completion badges, and a weekly drill surface now extend Home, Quick Cards, Library, and local persistence without adding streaming, sync, or social gamification.
 
 ## Milestone-Based Roadmap
 
@@ -188,6 +190,13 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 - Privacy enforced: system surfaces expose only bounded snapshots from approved sources; Ask history, notes, and free-form content are never visible on the Home Screen or Lock Screen.
 - Tests: `WidgetSnapshotBuilderTests`, `SystemSurfaceDeepLinkTests`, `ActiveProtocolActivityMapperTests` cover snapshot logic, routing, and Live Activity state mapping.
 - Exit criteria: Home Screen widgets show correct local data without opening the app; tapping a widget opens the correct in-app surface; Live Activity reflects active protocol progress in real time; all sensitive content remains in-app.
+
+### Sprint 10: Multimedia And Gamification _(Complete)_
+
+- Add bundled SVG illustrations and bounded local MP4 clips by extending existing quick-card and field-reference editorial records with media attachments, quiz definitions, and weekly-drill metadata.
+- Introduce `PracticeProgressRepository` and SwiftData-backed `PersistedPracticeProgress` so quiz mastery and weekly-drill completion remain local user state instead of seed-backed editorial content.
+- Extend Home, Quick Cards, and Library with a weekly drill section, offline quiz entry points, and derived completion badges while preserving existing navigation seams and search result kinds.
+- Exit criteria met: multimedia and quiz flows work fully offline, search continues routing to quick cards and field references, and no streaming, sync, leaderboard, or social-gamification dependency was introduced.
 
 ## Dependency Map
 

@@ -82,6 +82,7 @@ enum AppModelContainer {
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
             PersistedFieldReferenceEntry.self,
+            PersistedPracticeProgress.self,
             PersistedSeedContentState.self,
             PersistedInventoryItem.self,
             PersistedChecklistTemplate.self,
@@ -101,20 +102,38 @@ enum AppModelContainer {
             PersistedWeatherAlert.self
         ])
         let processInfo = ProcessInfo.processInfo
-        let isTestHost = processInfo.isRunningTests
-        let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: isTestHost
-        )
 
         do {
+            let modelConfiguration: ModelConfiguration
+            if processInfo.isRunningUnitTests {
+                modelConfiguration = ModelConfiguration(
+                    schema: schema,
+                    isStoredInMemoryOnly: true
+                )
+            } else if processInfo.isRunningUITests {
+                let storeDirectory = FileManager.default.temporaryDirectory
+                    .appendingPathComponent("OSA-UITests", isDirectory: true)
+                try FileManager.default.createDirectory(
+                    at: storeDirectory,
+                    withIntermediateDirectories: true
+                )
+                let storeURL = storeDirectory
+                    .appendingPathComponent("store-\(processInfo.processIdentifier).sqlite")
+                modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
+            } else {
+                modelConfiguration = ModelConfiguration(
+                    schema: schema,
+                    isStoredInMemoryOnly: false
+                )
+            }
+
             let modelContainer = try ModelContainer(
                 for: schema,
                 configurations: [modelConfiguration]
             )
 
             // Skip seed import for unit-test hosts, but allow UI tests to
-            // import bundled content into an in-memory store for navigation.
+            // import bundled content into an isolated temporary store.
             guard !processInfo.isRunningUnitTests else {
                 return modelContainer
             }

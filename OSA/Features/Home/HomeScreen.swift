@@ -4,6 +4,7 @@ struct HomeScreen: View {
     @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
     @Environment(\.handbookRepository) private var handbookRepository
     @Environment(\.quickCardRepository) private var quickCardRepository
+    @Environment(\.practiceProgressRepository) private var practiceProgressRepository
     @Environment(\.searchService) private var searchService
     @Environment(\.checklistRepository) private var checklistRepository
     @Environment(\.inventoryRepository) private var inventoryRepository
@@ -32,6 +33,7 @@ struct HomeScreen: View {
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
     @State private var feedState: HomeSectionState<[HomeFeedItem]> = .loading
     @State private var pinnedState: HomeSectionState<[HomePinnedItem]> = .loading
+    @State private var weeklyDrillState: HomeSectionState<HomeWeeklyDrillPresentation> = .loading
     @State private var suggestionsState: HomeSectionState<[HomeSuggestion]> = .loading
     @State private var checklistsState: HomeSectionState<[ChecklistRun]> = .loading
     @State private var inventoryState: HomeSectionState<[HomeInventoryReminder]> = .loading
@@ -49,6 +51,7 @@ struct HomeScreen: View {
                     ConnectivityStatusCallout(notice: connectivityNotice)
                 }
                 HomeReadinessSectionView(readinessSnapshot: readinessSnapshot)
+                HomeWeeklyDrillSectionView(state: weeklyDrillState)
                 HomePinnedContentSectionView(state: pinnedState)
                 HomeSpotlightSectionView(
                     spotlightMode: $spotlightMode,
@@ -87,6 +90,7 @@ struct HomeScreen: View {
 
     private func reloadLocalSections() {
         loadQuickCards()
+        loadWeeklyDrill()
         loadPinnedContent()
         loadContextualSuggestions()
         loadActiveChecklists()
@@ -119,6 +123,44 @@ struct HomeScreen: View {
             quickCardsState = cards.isEmpty ? .empty : .loaded(cards)
         } catch {
             quickCardsState = .failed("Quick cards could not be loaded.")
+        }
+    }
+
+    private func loadWeeklyDrill() {
+        do {
+            let allCards = try quickCardRepository?.listQuickCards() ?? []
+            guard let card = PracticeSchedule.currentWeeklyDrill(from: allCards) else {
+                weeklyDrillState = .empty
+                return
+            }
+
+            let weekToken = PracticeSchedule.weekToken()
+            let quizProgress: QuizProgress?
+            let weeklyCompletion: WeeklyDrillCompletion?
+            if let practiceProgressRepository {
+                quizProgress = try practiceProgressRepository.quizProgress(for: card.id)
+                weeklyCompletion = try practiceProgressRepository.weeklyDrillCompletion(for: weekToken)
+            } else {
+                quizProgress = nil
+                weeklyCompletion = nil
+            }
+            let currentCompletion = weeklyCompletion?.contentID == card.id ? weeklyCompletion : nil
+
+            weeklyDrillState = .loaded(
+                HomeWeeklyDrillPresentation(
+                    card: card,
+                    weekToken: weekToken,
+                    prompt: card.weeklyDrillMetadata?.prompt ?? card.summary,
+                    weeklyDrillCompletion: currentCompletion,
+                    badges: CompletionBadge.derive(
+                        quizProgress: quizProgress,
+                        quizDefinition: card.quizDefinition,
+                        weeklyDrillCompletion: currentCompletion
+                    )
+                )
+            )
+        } catch {
+            weeklyDrillState = .failed("Weekly drill could not be loaded.")
         }
     }
 

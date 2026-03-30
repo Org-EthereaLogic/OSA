@@ -14,6 +14,9 @@ final class PersistedQuickCard {
     var tagsJSON: String
     var lastReviewedAt: Date?
     var largeTypeLayoutVersion: Int
+    var mediaAttachmentsJSON: String
+    var quizDefinitionJSON: String
+    var weeklyDrillMetadataJSON: String
 
     init(
         id: UUID,
@@ -26,7 +29,10 @@ final class PersistedQuickCard {
         relatedSectionIDsJSON: String,
         tagsJSON: String,
         lastReviewedAt: Date?,
-        largeTypeLayoutVersion: Int
+        largeTypeLayoutVersion: Int,
+        mediaAttachmentsJSON: String,
+        quizDefinitionJSON: String,
+        weeklyDrillMetadataJSON: String
     ) {
         self.id = id
         self.slug = slug
@@ -39,5 +45,8 @@ final class PersistedQuickCard {
         self.tagsJSON = tagsJSON
         self.lastReviewedAt = lastReviewedAt
         self.largeTypeLayoutVersion = largeTypeLayoutVersion
+        self.mediaAttachmentsJSON = mediaAttachmentsJSON
+        self.quizDefinitionJSON = quizDefinitionJSON
+        self.weeklyDrillMetadataJSON = weeklyDrillMetadataJSON
     }
 }

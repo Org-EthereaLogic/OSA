@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Clove hitch reference</title>
+  <desc id="desc">Illustration of two wraps around a pole crossing on the front.</desc>
+  <rect width="640" height="360" rx="28" fill="#F6EFE2"/>
+  <rect x="48" y="42" width="544" height="276" rx="24" fill="#FFF8EB" stroke="#D8C7A0" stroke-width="4"/>
+  <rect x="274" y="82" width="88" height="196" rx="18" fill="#C9B18A" stroke="#8B6A44" stroke-width="4"/>
+  <path d="M112 150c92 0 108-50 178-50s86 50 178 50" fill="none" stroke="#214C40" stroke-width="18" stroke-linecap="round"/>
+  <path d="M112 216c92 0 108-50 178-50s86 50 178 50" fill="none" stroke="#214C40" stroke-width="18" stroke-linecap="round"/>
+  <path d="M244 138c22 16 50 30 74 44" fill="none" stroke="#214C40" stroke-width="18" stroke-linecap="round"/>
+  <text x="92" y="312" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#214C40">Fast to stage on a post. Back it up if shaking or repeated movement is likely.</text>
+</svg>

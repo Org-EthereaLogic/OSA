@@ -5,6 +5,7 @@ struct AppDependencies {
     let handbookRepository: any HandbookRepository
     let quickCardRepository: any QuickCardRepository
     let fieldReferenceRepository: any FieldReferenceRepository
+    let practiceProgressRepository: any PracticeProgressRepository
     let seedContentRepository: any SeedContentRepository
     let inventoryRepository: any InventoryRepository
     let supplyTemplateRepository: any SupplyTemplateRepository
@@ -39,6 +40,7 @@ struct AppDependencies {
     @MainActor
     static func live(modelContainer: ModelContainer) -> AppDependencies {
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
+        let practiceProgressRepository = SwiftDataPracticeProgressRepository(modelContext: modelContainer.mainContext)
         let baseInventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
         let supplyTemplateRepository = BundledSupplyTemplateRepository()
         let baseChecklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
@@ -167,6 +169,7 @@ struct AppDependencies {
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
             fieldReferenceRepository: contentRepository,
+            practiceProgressRepository: practiceProgressRepository,
             seedContentRepository: contentRepository,
             inventoryRepository: inventoryRepository,
             supplyTemplateRepository: supplyTemplateRepository,

@@ -27,6 +27,7 @@ final class OfflineStressTests: XCTestCase {
         PersistedImportedKnowledgeDocument.self,
         PersistedKnowledgeChunk.self,
         PersistedPendingOperation.self,
+        PersistedPracticeProgress.self,
         PersistedDailyForecast.self,
         PersistedWeatherAlert.self
     ]

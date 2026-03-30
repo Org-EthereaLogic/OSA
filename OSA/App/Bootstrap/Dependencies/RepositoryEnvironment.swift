@@ -12,6 +12,10 @@ private struct FieldReferenceRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any FieldReferenceRepository)? = nil
 }
 
+private struct PracticeProgressRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any PracticeProgressRepository)? = nil
+}
+
 private struct InventoryRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any InventoryRepository)? = nil
 }
@@ -138,6 +142,11 @@ extension EnvironmentValues {
     var fieldReferenceRepository: (any FieldReferenceRepository)? {
         get { self[FieldReferenceRepositoryKey.self] }
         set { self[FieldReferenceRepositoryKey.self] = newValue }
+    }
+
+    var practiceProgressRepository: (any PracticeProgressRepository)? {
+        get { self[PracticeProgressRepositoryKey.self] }
+        set { self[PracticeProgressRepositoryKey.self] = newValue }
     }
 
     var inventoryRepository: (any InventoryRepository)? {

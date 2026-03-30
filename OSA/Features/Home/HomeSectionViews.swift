@@ -133,6 +133,70 @@ struct HomeReadinessSectionView: View {
     }
 }
 
+struct HomeWeeklyDrillSectionView: View {
+    let state: HomeSectionState<HomeWeeklyDrillPresentation>
+
+    var body: some View {
+        HomeSectionCard(title: "Weekly Drill", systemImage: "calendar.badge.clock") {
+            HomeAnimatedStateContainer(identity: state.motionKey { $0.motionKey }) {
+                switch state {
+                case .loading:
+                    HomeSectionLoadingView(label: "Selecting this week's drill...")
+                case .empty:
+                    HomeSectionEmptyView(message: "No weekly drill is configured yet.")
+                case .failed(let message):
+                    HomeSectionFailureView(message: message)
+                case .loaded(let presentation):
+                    NavigationLink {
+                        QuickCardDetailView(card: presentation.card)
+                    } label: {
+                        VStack(alignment: .leading, spacing: Spacing.md) {
+                            HStack(alignment: .top, spacing: Spacing.md) {
+                                Image(systemName: presentation.weeklyDrillCompletion == nil ? "calendar.badge.clock" : "calendar.badge.checkmark")
+                                    .foregroundStyle(presentation.weeklyDrillCompletion == nil ? .osaPrimary : .osaLocal)
+                                    .frame(width: 30, height: 30)
+                                    .background(
+                                        (presentation.weeklyDrillCompletion == nil ? Color.osaPrimary : Color.osaLocal).opacity(0.12),
+                                        in: RoundedRectangle(cornerRadius: CornerRadius.sm)
+                                    )
+                                    .accessibilityHidden(true)
+
+                                VStack(alignment: .leading, spacing: Spacing.xs) {
+                                    Text(presentation.card.title)
+                                        .font(.cardTitle)
+                                        .foregroundStyle(.primary)
+
+                                    Text(presentation.prompt)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+
+                                    Text(presentation.weeklyDrillCompletion == nil ? "Finish the local quiz to complete this week's drill." : "Completed for \(presentation.weekToken).")
+                                        .font(.caption)
+                                        .foregroundStyle(presentation.weeklyDrillCompletion == nil ? .osaPrimary : .osaLocal)
+                                }
+
+                                Spacer(minLength: 0)
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
+                                    .accessibilityHidden(true)
+                            }
+
+                            CompletionBadgeStripView(badges: presentation.badges)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("home-weekly-drill-card")
+                    .hapticTap(.prominentNavigation)
+                    .accessibilityHint("Opens the weekly drill quick card.")
+                }
+            }
+        }
+    }
+}
+
 struct HomePinnedContentSectionView: View {
     let state: HomeSectionState<[HomePinnedItem]>
 
@@ -768,6 +832,20 @@ private extension HomeSectionState {
 
 private func joinedMotionIDs<T: Identifiable>(_ items: [T]) -> String {
     items.map { String(describing: $0.id) }.joined(separator: "|")
+}
+
+struct HomeWeeklyDrillPresentation: Identifiable {
+    let card: QuickCard
+    let weekToken: String
+    let prompt: String
+    let weeklyDrillCompletion: WeeklyDrillCompletion?
+    let badges: [CompletionBadge]
+
+    var id: UUID { card.id }
+
+    var motionKey: String {
+        "\(card.id.uuidString.lowercased())-\(weekToken)-\(weeklyDrillCompletion != nil)"
+    }
 }
 
 struct HomeNoteRow: View {

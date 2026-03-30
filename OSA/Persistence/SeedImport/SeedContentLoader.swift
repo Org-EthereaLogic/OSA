@@ -10,6 +10,9 @@ enum SeedContentLoaderError: Error, Equatable {
     case recordCountMismatch(expected: Int, actual: Int, fileName: String)
     case missingReferencedSection(quickCardID: UUID, sectionID: UUID)
     case missingReferencedSectionForFieldReference(fieldReferenceID: UUID, sectionID: UUID)
+    case missingMediaAsset(contentID: UUID, path: String)
+    case invalidMediaReference(contentID: UUID, path: String)
+    case invalidQuizDefinition(contentID: UUID, message: String)
 }
 
 struct SeedContentLoader {
@@ -100,6 +103,10 @@ struct SeedContentLoader {
                 )
             }
         }
+
+        let resourceRootURL = directoryURL.deletingLastPathComponent()
+        try validateEnhancements(for: quickCards, resourceRootURL: resourceRootURL)
+        try validateEnhancements(for: fieldReferences, resourceRootURL: resourceRootURL)
 
         return SeedContentBundle(
             manifest: manifest,
@@ -211,6 +218,100 @@ struct SeedContentLoader {
         }
 
         return lhs.category.rawValue.localizedCaseInsensitiveCompare(rhs.category.rawValue) == .orderedAscending
+    }
+
+    private func validateEnhancements(for quickCards: [QuickCard], resourceRootURL: URL) throws {
+        for quickCard in quickCards {
+            try validateMediaAttachments(
+                quickCard.mediaAttachments,
+                contentID: quickCard.id,
+                resourceRootURL: resourceRootURL
+            )
+            try validateQuizDefinition(quickCard.quizDefinition, contentID: quickCard.id)
+        }
+    }
+
+    private func validateEnhancements(for fieldReferences: [FieldReferenceEntry], resourceRootURL: URL) throws {
+        for fieldReference in fieldReferences {
+            try validateMediaAttachments(
+                fieldReference.mediaAttachments,
+                contentID: fieldReference.id,
+                resourceRootURL: resourceRootURL
+            )
+            try validateQuizDefinition(fieldReference.quizDefinition, contentID: fieldReference.id)
+        }
+    }
+
+    private func validateMediaAttachments(
+        _ attachments: [LocalMediaAttachment],
+        contentID: UUID,
+        resourceRootURL: URL
+    ) throws {
+        for attachment in attachments {
+            let bundlePath = attachment.bundlePath.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            guard !bundlePath.isEmpty,
+                  !bundlePath.contains("://"),
+                  !bundlePath.hasPrefix("/") else {
+                throw SeedContentLoaderError.invalidMediaReference(
+                    contentID: contentID,
+                    path: attachment.bundlePath
+                )
+            }
+
+            switch attachment.kind {
+            case .inlineSVG:
+                guard bundlePath.lowercased().hasSuffix(".svg") else {
+                    throw SeedContentLoaderError.invalidMediaReference(contentID: contentID, path: attachment.bundlePath)
+                }
+            case .shortVideo:
+                guard bundlePath.lowercased().hasSuffix(".mp4") else {
+                    throw SeedContentLoaderError.invalidMediaReference(contentID: contentID, path: attachment.bundlePath)
+                }
+            }
+
+            let assetURL = resourceRootURL.appendingPathComponent(bundlePath)
+            guard FileManager.default.fileExists(atPath: assetURL.path) else {
+                throw SeedContentLoaderError.missingMediaAsset(
+                    contentID: contentID,
+                    path: attachment.bundlePath
+                )
+            }
+        }
+    }
+
+    private func validateQuizDefinition(_ quizDefinition: QuizDefinition?, contentID: UUID) throws {
+        guard let quizDefinition else { return }
+
+        guard !quizDefinition.questions.isEmpty else {
+            throw SeedContentLoaderError.invalidQuizDefinition(
+                contentID: contentID,
+                message: "Quiz definitions must contain at least one question."
+            )
+        }
+
+        guard (0...100).contains(quizDefinition.masteryScorePercent) else {
+            throw SeedContentLoaderError.invalidQuizDefinition(
+                contentID: contentID,
+                message: "Mastery score percent must be between 0 and 100."
+            )
+        }
+
+        for question in quizDefinition.questions {
+            guard !question.options.isEmpty else {
+                throw SeedContentLoaderError.invalidQuizDefinition(
+                    contentID: contentID,
+                    message: "Question \(question.id) must contain answer options."
+                )
+            }
+
+            guard question.correctOption != nil else {
+                throw SeedContentLoaderError.invalidQuizDefinition(
+                    contentID: contentID,
+                    message: "Question \(question.id) has an invalid correct option."
+                )
+            }
+        }
     }
 }
 
@@ -395,6 +496,9 @@ private struct QuickCardFile: Decodable {
     let tags: [String]
     let lastReviewedAt: Date?
     let largeTypeLayoutVersion: Int
+    let mediaAttachments: [LocalMediaAttachment]?
+    let quizDefinition: QuizDefinition?
+    let weeklyDrillMetadata: WeeklyDrillMetadata?
 
     var toDomain: QuickCard {
         QuickCard(
@@ -408,7 +512,10 @@ private struct QuickCardFile: Decodable {
             relatedSectionIDs: relatedSectionIDs,
             tags: tags,
             lastReviewedAt: lastReviewedAt,
-            largeTypeLayoutVersion: largeTypeLayoutVersion
+            largeTypeLayoutVersion: largeTypeLayoutVersion,
+            mediaAttachments: mediaAttachments ?? [],
+            quizDefinition: quizDefinition,
+            weeklyDrillMetadata: weeklyDrillMetadata
         )
     }
 }
@@ -429,6 +536,8 @@ private struct FieldReferenceEntryFile: Decodable {
     let tags: [String]
     let safetyLevel: HandbookSafetyLevel
     let lastReviewedAt: Date?
+    let mediaAttachments: [LocalMediaAttachment]?
+    let quizDefinition: QuizDefinition?
 
     var toDomain: FieldReferenceEntry {
         FieldReferenceEntry(
@@ -442,7 +551,9 @@ private struct FieldReferenceEntryFile: Decodable {
             relatedSectionIDs: relatedSectionIDs,
             tags: tags,
             safetyLevel: safetyLevel,
-            lastReviewedAt: lastReviewedAt
+            lastReviewedAt: lastReviewedAt,
+            mediaAttachments: mediaAttachments ?? [],
+            quizDefinition: quizDefinition
         )
     }
 }

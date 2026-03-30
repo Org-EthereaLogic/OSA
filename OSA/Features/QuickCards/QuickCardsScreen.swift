@@ -92,8 +92,7 @@ struct QuickCardsScreen: View {
         guard !trimmed.isEmpty else { return cards }
 
         return cards.filter { card in
-            [card.title, card.summary, card.category]
-                .contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
+            card.searchableText.localizedCaseInsensitiveContains(trimmed)
                 || card.tags.contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
         }
     }
@@ -228,6 +227,24 @@ private struct QuickCardRow: View {
                 HStack(spacing: Spacing.xs) {
                     if card.largeTypeLayoutVersion >= 2 {
                         Label("Infographic", systemImage: "rectangle.grid.2x2.fill")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.osaPaperGlow)
+                            .padding(.horizontal, Spacing.sm)
+                            .padding(.vertical, Spacing.xxs)
+                            .background(Color.osaPrimary.opacity(0.18), in: Capsule())
+                    }
+
+                    if !card.mediaAttachments.isEmpty {
+                        Label("Media", systemImage: "photo.on.rectangle")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.osaPaperGlow)
+                            .padding(.horizontal, Spacing.sm)
+                            .padding(.vertical, Spacing.xxs)
+                            .background(Color.osaPrimary.opacity(0.18), in: Capsule())
+                    }
+
+                    if card.quizDefinition != nil {
+                        Label("Quiz", systemImage: "questionmark.circle.fill")
                             .font(.metadataCaption)
                             .foregroundStyle(.osaPaperGlow)
                             .padding(.horizontal, Spacing.sm)

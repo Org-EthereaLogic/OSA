@@ -35,6 +35,7 @@ struct OSAApp: App {
                 .environment(\.handbookRepository, dependencies.handbookRepository)
                 .environment(\.quickCardRepository, dependencies.quickCardRepository)
                 .environment(\.fieldReferenceRepository, dependencies.fieldReferenceRepository)
+                .environment(\.practiceProgressRepository, dependencies.practiceProgressRepository)
                 .environment(\.inventoryRepository, dependencies.inventoryRepository)
                 .environment(\.supplyTemplateRepository, dependencies.supplyTemplateRepository)
                 .environment(\.checklistRepository, dependencies.checklistRepository)

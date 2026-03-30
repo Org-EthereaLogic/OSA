@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Trucker's hitch reference</title>
+  <desc id="desc">Diagram of a fixed point, mid-line loop, and hauling direction for tensioning.</desc>
+  <rect width="640" height="360" rx="28" fill="#F6EFE2"/>
+  <rect x="48" y="42" width="544" height="276" rx="24" fill="#FFF8EB" stroke="#D8C7A0" stroke-width="4"/>
+  <circle cx="142" cy="182" r="28" fill="#D6E2DF" stroke="#214C40" stroke-width="6"/>
+  <path d="M170 182h146c38 0 62-26 62-58s-24-58-62-58c-32 0-58 18-64 44" fill="none" stroke="#214C40" stroke-width="16" stroke-linecap="round"/>
+  <path d="M370 182h122" fill="none" stroke="#214C40" stroke-width="16" stroke-linecap="round"/>
+  <path d="M470 160l34 22-34 22" fill="none" stroke="#214C40" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="92" y="108" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#214C40">Anchor. Make a loop. Pull through for tension.</text>
+  <text x="92" y="312" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#214C40">Use for strapping loads you can re-check. Do not use as a life-safety anchor.</text>
+</svg>

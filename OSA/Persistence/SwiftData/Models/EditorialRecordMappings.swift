@@ -117,7 +117,10 @@ extension PersistedQuickCard {
             relatedSectionIDsJSON: PersistenceValueCoding.encode(quickCard.relatedSectionIDs),
             tagsJSON: PersistenceValueCoding.encode(quickCard.tags),
             lastReviewedAt: quickCard.lastReviewedAt,
-            largeTypeLayoutVersion: quickCard.largeTypeLayoutVersion
+            largeTypeLayoutVersion: quickCard.largeTypeLayoutVersion,
+            mediaAttachmentsJSON: PersistenceValueCoding.encodeCodable(quickCard.mediaAttachments),
+            quizDefinitionJSON: PersistenceValueCoding.encodeOptionalCodable(quickCard.quizDefinition),
+            weeklyDrillMetadataJSON: PersistenceValueCoding.encodeOptionalCodable(quickCard.weeklyDrillMetadata)
         )
     }
 
@@ -133,6 +136,9 @@ extension PersistedQuickCard {
         tagsJSON = PersistenceValueCoding.encode(quickCard.tags)
         lastReviewedAt = quickCard.lastReviewedAt
         largeTypeLayoutVersion = quickCard.largeTypeLayoutVersion
+        mediaAttachmentsJSON = PersistenceValueCoding.encodeCodable(quickCard.mediaAttachments)
+        quizDefinitionJSON = PersistenceValueCoding.encodeOptionalCodable(quickCard.quizDefinition)
+        weeklyDrillMetadataJSON = PersistenceValueCoding.encodeOptionalCodable(quickCard.weeklyDrillMetadata)
     }
 
     func toDomain() -> QuickCard {
@@ -147,7 +153,10 @@ extension PersistedQuickCard {
             relatedSectionIDs: PersistenceValueCoding.decodeUUIDs(from: relatedSectionIDsJSON),
             tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
             lastReviewedAt: lastReviewedAt,
-            largeTypeLayoutVersion: largeTypeLayoutVersion
+            largeTypeLayoutVersion: largeTypeLayoutVersion,
+            mediaAttachments: PersistenceValueCoding.decodeCodable([LocalMediaAttachment].self, from: mediaAttachmentsJSON) ?? [],
+            quizDefinition: PersistenceValueCoding.decodeOptionalCodable(QuizDefinition.self, from: quizDefinitionJSON),
+            weeklyDrillMetadata: PersistenceValueCoding.decodeOptionalCodable(WeeklyDrillMetadata.self, from: weeklyDrillMetadataJSON)
         )
     }
 }
@@ -165,7 +174,9 @@ extension PersistedFieldReferenceEntry {
             relatedSectionIDsJSON: PersistenceValueCoding.encode(entry.relatedSectionIDs),
             tagsJSON: PersistenceValueCoding.encode(entry.tags),
             safetyLevelRawValue: entry.safetyLevel.rawValue,
-            lastReviewedAt: entry.lastReviewedAt
+            lastReviewedAt: entry.lastReviewedAt,
+            mediaAttachmentsJSON: PersistenceValueCoding.encodeCodable(entry.mediaAttachments),
+            quizDefinitionJSON: PersistenceValueCoding.encodeOptionalCodable(entry.quizDefinition)
         )
     }
 
@@ -181,6 +192,8 @@ extension PersistedFieldReferenceEntry {
         tagsJSON = PersistenceValueCoding.encode(entry.tags)
         safetyLevelRawValue = entry.safetyLevel.rawValue
         lastReviewedAt = entry.lastReviewedAt
+        mediaAttachmentsJSON = PersistenceValueCoding.encodeCodable(entry.mediaAttachments)
+        quizDefinitionJSON = PersistenceValueCoding.encodeOptionalCodable(entry.quizDefinition)
     }
 
     func toDomain() -> FieldReferenceEntry {
@@ -195,7 +208,9 @@ extension PersistedFieldReferenceEntry {
             relatedSectionIDs: PersistenceValueCoding.decodeUUIDs(from: relatedSectionIDsJSON),
             tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
             safetyLevel: HandbookSafetyLevel(rawValue: safetyLevelRawValue) ?? .normal,
-            lastReviewedAt: lastReviewedAt
+            lastReviewedAt: lastReviewedAt,
+            mediaAttachments: PersistenceValueCoding.decodeCodable([LocalMediaAttachment].self, from: mediaAttachmentsJSON) ?? [],
+            quizDefinition: PersistenceValueCoding.decodeOptionalCodable(QuizDefinition.self, from: quizDefinitionJSON)
         )
     }
 }
