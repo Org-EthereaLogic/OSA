@@ -51,11 +51,16 @@ struct MapScreen: View {
         ScrollView {
             VStack(spacing: 0) {
                 categoryFilterBar
+
+                VStack(spacing: Spacing.lg) {
+                    quickActionsCard
+                }
+                .padding(Spacing.lg)
+
                 mapContent
                     .frame(height: 320)
                     .clipShape(RoundedRectangle(cornerRadius: CornerRadius.lg))
                     .padding(.horizontal, Spacing.lg)
-                    .padding(.top, Spacing.md)
 
                 if displayMode != .online {
                     offlineBanner
@@ -65,7 +70,6 @@ struct MapScreen: View {
 
                 VStack(spacing: Spacing.lg) {
                     coordinateSummaryCard
-                    quickActionsCard
                     trackRecordingCard
                     measurementCard
                     waypointSection
@@ -266,7 +270,7 @@ struct MapScreen: View {
                         title: "Save Visible Waypoint",
                         systemImage: "mappin.and.ellipse",
                         accessibilityLabel: "Save visible waypoint",
-                        accessibilityIdentifier: "Save visible waypoint"
+                        accessibilityIdentifier: "map-save-visible-waypoint"
                     ) {
                         beginWaypointCreation(at: visibleRegion.centerCoordinate)
                     }
@@ -276,7 +280,7 @@ struct MapScreen: View {
                         systemImage: "arrow.down.to.line",
                         tint: .osaTrust,
                         isDisabled: connectivity != .onlineUsable || tileCacheService == nil,
-                        accessibilityIdentifier: "Save offline region"
+                        accessibilityIdentifier: "map-save-offline-region"
                     ) {
                         showingOfflinePlanner = true
                     }
@@ -287,7 +291,7 @@ struct MapScreen: View {
                         title: "Compass",
                         systemImage: "location.north.circle",
                         tint: .osaPrimary,
-                        accessibilityIdentifier: "Open compass"
+                        accessibilityIdentifier: "map-open-compass"
                     ) {
                         showingCompass = true
                     }
@@ -296,7 +300,7 @@ struct MapScreen: View {
                         title: "Sun Compass",
                         systemImage: "sun.max",
                         tint: .osaWarning,
-                        accessibilityIdentifier: "Open sun compass"
+                        accessibilityIdentifier: "map-open-sun-compass"
                     ) {
                         showingSunCompass = true
                     }

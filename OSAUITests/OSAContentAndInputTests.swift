@@ -611,17 +611,12 @@ final class OSAContentAndInputTests: XCTestCase {
         app.openMapScreen()
         app.handleLocationPermissionIfNeeded()
 
-        let saveWaypointButton = app.buttons["Save Visible Waypoint"]
-        if app.scrollToElement(saveWaypointButton, maxSwipes: 2) {
-            saveWaypointButton.tap()
-        } else {
-            let saveWaypointTile = app.otherElements["Save visible waypoint"]
-            XCTAssertTrue(
-                app.scrollToElement(saveWaypointTile, maxSwipes: 2),
-                "Map should expose a visible-waypoint save action"
-            )
-            saveWaypointTile.tap()
-        }
+        let saveWaypointControl = mapSaveVisibleWaypointControl()
+        XCTAssertTrue(
+            scrollToElement(saveWaypointControl, maxSwipes: 2),
+            "Map should expose a visible-waypoint save action"
+        )
+        tapElement(saveWaypointControl)
 
         let titleField = app.textFields["Title"]
         XCTAssertTrue(titleField.waitForExistence(timeout: 3), "Waypoint editor should expose a title field")
@@ -639,4 +634,235 @@ final class OSAContentAndInputTests: XCTestCase {
             "Saved waypoint should appear in the Map screen waypoint list"
         )
     }
+
+    private func tapTab(_ name: String) {
+        let tabBar = app.tabBars.firstMatch
+        let button = tabBar.buttons[name]
+        if button.waitForExistence(timeout: 3) {
+            button.tap()
+        }
+    }
+
+    private func navigateToMoreItem(_ label: String) {
+        tapTab("More")
+
+        let button = app.buttons[label]
+        if button.waitForExistence(timeout: 2) {
+            button.tap()
+            return
+        }
+
+        let cell = app.cells.matching(
+            NSPredicate(format: "label CONTAINS[c] %@", label)
+        ).firstMatch
+        if cell.waitForExistence(timeout: 2) {
+            if cell.isHittable {
+                cell.tap()
+            } else {
+                cell.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            }
+            return
+        }
+
+        let item = app.staticTexts[label]
+        if item.waitForExistence(timeout: 3) {
+            item.tap()
+        }
+    }
+
+    private func openLibraryChapter(named title: String) -> Bool {
+        tapTab("Library")
+
+        let chapter = app.staticTexts[title]
+        guard scrollToElement(chapter, maxSwipes: 6) else {
+            return false
+        }
+
+        chapter.tap()
+        return true
+    }
+
+    private func scrollLibraryToTop() {
+        for _ in 0..<3 {
+            app.swipeDown()
+        }
+    }
+
+    private func dismissModal() {
+        let cancel = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Cancel'")).firstMatch
+        if cancel.waitForExistence(timeout: 2) {
+            cancel.tap()
+            return
+        }
+
+        app.swipeDown()
+    }
+
+    private func navigateBack() {
+        let backButton = app.navigationBars.buttons.firstMatch
+        if backButton.waitForExistence(timeout: 2) {
+            backButton.tap()
+        }
+    }
+
+    private func handleLocationPermissionIfNeeded() {
+        let allowWhileUsing = app.buttons["Allow While Using App"]
+        if allowWhileUsing.waitForExistence(timeout: 2) {
+            allowWhileUsing.tap()
+            return
+        }
+
+        let allowOnce = app.buttons["Allow Once"]
+        if allowOnce.waitForExistence(timeout: 2) {
+            allowOnce.tap()
+        }
+    }
+
+    private func openMapScreen() {
+        tapTab("Map")
+        if app.navigationBars["Map"].waitForExistence(timeout: 2) {
+            return
+        }
+
+        navigateToMoreItem("Map")
+
+        if app.navigationBars["Map"].waitForExistence(timeout: 3) {
+            return
+        }
+
+        app.terminate()
+        if !app.launchArguments.contains("UI-TEST-OPEN-TAB=maps") {
+            app.launchArguments.append("UI-TEST-OPEN-TAB=maps")
+        }
+        app.launch()
+
+        XCTAssertTrue(
+            app.navigationBars["Map"].waitForExistence(timeout: 3),
+            "Map screen should open from the overflow tab list or launch directly in UI testing"
+        )
+    }
+
+    private func mapSaveVisibleWaypointControl() -> XCUIElement {
+        let button = app.buttons.matching(identifier: "map-save-visible-waypoint").firstMatch
+        if button.exists {
+            return button
+        }
+
+        let predicate = NSPredicate(
+            format: "identifier == %@ OR identifier == %@ OR label ==[c] %@ OR label ==[c] %@",
+            "map-save-visible-waypoint",
+            "Save visible waypoint",
+            "Save visible waypoint",
+            "Save Visible Waypoint"
+        )
+        return app.descendants(matching: .any).matching(predicate).firstMatch
+    }
+
+    private func findButton(labelContaining text: String) -> XCUIElement? {
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@", text)
+        let navButton = app.navigationBars.buttons.matching(predicate).firstMatch
+        if navButton.waitForExistence(timeout: 2) { return navButton }
+
+        let button = app.buttons.matching(predicate).firstMatch
+        if button.exists { return button }
+
+        return nil
+    }
+
+    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private func tapElement(_ element: XCUIElement) {
+        if element.isHittable {
+            element.tap()
+            return
+        }
+
+        element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+    }
+
+    private func firstHittableElement(in query: XCUIElementQuery) -> XCUIElement? {
+        query.allElementsBoundByIndex.first(where: \.isHittable)
+    }
+
+    private func openNewNoteComposer() {
+        let createNoteButton = app.buttons["Create note"]
+        if createNoteButton.waitForExistence(timeout: 3) {
+            createNoteButton.tap()
+
+            let newNoteAction = app.buttons["New Note"]
+            if newNoteAction.waitForExistence(timeout: 3) {
+                newNoteAction.tap()
+                return
+            }
+        }
+
+        let createFirstNoteButton = app.buttons["Create First Note"]
+        if createFirstNoteButton.waitForExistence(timeout: 2) {
+            createFirstNoteButton.tap()
+        }
+    }
+
+    private func submitAskQuestion(_ question: String) {
+        let textField = app.textFields["Ask a question..."]
+        XCTAssertTrue(textField.waitForExistence(timeout: 3), "Ask screen should show a query field")
+        textField.tap()
+        textField.typeText(question)
+
+        let submitButton = app.buttons["Submit question"]
+        if submitButton.exists {
+            submitButton.tap()
+            return
+        }
+
+        if app.keyboards.buttons["Return"].exists {
+            app.keyboards.buttons["Return"].tap()
+            return
+        }
+
+        if app.keyboards.buttons["return"].exists {
+            app.keyboards.buttons["return"].tap()
+        }
+    }
+
+    private func firstQuickCardButton() -> XCUIElement? {
+        let quickCardLabels = [
+            "Earthquake Drop-Cover-Hold",
+            "First Hour Power Outage Check",
+            "Boil Water Advisory Steps",
+            "Gas Leak Response",
+            "Go-Bag Grab List",
+            "Family Meeting Point Reminder",
+            "Severe Weather Shelter Steps",
+            "Refrigerator Food Safety Timer",
+            "Water Rotation Check",
+            "Home Medication Check",
+            "Smoke And CO Detector Check",
+            "Vehicle Breakdown Safety Steps",
+            "Utility Shutoff Quick Reference",
+            "Winter Storm Home Preparation"
+        ]
+
+        for label in quickCardLabels {
+            let button = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", label)).firstMatch
+            if button.waitForExistence(timeout: 1) {
+                return button
+            }
+        }
+
+        return nil
+    }
+
 }
