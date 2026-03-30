@@ -199,6 +199,69 @@ struct ConnectivityStatusCallout: View {
     }
 }
 
+/// Manages connectivity notice presentation with auto-dismiss.
+///
+/// Extracts the observe → handle change → present notice → auto-dismiss pattern
+/// shared by HomeScreen and SettingsScreen.
+@MainActor @Observable
+final class ConnectivityNoticePresenter {
+    private(set) var notice: ConnectivityStatusNotice?
+    private(set) var connectivity: ConnectivityState = .offline
+    private var dismissTask: Task<Void, Never>?
+    private var reduceMotion: Bool
+
+    init(reduceMotion: Bool = false) {
+        self.reduceMotion = reduceMotion
+    }
+
+    var animation: Animation {
+        reduceMotion
+            ? .easeOut(duration: 0.12)
+            : .easeInOut(duration: 0.2)
+    }
+
+    func observe(
+        service: ConnectivityService,
+        noticeBuilder: @escaping (ConnectivityState, ConnectivityState?) -> ConnectivityStatusNotice?
+    ) async {
+        var previousState: ConnectivityState?
+        for await state in service.stateStream() {
+            guard previousState != state else { continue }
+            withAnimation(animation) {
+                connectivity = state
+            }
+            present(noticeBuilder(state, previousState))
+            previousState = state
+        }
+    }
+
+    func cancelDismissTask() {
+        dismissTask?.cancel()
+    }
+
+    func updateReduceMotion(_ value: Bool) {
+        reduceMotion = value
+    }
+
+    private func present(_ newNotice: ConnectivityStatusNotice?) {
+        dismissTask?.cancel()
+
+        withAnimation(animation) {
+            notice = newNotice
+        }
+
+        guard let newNotice, newNotice.autoDismisses else { return }
+
+        dismissTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(4))
+            guard !Task.isCancelled, notice == newNotice else { return }
+            withAnimation(animation) {
+                notice = nil
+            }
+        }
+    }
+}
+
 private struct ConnectivityBadgeAppearance {
     let dot: Color
     let label: Color

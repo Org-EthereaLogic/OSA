@@ -61,13 +61,24 @@ func evaluateSupplyReadiness(
     var missingCriticalCount = 0
     var nearExpiryCount = 0
 
+    // Pre-compute the expiry threshold once instead of per-item.
+    let nearExpiryThreshold = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? .distantFuture
+
+    // Group inventory by category for O(1) lookup instead of scanning the
+    // full list for every template item.
+    let inventoryByCategory = Dictionary(grouping: inventory, by: \.category)
+
     for templateItem in template.items {
         let targetQuantity = templateItem.targetQuantity * (templateItem.scalesWithHouseholdSize ? householdSize : 1)
-        let matches = inventory.filter { item in
-            guard item.category == templateItem.inventoryCategory else { return false }
+        let categoryItems = inventoryByCategory[templateItem.inventoryCategory] ?? []
+
+        // Pre-lowercase keywords once per template item.
+        let lowercasedKeywords = templateItem.matchKeywords.map { $0.lowercased() }
+
+        let matches = categoryItems.filter { item in
+            guard !lowercasedKeywords.isEmpty else { return true }
             let searchableText = "\(item.name) \(item.notes) \(item.location)".lowercased()
-            return templateItem.matchKeywords.isEmpty
-                || templateItem.matchKeywords.contains { searchableText.contains($0.lowercased()) }
+            return lowercasedKeywords.contains { searchableText.contains($0) }
         }
 
         let matchedQuantity = matches.reduce(0) { $0 + $1.quantity }
@@ -79,7 +90,7 @@ func evaluateSupplyReadiness(
 
         nearExpiryCount += matches.filter {
             guard let expiryDate = $0.expiryDate else { return false }
-            return expiryDate <= Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? .distantFuture
+            return expiryDate <= nearExpiryThreshold
         }.count
     }
 

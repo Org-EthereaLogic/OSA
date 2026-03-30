@@ -18,7 +18,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testHomeEmergencyEntryIsAccessible() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         let emergencyButton = app.buttons["Emergency Mode"]
         XCTAssertTrue(emergencyButton.waitForExistence(timeout: 3), "Home should expose an Emergency Mode button")
@@ -26,7 +26,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testAskInputAndSubmitControlsAreAccessible() {
-        tapTab("Ask")
+        app.tapTab("Ask")
 
         let input = app.textFields["Ask a question..."]
         XCTAssertTrue(input.waitForExistence(timeout: 3), "Ask screen should expose an accessible question input")
@@ -37,7 +37,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testInventoryExportActionIsAccessible() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
         let exportButton = app.buttons["Export inventory"]
         XCTAssertTrue(exportButton.waitForExistence(timeout: 3), "Inventory should expose an export action")
@@ -45,7 +45,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testEmergencyModeExitAndPrimaryActionAreAccessible() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         let emergencyButton = app.buttons["Emergency Mode"]
         XCTAssertTrue(emergencyButton.waitForExistence(timeout: 3), "Emergency Mode button missing")
@@ -65,9 +65,9 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testQuickCardDetailPinControlIsAccessible() {
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
-        guard let cardButton = firstQuickCardButton() else {
+        guard let cardButton = app.firstQuickCardButton() else {
             XCTFail("Quick Cards list should contain at least one quick card")
             return
         }
@@ -82,9 +82,9 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testQuickCardAndHandbookShareControlsAreAccessible() {
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
-        guard let quickCard = firstQuickCardButton() else {
+        guard let quickCard = app.firstQuickCardButton() else {
             XCTFail("Quick Cards list should contain at least one seeded card")
             return
         }
@@ -99,7 +99,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         backButton.tap()
 
         XCTAssertTrue(
-            openLibraryChapter(named: "Preparedness Foundations"),
+            app.openLibraryChapter(named: "Preparedness Foundations"),
             "Preparedness Foundations chapter missing from Library"
         )
 
@@ -113,7 +113,7 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testEmergencyModeSurvivalToolsShortcutIsAccessible() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         let emergencyButton = app.buttons["Emergency Mode"]
         XCTAssertTrue(emergencyButton.waitForExistence(timeout: 3), "Emergency Mode button missing")
@@ -128,31 +128,31 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     }
 
     func testSettingsAccessibilityControlsExist() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
         let extendedSettingsScrollDepth = 12
 
         let largePrintToggle = app.switches["Large print reading mode"]
         XCTAssertTrue(
-            scrollToElement(largePrintToggle),
+            app.scrollToElement(largePrintToggle),
             "Settings should expose Large print reading mode toggle"
         )
 
         let languagePicker = app.segmentedControls["settings-app-language-picker"]
         XCTAssertTrue(
-            scrollToElement(languagePicker),
+            app.scrollToElement(languagePicker),
             "Settings should expose the app language picker"
         )
 
         let highContrastToggle = app.switches["settings-high-contrast-toggle"]
         XCTAssertTrue(
-            scrollToElement(highContrastToggle),
+            app.scrollToElement(highContrastToggle),
             "Settings should expose High contrast mode"
         )
 
         let addContact = app.buttons["Add Emergency Contact"]
         XCTAssertTrue(
-            scrollToElement(addContact, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(addContact, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose Add Emergency Contact"
         )
 
@@ -160,31 +160,31 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
             .firstMatch
         XCTAssertTrue(
-            scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
             "Settings should explain how emergency contacts support the I'm Safe shortcut"
         )
 
         let criticalHapticsToggle = app.switches["Critical haptics"]
         XCTAssertTrue(
-            scrollToElement(criticalHapticsToggle, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(criticalHapticsToggle, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose Critical haptics"
         )
 
         let inventoryAlertsToggle = app.switches["Local expiry reminders"]
         XCTAssertTrue(
-            scrollToElement(inventoryAlertsToggle, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(inventoryAlertsToggle, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose local expiry reminder controls"
         )
 
         let discoveryButton = app.buttons["Discover New Content"]
         XCTAssertTrue(
-            scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose Discover New Content"
         )
     }
 
     func testLibraryContentTypeFiltersAreAccessible() {
-        tapTab("Library")
+        app.tapTab("Library")
 
         let searchField = app.searchFields.firstMatch
         XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Library should expose a search field")
@@ -200,82 +200,4 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         let summary = app.staticTexts["Content Type: Quick Cards"]
         XCTAssertTrue(summary.waitForExistence(timeout: 3), "Library should expose the active content-type summary")
     }
-
-    private func tapTab(_ name: String) {
-        let button = app.tabBars.firstMatch.buttons[name]
-        if button.waitForExistence(timeout: 3) {
-            button.tap()
-        }
-    }
-
-    private func navigateToMoreItem(_ label: String) {
-        tapTab("More")
-
-        let item = app.staticTexts[label]
-        if item.waitForExistence(timeout: 3) {
-            item.tap()
-            return
-        }
-
-        let button = app.buttons[label]
-        if button.waitForExistence(timeout: 2) {
-            button.tap()
-        }
-    }
-
-    private func openLibraryChapter(named title: String) -> Bool {
-        tapTab("Library")
-
-        let chapter = app.staticTexts[title]
-        guard scrollToElement(chapter, maxSwipes: 6) else {
-            return false
-        }
-
-        chapter.tap()
-        return true
-    }
-
-    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
-        if element.waitForExistence(timeout: 1) {
-            return true
-        }
-
-        for _ in 0..<maxSwipes {
-            app.swipeUp()
-            if element.waitForExistence(timeout: 1) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    private func firstQuickCardButton() -> XCUIElement? {
-        let quickCardLabels = [
-            "Earthquake Drop-Cover-Hold",
-            "First Hour Power Outage Check",
-            "Boil Water Advisory Steps",
-            "Gas Leak Response",
-            "Go-Bag Grab List",
-            "Family Meeting Point Reminder",
-            "Severe Weather Shelter Steps",
-            "Refrigerator Food Safety Timer",
-            "Water Rotation Check",
-            "Home Medication Check",
-            "Smoke And CO Detector Check",
-            "Vehicle Breakdown Safety Steps",
-            "Utility Shutoff Quick Reference",
-            "Winter Storm Home Preparation"
-        ]
-
-        for label in quickCardLabels {
-            let button = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", label)).firstMatch
-            if button.waitForExistence(timeout: 1) {
-                return button
-            }
-        }
-
-        return nil
-    }
-
 }

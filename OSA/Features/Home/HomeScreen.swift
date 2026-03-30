@@ -31,7 +31,6 @@ struct HomeScreen: View {
     private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     @State private var spotlightMode: SpotlightMode = .quickCards
-    @State private var connectivity: ConnectivityState = .offline
     @State private var quickCardsState: HomeSectionState<[QuickCard]> = .loading
     @State private var feedState: HomeSectionState<[HomeFeedItem]> = .loading
     @State private var pinnedState: HomeSectionState<[HomePinnedItem]> = .loading
@@ -42,15 +41,15 @@ struct HomeScreen: View {
     @State private var notesState: HomeSectionState<[NoteRecord]> = .loading
     @State private var readinessSnapshot: SupplyReadinessSnapshot?
     @State private var showEmergencyMode = false
-    @State private var connectivityNotice: ConnectivityStatusNotice?
-    @State private var connectivityNoticeDismissTask: Task<Void, Never>?
+    @State private var hasLoadedInitially = false
+    @State private var connectivityPresenter = ConnectivityNoticePresenter()
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: Spacing.lg) {
-                HomeHeaderView(connectivity: connectivity, onEmergencyModeTapped: openEmergencyMode)
-                if let connectivityNotice {
-                    ConnectivityStatusCallout(notice: connectivityNotice)
+                HomeHeaderView(connectivity: connectivityPresenter.connectivity, onEmergencyModeTapped: openEmergencyMode)
+                if let notice = connectivityPresenter.notice {
+                    ConnectivityStatusCallout(notice: notice)
                 }
                 HomeReadinessSectionView(readinessSnapshot: readinessSnapshot)
                 HomeWeeklyDrillSectionView(state: weeklyDrillState)
@@ -73,24 +72,38 @@ struct HomeScreen: View {
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: loadDashboard)
-        .task { await observeConnectivity() }
+        .task {
+            connectivityPresenter.updateReduceMotion(accessibilityReduceMotion)
+            guard let service = connectivityService else { return }
+            await connectivityPresenter.observe(service: service) { state, previous in
+                Self.homeConnectivityNotice(for: state, previousState: previous)
+            }
+        }
         .refreshable { await refreshDashboard() }
         .fullScreenCover(isPresented: $showEmergencyMode) {
             EmergencyModeView()
         }
         .onDisappear {
-            connectivityNoticeDismissTask?.cancel()
+            connectivityPresenter.cancelDismissTask()
         }
     }
 
     private func loadDashboard() {
-        reloadLocalSections()
+        if hasLoadedInitially {
+            // On tab re-entry, refresh only sections whose underlying data may
+            // have changed (checklists, inventory, notes, readiness). Quick cards
+            // keep their stable shuffle to avoid visual churn.
+            reloadMutableSections()
+        } else {
+            hasLoadedInitially = true
+            reloadAllSections()
+        }
         if spotlightMode == .feed, case .loading = feedState {
             Task { await loadFeed() }
         }
     }
 
-    private func reloadLocalSections() {
+    private func reloadAllSections() {
         loadQuickCards()
         loadWeeklyDrill()
         loadPinnedContent()
@@ -101,8 +114,18 @@ struct HomeScreen: View {
         loadRecentNotes()
     }
 
+    /// Refreshes only the sections backed by user-mutable data.
+    /// Quick cards and weekly drill keep their stable shuffle.
+    private func reloadMutableSections() {
+        loadPinnedContent()
+        loadActiveChecklists()
+        loadReadinessSnapshot()
+        loadInventoryReminders()
+        loadRecentNotes()
+    }
+
     private func refreshDashboard() async {
-        reloadLocalSections()
+        reloadAllSections()
         if spotlightMode == .feed {
             await loadFeed()
         }
@@ -496,42 +519,7 @@ struct HomeScreen: View {
         }
     }
 
-    private func observeConnectivity() async {
-        guard let service = connectivityService else { return }
-        var previousState: ConnectivityState?
-        for await state in service.stateStream() {
-            handleConnectivityChange(from: previousState, to: state)
-            previousState = state
-        }
-    }
-
-    private func handleConnectivityChange(from previousState: ConnectivityState?, to newState: ConnectivityState) {
-        guard previousState != newState else { return }
-        withAnimation(connectivityAnimation) {
-            connectivity = newState
-        }
-        presentConnectivityNotice(homeConnectivityNotice(for: newState, previousState: previousState))
-    }
-
-    private func presentConnectivityNotice(_ notice: ConnectivityStatusNotice?) {
-        connectivityNoticeDismissTask?.cancel()
-
-        withAnimation(connectivityAnimation) {
-            connectivityNotice = notice
-        }
-
-        guard let notice, notice.autoDismisses else { return }
-
-        connectivityNoticeDismissTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(4))
-            guard !Task.isCancelled, connectivityNotice == notice else { return }
-            withAnimation(connectivityAnimation) {
-                connectivityNotice = nil
-            }
-        }
-    }
-
-    private func homeConnectivityNotice(
+    private static func homeConnectivityNotice(
         for state: ConnectivityState,
         previousState: ConnectivityState?
     ) -> ConnectivityStatusNotice? {
@@ -570,11 +558,6 @@ struct HomeScreen: View {
         }
     }
 
-    private var connectivityAnimation: Animation {
-        accessibilityReduceMotion
-            ? .easeOut(duration: 0.12)
-            : .easeInOut(duration: 0.2)
-    }
 }
 
 #Preview {
