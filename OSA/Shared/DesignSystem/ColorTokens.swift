@@ -95,4 +95,28 @@ extension ShapeStyle where Self == Color {
 
     /// Critical state — import failures, expired supplies, or destructive warnings.
     static var osaCritical: Color { .lanternDynamic(light: 0xC2581A, dark: 0xF08B53) }
+
+    static func osaReadableSurface(highContrast: Bool) -> Color {
+        highContrast ? .lanternDynamic(light: 0xFFFFFF, dark: 0x102721) : .osaSurface
+    }
+
+    static func osaReadableBackground(highContrast: Bool) -> Color {
+        highContrast ? .lanternDynamic(light: 0xFFFDF7, dark: 0x0B1A16) : .osaBackground
+    }
+
+    static func osaReadableStroke(highContrast: Bool) -> Color {
+        highContrast ? .lanternDynamic(light: 0x8A6B16, dark: 0xE9D08D) : .osaHairline
+    }
+
+    static func osaHeroPrimaryText(highContrast: Bool) -> Color {
+        highContrast ? .white : .white
+    }
+
+    static func osaHeroSecondaryText(highContrast: Bool) -> Color {
+        highContrast ? .white : Color.white.opacity(0.84)
+    }
+
+    static func osaHeroMetadataText(highContrast: Bool) -> Color {
+        highContrast ? .white : .osaPaperGlow
+    }
 }

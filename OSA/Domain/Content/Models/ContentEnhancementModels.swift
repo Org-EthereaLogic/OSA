@@ -5,6 +5,12 @@ enum LocalMediaKind: String, Codable, Equatable, Sendable {
     case shortVideo = "short-video"
 }
 
+struct LocalMediaAttachmentTranslation: Codable, Equatable, Sendable {
+    let caption: String?
+    let accessibilityLabel: String?
+    let transcript: String?
+}
+
 struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
     let id: String
     let kind: LocalMediaKind
@@ -13,6 +19,7 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
     let accessibilityLabel: String
     let transcript: String?
     let preferredHeight: Double?
+    let spanishTranslation: LocalMediaAttachmentTranslation?
 
     init(
         id: String? = nil,
@@ -21,7 +28,8 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
         caption: String,
         accessibilityLabel: String,
         transcript: String? = nil,
-        preferredHeight: Double? = nil
+        preferredHeight: Double? = nil,
+        spanishTranslation: LocalMediaAttachmentTranslation? = nil
     ) {
         self.id = id ?? bundlePath
         self.kind = kind
@@ -30,6 +38,7 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
         self.accessibilityLabel = accessibilityLabel
         self.transcript = transcript
         self.preferredHeight = preferredHeight
+        self.spanishTranslation = spanishTranslation
     }
 
     var searchableText: String {
@@ -46,6 +55,7 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
         case accessibilityLabel
         case transcript
         case preferredHeight
+        case spanishTranslation
     }
 
     init(from decoder: any Decoder) throws {
@@ -57,6 +67,7 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
         let transcript = try container.decodeIfPresent(String.self, forKey: .transcript)
         let preferredHeight = try container.decodeIfPresent(Double.self, forKey: .preferredHeight)
         let id = try container.decodeIfPresent(String.self, forKey: .id)
+        let spanishTranslation = try container.decodeIfPresent(LocalMediaAttachmentTranslation.self, forKey: .spanishTranslation)
 
         self.init(
             id: id,
@@ -65,8 +76,42 @@ struct LocalMediaAttachment: Codable, Equatable, Sendable, Identifiable {
             caption: caption,
             accessibilityLabel: accessibilityLabel,
             transcript: transcript,
-            preferredHeight: preferredHeight
+            preferredHeight: preferredHeight,
+            spanishTranslation: spanishTranslation
         )
+    }
+
+    func caption(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            caption
+        case .spanish:
+            spanishTranslation?.caption?.nonEmpty ?? caption
+        }
+    }
+
+    func accessibilityLabel(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            accessibilityLabel
+        case .spanish:
+            spanishTranslation?.accessibilityLabel?.nonEmpty ?? accessibilityLabel
+        }
+    }
+
+    func transcript(for language: AppLanguage) -> String? {
+        switch language {
+        case .english:
+            transcript?.nonEmpty
+        case .spanish:
+            spanishTranslation?.transcript?.nonEmpty ?? transcript?.nonEmpty
+        }
+    }
+
+    func searchableText(for language: AppLanguage) -> String {
+        [caption(for: language), accessibilityLabel(for: language), transcript(for: language)]
+            .compactMap { $0 }
+            .joined(separator: " ")
     }
 }
 
@@ -109,5 +154,12 @@ struct WeeklyDrillMetadata: Codable, Equatable, Sendable {
 extension QuizQuestion {
     var correctOption: QuizOption? {
         options.first(where: { $0.id == correctOptionID })
+    }
+}
+
+private extension String {
+    var nonEmpty: String? {
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : self
     }
 }

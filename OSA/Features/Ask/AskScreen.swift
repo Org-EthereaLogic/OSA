@@ -13,6 +13,8 @@ struct AskScreen: View {
     private var recentQuestionsRawValue = RecentAskHistorySettings.encode(questions: [])
     @AppStorage(UserProfileSettings.regionKey)
     private var regionRawValue = UserProfileSettings.regionDefault.rawValue
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
 
     @State private var query = ""
     @State private var askState: AskViewState = .idle
@@ -45,6 +47,7 @@ struct AskScreen: View {
                     case .answered(let result):
                         AnswerView(
                             result: result,
+                            language: appLanguage,
                             destinationForCitation: { citation in
                                 destination(for: citation)
                             },
@@ -59,6 +62,7 @@ struct AskScreen: View {
                     case .refused(let reason):
                         RefusalView(
                             reason: reason,
+                            language: appLanguage,
                             connectivity: connectivity,
                             canImport: trustedSourceHTTPClient != nil && importPipeline != nil,
                             onImportTapped: { showImportSheet = true }
@@ -124,9 +128,7 @@ struct AskScreen: View {
             }
             .accessibilityHint("Allows Ask to search notes stored locally on this device.")
 
-            Text(
-                "Region preference: \(currentRegion.displayName). Follow-up context refines only this session's local retrieval. Recent questions stay on this device only."
-            )
+            Text(scopeSupportText)
             .font(.metadataCaption)
             .foregroundStyle(.tertiary)
         }
@@ -141,11 +143,18 @@ struct AskScreen: View {
     }
 
     private var scopeSummary: String {
-        if includePersonalNotes {
-            return "Searching handbook, field references, quick cards, inventory, checklists, and your notes for \(currentRegion.displayName)."
+        switch appLanguage {
+        case .english:
+            if includePersonalNotes {
+                return "Searching handbook, field references, quick cards, inventory, checklists, and your notes for \(currentRegion.displayName)."
+            }
+            return "Searching handbook, field references, quick cards, inventory, and checklists for \(currentRegion.displayName)."
+        case .spanish:
+            if includePersonalNotes {
+                return "Buscando en el manual, referencias de campo, tarjetas rapidas, inventario, listas y tus notas para \(currentRegion.displayName)."
+            }
+            return "Buscando en el manual, referencias de campo, tarjetas rapidas, inventario y listas para \(currentRegion.displayName)."
         }
-
-        return "Searching handbook, field references, quick cards, inventory, and checklists for \(currentRegion.displayName)."
     }
 
     private var currentRegion: PreparednessRegion {
@@ -226,6 +235,7 @@ struct AskScreen: View {
                         .stroke(Color.osaHairline, lineWidth: 1)
                 }
                 .onSubmit { submitQuery() }
+                .accessibilityIdentifier("ask-input-field")
                 .accessibilityLabel("Ask a question...")
                 .accessibilityHint("Search approved local content with citations.")
 
@@ -233,6 +243,7 @@ struct AskScreen: View {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.title2)
             }
+            .accessibilityIdentifier("ask-submit-button")
             .accessibilityLabel("Submit question")
             .accessibilityHint("Submits your question to search local sources.")
             .foregroundStyle(query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.secondary : Color.white)
@@ -332,7 +343,11 @@ struct AskScreen: View {
               !result.citations.isEmpty,
               let noteRepository
         else {
-            studyGuideStatus = .failed("Study guide saving is unavailable right now.")
+            studyGuideStatus = .failed(
+                appLanguage == .spanish
+                    ? "Guardar la guia de estudio no esta disponible ahora mismo."
+                    : "Study guide saving is unavailable right now."
+            )
             return
         }
 
@@ -347,7 +362,11 @@ struct AskScreen: View {
             studyGuideStatus = .saved(note.title)
         } catch {
             hapticFeedbackService?.play(.error)
-            studyGuideStatus = .failed("Study guide could not be saved locally.")
+            studyGuideStatus = .failed(
+                appLanguage == .spanish
+                    ? "La guia de estudio no se pudo guardar localmente."
+                    : "Study guide could not be saved locally."
+            )
         }
     }
 
@@ -376,6 +395,19 @@ struct AskScreen: View {
             return nil
         }
     }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
+    }
+
+    private var scopeSupportText: String {
+        switch appLanguage {
+        case .english:
+            "Region preference: \(currentRegion.displayName). Follow-up context refines only this session's local retrieval. Recent questions stay on this device only."
+        case .spanish:
+            "Preferencia de region: \(currentRegion.displayName). El contexto de seguimiento solo ajusta la recuperacion local de esta sesion. Las preguntas recientes se quedan solo en este dispositivo."
+        }
+    }
 }
 
 private enum AskAccessibilityTarget: Hashable {
@@ -397,6 +429,7 @@ private enum AskDestination: Hashable {
 
 private struct AnswerView: View {
     let result: AnswerResult
+    let language: AppLanguage
     let destinationForCitation: (CitationReference) -> AskDestination?
     let destinationForAction: (SuggestedAction) -> AskDestination?
     let onSaveStudyGuide: () -> Void
@@ -417,6 +450,7 @@ private struct AnswerView: View {
                 .padding(.vertical, Spacing.xs)
                 .background(confidenceColor.opacity(0.12), in: Capsule())
                 .accessibilityElement(children: .ignore)
+                .accessibilityIdentifier("ask-confidence-badge")
                 .accessibilityLabel("Confidence")
                 .accessibilityValue(confidenceLabel)
 
@@ -431,6 +465,7 @@ private struct AnswerView: View {
                     .stroke(Color.osaHairline, lineWidth: 1)
             }
             .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("ask-answer-card")
             .accessibilityLabel("Answer")
             .accessibilityValue("\(confidenceLabel). \(result.answerText)")
 
@@ -472,7 +507,7 @@ private struct AnswerView: View {
                         .foregroundStyle(.secondary)
 
                     if let studyGuideStatus {
-                        Text(studyGuideStatus.message)
+                        Text(studyGuideStatus.message(for: language))
                             .font(.caption)
                             .foregroundStyle(studyGuideStatus.color)
                     }
@@ -488,7 +523,8 @@ private struct AnswerView: View {
                     ForEach(Array(result.suggestedActions.enumerated()), id: \.offset) { _, action in
                         SuggestedActionButton(
                             action: action,
-                            destination: destinationForAction(action)
+                            destination: destinationForAction(action),
+                            language: language
                         )
                     }
                 }
@@ -513,10 +549,19 @@ private struct AnswerView: View {
     }
 
     private var confidenceLabel: String {
-        switch result.confidence {
-        case .groundedHigh: "Multiple approved sources"
-        case .groundedMedium: "Limited local evidence"
-        case .insufficientLocalEvidence: "Insufficient evidence"
+        switch language {
+        case .english:
+            switch result.confidence {
+            case .groundedHigh: "Multiple approved sources"
+            case .groundedMedium: "Limited local evidence"
+            case .insufficientLocalEvidence: "Insufficient evidence"
+            }
+        case .spanish:
+            switch result.confidence {
+            case .groundedHigh: "Multiples fuentes aprobadas"
+            case .groundedMedium: "Evidencia local limitada"
+            case .insufficientLocalEvidence: "Evidencia insuficiente"
+            }
         }
     }
 }
@@ -525,12 +570,22 @@ private enum AskStudyGuideStatus {
     case saved(String)
     case failed(String)
 
-    var message: String {
-        switch self {
-        case .saved(let title):
-            "Saved locally as \"\(title)\"."
-        case .failed(let message):
-            message
+    func message(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            switch self {
+            case .saved(let title):
+                "Saved locally as \"\(title)\"."
+            case .failed(let message):
+                message
+            }
+        case .spanish:
+            switch self {
+            case .saved(let title):
+                "Guardado localmente como \"\(title)\"."
+            case .failed(let message):
+                message
+            }
         }
     }
 
@@ -637,6 +692,7 @@ private struct CitationRow: View {
 
 private struct RefusalView: View {
     let reason: RefusalReason
+    let language: AppLanguage
     let connectivity: ConnectivityState
     let canImport: Bool
     let onImportTapped: () -> Void
@@ -708,28 +764,56 @@ private struct RefusalView: View {
     }
 
     private var title: String {
-        switch reason {
-        case .emptyQuery:
-            "Empty Question"
-        case .blockedSensitiveScope:
-            "Outside App Scope"
-        case .insufficientEvidence:
-            "Not Found Locally"
-        case .outsideProductScope:
-            "Not Supported"
+        switch language {
+        case .english:
+            switch reason {
+            case .emptyQuery:
+                "Empty Question"
+            case .blockedSensitiveScope:
+                "Outside App Scope"
+            case .insufficientEvidence:
+                "Not Found Locally"
+            case .outsideProductScope:
+                "Not Supported"
+            }
+        case .spanish:
+            switch reason {
+            case .emptyQuery:
+                "Pregunta vacia"
+            case .blockedSensitiveScope:
+                "Fuera del alcance de la app"
+            case .insufficientEvidence:
+                "No se encontro localmente"
+            case .outsideProductScope:
+                "No compatible"
+            }
         }
     }
 
     private var explanation: String {
-        switch reason {
-        case .emptyQuery:
-            "Please enter a question to search your local content."
-        case .blockedSensitiveScope(let detail):
-            detail
-        case .insufficientEvidence:
-            "No relevant content was found in your approved local sources. Try rephrasing your question."
-        case .outsideProductScope:
-            "This question is outside the scope of your preparedness handbook."
+        switch language {
+        case .english:
+            switch reason {
+            case .emptyQuery:
+                "Please enter a question to search your local content."
+            case .blockedSensitiveScope(let detail):
+                detail
+            case .insufficientEvidence:
+                "No relevant content was found in your approved local sources. Try rephrasing your question."
+            case .outsideProductScope:
+                "This question is outside the scope of your preparedness handbook."
+            }
+        case .spanish:
+            switch reason {
+            case .emptyQuery:
+                "Ingresa una pregunta para buscar en tu contenido local."
+            case .blockedSensitiveScope(let detail):
+                detail
+            case .insufficientEvidence:
+                "No se encontro contenido relevante en tus fuentes locales aprobadas. Intenta reformular la pregunta."
+            case .outsideProductScope:
+                "Esta pregunta esta fuera del alcance del manual de preparacion."
+            }
         }
     }
 }
@@ -737,6 +821,7 @@ private struct RefusalView: View {
 private struct SuggestedActionButton: View {
     let action: SuggestedAction
     let destination: AskDestination?
+    let language: AppLanguage
 
     var body: some View {
         if let destination {
@@ -787,15 +872,29 @@ private struct SuggestedActionButton: View {
     }
 
     private var label: String {
-        switch action {
-        case .openQuickCard(_, let title):
-            "Open Quick Card: \(title)"
-        case .openHandbookSection(_, let title):
-            "Read: \(title)"
-        case .openFieldReference(_, let title):
-            "Open Reference: \(title)"
-        case .searchOnline(let query):
-            "Search online: \(query)"
+        switch language {
+        case .english:
+            switch action {
+            case .openQuickCard(_, let title):
+                "Open Quick Card: \(title)"
+            case .openHandbookSection(_, let title):
+                "Read: \(title)"
+            case .openFieldReference(_, let title):
+                "Open Reference: \(title)"
+            case .searchOnline(let query):
+                "Search online: \(query)"
+            }
+        case .spanish:
+            switch action {
+            case .openQuickCard(_, let title):
+                "Abrir tarjeta rapida: \(title)"
+            case .openHandbookSection(_, let title):
+                "Leer: \(title)"
+            case .openFieldReference(_, let title):
+                "Abrir referencia: \(title)"
+            case .searchOnline(let query):
+                "Buscar en linea: \(query)"
+            }
         }
     }
 }

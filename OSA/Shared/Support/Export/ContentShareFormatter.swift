@@ -1,11 +1,11 @@
 import Foundation
 
 enum ContentShareFormatter {
-    static func quickCardText(for card: QuickCard) -> String {
+    static func quickCardText(for card: QuickCard, language: AppLanguage = .english) -> String {
         [
-            card.title,
-            card.summary.trimmingCharacters(in: .whitespacesAndNewlines),
-            "Shared from OSA"
+            card.localizedTitle(for: language),
+            card.localizedSummary(for: language).trimmingCharacters(in: .whitespacesAndNewlines),
+            AppLocalization.localized("Shared from OSA", language: language)
         ]
         .filter { !$0.isEmpty }
         .joined(separator: "\n\n")

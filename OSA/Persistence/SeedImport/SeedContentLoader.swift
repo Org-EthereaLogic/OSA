@@ -496,6 +496,7 @@ private struct QuickCardFile: Decodable {
     let tags: [String]
     let lastReviewedAt: Date?
     let largeTypeLayoutVersion: Int
+    let spanishTranslation: QuickCardTranslation?
     let mediaAttachments: [LocalMediaAttachment]?
     let quizDefinition: QuizDefinition?
     let weeklyDrillMetadata: WeeklyDrillMetadata?
@@ -513,6 +514,7 @@ private struct QuickCardFile: Decodable {
             tags: tags,
             lastReviewedAt: lastReviewedAt,
             largeTypeLayoutVersion: largeTypeLayoutVersion,
+            spanishTranslation: spanishTranslation,
             mediaAttachments: mediaAttachments ?? [],
             quizDefinition: quizDefinition,
             weeklyDrillMetadata: weeklyDrillMetadata

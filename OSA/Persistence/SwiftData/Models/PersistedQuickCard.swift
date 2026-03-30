@@ -14,6 +14,7 @@ final class PersistedQuickCard {
     var tagsJSON: String
     var lastReviewedAt: Date?
     var largeTypeLayoutVersion: Int
+    var spanishTranslationJSON: String = "null"
     var mediaAttachmentsJSON: String
     var quizDefinitionJSON: String
     var weeklyDrillMetadataJSON: String
@@ -30,6 +31,7 @@ final class PersistedQuickCard {
         tagsJSON: String,
         lastReviewedAt: Date?,
         largeTypeLayoutVersion: Int,
+        spanishTranslationJSON: String = "null",
         mediaAttachmentsJSON: String,
         quizDefinitionJSON: String,
         weeklyDrillMetadataJSON: String
@@ -45,6 +47,7 @@ final class PersistedQuickCard {
         self.tagsJSON = tagsJSON
         self.lastReviewedAt = lastReviewedAt
         self.largeTypeLayoutVersion = largeTypeLayoutVersion
+        self.spanishTranslationJSON = spanishTranslationJSON
         self.mediaAttachmentsJSON = mediaAttachmentsJSON
         self.quizDefinitionJSON = quizDefinitionJSON
         self.weeklyDrillMetadataJSON = weeklyDrillMetadataJSON

@@ -118,6 +118,7 @@ extension PersistedQuickCard {
             tagsJSON: PersistenceValueCoding.encode(quickCard.tags),
             lastReviewedAt: quickCard.lastReviewedAt,
             largeTypeLayoutVersion: quickCard.largeTypeLayoutVersion,
+            spanishTranslationJSON: PersistenceValueCoding.encodeOptionalCodable(quickCard.spanishTranslation),
             mediaAttachmentsJSON: PersistenceValueCoding.encodeCodable(quickCard.mediaAttachments),
             quizDefinitionJSON: PersistenceValueCoding.encodeOptionalCodable(quickCard.quizDefinition),
             weeklyDrillMetadataJSON: PersistenceValueCoding.encodeOptionalCodable(quickCard.weeklyDrillMetadata)
@@ -136,6 +137,7 @@ extension PersistedQuickCard {
         tagsJSON = PersistenceValueCoding.encode(quickCard.tags)
         lastReviewedAt = quickCard.lastReviewedAt
         largeTypeLayoutVersion = quickCard.largeTypeLayoutVersion
+        spanishTranslationJSON = PersistenceValueCoding.encodeOptionalCodable(quickCard.spanishTranslation)
         mediaAttachmentsJSON = PersistenceValueCoding.encodeCodable(quickCard.mediaAttachments)
         quizDefinitionJSON = PersistenceValueCoding.encodeOptionalCodable(quickCard.quizDefinition)
         weeklyDrillMetadataJSON = PersistenceValueCoding.encodeOptionalCodable(quickCard.weeklyDrillMetadata)
@@ -154,6 +156,7 @@ extension PersistedQuickCard {
             tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
             lastReviewedAt: lastReviewedAt,
             largeTypeLayoutVersion: largeTypeLayoutVersion,
+            spanishTranslation: PersistenceValueCoding.decodeOptionalCodable(QuickCardTranslation.self, from: spanishTranslationJSON),
             mediaAttachments: PersistenceValueCoding.decodeCodable([LocalMediaAttachment].self, from: mediaAttachmentsJSON) ?? [],
             quizDefinition: PersistenceValueCoding.decodeOptionalCodable(QuizDefinition.self, from: quizDefinitionJSON),
             weeklyDrillMetadata: PersistenceValueCoding.decodeOptionalCodable(WeeklyDrillMetadata.self, from: weeklyDrillMetadataJSON)

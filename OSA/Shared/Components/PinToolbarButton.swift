@@ -2,9 +2,9 @@ import SwiftUI
 
 struct PinToolbarButton: View {
     let isPinned: Bool
-    let pinLabel: String
-    let unpinLabel: String
-    let hint: String
+    let pinLabel: LocalizedStringKey
+    let unpinLabel: LocalizedStringKey
+    let hint: LocalizedStringKey
     let action: () -> Void
 
     var body: some View {

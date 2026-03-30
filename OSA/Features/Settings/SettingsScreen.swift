@@ -25,6 +25,10 @@ struct SettingsScreen: View {
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
     @AppStorage(AccessibilitySettings.criticalHapticsKey)
     private var criticalHaptics = AccessibilitySettings.criticalHapticsDefault
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @AppStorage(DiscoverySettings.isRSSDiscoveryEnabledKey)
     private var isRSSDiscoveryEnabled = DiscoverySettings.isRSSDiscoveryEnabledDefault
     @AppStorage(DiscoverySettings.lastDiscoveryDateKey)
@@ -65,7 +69,7 @@ struct SettingsScreen: View {
         .tint(.osaPrimary)
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .background(.osaBackground)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
         .navigationTitle("Settings")
         .task {
             loadContacts()
@@ -86,6 +90,9 @@ struct SettingsScreen: View {
         }
         .onChange(of: inventoryAlertLeadTimeRawValue) { _, _ in
             Task { await handleInventoryAlertLeadTimeChange() }
+        }
+        .onChange(of: appLanguageRawValue) { _, _ in
+            refreshSystemSurfaceSnapshot()
         }
         .sheet(item: $contactEditor, onDismiss: loadContacts) { editor in
             NavigationStack {
@@ -142,10 +149,10 @@ struct SettingsScreen: View {
         Section("Emergency Contacts") {
             SettingsSummaryCard(
                 systemImage: contacts.isEmpty ? "person.crop.circle.badge.plus" : "checkmark.shield.fill",
-                title: contacts.isEmpty ? "Set up the I'm Safe shortcut" : "I'm Safe shortcut ready",
+                title: contacts.isEmpty ? Text("Set up the I'm Safe shortcut") : Text("I'm Safe shortcut ready"),
                 message: contacts.isEmpty
-                    ? "Add one or more local contacts so Emergency Mode can prepare a ready-to-send check-in message."
-                    : "\(contacts.count) \(contacts.count == 1 ? "local contact is" : "local contacts are") available for quick check-ins from Emergency Mode.",
+                    ? Text("Add one or more local contacts so Emergency Mode can prepare a ready-to-send check-in message.")
+                    : Text("\(contacts.count) \(contacts.count == 1 ? "local contact is" : "local contacts are") available for quick check-ins from Emergency Mode."),
                 tint: contacts.isEmpty ? .osaPrimary : .osaLocal
             )
 
@@ -190,15 +197,34 @@ struct SettingsScreen: View {
         Section("Accessibility & Feedback") {
             SettingsSummaryCard(
                 systemImage: "figure.wave.circle",
-                title: "Large type and critical feedback",
-                message: "These settings affect emergency reading screens, checklist completion cues, and other high-priority interactions.",
+                title: Text("Language, contrast, and critical feedback"),
+                message: Text("These settings affect emergency reading screens, quick cards, and other high-priority interactions on this iPhone."),
                 tint: .osaCalm
             )
 
+            Picker("App language", selection: $appLanguageRawValue) {
+                ForEach(AppLanguage.allCases) { language in
+                    Text(language.displayName).tag(language.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("settings-app-language-picker")
+            .accessibilityHint("Changes app chrome and bundled quick-card translations between English and Spanish.")
+
+            Toggle("High contrast mode", isOn: $highContrastMode)
+                .accessibilityIdentifier("settings-high-contrast-toggle")
+                .accessibilityHint("Uses stronger contrast on emergency reading and action surfaces.")
+
             Toggle("Large print reading mode", isOn: $largePrintReadingMode)
+                .accessibilityIdentifier("settings-large-print-toggle")
                 .accessibilityHint("Uses larger text on reading-heavy emergency content.")
             Toggle("Critical haptics", isOn: $criticalHaptics)
+                .accessibilityIdentifier("settings-critical-haptics-toggle")
                 .accessibilityHint("Enables stronger haptic feedback for important actions.")
+
+            Text("Spanish currently applies to app chrome and bundled critical quick cards. Handbook, protocols, and Ask answers still fall back to English content.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -762,8 +788,8 @@ struct SettingsScreen: View {
 
 private struct SettingsSummaryCard: View {
     let systemImage: String
-    let title: String
-    let message: String
+    let title: Text
+    let message: Text
     let tint: Color
 
     var body: some View {
@@ -775,10 +801,10 @@ private struct SettingsSummaryCard: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: Spacing.xxs) {
-                Text(title)
+                title
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
-                Text(message)
+                message
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

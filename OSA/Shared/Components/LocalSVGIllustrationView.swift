@@ -4,6 +4,8 @@ import WebKit
 struct LocalSVGIllustrationView: View {
     let attachment: LocalMediaAttachment
 
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
     @State private var svgMarkup: String?
 
     var body: some View {
@@ -26,16 +28,20 @@ struct LocalSVGIllustrationView: View {
                 .padding(.vertical, Spacing.md)
             }
 
-            Text(attachment.caption)
+            Text(attachment.caption(for: appLanguage))
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(attachment.accessibilityLabel)
+        .accessibilityLabel(attachment.accessibilityLabel(for: appLanguage))
         .task {
             svgMarkup = loadSVGMarkup()
         }
+    }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
     }
 
     private func loadSVGMarkup(bundle: Bundle = .main) -> String? {

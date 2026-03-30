@@ -7,6 +7,11 @@
       "category": "Heat",
       "summary": "Cycle shade, airflow, hydration, and room checks before the house gets dangerous.",
       "bodyMarkdown": "## First 10 Minutes\n- Close blinds on sun-facing windows.\n- Stage water, medications, and chargers in one cool room.\n\n## Keep Doing\n- Rotate people and pets through the cool room.\n- Limit oven, dryer, and heavy appliance use until evening.\n\n## Leave Early If\n- Indoor heat keeps climbing.\n- Anyone becomes confused, stops sweating, or cannot cool down.\n\n## Do Not\n- Trap everyone in the hottest room.\n- Wait until the house feels dangerous before planning transport.",
+      "spanishTranslation": {
+        "title": "Ciclo de cuarto fresco por ola de calor",
+        "summary": "Alterna sombra, flujo de aire, hidratacion y revisiones del cuarto antes de que la casa se vuelva peligrosa.",
+        "bodyMarkdown": "## Primeros 10 minutos\n- Cierra persianas en las ventanas con sol.\n- Junta agua, medicamentos y cargadores en un solo cuarto fresco.\n\n## Sigue haciendo\n- Rota a personas y mascotas por el cuarto fresco.\n- Limita el uso del horno, secadora y aparatos pesados hasta la tarde.\n\n## Sal temprano si\n- El calor interior sigue subiendo.\n- Alguien se confunde, deja de sudar o no puede enfriarse.\n\n## No hagas\n- Encerrar a todos en el cuarto mas caliente.\n- Esperar a que la casa se sienta peligrosa para planear el traslado."
+      },
       "priority": 92,
       "relatedSectionIDs": [
         "aabbcc0b-0001-0000-0000-000000000001"
@@ -26,6 +31,10 @@
           "bundlePath": "Media/Illustrations/heat-wave-cool-room.svg",
           "caption": "A single cool room works best when shade, airflow, water, and key supplies are staged before the hottest part of the day.",
           "accessibilityLabel": "Illustration showing a shaded room with water, airflow, and household staging supplies.",
+          "spanishTranslation": {
+            "caption": "Un solo cuarto fresco funciona mejor cuando la sombra, el flujo de aire, el agua y los suministros clave se preparan antes de la parte mas calurosa del dia.",
+            "accessibilityLabel": "Ilustracion que muestra un cuarto con sombra, agua, flujo de aire y suministros del hogar preparados."
+          },
           "preferredHeight": 220
         }
       ],
@@ -70,6 +79,11 @@
       "category": "Air Quality",
       "summary": "Build one lower-smoke room quickly and keep it clean enough to rest in.",
       "bodyMarkdown": "## Seal\n- Shut windows and exterior doors.\n- Block obvious drafts with materials you can remove fast.\n\n## Filter\n- Run the best filter setup you already know how to use.\n- Keep doors closed once the room is staged.\n\n## Protect\n- Leave smoky jackets, shoes, and cleanup tools outside the room.\n- Keep medications, water, and chargers inside.\n\n## Move If Needed\n- Indoor air keeps worsening.\n- Anyone struggles to breathe or cannot recover after getting inside.",
+      "spanishTranslation": {
+        "title": "Montaje de cuarto limpio por humo de incendio",
+        "summary": "Arma rapido un cuarto con menos humo y mantenlo lo bastante limpio para descansar alli.",
+        "bodyMarkdown": "## Sella\n- Cierra ventanas y puertas exteriores.\n- Tapa corrientes evidentes con materiales que puedas quitar rapido.\n\n## Filtra\n- Usa la mejor configuracion de filtrado que ya sabes manejar.\n- Manten las puertas cerradas una vez que el cuarto este listo.\n\n## Protege\n- Deja chaquetas con humo, zapatos y herramientas de limpieza fuera del cuarto.\n- Guarda medicamentos, agua y cargadores adentro.\n\n## Muevete si hace falta\n- El aire interior sigue empeorando.\n- Alguien tiene dificultad para respirar o no se recupera despues de entrar."
+      },
       "priority": 94,
       "relatedSectionIDs": [
         "aabbcc0b-0003-0000-0000-000000000001"
@@ -89,6 +103,10 @@
           "bundlePath": "Media/Illustrations/wildfire-clean-room.svg",
           "caption": "Seal the room, run the best filter setup you already trust, and keep smoke-covered gear outside the clean room.",
           "accessibilityLabel": "Illustration showing a sealed window, an air filter, and staged medications and water inside a clean room.",
+          "spanishTranslation": {
+            "caption": "Sella el cuarto, usa la mejor filtracion que ya conoces y deja el equipo cubierto de humo fuera del cuarto limpio.",
+            "accessibilityLabel": "Ilustracion que muestra una ventana sellada, un filtro de aire y medicamentos y agua preparados dentro de un cuarto limpio."
+          },
           "preferredHeight": 220
         }
       ],
@@ -133,6 +151,11 @@
       "category": "Flood",
       "summary": "Use a stop-check-move sequence when water is rising or entering the home.",
       "bodyMarkdown": "## Stop\n- Pause before troubleshooting.\n- Check footing, exits, and who still needs to move.\n\n## Check\n- Note where water is entering and what outlets or appliances are nearby.\n- Lift documents, lights, and medications above the expected water line.\n\n## Move\n- Shift go-bags, chargers, and dry layers toward the safest exit.\n- Leave before stairs, doors, or roads are cut off.\n\n## Do Not\n- Keep wading once you lose dry footing.\n- Reset gear while water and electricity risks are still unclear.",
+      "spanishTranslation": {
+        "title": "Entrada de agua por inundacion: alto-revisa-muevete",
+        "summary": "Usa una secuencia de alto-revisa-muevete cuando el agua este subiendo o entrando en casa.",
+        "bodyMarkdown": "## Alto\n- Pausa antes de intentar resolver el problema.\n- Revisa apoyo, salidas y quien todavia necesita moverse.\n\n## Revisa\n- Nota por donde entra el agua y que enchufes o aparatos hay cerca.\n- Sube documentos, luces y medicamentos por encima de la linea de agua esperada.\n\n## Muevete\n- Mueve bolsas de evacuacion, cargadores y ropa seca hacia la salida mas segura.\n- Sal antes de que se corten escaleras, puertas o caminos.\n\n## No hagas\n- Seguir caminando en el agua cuando pierdas apoyo seco.\n- Reiniciar equipos mientras los riesgos de agua y electricidad sigan poco claros."
+      },
       "priority": 93,
       "relatedSectionIDs": [
         "aabbcc0b-0004-0000-0000-000000000001"
@@ -152,6 +175,10 @@
           "bundlePath": "Media/Illustrations/flood-stop-check.svg",
           "caption": "As water rises, pause, check hazards and exits, then move essentials toward the safest exit before footing is lost.",
           "accessibilityLabel": "Illustration showing a rising indoor water line with supplies lifted above it and an exit direction.",
+          "spanishTranslation": {
+            "caption": "Mientras sube el agua, pausa, revisa riesgos y salidas, y luego mueve lo esencial hacia la salida mas segura antes de perder apoyo.",
+            "accessibilityLabel": "Ilustracion que muestra una linea de agua interior en aumento, suministros elevados y una direccion de salida."
+          },
           "preferredHeight": 220
         }
       ],

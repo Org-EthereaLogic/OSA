@@ -7,6 +7,11 @@ struct EmergencyModeView: View {
     @Environment(\.emergencyContactRepository) private var emergencyContactRepository
     @Environment(\.locationService) private var locationService
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @State private var isNightVisionEnabled = false
     @State private var isSOSAlarmActive = false
     @State private var emergencyContacts: [EmergencyContact] = []
@@ -34,7 +39,7 @@ struct EmergencyModeView: View {
             .safeAreaInset(edge: .bottom) {
                 emergencyActionBar
             }
-            .background(.osaBackground)
+            .background(Color.osaReadableBackground(highContrast: highContrastMode))
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Exit Emergency Mode") { dismiss() }
@@ -42,7 +47,7 @@ struct EmergencyModeView: View {
                 }
             }
         }
-        .background(.osaBackground)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
         .task { loadEmergencyContacts() }
         .sheet(isPresented: $showSafeMessageComposer) {
             MessageComposeView(
@@ -74,17 +79,17 @@ struct EmergencyModeView: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("EMERGENCY MODE")
                 .font(.brandEyebrow)
-                .foregroundStyle(Color.white.opacity(0.95))
+                .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
                 .tracking(1.2)
                 .accessibilityAddTraits(.isHeader)
 
             Text("Large targets, reviewed protocols, and local shortcuts for high-stress moments.")
                 .font(.brandSubheadline)
-                .foregroundStyle(Color.white.opacity(0.96))
+                .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
 
             Text("Call emergency services whenever the situation is immediately life-threatening.")
                 .font(.metadataCaption)
-                .foregroundStyle(Color.white.opacity(0.96))
+                .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,7 +104,7 @@ struct EmergencyModeView: View {
     }
 
     private var actionGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: Spacing.md) {
+        LazyVGrid(columns: gridColumns, spacing: Spacing.md) {
             NavigationLink {
                 EmergencyProtocolsScreen()
             } label: {
@@ -251,10 +256,10 @@ struct EmergencyModeView: View {
         .padding(.horizontal, Spacing.lg)
         .padding(.top, Spacing.sm)
         .padding(.bottom, Spacing.sm)
-        .background(.ultraThinMaterial)
+        .background(Color.osaReadableSurface(highContrast: highContrastMode))
         .overlay(alignment: .top) {
             Rectangle()
-                .fill(Color.osaHairline)
+                .fill(Color.osaReadableStroke(highContrast: highContrastMode))
                 .frame(height: 1)
         }
     }
@@ -307,22 +312,46 @@ struct EmergencyModeView: View {
     }
 
     private var safeMessageBody: String {
-        var body = "I am safe."
+        let intro: String
+        let close: String
+
+        switch appLanguage {
+        case .english:
+            intro = "I am safe."
+            close = "I will contact you when I can."
+        case .spanish:
+            intro = "Estoy bien."
+            close = "Me comunicare cuando pueda."
+        }
+
+        var body = intro
 
         if let coordinate = locationService?.currentLocation {
             body += " My location is \(String(format: "%.4f", coordinate.latitude)), \(String(format: "%.4f", coordinate.longitude))."
         }
 
-        body += " I will contact you when I can."
+        body += " \(close)"
         return body
+    }
+
+    private var gridColumns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible()), GridItem(.flexible())]
+    }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
     }
 }
 
 private struct EmergencyActionCard: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
     let systemImage: String
     let tint: Color
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
@@ -342,20 +371,22 @@ private struct EmergencyActionCard: View {
         }
         .padding(Spacing.lg)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .topLeading)
-        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+        .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.xl))
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
-                .stroke(Color.osaHairline, lineWidth: 1)
+                .stroke(Color.osaReadableStroke(highContrast: highContrastMode), lineWidth: 1)
         }
         .accessibilityElement(children: .combine)
     }
 }
 
 private struct EmergencyBottomBarButton: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
     let systemImage: String
     let tint: Color
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     var body: some View {
         HStack(spacing: Spacing.sm) {
@@ -383,10 +414,13 @@ private struct EmergencyBottomBarButton: View {
         .padding(.horizontal, Spacing.md)
         .padding(.vertical, Spacing.sm)
         .frame(maxWidth: .infinity, minHeight: 64, alignment: .leading)
-        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.lg))
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.lg)
-                .stroke(tint.opacity(0.28), lineWidth: 1)
+                .stroke(
+                    highContrastMode ? Color.osaReadableStroke(highContrast: true) : tint.opacity(0.28),
+                    lineWidth: 1
+                )
         }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
@@ -394,9 +428,11 @@ private struct EmergencyBottomBarButton: View {
 }
 
 private struct EmergencyWideActionRow: View {
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
     let systemImage: String
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
@@ -418,10 +454,10 @@ private struct EmergencyWideActionRow: View {
                 .accessibilityHidden(true)
         }
         .padding(Spacing.lg)
-        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+        .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.lg))
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.lg)
-                .stroke(Color.osaHairline, lineWidth: 1)
+                .stroke(Color.osaReadableStroke(highContrast: highContrastMode), lineWidth: 1)
         }
         .accessibilityElement(children: .combine)
     }

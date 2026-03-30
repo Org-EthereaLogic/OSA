@@ -5,6 +5,8 @@ struct HomeHeaderView: View {
     let onEmergencyModeTapped: () -> Void
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.lg) {
@@ -12,7 +14,7 @@ struct HomeHeaderView: View {
                 VStack(alignment: .leading, spacing: Spacing.sm) {
                     Text("OFFLINE-FIRST PREPAREDNESS")
                         .font(.brandEyebrow)
-                        .foregroundStyle(Color.white.opacity(0.95))
+                        .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
                         .tracking(1.2)
                         .accessibilityAddTraits(.isHeader)
 
@@ -20,7 +22,7 @@ struct HomeHeaderView: View {
 
                     Text(AppBrand.reassurance)
                         .font(.brandSubheadline)
-                        .foregroundStyle(Color.white.opacity(0.95))
+                        .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
                         .fixedSize(horizontal: false, vertical: true)
 
                     let chipLayout = dynamicTypeSize.isAccessibilitySize
@@ -48,6 +50,7 @@ struct HomeHeaderView: View {
                             .background(Color.osaEmber.opacity(0.18), in: RoundedRectangle(cornerRadius: CornerRadius.md))
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("home-emergency-mode-button")
                     .accessibilityHint("Opens large-target emergency actions and nearby resource shortcuts.")
                 }
 
@@ -71,7 +74,10 @@ struct HomeHeaderView: View {
         )
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
-                .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+                .stroke(
+                    highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.24),
+                    lineWidth: 1
+                )
         }
         .shadow(color: Color.osaNight.opacity(0.16), radius: 20, y: 10)
     }
@@ -135,6 +141,8 @@ struct HomeReadinessSectionView: View {
 
 struct HomeWeeklyDrillSectionView: View {
     let state: HomeSectionState<HomeWeeklyDrillPresentation>
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
 
     var body: some View {
         HomeSectionCard(title: "Weekly Drill", systemImage: "calendar.badge.clock") {
@@ -162,7 +170,7 @@ struct HomeWeeklyDrillSectionView: View {
                                     .accessibilityHidden(true)
 
                                 VStack(alignment: .leading, spacing: Spacing.xs) {
-                                    Text(presentation.card.title)
+                                    Text(presentation.card.localizedTitle(for: appLanguage))
                                         .font(.cardTitle)
                                         .foregroundStyle(.primary)
 
@@ -195,10 +203,16 @@ struct HomeWeeklyDrillSectionView: View {
             }
         }
     }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
+    }
 }
 
 struct HomePinnedContentSectionView: View {
     let state: HomeSectionState<[HomePinnedItem]>
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
 
     var body: some View {
         HomeSectionCard(title: "Pinned Content", systemImage: "pin.fill") {
@@ -220,8 +234,8 @@ struct HomePinnedContentSectionView: View {
                                 } label: {
                                     HomePinnedRow(
                                         icon: "bolt.fill",
-                                        title: card.title,
-                                        subtitle: card.summary
+                                        title: card.localizedTitle(for: appLanguage),
+                                        subtitle: card.localizedSummary(for: appLanguage)
                                     )
                                 }
                                 .buttonStyle(.plain)
@@ -247,6 +261,10 @@ struct HomePinnedContentSectionView: View {
             }
         }
     }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
+    }
 }
 
 struct HomeSpotlightSectionView: View {
@@ -269,6 +287,7 @@ struct HomeSpotlightSectionView: View {
                 }
             }
             .pickerStyle(.segmented)
+            .accessibilityIdentifier("home-spotlight-picker")
             .accessibilityLabel("Spotlight content")
             .accessibilityValue(spotlightMode.title)
             .accessibilityHint("Switches between quick cards and the local feed.")
@@ -502,7 +521,7 @@ struct HomeRecentNotesSectionView: View {
 }
 
 struct HomeSectionCard<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let systemImage: String
     @ViewBuilder let content: () -> Content
 
@@ -526,7 +545,7 @@ struct HomeSectionCard<Content: View>: View {
 }
 
 struct HomeHeaderChip: View {
-    let title: String
+    let title: LocalizedStringKey
     let systemImage: String
     let tint: Color
 
@@ -541,6 +560,7 @@ struct HomeHeaderChip: View {
                 Capsule()
                     .stroke(tint.opacity(0.35), lineWidth: 1)
             }
+            .accessibilityHidden(true)
     }
 }
 
@@ -582,6 +602,8 @@ struct HomeSectionFailureView: View {
 
 struct HomeQuickCardRow: View {
     let card: QuickCard
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
 
     var body: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
@@ -593,11 +615,11 @@ struct HomeQuickCardRow: View {
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
-                Text(card.title)
+                Text(card.localizedTitle(for: appLanguage))
                     .font(.cardTitle)
                     .foregroundStyle(.primary)
 
-                Text(card.summary)
+                Text(card.localizedSummary(for: appLanguage))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
@@ -611,7 +633,11 @@ struct HomeQuickCardRow: View {
                 .accessibilityHidden(true)
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Quick card, \(card.title). \(card.summary)")
+        .accessibilityLabel("Quick card, \(card.localizedTitle(for: appLanguage)). \(card.localizedSummary(for: appLanguage))")
+    }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
     }
 }
 
@@ -685,7 +711,7 @@ struct HomeInventoryRow: View {
 }
 
 struct ReadinessBadge: View {
-    let title: String
+    let title: LocalizedStringKey
     let value: String
     let tint: Color
 

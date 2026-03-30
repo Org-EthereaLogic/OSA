@@ -96,6 +96,64 @@ final class OSAContentAndInputTests: XCTestCase {
         )
     }
 
+    func testSettingsLanguagePickerCanSwitchToSpanish() {
+        navigateToMoreItem("Settings")
+
+        let languagePicker = app.segmentedControls["settings-app-language-picker"]
+        XCTAssertTrue(
+            scrollToElement(languagePicker),
+            "Settings should expose the app language picker"
+        )
+
+        let spanishButton = languagePicker.buttons["Espanol"]
+        XCTAssertTrue(spanishButton.waitForExistence(timeout: 3), "Spanish segment should be visible")
+        spanishButton.tap()
+
+        XCTAssertTrue(
+            app.staticTexts["Modo de alto contraste"].waitForExistence(timeout: 3)
+                || app.staticTexts["Idioma de la app"].waitForExistence(timeout: 3),
+            "Switching to Spanish should update visible Settings copy"
+        )
+    }
+
+    func testQuickCardDetailLoadsWithLargePrintEnabled() {
+        navigateToMoreItem("Settings")
+
+        let largePrintToggle = app.switches["settings-large-print-toggle"]
+        XCTAssertTrue(
+            scrollToElement(largePrintToggle),
+            "Settings should expose the large print toggle"
+        )
+        if "\(largePrintToggle.value)" == "0" {
+            largePrintToggle.tap()
+        }
+
+        navigateToMoreItem("Quick Cards")
+
+        let quickCardLabels = [
+            "Earthquake Drop-Cover-Hold",
+            "Gas Leak Response",
+            "Boil Water Advisory Steps",
+            "First Hour Power Outage Check"
+        ]
+
+        guard let cardLabel = quickCardLabels.first(where: {
+            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.waitForExistence(timeout: 1)
+        }) else {
+            XCTFail("Expected seeded quick card missing")
+            return
+        }
+
+        let card = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", cardLabel)).firstMatch
+        card.tap()
+
+        XCTAssertTrue(
+            app.navigationBars[cardLabel].waitForExistence(timeout: 3)
+                || app.staticTexts["Stored locally"].waitForExistence(timeout: 3),
+            "Quick card detail should still load with large print enabled"
+        )
+    }
+
     func testCreateAndViewNote() {
         navigateToMoreItem("Notes")
 
@@ -511,23 +569,25 @@ final class OSAContentAndInputTests: XCTestCase {
     func testSettingsShowsEmergencyContactPurposeAndDiscoveryControls() {
         navigateToMoreItem("Settings")
 
+        let extendedSettingsScrollDepth = 12
+
         let safeShortcutCopy = app.descendants(matching: .any)
             .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
             .firstMatch
         XCTAssertTrue(
-            scrollToElement(safeShortcutCopy),
+            scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
             "Settings should explain how emergency contacts support the I'm Safe shortcut"
         )
 
         let criticalHaptics = app.switches["Critical haptics"]
         XCTAssertTrue(
-            scrollToElement(criticalHaptics),
+            scrollToElement(criticalHaptics, maxSwipes: extendedSettingsScrollDepth),
             "Settings should surface critical haptics controls"
         )
 
         let discoveryButton = app.buttons["Discover New Content"]
         XCTAssertTrue(
-            scrollToElement(discoveryButton),
+            scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
             "Settings should surface the discovery action"
         )
     }
@@ -548,7 +608,7 @@ final class OSAContentAndInputTests: XCTestCase {
         let knowledgePackLink = app.otherElements["settings-knowledge-packs"]
         let knowledgePackText = app.staticTexts["Knowledge Packs"]
         XCTAssertTrue(
-            scrollToElement(knowledgePackLink, maxSwipes: 6) || scrollToElement(knowledgePackText, maxSwipes: 6),
+            scrollToElement(knowledgePackLink, maxSwipes: 10) || scrollToElement(knowledgePackText, maxSwipes: 10),
             "Settings should expose Knowledge Packs inside the knowledge-discovery area"
         )
 

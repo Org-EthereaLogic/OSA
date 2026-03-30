@@ -5,7 +5,10 @@ struct EmergencyProtocolView: View {
 
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @Environment(\.accessibilityReduceMotion) private var accessibilityReduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
 
     @State private var currentIndex = 0
@@ -22,7 +25,7 @@ struct EmergencyProtocolView: View {
             stepCard
             controls
         }
-        .background(.osaBackground)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
         .navigationTitle(template.title)
         .navigationBarTitleDisplayMode(.inline)
         .onReceive(metronomeTimer) { _ in
@@ -45,24 +48,28 @@ struct EmergencyProtocolView: View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             Text("EMERGENCY PROTOCOL")
                 .font(.brandEyebrow)
-                .foregroundStyle(Color.white.opacity(0.95))
+                .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
                 .tracking(1.1)
                 .accessibilityAddTraits(.isHeader)
 
             Text(template.description)
                 .font(.brandSubheadline)
-                .foregroundStyle(Color.white.opacity(0.95))
+                .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
                 .minimumScaleFactor(0.7)
 
-            HStack(spacing: Spacing.sm) {
+            let metadataLayout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.sm))
+                : AnyLayout(HStackLayout(spacing: Spacing.sm))
+
+            metadataLayout {
                 Label("Step \(currentIndex + 1) of \(template.items.count)", systemImage: "list.number")
                     .font(.metadataCaption)
-                    .foregroundStyle(.osaPaperGlow)
+                    .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
 
                 if template.timerProfile == .cprMetronome {
                     Label(metronomeRunning ? "CPR pace active" : "CPR pace available", systemImage: "waveform.path")
                         .font(.metadataCaption)
-                        .foregroundStyle(.osaPaperGlow)
+                        .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
                 }
             }
 
@@ -84,7 +91,10 @@ struct EmergencyProtocolView: View {
         )
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
-                .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+                .stroke(
+                    highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.24),
+                    lineWidth: 1
+                )
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.top, Spacing.md)
@@ -137,10 +147,10 @@ struct EmergencyProtocolView: View {
         }
         .padding(Spacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.xl))
+        .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.xl))
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
-                .stroke(Color.osaHairline, lineWidth: 1)
+                .stroke(Color.osaReadableStroke(highContrast: highContrastMode), lineWidth: 1)
         }
         .padding(.horizontal, Spacing.lg)
         .padding(.vertical, Spacing.lg)
@@ -148,7 +158,11 @@ struct EmergencyProtocolView: View {
     }
 
     private var controls: some View {
-        HStack(spacing: Spacing.md) {
+        let controlLayout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: Spacing.md))
+            : AnyLayout(HStackLayout(spacing: Spacing.md))
+
+        return controlLayout {
             Button {
                 stepBackward()
             } label: {

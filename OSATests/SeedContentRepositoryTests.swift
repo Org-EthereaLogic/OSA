@@ -193,8 +193,13 @@ final class SeedContentRepositoryTests: XCTestCase {
         let bundle = try SeedContentLoader(directoryURL: fixtures.directoryURL).loadBundle()
 
         let quickCard = try XCTUnwrap(bundle.quickCards.first)
+        XCTAssertEqual(quickCard.spanishTranslation?.title, "Revision rapida de vendaje compresivo")
         XCTAssertEqual(quickCard.mediaAttachments.count, 2)
         XCTAssertEqual(quickCard.mediaAttachments.first?.bundlePath, "Media/Illustrations/pressure-dressing.svg")
+        XCTAssertEqual(
+            quickCard.mediaAttachments.first?.spanishTranslation?.accessibilityLabel,
+            "Ilustracion de un vendaje compresivo en un antebrazo."
+        )
         XCTAssertEqual(quickCard.quizDefinition?.questions.count, 1)
         XCTAssertEqual(quickCard.weeklyDrillMetadata?.badgeLabel, "Drill Badge")
 
@@ -361,6 +366,11 @@ private struct EnhancedSeedContentFixtures {
           "category": "first-aid",
           "summary": "Fixture with media and quiz metadata.",
           "bodyMarkdown": "1. Place the pad.",
+          "spanishTranslation": {
+            "title": "Revision rapida de vendaje compresivo",
+            "summary": "Prueba de traduccion para contenido critico.",
+            "bodyMarkdown": "1. Coloca la almohadilla."
+          },
           "priority": 90,
           "relatedSectionIDs": [
             "11111111-1111-1111-1111-111111111112"
@@ -373,14 +383,23 @@ private struct EnhancedSeedContentFixtures {
               "kind": "inline-svg",
               "bundlePath": "Media/Illustrations/pressure-dressing.svg",
               "caption": "Pressure dressing illustration.",
-              "accessibilityLabel": "Pressure dressing image."
+              "accessibilityLabel": "Pressure dressing image.",
+              "spanishTranslation": {
+                "caption": "Ilustracion de vendaje compresivo.",
+                "accessibilityLabel": "Ilustracion de un vendaje compresivo en un antebrazo."
+              }
             },
             {
               "kind": "short-video",
               "bundlePath": "Media/Videos/pressure-dressing-flow.mp4",
               "caption": "Pressure dressing video.",
               "accessibilityLabel": "Pressure dressing video.",
-              "transcript": "Wrap path."
+              "transcript": "Wrap path.",
+              "spanishTranslation": {
+                "caption": "Video de vendaje compresivo.",
+                "accessibilityLabel": "Video de vendaje compresivo.",
+                "transcript": "Ruta del vendaje."
+              }
             }
           ],
           "quizDefinition": {

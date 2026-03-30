@@ -130,15 +130,29 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
     func testSettingsAccessibilityControlsExist() {
         navigateToMoreItem("Settings")
 
+        let extendedSettingsScrollDepth = 12
+
         let largePrintToggle = app.switches["Large print reading mode"]
         XCTAssertTrue(
             scrollToElement(largePrintToggle),
             "Settings should expose Large print reading mode toggle"
         )
 
+        let languagePicker = app.segmentedControls["settings-app-language-picker"]
+        XCTAssertTrue(
+            scrollToElement(languagePicker),
+            "Settings should expose the app language picker"
+        )
+
+        let highContrastToggle = app.switches["settings-high-contrast-toggle"]
+        XCTAssertTrue(
+            scrollToElement(highContrastToggle),
+            "Settings should expose High contrast mode"
+        )
+
         let addContact = app.buttons["Add Emergency Contact"]
         XCTAssertTrue(
-            scrollToElement(addContact),
+            scrollToElement(addContact, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose Add Emergency Contact"
         )
 
@@ -146,26 +160,26 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
             .firstMatch
         XCTAssertTrue(
-            scrollToElement(safeShortcutCopy),
+            scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
             "Settings should explain how emergency contacts support the I'm Safe shortcut"
         )
 
         let criticalHapticsToggle = app.switches["Critical haptics"]
         XCTAssertTrue(
-            scrollToElement(criticalHapticsToggle),
+            scrollToElement(criticalHapticsToggle, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose Critical haptics"
-        )
-
-        let discoveryButton = app.buttons["Discover New Content"]
-        XCTAssertTrue(
-            scrollToElement(discoveryButton),
-            "Settings should expose Discover New Content"
         )
 
         let inventoryAlertsToggle = app.switches["Local expiry reminders"]
         XCTAssertTrue(
-            scrollToElement(inventoryAlertsToggle),
+            scrollToElement(inventoryAlertsToggle, maxSwipes: extendedSettingsScrollDepth),
             "Settings should expose local expiry reminder controls"
+        )
+
+        let discoveryButton = app.buttons["Discover New Content"]
+        XCTAssertTrue(
+            scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
+            "Settings should expose Discover New Content"
         )
     }
 

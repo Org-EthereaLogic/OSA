@@ -6,6 +6,10 @@ struct QuickCardsScreen: View {
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
     @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
     private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @State private var cards: [QuickCard] = []
     @State private var loadFailed = false
     @State private var searchText = ""
@@ -34,7 +38,11 @@ struct QuickCardsScreen: View {
                                 NavigationLink {
                                     QuickCardDetailView(card: card)
                                 } label: {
-                                    QuickCardRow(card: card)
+                                    QuickCardRow(
+                                        card: card,
+                                        language: appLanguage,
+                                        highContrastMode: highContrastMode
+                                    )
                                 }
                                 .buttonStyle(.plain)
                                 .hapticTap(.prominentNavigation)
@@ -92,7 +100,7 @@ struct QuickCardsScreen: View {
         guard !trimmed.isEmpty else { return cards }
 
         return cards.filter { card in
-            card.searchableText.localizedCaseInsensitiveContains(trimmed)
+            card.localizedSearchableText(for: appLanguage).localizedCaseInsensitiveContains(trimmed)
                 || card.tags.contains(where: { $0.localizedCaseInsensitiveContains(trimmed) })
         }
     }
@@ -146,7 +154,10 @@ struct QuickCardsScreen: View {
         )
         .overlay {
             RoundedRectangle(cornerRadius: CornerRadius.xl)
-                .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+                .stroke(
+                    highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.24),
+                    lineWidth: 1
+                )
         }
     }
 
@@ -201,12 +212,18 @@ struct QuickCardsScreen: View {
             }
         )
     }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
+    }
 }
 
 // MARK: - Quick Card Row
 
 private struct QuickCardRow: View {
     let card: QuickCard
+    let language: AppLanguage
+    let highContrastMode: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
@@ -263,13 +280,13 @@ private struct QuickCardRow: View {
                 }
             }
 
-            Text(card.title)
+            Text(card.localizedTitle(for: language))
                 .font(.cardTitle)
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
 
-            Text(card.summary)
+            Text(card.localizedSummary(for: language))
                 .font(.cardBody)
-                .foregroundStyle(Color.white.opacity(0.74))
+                .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
                 .lineLimit(3)
         }
         .padding(Spacing.lg)
@@ -288,6 +305,9 @@ private struct QuickCardRow: View {
         }
         .shadow(color: Color.osaNight.opacity(0.1), radius: 14, y: 8)
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            "\(card.localizedTitle(for: language)). \(card.localizedSummary(for: language))"
+        )
     }
 }
 

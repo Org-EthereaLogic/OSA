@@ -27,6 +27,8 @@ struct HomeScreen: View {
     private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(RecentAskHistorySettings.recentQuestionsKey)
     private var recentAskQuestionsRawValue = RecentAskHistorySettings.encode(questions: [])
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
 
     @State private var spotlightMode: SpotlightMode = .quickCards
     @State private var connectivity: ConnectivityState = .offline
@@ -67,7 +69,7 @@ struct HomeScreen: View {
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.lg)
         }
-        .background(.osaBackground)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: loadDashboard)

@@ -1,5 +1,11 @@
 import Foundation
 
+struct QuickCardTranslation: Codable, Equatable, Sendable {
+    let title: String?
+    let summary: String?
+    let bodyMarkdown: String?
+}
+
 struct QuickCard: Identifiable, Equatable, Sendable {
     let id: UUID
     let title: String
@@ -12,6 +18,7 @@ struct QuickCard: Identifiable, Equatable, Sendable {
     let tags: [String]
     let lastReviewedAt: Date?
     let largeTypeLayoutVersion: Int
+    let spanishTranslation: QuickCardTranslation?
     let mediaAttachments: [LocalMediaAttachment]
     let quizDefinition: QuizDefinition?
     let weeklyDrillMetadata: WeeklyDrillMetadata?
@@ -28,6 +35,7 @@ struct QuickCard: Identifiable, Equatable, Sendable {
         tags: [String],
         lastReviewedAt: Date?,
         largeTypeLayoutVersion: Int,
+        spanishTranslation: QuickCardTranslation? = nil,
         mediaAttachments: [LocalMediaAttachment] = [],
         quizDefinition: QuizDefinition? = nil,
         weeklyDrillMetadata: WeeklyDrillMetadata? = nil
@@ -43,6 +51,7 @@ struct QuickCard: Identifiable, Equatable, Sendable {
         self.tags = tags
         self.lastReviewedAt = lastReviewedAt
         self.largeTypeLayoutVersion = largeTypeLayoutVersion
+        self.spanishTranslation = spanishTranslation
         self.mediaAttachments = mediaAttachments
         self.quizDefinition = quizDefinition
         self.weeklyDrillMetadata = weeklyDrillMetadata
@@ -59,5 +68,52 @@ struct QuickCard: Identifiable, Equatable, Sendable {
         ]
         .compactMap { $0 }
         .joined(separator: " ")
+    }
+
+    func localizedTitle(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            title
+        case .spanish:
+            spanishTranslation?.title?.nonEmpty ?? title
+        }
+    }
+
+    func localizedSummary(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            summary
+        case .spanish:
+            spanishTranslation?.summary?.nonEmpty ?? summary
+        }
+    }
+
+    func localizedBodyMarkdown(for language: AppLanguage) -> String {
+        switch language {
+        case .english:
+            bodyMarkdown
+        case .spanish:
+            spanishTranslation?.bodyMarkdown?.nonEmpty ?? bodyMarkdown
+        }
+    }
+
+    func localizedSearchableText(for language: AppLanguage) -> String {
+        [
+            localizedTitle(for: language),
+            localizedSummary(for: language),
+            category,
+            localizedBodyMarkdown(for: language),
+            mediaAttachments.map { $0.searchableText(for: language) }.joined(separator: " "),
+            quizDefinition?.searchableText
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+    }
+}
+
+private extension String {
+    var nonEmpty: String? {
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : self
     }
 }

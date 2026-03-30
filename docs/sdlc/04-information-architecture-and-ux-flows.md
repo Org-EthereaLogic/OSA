@@ -79,7 +79,7 @@ This keeps the required screens first-class without overcrowding a five-slot tab
 ### Settings
 
 - Organized into focused sections: Preparedness Profile, Emergency Contacts, Accessibility & Feedback, Assistant, Connectivity, Knowledge Discovery, Privacy, and About.
-- Model capability status, trusted-source preferences, privacy posture, Ask scope controls, accessibility toggles (large print, critical haptics), emergency contact management, connectivity status with inline callouts, and knowledge discovery controls.
+- Model capability status, trusted-source preferences, privacy posture, Ask scope controls, app-language and accessibility toggles (English/Spanish, high contrast, large print, critical haptics), emergency contact management, connectivity status with inline callouts, and knowledge discovery controls.
 
 ## Emergency-First Shortcuts
 
@@ -230,7 +230,7 @@ Under stress, the app should bias toward direct card opening and simple checklis
 
 - Preparedness Profile: region picker, household size stepper, hazard toggles
 - Emergency Contacts: CRUD with I'm Safe shortcut integration
-- Accessibility & Feedback: large print reading mode, critical haptics toggle
+- Accessibility & Feedback: app language picker, high-contrast mode, large print reading mode, critical haptics toggle
 - Assistant: model capability status (live from `DeviceCapabilityDetector`), personal notes scope toggle
 - Connectivity: inline status callout with connectivity state stream, reduce-motion-aware transitions
 - Knowledge Discovery: Brave Search API key management, discover action with status feedback

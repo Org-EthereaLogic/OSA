@@ -29,6 +29,8 @@ targets:
       - path: OSA/Resources/Media
         buildPhase: resources
         type: folder
+      - path: OSA/Resources/Localization
+        buildPhase: resources
       - path: OSA/Resources/SeedContent
         buildPhase: resources
         type: folder

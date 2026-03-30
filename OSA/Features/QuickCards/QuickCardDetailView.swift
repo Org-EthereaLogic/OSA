@@ -7,10 +7,15 @@ struct QuickCardDetailView: View {
     @Environment(\.quickCardRepository) private var quickCardRepository
     @Environment(\.practiceProgressRepository) private var practiceProgressRepository
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(PinnedContentSettings.pinnedQuickCardIDsKey)
     private var pinnedQuickCardIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @State private var relatedSections: [HandbookSection] = []
     @State private var sharePayload: ActivitySharePayload?
     @State private var quizProgress: QuizProgress?
@@ -32,20 +37,24 @@ struct QuickCardDetailView: View {
                     }
                     .foregroundStyle(.osaEmber)
 
-                    Text(card.title)
+                    Text(card.localizedTitle(for: appLanguage))
                         .font(.stressTitle)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Text(card.summary)
+                    Text(card.localizedSummary(for: appLanguage))
                         .font(.brandSubheadline)
-                        .foregroundStyle(Color.white.opacity(0.78))
+                        .foregroundStyle(Color.osaHeroSecondaryText(highContrast: highContrastMode))
                         .fixedSize(horizontal: false, vertical: true)
 
-                    HStack(spacing: Spacing.sm) {
+                    let metadataLayout = dynamicTypeSize.isAccessibilitySize
+                        ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.sm))
+                        : AnyLayout(HStackLayout(spacing: Spacing.sm))
+
+                    metadataLayout {
                         Label("Stored locally", systemImage: "internaldrive.fill")
                             .font(.metadataCaption)
-                            .foregroundStyle(.osaPaperGlow)
+                            .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
 
                         if let reviewed = card.lastReviewedAt {
                             Label(
@@ -53,7 +62,7 @@ struct QuickCardDetailView: View {
                                 systemImage: "checkmark.seal.fill"
                             )
                             .font(.metadataCaption)
-                            .foregroundStyle(.osaPaperGlow)
+                            .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
                         }
                     }
                 }
@@ -69,7 +78,10 @@ struct QuickCardDetailView: View {
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: CornerRadius.xl)
-                        .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+                        .stroke(
+                            highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.24),
+                            lineWidth: 1
+                        )
                 }
 
                 VStack(alignment: .leading, spacing: Spacing.lg) {
@@ -94,13 +106,17 @@ struct QuickCardDetailView: View {
                     if card.largeTypeLayoutVersion >= 2 {
                         QuickCardInfographicLayout(
                             card: card,
-                            largePrintReadingMode: largePrintReadingMode
+                            largePrintReadingMode: largePrintReadingMode,
+                            language: appLanguage,
+                            highContrastMode: highContrastMode
                         )
-                    } else if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(card.bodyMarkdown)) {
+                    } else if let attributed = try? AttributedString(
+                        markdown: MarkdownPreprocessor.prepare(card.localizedBodyMarkdown(for: appLanguage))
+                    ) {
                         Text(attributed)
                             .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
                     } else {
-                        Text(card.summary)
+                        Text(card.localizedSummary(for: appLanguage))
                             .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
                     }
 
@@ -139,7 +155,10 @@ struct QuickCardDetailView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal, Spacing.md)
                                         .padding(.vertical, Spacing.sm)
-                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                        .background(
+                                            Color.osaReadableBackground(highContrast: highContrastMode),
+                                            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+                                        )
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the related handbook section.")
@@ -148,25 +167,25 @@ struct QuickCardDetailView: View {
                     }
                 }
                 .padding(Spacing.lg)
-                .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+                .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.lg))
                 .overlay {
                     RoundedRectangle(cornerRadius: CornerRadius.lg)
-                        .stroke(Color.osaHairline, lineWidth: 1)
+                        .stroke(Color.osaReadableStroke(highContrast: highContrastMode), lineWidth: 1)
                 }
             }
             .padding(.horizontal, Spacing.lg)
             .padding(.vertical, Spacing.md)
             .padding(.bottom, Spacing.xxxl)
         }
-        .background(.osaBackground)
-        .navigationTitle(card.title)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
+        .navigationTitle(card.localizedTitle(for: appLanguage))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     sharePayload = ActivitySharePayload(
-                        items: [ContentShareFormatter.quickCardText(for: card)],
-                        subject: card.title
+                        items: [ContentShareFormatter.quickCardText(for: card, language: appLanguage)],
+                        subject: card.localizedTitle(for: appLanguage)
                     )
                 } label: {
                     Image(systemName: "square.and.arrow.up")
@@ -193,7 +212,7 @@ struct QuickCardDetailView: View {
         .sheet(isPresented: $showingQuiz) {
             if let quizDefinition = card.quizDefinition {
                 QuizSessionView(
-                    contentTitle: card.title,
+                    contentTitle: card.localizedTitle(for: appLanguage),
                     contentID: card.id,
                     quiz: quizDefinition
                 ) { progress in
@@ -257,11 +276,17 @@ struct QuickCardDetailView: View {
             completedAt: completedAt
         )
     }
+
+    private var appLanguage: AppLanguage {
+        AccessibilitySettings.appLanguage(from: appLanguageRawValue)
+    }
 }
 
 private struct QuickCardInfographicLayout: View {
     let card: QuickCard
     let largePrintReadingMode: Bool
+    let language: AppLanguage
+    let highContrastMode: Bool
 
     private var columns: [GridItem] {
         if largePrintReadingMode {
@@ -275,7 +300,7 @@ private struct QuickCardInfographicLayout: View {
     }
 
     private var panels: [QuickCardInfographicPanel] {
-        quickCardInfographicPanels(from: card.bodyMarkdown)
+        quickCardInfographicPanels(from: card.localizedBodyMarkdown(for: language))
     }
 
     var body: some View {
@@ -311,7 +336,10 @@ private struct QuickCardInfographicLayout: View {
                     .frame(maxWidth: .infinity, minHeight: 144, alignment: .topLeading)
                     .background(
                         LinearGradient(
-                            colors: [Color.osaBackground, Color.osaPrimary.opacity(0.08)],
+                            colors: [
+                                Color.osaReadableBackground(highContrast: highContrastMode),
+                                highContrastMode ? Color.osaPrimary.opacity(0.18) : Color.osaPrimary.opacity(0.08)
+                            ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -319,7 +347,10 @@ private struct QuickCardInfographicLayout: View {
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: CornerRadius.md)
-                            .stroke(Color.osaPrimary.opacity(0.18), lineWidth: 1)
+                            .stroke(
+                                highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.18),
+                                lineWidth: 1
+                            )
                     }
                 }
             }

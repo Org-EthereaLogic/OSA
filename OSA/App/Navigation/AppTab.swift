@@ -17,19 +17,19 @@ enum AppTab: String, Hashable, CaseIterable {
 
     var title: String {
         switch self {
-        case .home: "Home"
-        case .library: "Library"
-        case .ask: "Ask"
-        case .inventory: "Inventory"
-        case .maps: "Map"
-        case .documents: "Document Vault"
-        case .tools: "Tools"
-        case .checklists: "Checklists"
-        case .quickCards: "Quick Cards"
-        case .weather: "Weather"
-        case .notes: "Notes"
-        case .settings: "Settings"
-        case .more: "More"
+        case .home: AppLocalization.localized("Home")
+        case .library: AppLocalization.localized("Library")
+        case .ask: AppLocalization.localized("Ask")
+        case .inventory: AppLocalization.localized("Inventory")
+        case .maps: AppLocalization.localized("Map")
+        case .documents: AppLocalization.localized("Document Vault")
+        case .tools: AppLocalization.localized("Tools")
+        case .checklists: AppLocalization.localized("Checklists")
+        case .quickCards: AppLocalization.localized("Quick Cards")
+        case .weather: AppLocalization.localized("Weather")
+        case .notes: AppLocalization.localized("Notes")
+        case .settings: AppLocalization.localized("Settings")
+        case .more: AppLocalization.localized("More")
         }
     }
 

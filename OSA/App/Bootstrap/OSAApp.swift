@@ -10,6 +10,8 @@ struct OSAApp: App {
     @State private var onscreenContentManager = OnscreenContentManager()
     @AppStorage(UserProfileSettings.onboardingCompletedKey)
     private var onboardingCompleted = UserProfileSettings.onboardingCompletedDefault
+    @AppStorage(AccessibilitySettings.appLanguageKey)
+    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
 
     init() {
         let processInfo = ProcessInfo.processInfo
@@ -20,6 +22,18 @@ struct OSAApp: App {
             UserDefaults.standard.set(true, forKey: UserProfileSettings.onboardingCompletedKey)
             UserDefaults.standard.removeObject(forKey: RecentLibraryHistorySettings.recentSectionIDsKey)
             UserDefaults.standard.removeObject(forKey: RecentAskHistorySettings.recentQuestionsKey)
+            UserDefaults.standard.set(
+                AccessibilitySettings.appLanguageDefault.rawValue,
+                forKey: AccessibilitySettings.appLanguageKey
+            )
+            UserDefaults.standard.set(
+                AccessibilitySettings.highContrastModeDefault,
+                forKey: AccessibilitySettings.highContrastModeKey
+            )
+            UserDefaults.standard.set(
+                AccessibilitySettings.largePrintReadingModeDefault,
+                forKey: AccessibilitySettings.largePrintReadingModeKey
+            )
         }
 
         let container = AppModelContainer.makeShared()
@@ -32,6 +46,10 @@ struct OSAApp: App {
     var body: some Scene {
         WindowGroup {
             AppTabView(coordinator: navigationCoordinator)
+                .environment(
+                    \.locale,
+                    AccessibilitySettings.appLanguage(from: appLanguageRawValue).locale
+                )
                 .environment(\.handbookRepository, dependencies.handbookRepository)
                 .environment(\.quickCardRepository, dependencies.quickCardRepository)
                 .environment(\.fieldReferenceRepository, dependencies.fieldReferenceRepository)

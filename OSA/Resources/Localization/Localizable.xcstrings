@@ -1,0 +1,498 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Accessibility & Feedback" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Accessibility & Feedback" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Accesibilidad y comentarios" } }
+      }
+    },
+    "Add Emergency Contact" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add Emergency Contact" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Agregar contacto de emergencia" } }
+      }
+    },
+    "Answers are grounded in approved local content with citations. This is not a general chatbot." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Answers are grounded in approved local content with citations. This is not a general chatbot." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Las respuestas se basan en contenido local aprobado con citas. Esto no es un chat general." } }
+      }
+    },
+    "App language" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "App language" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma de la app" } }
+      }
+    },
+    "Ask" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ask" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Consulta" } }
+      }
+    },
+    "Ask Lantern" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ask Lantern" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Consulta a Lantern" } }
+      }
+    },
+    "Ask a question..." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ask a question..." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Haz una pregunta..." } }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Back" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Atras" } }
+      }
+    },
+    "Checklists" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Checklists" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Listas" } }
+      }
+    },
+    "Cited answers" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cited answers" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Respuestas con citas" } }
+      }
+    },
+    "Confidence" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Confidence" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Confianza" } }
+      }
+    },
+    "Creates a local reference note with linked sources. This does not save a full chat transcript." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Creates a local reference note with linked sources. This does not save a full chat transcript." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Crea una nota de referencia local con fuentes enlazadas. Esto no guarda una transcripcion completa del chat." } }
+      }
+    },
+    "Critical haptics" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Critical haptics" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hapticos criticos" } }
+      }
+    },
+    "Document Vault" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Document Vault" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Boveda de documentos" } }
+      }
+    },
+    "EMERGENCY MODE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "EMERGENCY MODE" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "MODO DE EMERGENCIA" } }
+      }
+    },
+    "EMERGENCY PROTOCOL" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "EMERGENCY PROTOCOL" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "PROTOCOLO DE EMERGENCIA" } }
+      }
+    },
+    "Emergency Mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Emergency Mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo de emergencia" } }
+      }
+    },
+    "Exit Emergency Mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Exit Emergency Mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Salir del modo de emergencia" } }
+      }
+    },
+    "High contrast mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "High contrast mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo de alto contraste" } }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Home" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } }
+      }
+    },
+    "Hospitals" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hospitals" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hospitales" } }
+      }
+    },
+    "I’m Safe Unavailable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "I’m Safe Unavailable" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "I’m Safe no disponible" } }
+      }
+    },
+    "IMMEDIATE ACTION GUIDANCE" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "IMMEDIATE ACTION GUIDANCE" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "GUIA DE ACCION INMEDIATA" } }
+      }
+    },
+    "Illustration Unavailable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Illustration Unavailable" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ilustracion no disponible" } }
+      }
+    },
+    "Illustrations And Media" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Illustrations And Media" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ilustraciones y medios" } }
+      }
+    },
+    "Include personal notes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Include personal notes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Incluir notas personales" } }
+      }
+    },
+    "Infographic Layout" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Infographic Layout" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Diseno infografico" } }
+      }
+    },
+    "Infographic" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Infographic" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Infografia" } }
+      }
+    },
+    "Inventory" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Inventory" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inventario" } }
+      }
+    },
+    "Key Actions" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Key Actions" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Acciones clave" } }
+      }
+    },
+    "Language, contrast, and critical feedback" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language, contrast, and critical feedback" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Idioma, contraste y respuesta critica" } }
+      }
+    },
+    "Large print reading mode" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Large print reading mode" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo de lectura en letra grande" } }
+      }
+    },
+    "Large targets, reviewed protocols, and local shortcuts for high-stress moments." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Large targets, reviewed protocols, and local shortcuts for high-stress moments." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Botones grandes, protocolos revisados y atajos locales para momentos de mucho estres." } }
+      }
+    },
+    "Large-type cards for fast, low-friction reference." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Large-type cards for fast, low-friction reference." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tarjetas de letra grande para consulta rapida y sencilla." } }
+      }
+    },
+    "Library" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Library" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Biblioteca" } }
+      }
+    },
+    "Loading..." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading..." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cargando..." } }
+      }
+    },
+    "Local Tools" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Local Tools" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Herramientas locales" } }
+      }
+    },
+    "Map" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Map" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mapa" } }
+      }
+    },
+    "Media" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Media" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Medios" } }
+      }
+    },
+    "More" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "More" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mas" } }
+      }
+    },
+    "Nearby Resources" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nearby Resources" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Recursos cercanos" } }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Next" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente" } }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } }
+      }
+    },
+    "OFFLINE-FIRST PREPAREDNESS" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "OFFLINE-FIRST PREPAREDNESS" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "PREPARACION PRIMERO SIN CONEXION" } }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aceptar" } }
+      }
+    },
+    "Open Survival Tools" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Survival Tools" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir herramientas de supervivencia" } }
+      }
+    },
+    "Practice Quiz" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Practice Quiz" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuestionario de practica" } }
+      }
+    },
+    "Protocols" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Protocols" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Protocolos" } }
+      }
+    },
+    "Quick Cards" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick Cards" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tarjetas rapidas" } }
+      }
+    },
+    "Quiz" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quiz" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cuestionario" } }
+      }
+    },
+    "Readiness" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Readiness" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparacion" } }
+      }
+    },
+    "Related" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Related" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Relacionado" } }
+      }
+    },
+    "Related Content" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Related Content" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Contenido relacionado" } }
+      }
+    },
+    "Related Handbook" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Related Handbook" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Manual relacionado" } }
+      }
+    },
+    "Reviewed" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reviewed" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Revisado" } }
+      }
+    },
+    "Search quick cards" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search quick cards" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar tarjetas rapidas" } }
+      }
+    },
+    "Search your local knowledge base" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search your local knowledge base" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Busca en tu base de conocimiento local" } }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Configuracion" } }
+      }
+    },
+    "Settings should explain how emergency contacts support the I'm Safe shortcut" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings should explain how emergency contacts support the I'm Safe shortcut" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "La configuracion debe explicar como los contactos de emergencia apoyan el atajo I'm Safe" } }
+      }
+    },
+    "Share handbook section" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Share handbook section" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir seccion del manual" } }
+      }
+    },
+    "Share quick card" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Share quick card" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir tarjeta rapida" } }
+      }
+    },
+    "Shared from OSA" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shared from OSA" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartido desde OSA" } }
+      }
+    },
+    "Shelters" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shelters" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Refugios" } }
+      }
+    },
+    "Spanish currently applies to app chrome and bundled critical quick cards. Handbook, protocols, and Ask answers still fall back to English content." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Spanish currently applies to app chrome and bundled critical quick cards. Handbook, protocols, and Ask answers still fall back to English content." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El espanol ahora se aplica a la interfaz y a las tarjetas rapidas criticas incluidas. El manual, los protocolos y las respuestas de Ask siguen usando contenido en ingles." } }
+      }
+    },
+    "Sources" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sources" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fuentes" } }
+      }
+    },
+    "Start Over" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Start Over" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Volver a empezar" } }
+      }
+    },
+    "Step-by-step emergency flows" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Step-by-step emergency flows" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Flujos de emergencia paso a paso" } }
+      }
+    },
+    "Stored locally" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stored locally" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardado localmente" } }
+      }
+    },
+    "Stored locally on this device" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stored locally on this device" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardado localmente en este dispositivo" } }
+      }
+    },
+    "Stored on this device only." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stored on this device only." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardado solo en este dispositivo." } }
+      }
+    },
+    "Study Guide" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Study Guide" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guia de estudio" } }
+      }
+    },
+    "Submit question" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Submit question" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enviar pregunta" } }
+      }
+    },
+    "Survival Tools" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Survival Tools" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Herramientas de supervivencia" } }
+      }
+    },
+    "This bundled clip could not be loaded from the app bundle." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This bundled clip could not be loaded from the app bundle." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo cargar este clip incluido desde el paquete de la app." } }
+      }
+    },
+    "This local illustration could not be loaded from the app bundle." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This local illustration could not be loaded from the app bundle." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo cargar esta ilustracion local desde el paquete de la app." } }
+      }
+    },
+    "These settings affect emergency reading screens, quick cards, and other high-priority interactions on this iPhone." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "These settings affect emergency reading screens, quick cards, and other high-priority interactions on this iPhone." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estas opciones afectan las pantallas de lectura de emergencia, las tarjetas rapidas y otras interacciones prioritarias en este iPhone." } }
+      }
+    },
+    "Tools" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tools" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Herramientas" } }
+      }
+    },
+    "Transcript" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcript" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Transcripcion" } }
+      }
+    },
+    "Transcript available below." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transcript available below." } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Transcripcion disponible abajo." } }
+      }
+    },
+    "Unable to Load" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unable to Load" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo cargar" } }
+      }
+    },
+    "Video Unavailable" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Video Unavailable" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Video no disponible" } }
+      }
+    },
+    "Weather" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Weather" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Clima" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

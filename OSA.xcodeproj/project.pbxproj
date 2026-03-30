@@ -18,6 +18,7 @@
 		0E690B861B5C5A3923CFECE8 /* ImportedKnowledgeNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */; };
 		0E85A5784A2B8BAF62AF301F /* SearchIndexStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAD9A8A21E4FBB264425F85 /* SearchIndexStore.swift */; };
 		0EC383E2323F4FE79D923A18 /* SensitivityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D8AE87A9FB6D5E2FCB5A2 /* SensitivityPolicy.swift */; };
+		0F2E27A98240E2517572ABAE /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ADA1262E62AB66355D7F30 /* AppLocalization.swift */; };
 		0F68188A4A68F28A12D44DE5 /* PersistedSourceRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED68C29388D3826CDAC4355 /* PersistedSourceRecord.swift */; };
 		0FC45FDEF80AC5B5CB6B7133 /* TrustedSourceFetchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8E464B47A95D1D9E24BEA0 /* TrustedSourceFetchResponse.swift */; };
 		10E7C7A38E5BA14F2151A2BB /* TrustedSourceAllowlistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACB4768D546A1C391433CA9 /* TrustedSourceAllowlistTests.swift */; };
@@ -28,6 +29,7 @@
 		14F7BA5ED338E025821DBD29 /* InventoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDE1541FB0EEE3A030E64E2 /* InventoryScreen.swift */; };
 		156D3E90ACC7B48234885808 /* SupplyTemplateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0458217A848B91378DA752E1 /* SupplyTemplateRepository.swift */; };
 		160548E01A73AC06280199AA /* OSAFullE2EVisualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55C745E0F49839ABEDD32AF /* OSAFullE2EVisualTests.swift */; };
+		16386454D47899410F4A2D21 /* AccessibilitySettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71910F09201E6AB2764425CA /* AccessibilitySettingsTests.swift */; };
 		173787093392BCF564520D47 /* NoteExportFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FECA0271B877F0C078881B45 /* NoteExportFormatterTests.swift */; };
 		179083178D462434A3F9D155 /* PersistedDocumentVaultEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBAB309C6C680D5D1604F54 /* PersistedDocumentVaultEntry.swift */; };
 		17C1AF949A7590E68F2EF155 /* DocumentVaultDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3659F062FDD319B2CBDFD9AB /* DocumentVaultDetailView.swift */; };
@@ -205,6 +207,7 @@
 		9AE8F8BCE19A4D6CE669F3F2 /* GPXExporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD7BAB7DBF441622534C8E3 /* GPXExporterTests.swift */; };
 		9BAA109A4157D80B30D2DC3D /* SearchRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E0800B309187BC32849506 /* SearchRepositories.swift */; };
 		9C08F682D11A7E9D3AAE5F70 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B55A37D12A93A850C5113 /* CornerRadius.swift */; };
+		9C9A45758796FB4249639C3B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = BCCAE1032A0BB432922D7278 /* Localizable.xcstrings */; };
 		9DBB5849A6EE73188A7F568F /* SwiftDataKnowledgePackInstallStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1AC89D33C1D1868047F163 /* SwiftDataKnowledgePackInstallStateRepository.swift */; };
 		9E98375D3A525DA0C765D3DB /* InventoryExpiryNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37412C705F4D7295611282CB /* InventoryExpiryNotificationService.swift */; };
 		9EA062225E32C8788B98732D /* WeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416AE674FF679A3A4ABC6011 /* WeatherRepository.swift */; };
@@ -552,6 +555,7 @@
 		6E33D234C31BC233615D7760 /* PersistedImportedKnowledgeDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedImportedKnowledgeDocument.swift; sourceTree = "<group>"; };
 		6F9ED5FF1719CC362D7FD9DA /* AskLanternIntentExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskLanternIntentExecutor.swift; sourceTree = "<group>"; };
 		709F842F81A545E11C32FBF9 /* ChecklistPDFExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistPDFExporterTests.swift; sourceTree = "<group>"; };
+		71910F09201E6AB2764425CA /* AccessibilitySettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilitySettingsTests.swift; sourceTree = "<group>"; };
 		71BB74B06DFA5952D439C3B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		72602CDA1D8090046FD1C1AC /* KnowledgeChunkMappings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowledgeChunkMappings.swift; sourceTree = "<group>"; };
 		72E009DE17B43BD1E90A1A44 /* AccessibilitySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilitySettings.swift; sourceTree = "<group>"; };
@@ -666,6 +670,7 @@
 		BBD11187037BC5CB0A530404 /* FoundationModelAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelAdapter.swift; sourceTree = "<group>"; };
 		BC851E000C67C25AE098E77A /* SurvivalToolKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurvivalToolKitTests.swift; sourceTree = "<group>"; };
 		BCC871E88C1B172A2C713DBF /* PersistedPracticeProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPracticeProgress.swift; sourceTree = "<group>"; };
+		BCCAE1032A0BB432922D7278 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		BDD24C086A9151885F15C251 /* NoteRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRepositories.swift; sourceTree = "<group>"; };
 		BE412CBE23992375431B18AB /* InventoryItemEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemEntity.swift; sourceTree = "<group>"; };
 		C261B5773712E274680B1205 /* WhistleToneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhistleToneController.swift; sourceTree = "<group>"; };
@@ -723,6 +728,7 @@
 		EFE2D4E0544329BA178A6479 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
 		F00166C23B71FBE908EC7899 /* ChecklistRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRunView.swift; sourceTree = "<group>"; };
 		F0C97E66FE9C3CF8AEC89EE2 /* WeatherKitForecastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherKitForecastService.swift; sourceTree = "<group>"; };
+		F1ADA1262E62AB66355D7F30 /* AppLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocalization.swift; sourceTree = "<group>"; };
 		F26ADC1A8F22481BD287B0DE /* PersistedChecklistRun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedChecklistRun.swift; sourceTree = "<group>"; };
 		F2ED36E8CBC50766B4FEB8EE /* SeedContentImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentImporter.swift; sourceTree = "<group>"; };
 		F3DB81C85EF1C961CF81C65B /* DocumentVaultRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentVaultRepository.swift; sourceTree = "<group>"; };
@@ -824,6 +830,7 @@
 		121FAE7F770883FA9FB313F1 = {
 			isa = PBXGroup;
 			children = (
+				A1EC741339C75134BFEA57B3 /* Localization */,
 				149F7594B294B87DC2A74350 /* OSA */,
 				D03BFB433C1F62BEBE736A3F /* OSATests */,
 				D0BAA061C12D3FFC32DFA8FD /* OSAUITests */,
@@ -949,6 +956,14 @@
 				8976CA8306E4FCE07EC37FCE /* ChecklistRepositories.swift */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		358E3F270E3AA892A16EEB6F /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				F1ADA1262E62AB66355D7F30 /* AppLocalization.swift */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		376EE5FD5C50456349750BAF /* Home */ = {
@@ -1464,6 +1479,15 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
+		A1EC741339C75134BFEA57B3 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				BCCAE1032A0BB432922D7278 /* Localizable.xcstrings */,
+			);
+			name = Localization;
+			path = OSA/Resources/Localization;
+			sourceTree = "<group>";
+		};
 		A22D420E6F4B063F724FB37A /* Assistant */ = {
 			isa = PBXGroup;
 			children = (
@@ -1616,6 +1640,7 @@
 			children = (
 				632BED72C5C732A064993240 /* Components */,
 				30DC1E29CE9B6A96D0EFDE88 /* DesignSystem */,
+				358E3F270E3AA892A16EEB6F /* Localization */,
 				D87967712A16E7CC7B02D522 /* Support */,
 			);
 			path = Shared;
@@ -1672,6 +1697,7 @@
 		D03BFB433C1F62BEBE736A3F /* OSATests */ = {
 			isa = PBXGroup;
 			children = (
+				71910F09201E6AB2764425CA /* AccessibilitySettingsTests.swift */,
 				526FCFC2770B10D39113F910 /* ActiveProtocolActivityMapperTests.swift */,
 				76DC56407C47E05650A0DECD /* AppEntityQueryTests.swift */,
 				890D3B9F7FA0DDC15B09D8C9 /* AppEntitySpotlightTests.swift */,
@@ -2036,6 +2062,7 @@
 			knownRegions = (
 				Base,
 				en,
+				es,
 			);
 			mainGroup = 121FAE7F770883FA9FB313F1;
 			minimizedProjectReferenceProxies = 1;
@@ -2059,6 +2086,7 @@
 			files = (
 				EB1027E19D6ECC8E62FBDA78 /* Assets.xcassets in Resources */,
 				DE465F477B4F2C52D4E0F88E /* KnowledgePacks in Resources */,
+				9C9A45758796FB4249639C3B /* Localizable.xcstrings in Resources */,
 				1F5F6D1CEE0E83BDA0D86C98 /* Media in Resources */,
 				C009F1857F6F8DD6341F7EF4 /* SeedContent in Resources */,
 			);
@@ -2090,6 +2118,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16386454D47899410F4A2D21 /* AccessibilitySettingsTests.swift in Sources */,
 				2BC648A86034832EEC45750D /* ActiveProtocolActivityMapperTests.swift in Sources */,
 				50314FDA64ED2A9E1B3C78B0 /* AppEntityQueryTests.swift in Sources */,
 				E225142F08665D900EF9F21D /* AppEntitySpotlightTests.swift in Sources */,
@@ -2178,6 +2207,7 @@
 				5A51318F876BCB901E137192 /* ActivityShareSheet.swift in Sources */,
 				9AB564FAEAAD7FE42A1E6886 /* AppBrand.swift in Sources */,
 				94CE794A028F52F1E13647EA /* AppDependencies.swift in Sources */,
+				0F2E27A98240E2517572ABAE /* AppLocalization.swift in Sources */,
 				120E79774EE8C620795E4B8D /* AppModelContainer.swift in Sources */,
 				EBD39EEC7CF17F6527AF18DC /* AppNavigationCoordinator.swift in Sources */,
 				7808AE641DE908499FF5077C /* AppTab.swift in Sources */,
@@ -2465,7 +2495,7 @@
 				CODE_SIGN_ENTITLEMENTS = OSA/OSA.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_KEY_CFBundleDisplayName = Lantern;
-				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLSchemes\": [\"lantern\"], \"CFBundleURLName\": \"com.etherealogic.osa\"]]";
+				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLName\": \"com.etherealogic.osa\", \"CFBundleURLSchemes\": [\"lantern\"]]]";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lantern uses the camera to scan inventory codes, capture inventory photos, and scan documents into your encrypted local vault.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Lantern uses your photo library only when you choose local images to attach to inventory items or import into the encrypted document vault.";
@@ -2544,7 +2574,7 @@
 				CODE_SIGN_ENTITLEMENTS = OSA/OSA.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_KEY_CFBundleDisplayName = Lantern;
-				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLSchemes\": [\"lantern\"], \"CFBundleURLName\": \"com.etherealogic.osa\"]]";
+				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLName\": \"com.etherealogic.osa\", \"CFBundleURLSchemes\": [\"lantern\"]]]";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lantern uses the camera to scan inventory codes, capture inventory photos, and scan documents into your encrypted local vault.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Lantern uses your photo library only when you choose local images to attach to inventory items or import into the encrypted document vault.";

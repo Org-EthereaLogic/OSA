@@ -7,6 +7,11 @@
       "category": "power-outage",
       "summary": "Stabilize light, refrigeration, charging, and household communication in the first hour.",
       "bodyMarkdown": "1. Confirm everyone is safe and account for anyone who needs power-dependent equipment.\n2. Switch to battery lighting and keep open flames out of routine indoor use.\n3. Keep the refrigerator and freezer closed while you estimate outage length.\n4. Charge essential devices from the safest available power source and conserve battery.",
+      "spanishTranslation": {
+        "title": "Revision de la primera hora sin luz",
+        "summary": "Estabiliza luz, refrigeracion, carga y comunicacion del hogar durante la primera hora.",
+        "bodyMarkdown": "1. Confirma que todos esten bien e identifica a quien necesite equipo dependiente de energia.\n2. Cambia a iluminacion con bateria y evita llamas abiertas en el uso interior normal.\n3. Manten cerrados el refrigerador y el congelador mientras estimas la duracion del corte.\n4. Carga los dispositivos esenciales desde la fuente mas segura disponible y ahorra bateria."
+      },
       "priority": 100,
       "relatedSectionIDs": [
         "11111111-1111-1111-1111-111111111112",
@@ -30,6 +35,11 @@
       "category": "water",
       "summary": "Keep stored water easy to trust, easy to reach, and easy to rotate.",
       "bodyMarkdown": "1. Check containers for leaks, cloudiness, or broken seals.\n2. Move the oldest dated containers to the front of storage.\n3. Refill or replace any container that no longer matches your labeling or rotation plan.\n4. Keep treatment notes and rotation dates written where the household can find them quickly.",
+      "spanishTranslation": {
+        "title": "Revision de rotacion de agua",
+        "summary": "Manten el agua almacenada facil de confiar, de alcanzar y de rotar.",
+        "bodyMarkdown": "1. Revisa los recipientes por fugas, turbidez o sellos rotos.\n2. Mueve al frente los recipientes con fecha mas antigua.\n3. Rellena o reemplaza cualquier recipiente que ya no coincida con tu plan de rotulado o rotacion.\n4. Manten las notas de tratamiento y fechas de rotacion escritas donde el hogar pueda encontrarlas rapido."
+      },
       "priority": 80,
       "relatedSectionIDs": [
         "11111111-1111-1111-1111-111111111112",
@@ -51,6 +61,11 @@
       "category": "water",
       "summary": "Purify tap water safely when a boil-water advisory is active.",
       "bodyMarkdown": "1. Fill clean containers with water before supply pressure drops.\n2. Bring water to a rolling boil for at least one minute.\n3. Let boiled water cool completely before transferring to storage containers.\n4. Use only boiled or bottled water for drinking, cooking, brushing teeth, and pet bowls.\n5. Do not assume tap water is safe until the advisory is officially lifted by your utility.",
+      "spanishTranslation": {
+        "title": "Pasos por aviso de hervir el agua",
+        "summary": "Purifica el agua del grifo con seguridad cuando haya un aviso de hervir el agua.",
+        "bodyMarkdown": "1. Llena recipientes limpios con agua antes de que baje la presion del suministro.\n2. Lleva el agua a hervor fuerte durante al menos un minuto.\n3. Deja que el agua hervida se enfrie por completo antes de pasarla a recipientes de almacenamiento.\n4. Usa solo agua hervida o embotellada para beber, cocinar, cepillarte los dientes y los recipientes de mascotas.\n5. No supongas que el agua del grifo es segura hasta que tu servicio la declare oficialmente apta."
+      },
       "priority": 95,
       "relatedSectionIDs": [
         "aabbcc02-0003-0000-0000-000000000001"
@@ -73,6 +88,11 @@
       "category": "utilities",
       "summary": "Get out safely when you smell gas or hear hissing near a gas line.",
       "bodyMarkdown": "1. Do not turn on or off any electrical switches or appliances.\n2. Do not use phones or electronics inside the building.\n3. Leave the building immediately and take everyone with you.\n4. Move to a safe distance upwind of the building.\n5. Call your gas utility or 911 from outside.\n6. Do not re-enter until emergency services have cleared the building.",
+      "spanishTranslation": {
+        "title": "Respuesta ante fuga de gas",
+        "summary": "Sal con seguridad cuando huelas gas o escuches un silbido cerca de una linea de gas.",
+        "bodyMarkdown": "1. No enciendas ni apagues interruptores o aparatos electricos.\n2. No uses telefonos ni electronicos dentro del edificio.\n3. Sal del edificio de inmediato y lleva contigo a todos.\n4. Alejate a una distancia segura, a favor del viento opuesto al edificio.\n5. Llama a tu compania de gas o al 911 desde afuera.\n6. No vuelvas a entrar hasta que los servicios de emergencia autoricen el regreso."
+      },
       "priority": 100,
       "relatedSectionIDs": [
         "aabbcc09-0002-0000-0000-000000000001"
@@ -94,6 +114,11 @@
       "category": "go-bag",
       "summary": "Grab essentials in the right order when told to evacuate.",
       "bodyMarkdown": "1. Grab your packed go-bag first.\n2. Take your phone, charger, wallet, ID, and keys.\n3. Collect daily medications not already in the go-bag.\n4. Gather important documents if not already packed.\n5. Secure pet carrier and pet supplies.\n6. Put on a weather-appropriate outer layer.\n7. Do one final check for family members and pets before leaving.",
+      "spanishTranslation": {
+        "title": "Lista rapida para tomar la bolsa de evacuacion",
+        "summary": "Toma lo esencial en el orden correcto cuando te indiquen evacuar.",
+        "bodyMarkdown": "1. Toma primero tu bolsa de evacuacion ya preparada.\n2. Lleva tu telefono, cargador, cartera, identificacion y llaves.\n3. Recoge los medicamentos diarios que no esten ya en la bolsa.\n4. Junta los documentos importantes si aun no estan guardados.\n5. Asegura el transportin y los suministros de las mascotas.\n6. Ponte una capa exterior adecuada al clima.\n7. Haz una ultima revision de familiares y mascotas antes de salir."
+      },
       "priority": 90,
       "relatedSectionIDs": [
         "aabbcc08-0001-0000-0000-000000000001"
@@ -115,6 +140,11 @@
       "category": "planning",
       "summary": "Confirm your household knows where to gather if separated.",
       "bodyMarkdown": "1. Review your primary meeting point near your home (front yard, mailbox, or end of driveway).\n2. Review your secondary meeting point outside the neighborhood for evacuations.\n3. Confirm every household member can name both locations from memory.\n4. Agree on a communication plan: text first — texts often get through when calls do not.\n5. Update meeting points any time you move or a location becomes inaccessible.",
+      "spanishTranslation": {
+        "title": "Recordatorio del punto de reunion familiar",
+        "summary": "Confirma que tu hogar sepa donde reunirse si se separan.",
+        "bodyMarkdown": "1. Repasa tu punto principal de reunion cerca de casa (patio delantero, buzon o final de la entrada).\n2. Repasa tu punto secundario de reunion fuera del vecindario para evacuaciones.\n3. Confirma que cada integrante del hogar pueda nombrar ambos lugares de memoria.\n4. Acorda un plan de comunicacion: primero mensajes de texto, porque suelen pasar cuando las llamadas no.\n5. Actualiza los puntos de reunion cada vez que te mudes o el lugar deje de ser accesible."
+      },
       "priority": 85,
       "relatedSectionIDs": [
         "aabbcc01-0002-0000-0000-000000000001"
@@ -136,6 +166,11 @@
       "category": "emergency",
       "summary": "Protect yourself the moment earthquake shaking starts.",
       "bodyMarkdown": "1. DROP to your hands and knees immediately.\n2. Take COVER under a sturdy desk or table and protect your head and neck.\n3. HOLD ON to your shelter until the shaking stops completely.\n4. Stay away from windows, heavy furniture, and exterior walls.\n5. If outdoors, move to an open area away from buildings and power lines.\n6. Do not run outside during shaking.\n7. After shaking stops, check for injuries and hazards before moving.",
+      "spanishTranslation": {
+        "title": "Terremoto: agachate, cubrete y sujetate",
+        "summary": "Protegete en el momento en que empieza el temblor.",
+        "bodyMarkdown": "1. AGACHATE de inmediato sobre manos y rodillas.\n2. CUBRETE debajo de una mesa o escritorio firme y protege cabeza y cuello.\n3. SUJETATE a tu refugio hasta que el movimiento se detenga por completo.\n4. Alejate de ventanas, muebles pesados y paredes exteriores.\n5. Si estas afuera, muevete a un area abierta lejos de edificios y lineas electricas.\n6. No corras hacia afuera mientras tiembla.\n7. Cuando pare el movimiento, revisa lesiones y peligros antes de moverte."
+      },
       "priority": 100,
       "relatedSectionIDs": [
         "11111111-1111-1111-1111-111111111112"
@@ -158,6 +193,11 @@
       "category": "emergency",
       "summary": "Get to safe shelter fast when a severe weather warning is issued.",
       "bodyMarkdown": "1. Move to the lowest interior room with no windows.\n2. Choose a basement, interior closet, or bathroom on the lowest floor.\n3. Bring your phone, shoes, and a flashlight.\n4. Cover yourself with a mattress or heavy blankets for protection from debris.\n5. Stay sheltered until the warning expires or an all-clear is given.\n6. Monitor NOAA weather radio or local alerts for updates.",
+      "spanishTranslation": {
+        "title": "Pasos para refugio por clima severo",
+        "summary": "Llega rapido a un refugio seguro cuando se emita una alerta de clima severo.",
+        "bodyMarkdown": "1. Muevete al cuarto interior mas bajo y sin ventanas.\n2. Elige un sotano, armario interior o bano en el piso mas bajo.\n3. Lleva tu telefono, zapatos y una linterna.\n4. Cubrete con un colchon o mantas pesadas para protegerte de escombros.\n5. Mantente refugiado hasta que la alerta termine o den el aviso de seguridad.\n6. Vigila la radio meteorologica NOAA o alertas locales para recibir actualizaciones."
+      },
       "priority": 95,
       "relatedSectionIDs": [
         "aabbcc06-0003-0000-0000-000000000001"
@@ -180,6 +220,11 @@
       "category": "food",
       "summary": "Know when to keep and when to discard food during a power outage.",
       "bodyMarkdown": "1. Keep the refrigerator and freezer doors closed — do not open to check.\n2. A closed refrigerator keeps food safe for about 4 hours.\n3. A full freezer holds temperature for about 48 hours; half full lasts about 24 hours.\n4. Each door opening shortens the safe window significantly.\n5. Discard any perishables above 40\u00b0F (4\u00b0C) after 4 hours without power.\n6. When in doubt, throw it out.",
+      "spanishTranslation": {
+        "title": "Temporizador de seguridad de comida refrigerada",
+        "summary": "Sabe cuando conservar y cuando desechar comida durante un corte de luz.",
+        "bodyMarkdown": "1. Manten cerradas las puertas del refrigerador y del congelador; no las abras para revisar.\n2. Un refrigerador cerrado mantiene la comida segura por unas 4 horas.\n3. Un congelador lleno mantiene la temperatura unas 48 horas; medio lleno dura unas 24 horas.\n4. Cada apertura de puerta reduce bastante la ventana segura.\n5. Desecha cualquier perecedero por encima de 40\u00b0F (4\u00b0C) despues de 4 horas sin energia.\n6. Si tienes dudas, tiralo."
+      },
       "priority": 80,
       "relatedSectionIDs": [
         "aabbcc03-0003-0000-0000-000000000001"
@@ -201,6 +246,11 @@
       "category": "medications",
       "summary": "Verify your household has enough medication supply and nothing is expired.",
       "bodyMarkdown": "1. Confirm at least a 7-day supply of each daily prescription.\n2. Check expiration dates and replace anything expired.\n3. Store medications in a cool, dry place away from direct sunlight.\n4. Keep a written list of all medications, dosages, and prescribing doctors.\n5. Add refill dates to your calendar before you run low.",
+      "spanishTranslation": {
+        "title": "Revision de medicamentos en casa",
+        "summary": "Verifica que tu hogar tenga suficiente suministro de medicamentos y que nada este vencido.",
+        "bodyMarkdown": "1. Confirma al menos 7 dias de suministro para cada receta diaria.\n2. Revisa fechas de vencimiento y reemplaza lo que este vencido.\n3. Guarda los medicamentos en un lugar fresco y seco, lejos del sol directo.\n4. Manten una lista escrita de todos los medicamentos, dosis y medicos que los recetan.\n5. Agrega fechas de resurtido a tu calendario antes de quedarte corto."
+      },
       "priority": 75,
       "relatedSectionIDs": [
         "aabbcc07-0002-0000-0000-000000000001"
@@ -222,6 +272,11 @@
       "category": "fire-safety",
       "summary": "Test and maintain every smoke and carbon monoxide detector in your home.",
       "bodyMarkdown": "1. Press the test button on each smoke and CO detector and confirm it sounds.\n2. Replace batteries at least once a year or when the low-battery chirp starts.\n3. Replace the entire detector unit every 10 years.\n4. Install detectors on every level of the home, inside bedrooms, and outside sleeping areas.\n5. Never disable a detector because of nuisance alarms — relocate it instead.",
+      "spanishTranslation": {
+        "title": "Revision de detectores de humo y CO",
+        "summary": "Prueba y manten cada detector de humo y monoxido de carbono en tu casa.",
+        "bodyMarkdown": "1. Presiona el boton de prueba en cada detector de humo y CO y confirma que suene.\n2. Cambia las baterias al menos una vez al ano o cuando empiece el pitido de bateria baja.\n3. Reemplaza toda la unidad del detector cada 10 anos.\n4. Instala detectores en cada nivel de la casa, dentro de dormitorios y fuera de las areas para dormir.\n5. Nunca desactives un detector por falsas alarmas; mejor reubicalo."
+      },
       "priority": 70,
       "relatedSectionIDs": [
         "aabbcc0a-0003-0000-0000-000000000001"
@@ -243,6 +298,11 @@
       "category": "vehicle",
       "summary": "Stay safe when your vehicle breaks down on or near a roadway.",
       "bodyMarkdown": "1. Pull as far off the road as safely possible.\n2. Turn on hazard lights immediately.\n3. Set out reflective triangles or flares if you have them.\n4. Stay inside the vehicle if on a highway — it is safer than standing outside.\n5. Call roadside assistance or 911 if you are in danger.\n6. If you must exit, do so from the side away from traffic.\n7. Wear a high-visibility vest if available.",
+      "spanishTranslation": {
+        "title": "Pasos de seguridad por averia del vehiculo",
+        "summary": "Mantente seguro cuando tu vehiculo se averie en o cerca de la via.",
+        "bodyMarkdown": "1. Orillate lo mas lejos posible de la carretera de forma segura.\n2. Enciende de inmediato las luces intermitentes.\n3. Coloca triangulos reflectantes o bengalas si los tienes.\n4. Si estas en autopista, quedate dentro del vehiculo; es mas seguro que estar afuera.\n5. Llama a asistencia en carretera o al 911 si estas en peligro.\n6. Si tienes que salir, hazlo por el lado opuesto al trafico.\n7. Usa un chaleco de alta visibilidad si esta disponible."
+      },
       "priority": 65,
       "relatedSectionIDs": [
         "11111111-1111-1111-1111-111111111113"
@@ -265,6 +325,11 @@
       "category": "utilities",
       "summary": "Know where your water, gas, and electrical shutoffs are before you need them.",
       "bodyMarkdown": "1. Locate your water main shutoff — usually near the street or where supply enters the house.\n2. Locate your gas shutoff at the meter and keep a wrench nearby.\n3. Locate your electrical main breaker — usually in a garage, basement, or utility room.\n4. Label each shutoff clearly so anyone in the household can find it.\n5. Show all household members where each shutoff is located.\n6. Only shut off gas if you smell a leak or are told to by authorities — call the utility company to turn it back on.",
+      "spanishTranslation": {
+        "title": "Referencia rapida de cierres de servicios",
+        "summary": "Sabe donde estan los cierres de agua, gas y electricidad antes de necesitarlos.",
+        "bodyMarkdown": "1. Ubica la llave principal del agua, normalmente cerca de la calle o donde entra el suministro.\n2. Ubica el cierre del gas en el medidor y manten una llave cerca.\n3. Ubica el interruptor principal electrico, normalmente en garaje, sotano o cuarto de servicio.\n4. Etiqueta cada cierre con claridad para que cualquiera en el hogar pueda encontrarlo.\n5. Muestra a todos los miembros del hogar donde se ubica cada cierre.\n6. Cierra el gas solo si hueles una fuga o si las autoridades te lo indican; llama a la compania para que lo vuelva a abrir."
+      },
       "priority": 85,
       "relatedSectionIDs": [
         "aabbcc09-0002-0000-0000-000000000001"
@@ -288,6 +353,11 @@
       "category": "warmth",
       "summary": "Prepare your home before a winter storm arrives to stay warm and safe.",
       "bodyMarkdown": "1. Choose one room to keep warm and close off unused rooms to conserve heat.\n2. Gather blankets, sleeping bags, and warm clothing layers in that room.\n3. Fill bathtubs and large containers with water in case pipes freeze.\n4. Charge all devices and battery banks fully.\n5. Stock easy-to-eat food that does not require cooking.\n6. Bring pets indoors.\n7. Confirm you have a battery-powered or hand-crank radio for weather updates.",
+      "spanishTranslation": {
+        "title": "Preparacion del hogar para tormenta invernal",
+        "summary": "Prepara tu hogar antes de que llegue una tormenta invernal para mantener calor y seguridad.",
+        "bodyMarkdown": "1. Elige una habitacion para mantener caliente y cierra las que no uses para conservar calor.\n2. Junta mantas, sacos de dormir y capas de ropa abrigada en esa habitacion.\n3. Llena baneras y recipientes grandes con agua por si se congelan las tuberias.\n4. Carga por completo todos los dispositivos y baterias externas.\n5. Guarda comida facil de comer que no requiera cocinar.\n6. Mete a las mascotas adentro.\n7. Confirma que tienes una radio a bateria o de manivela para actualizaciones del clima."
+      },
       "priority": 80,
       "relatedSectionIDs": [
         "aabbcc06-0001-0000-0000-000000000001",
@@ -312,6 +382,11 @@
       "category": "first-aid",
       "summary": "Control bleeding with direct pressure, a secure dressing, and fast escalation when bleeding does not stop.",
       "bodyMarkdown": "1. Expose the wound enough to place direct pressure.\n2. Put a clean absorbent pad over the source of bleeding.\n3. Wrap firmly enough to keep pressure in place without cutting off circulation.\n4. Re-check the fingers or toes below the dressing for warmth, color, and feeling.\n5. Add more material on top if bleeding continues — do not keep peeling the first layer off.\n6. Seek urgent care if bleeding soaks through, spurts, or the person shows signs of shock.",
+      "spanishTranslation": {
+        "title": "Revision rapida de vendaje compresivo",
+        "summary": "Controla el sangrado con presion directa, un vendaje firme y una escalada rapida si no se detiene.",
+        "bodyMarkdown": "1. Expone la herida lo suficiente para aplicar presion directa.\n2. Coloca una almohadilla limpia y absorbente sobre el punto de sangrado.\n3. Envuelve con la firmeza necesaria para mantener la presion sin cortar la circulacion.\n4. Revisa otra vez los dedos de manos o pies por debajo del vendaje para confirmar calor, color y sensibilidad.\n5. Agrega mas material encima si el sangrado sigue; no sigas despegando la primera capa.\n6. Busca atencion urgente si la sangre empapa el vendaje, sale a chorros o la persona muestra signos de choque."
+      },
       "priority": 96,
       "relatedSectionIDs": [
         "aabbcc07-0001-0000-0000-000000000001"
@@ -332,6 +407,10 @@
           "bundlePath": "Media/Illustrations/pressure-dressing.svg",
           "caption": "Place the pad, wrap firmly, and keep checking for ongoing bleeding below the dressing.",
           "accessibilityLabel": "Illustration showing a pressure pad on a forearm with a wrap secured over it.",
+          "spanishTranslation": {
+            "caption": "Coloca la almohadilla, envuelve con firmeza y sigue revisando si el sangrado continua por debajo del vendaje.",
+            "accessibilityLabel": "Ilustracion que muestra una almohadilla de presion sobre un antebrazo con un vendaje asegurado encima."
+          },
           "preferredHeight": 220
         },
         {
@@ -340,6 +419,11 @@
           "caption": "Short local clip showing the dressing pad, wrap path, and final check direction.",
           "accessibilityLabel": "Offline video showing the sequence for placing a pressure dressing and re-checking below it.",
           "transcript": "Place the pad over the wound. Wrap firmly enough to hold pressure. Check below the dressing for warmth, color, and feeling. Add more material on top if bleeding continues and seek urgent care if bleeding does not stop.",
+          "spanishTranslation": {
+            "caption": "Clip local corto que muestra la almohadilla, la ruta del vendaje y la revision final.",
+            "accessibilityLabel": "Video sin conexion que muestra la secuencia para colocar un vendaje compresivo y revisar por debajo de el.",
+            "transcript": "Coloca la almohadilla sobre la herida. Envuelve con firmeza suficiente para mantener la presion. Revisa por debajo del vendaje el calor, color y sensibilidad. Agrega mas material encima si el sangrado continua y busca atencion urgente si no se detiene."
+          },
           "preferredHeight": 220
         }
       ],

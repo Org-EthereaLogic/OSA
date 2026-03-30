@@ -22,6 +22,9 @@ final class SeedContentMigrationTests: XCTestCase {
         XCTAssertEqual(outcome.quickCardCount, 1)
         XCTAssertEqual(outcome.checklistTemplateCount, 1)
         XCTAssertEqual(outcome.fieldReferenceCount, 1)
+
+        let importedCard = try XCTUnwrap(env.repository.listQuickCards().first)
+        XCTAssertNil(importedCard.spanishTranslation)
     }
 
     func testSameManifestVersionOnSecondImportReturnsSkipped() throws {

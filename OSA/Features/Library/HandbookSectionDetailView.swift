@@ -8,12 +8,15 @@ struct HandbookSectionDetailView: View {
     @Environment(\.noteRepository) private var noteRepository
     @Environment(\.onscreenContentManager) private var onscreenContentManager
     @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(PinnedContentSettings.pinnedSectionIDsKey)
     private var pinnedSectionIDsRawValue = PinnedContentSettings.encode(ids: [])
     @AppStorage(RecentLibraryHistorySettings.recentSectionIDsKey)
     private var recentSectionIDsRawValue = RecentLibraryHistorySettings.encode(ids: [])
     @AppStorage(AccessibilitySettings.largePrintReadingModeKey)
     private var largePrintReadingMode = AccessibilitySettings.largePrintReadingModeDefault
+    @AppStorage(AccessibilitySettings.highContrastModeKey)
+    private var highContrastMode = AccessibilitySettings.highContrastModeDefault
     @State private var section: HandbookSection?
     @State private var chapter: HandbookChapter?
     @State private var relatedCards: [QuickCard] = []
@@ -38,7 +41,7 @@ struct HandbookSectionDetailView: View {
         }
         .navigationTitle(section?.heading ?? "Section")
         .navigationBarTitleDisplayMode(.inline)
-        .background(.osaBackground)
+        .background(Color.osaReadableBackground(highContrast: highContrastMode))
         .task { loadSection() }
         .onDisappear { onscreenContentManager?.clear() }
         .toolbar {
@@ -82,15 +85,19 @@ struct HandbookSectionDetailView: View {
                     if let chapter {
                         Label(chapter.title, systemImage: "book.closed.fill")
                             .font(.metadataCaption)
-                            .foregroundStyle(.osaPaperGlow.opacity(0.7))
+                            .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
                     }
 
                     Text(section.heading)
                         .font(.stressTitle)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.osaHeroPrimaryText(highContrast: highContrastMode))
                         .fixedSize(horizontal: false, vertical: true)
 
-                    HStack(spacing: Spacing.sm) {
+                    let metadataLayout = dynamicTypeSize.isAccessibilitySize
+                        ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.sm))
+                        : AnyLayout(HStackLayout(spacing: Spacing.sm))
+
+                    metadataLayout {
                         if section.safetyLevel == .sensitiveStaticOnly {
                             Label("Sensitive", systemImage: "exclamationmark.shield")
                                 .font(.metadataCaption)
@@ -99,7 +106,7 @@ struct HandbookSectionDetailView: View {
 
                         Label("Stored locally", systemImage: "internaldrive.fill")
                             .font(.metadataCaption)
-                            .foregroundStyle(.osaPaperGlow)
+                            .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
 
                         if let reviewed = section.lastReviewedAt {
                             Label(
@@ -107,7 +114,7 @@ struct HandbookSectionDetailView: View {
                                 systemImage: "checkmark.seal.fill"
                             )
                             .font(.metadataCaption)
-                            .foregroundStyle(.osaPaperGlow)
+                            .foregroundStyle(Color.osaHeroMetadataText(highContrast: highContrastMode))
                         }
                     }
                 }
@@ -123,7 +130,10 @@ struct HandbookSectionDetailView: View {
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: CornerRadius.xl)
-                        .stroke(Color.osaPrimary.opacity(0.24), lineWidth: 1)
+                        .stroke(
+                            highContrastMode ? Color.osaReadableStroke(highContrast: true) : Color.osaPrimary.opacity(0.24),
+                            lineWidth: 1
+                        )
                 }
 
                 // Body content card
@@ -171,7 +181,10 @@ struct HandbookSectionDetailView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal, Spacing.md)
                                         .padding(.vertical, Spacing.sm)
-                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                        .background(
+                                            Color.osaReadableBackground(highContrast: highContrastMode),
+                                            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+                                        )
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the related quick card.")
@@ -185,7 +198,10 @@ struct HandbookSectionDetailView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal, Spacing.md)
                                         .padding(.vertical, Spacing.sm)
-                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                        .background(
+                                            Color.osaReadableBackground(highContrast: highContrastMode),
+                                            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+                                        )
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the related handbook section.")
@@ -199,7 +215,10 @@ struct HandbookSectionDetailView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.horizontal, Spacing.md)
                                         .padding(.vertical, Spacing.sm)
-                                        .background(.osaBackground, in: RoundedRectangle(cornerRadius: CornerRadius.md))
+                                        .background(
+                                            Color.osaReadableBackground(highContrast: highContrastMode),
+                                            in: RoundedRectangle(cornerRadius: CornerRadius.md)
+                                        )
                                 }
                                 .buttonStyle(.plain)
                                 .accessibilityHint("Opens the linked note.")
@@ -208,10 +227,10 @@ struct HandbookSectionDetailView: View {
                     }
                 }
                 .padding(Spacing.lg)
-                .background(.osaSurface, in: RoundedRectangle(cornerRadius: CornerRadius.lg))
+                .background(Color.osaReadableSurface(highContrast: highContrastMode), in: RoundedRectangle(cornerRadius: CornerRadius.lg))
                 .overlay {
                     RoundedRectangle(cornerRadius: CornerRadius.lg)
-                        .stroke(Color.osaHairline, lineWidth: 1)
+                        .stroke(Color.osaReadableStroke(highContrast: highContrastMode), lineWidth: 1)
                 }
             }
             .padding(.horizontal, Spacing.lg)
