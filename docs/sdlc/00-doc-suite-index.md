@@ -102,8 +102,9 @@ This suite defines the initial product, architecture, data, safety, quality, and
 30. [Sprint 10 Multimedia And Gamification Enhanced Prompt](../prompt/enhanced/45-sprint-10-multimedia-and-gamification-enhanced-prompt.md) _(implementation task prompt)_
 31. [Sprint 11 Advanced Device Capabilities Enhanced Prompt](../prompt/enhanced/46-sprint-11-advanced-device-capabilities-enhanced-prompt.md) _(implementation task prompt)_
 32. [Sprint 12 Internationalization And Accessibility Depth Enhanced Prompt](../prompt/enhanced/47-sprint-12-internationalization-and-accessibility-depth-enhanced-prompt.md) _(implementation task prompt)_
-33. ADRs in [docs/adr](../adr/)
-34. [Risk Register](./risk-register.md)
+33. [Survival Tools Build Recovery And Timer Redraw Optimization Enhanced Prompt](../prompt/enhanced/48-survival-tools-build-recovery-and-timer-redraw-optimization-enhanced-prompt.md) _(implementation task prompt)_
+34. ADRs in [docs/adr](../adr/)
+35. [Risk Register](./risk-register.md)
 
 ## File List
 
@@ -150,15 +151,16 @@ This suite defines the initial product, architecture, data, safety, quality, and
 | [45-sprint-10-multimedia-and-gamification-enhanced-prompt.md](../prompt/enhanced/45-sprint-10-multimedia-and-gamification-enhanced-prompt.md) | Sprint 10 learning-and-media slice: bundled SVG illustrations, local short-form videos, knot-reference and illustrated first-aid content, local quiz modes, derived completion badges, and a weekly drill surface built on existing quick-card, field-reference, Home, and local-progress seams. | Executed |
 | [46-sprint-11-advanced-device-capabilities-enhanced-prompt.md](../prompt/enhanced/46-sprint-11-advanced-device-capabilities-enhanced-prompt.md) | Sprint 11 device-capability slice: on-device barcode or QR inventory capture, bounded inventory OCR prefill, local inventory photos, an encrypted document vault, and bundled offline knowledge-pack auto-installs built on the existing inventory, secure-storage, and seed-import seams. | Executed — Sprint 11 implementation landed with local bundle-backed knowledge packs that auto-install on launch |
 | [47-sprint-12-internationalization-and-accessibility-depth-enhanced-prompt.md](../prompt/enhanced/47-sprint-12-internationalization-and-accessibility-depth-enhanced-prompt.md) | Sprint 12 access-improvement slice: Spanish UI localization, bundled offline Spanish translations for critical quick cards, high-contrast mode, translated media accessibility metadata, and large-print plus VoiceOver refinements built on existing settings, seed-content, design-token, and reading-surface seams. | Executed |
+| [48-survival-tools-build-recovery-and-timer-redraw-optimization-enhanced-prompt.md](../prompt/enhanced/48-survival-tools-build-recovery-and-timer-redraw-optimization-enhanced-prompt.md) | Focused Survival Tools repair prompt that preserves the repaired view structure, re-runs the 16-test `OSAFullE2EVisualTests` suite, and replaces the root-level 0.2-second timer invalidation path with a localized timer refresh strategy. | Prepared |
 | [sdlc_doc_suite_prompt.md](../prompt/enhanced/sdlc_doc_suite_prompt.md) | Original source prompt retained for context and traceability. | Preserved input |
 
 ## Current Suite Status
 
-- Document creation status: complete for initial v0.1 draft set; updated through Sprint 11 implementation.
+- Document creation status: complete for initial v0.1 draft set; updated through Sprint 12 implementation.
 - Architecture confidence: high; Milestones 1–6 complete. Sprints 1–11 landed (list ergonomics, motion/haptics/settings, survival tools, notifications/export/sharing, bounded Ask intelligence, widgets and system integration, advanced maps and navigation, editorial depth and field references, multimedia and local practice, plus Sprint 11 inventory capture, encrypted document vault, and bundled offline knowledge packs that auto-install during bootstrap). All UI surfaces are backed by live data. Home Screen and Lock Screen widgets plus Live Activities for emergency protocol progress are available without exposing sensitive content. CI and quality automation in place. Siri App Intents with AssistantSchema, App Entities with Spotlight, FM-powered inventory completion, deep-link navigation intents, onscreen content manager, RSS-based knowledge discovery, system-surface widgets, and offline multimedia or quiz flows all landed. Maps feature remains fully enhanced with waypoints, track recording, GPX export, offline tile-region management, distance measurement, rescue coordinates, and sun compass.
 - Product confidence: high; release-readiness evidence pack maps 6 criteria to test evidence (4 passed, 2 require device testing). App Store materials and TestFlight feedback plan exist as dated repo artifacts.
 - Highest uncertainty areas: Foundation Models generation quality with real corpus data; device-specific performance and App Store binary validation. Branding and UI polish sprint is complete (forest canopy palette, wordmarks, themed surfaces applied across all feature screens). Widget sandbox and privacy boundaries validated.
-- Test coverage: a full `xcodebuild test` pass on 2026-03-29 after the bundled-pack bootstrap change recorded 571 total automated tests (446 XCTest unit + 52 XCTest UI + 73 Swift Testing). `xcodebuild -project OSA.xcodeproj -scheme OSA -destination 'platform=iOS Simulator,name=iPhone 16' build` also passed on 2026-03-29. `snyk` remained unavailable locally.
+- Test coverage: a full `xcodebuild test` pass on 2026-03-29 after Sprint 12 and E2E testing optimization recorded 575 total automated tests (448 XCTest unit + 54 XCTest UI + 73 Swift Testing). `xcodebuild -project OSA.xcodeproj -scheme OSA -destination 'platform=iOS Simulator,name=iPhone 16' build` also passed on 2026-03-29. `snyk` remained unavailable locally.
 
 ## Done Means
 

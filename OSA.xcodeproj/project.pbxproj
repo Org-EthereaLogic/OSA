@@ -18,6 +18,7 @@
 		0E690B861B5C5A3923CFECE8 /* ImportedKnowledgeNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */; };
 		0E85A5784A2B8BAF62AF301F /* SearchIndexStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAD9A8A21E4FBB264425F85 /* SearchIndexStore.swift */; };
 		0EC383E2323F4FE79D923A18 /* SensitivityPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50D8AE87A9FB6D5E2FCB5A2 /* SensitivityPolicy.swift */; };
+		0F16796B7B93101507BAC82F /* UITestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ABCDF4CFC4C8C0084B82C0 /* UITestHelpers.swift */; };
 		0F2E27A98240E2517572ABAE /* AppLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ADA1262E62AB66355D7F30 /* AppLocalization.swift */; };
 		0F68188A4A68F28A12D44DE5 /* PersistedSourceRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED68C29388D3826CDAC4355 /* PersistedSourceRecord.swift */; };
 		0FC45FDEF80AC5B5CB6B7133 /* TrustedSourceFetchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8E464B47A95D1D9E24BEA0 /* TrustedSourceFetchResponse.swift */; };
@@ -667,6 +668,7 @@
 		B8CB899FE034362457F085C0 /* UserProfileSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSettings.swift; sourceTree = "<group>"; };
 		B90C875FE52B156BEC585CBC /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
 		B956A294C70B716A09B7A6F7 /* ChecklistRunHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistRunHistoryView.swift; sourceTree = "<group>"; };
+		B9ABCDF4CFC4C8C0084B82C0 /* UITestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestHelpers.swift; sourceTree = "<group>"; };
 		BBD11187037BC5CB0A530404 /* FoundationModelAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelAdapter.swift; sourceTree = "<group>"; };
 		BC851E000C67C25AE098E77A /* SurvivalToolKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurvivalToolKitTests.swift; sourceTree = "<group>"; };
 		BCC871E88C1B172A2C713DBF /* PersistedPracticeProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedPracticeProgress.swift; sourceTree = "<group>"; };
@@ -1773,6 +1775,7 @@
 				2E183A89121B7AE8D29ECDA9 /* OSAContentAndInputTests.swift */,
 				A55C745E0F49839ABEDD32AF /* OSAFullE2EVisualTests.swift */,
 				570193DEE58B3253DCF265CD /* OSARotationUITests.swift */,
+				B9ABCDF4CFC4C8C0084B82C0 /* UITestHelpers.swift */,
 			);
 			path = OSAUITests;
 			sourceTree = "<group>";
@@ -2194,6 +2197,7 @@
 				304E7D436642558D2897285E /* OSAContentAndInputTests.swift in Sources */,
 				160548E01A73AC06280199AA /* OSAFullE2EVisualTests.swift in Sources */,
 				5201BFBD368C93A2F4E5E174 /* OSARotationUITests.swift in Sources */,
+				0F16796B7B93101507BAC82F /* UITestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2495,7 +2499,7 @@
 				CODE_SIGN_ENTITLEMENTS = OSA/OSA.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_KEY_CFBundleDisplayName = Lantern;
-				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLName\": \"com.etherealogic.osa\", \"CFBundleURLSchemes\": [\"lantern\"]]]";
+				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLSchemes\": [\"lantern\"], \"CFBundleURLName\": \"com.etherealogic.osa\"]]";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lantern uses the camera to scan inventory codes, capture inventory photos, and scan documents into your encrypted local vault.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Lantern uses your photo library only when you choose local images to attach to inventory items or import into the encrypted document vault.";
@@ -2574,7 +2578,7 @@
 				CODE_SIGN_ENTITLEMENTS = OSA/OSA.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_KEY_CFBundleDisplayName = Lantern;
-				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLName\": \"com.etherealogic.osa\", \"CFBundleURLSchemes\": [\"lantern\"]]]";
+				INFOPLIST_KEY_CFBundleURLTypes = "[[\"CFBundleURLSchemes\": [\"lantern\"], \"CFBundleURLName\": \"com.etherealogic.osa\"]]";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Lantern uses the camera to scan inventory codes, capture inventory photos, and scan documents into your encrypted local vault.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Lantern uses your location to show nearby shelters, evacuation routes, and local weather forecasts on the map.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Lantern uses your photo library only when you choose local images to attach to inventory items or import into the encrypted document vault.";

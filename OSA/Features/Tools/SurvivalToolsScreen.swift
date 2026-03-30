@@ -9,20 +9,12 @@ struct SurvivalToolsScreen: View {
     @State private var whistleController = WhistleToneController()
     @State private var brightScreenMode: BrightScreenMode?
 
-    @State private var timingMode: TimingMode = .stopwatch
-    @State private var countdownDuration: TimeInterval = 300
-    @State private var elapsedBeforePause: TimeInterval = 0
-    @State private var activeStartDate: Date?
-    @State private var countdownDidComplete = false
-
     @State private var converterKind: SurvivalToolKit.UnitConversionKind = .temperature
     @State private var converterDirection: SurvivalToolKit.UnitConversionDirection = .forward
     @State private var converterInput = ""
 
     @State private var latitudeText = "47.61"
     @State private var longitudeText = "-122.33"
-
-    private let timingTicker = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ScrollView {
@@ -43,12 +35,6 @@ struct SurvivalToolsScreen: View {
         }
         .onChange(of: morseText) { _, _ in
             morseSignalPlayer.stop()
-        }
-        .onChange(of: timingMode) { _, _ in
-            resetTiming(playHaptic: false)
-        }
-        .onReceive(timingTicker) { _ in
-            handleTimingTick()
         }
         .onDisappear {
             morseSignalPlayer.stop()
@@ -235,57 +221,7 @@ struct SurvivalToolsScreen: View {
                 subtitle: "Large controls for a stopwatch or a preset field timer."
             )
 
-            ToolCard(
-                title: "Timer / Stopwatch",
-                subtitle: "Foreground only. No notifications, lock-screen alerts, or background execution are claimed."
-            ) {
-                Picker("Timing mode", selection: $timingMode) {
-                    ForEach(TimingMode.allCases) { mode in
-                        Text(mode.title).tag(mode)
-                    }
-                }
-                .pickerStyle(.segmented)
-
-                Text(formattedDuration(timingDisplay))
-                    .font(.system(size: 46, weight: .semibold, design: .rounded))
-                    .monospacedDigit()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, Spacing.sm)
-                    .accessibilityLabel("Timing display")
-                    .accessibilityValue(formattedDuration(timingDisplay))
-
-                if timingMode == .countdown {
-                    HStack(spacing: Spacing.sm) {
-                        ForEach(Self.timerPresets, id: \.self) { preset in
-                            PresetButton(
-                                title: presetTitle(for: preset),
-                                isSelected: countdownDuration == preset
-                            ) {
-                                selectPreset(preset)
-                            }
-                        }
-                    }
-                }
-
-                HStack(spacing: Spacing.md) {
-                    ToolActionButton(
-                        title: isTimingRunning ? "Pause" : timingMode == .countdown ? "Start Timer" : "Start Stopwatch",
-                        systemImage: isTimingRunning ? "pause.fill" : "play.fill",
-                        tint: .osaPrimary,
-                        isProminent: true
-                    ) {
-                        toggleTiming()
-                    }
-
-                    ToolActionButton(
-                        title: "Reset",
-                        systemImage: "arrow.counterclockwise",
-                        tint: .osaBoundary
-                    ) {
-                        resetTiming()
-                    }
-                }
-            }
+            TimerToolCardView()
         }
     }
 
@@ -431,23 +367,6 @@ struct SurvivalToolsScreen: View {
         return "\(estimate.formattedValue). \(estimate.guidance)"
     }
 
-    private var isTimingRunning: Bool {
-        activeStartDate != nil
-    }
-
-    private var currentElapsedTime: TimeInterval {
-        elapsedBeforePause + (activeStartDate.map { Date().timeIntervalSince($0) } ?? 0)
-    }
-
-    private var timingDisplay: TimeInterval {
-        switch timingMode {
-        case .stopwatch:
-            currentElapsedTime
-        case .countdown:
-            max(countdownDuration - currentElapsedTime, 0)
-        }
-    }
-
     private func toggleMorseSignal() {
         if morseSignalPlayer.isRunning {
             morseSignalPlayer.stop()
@@ -475,51 +394,6 @@ struct SurvivalToolsScreen: View {
         }
     }
 
-    private func toggleTiming() {
-        if isTimingRunning {
-            elapsedBeforePause = currentElapsedTime
-            activeStartDate = nil
-            hapticFeedbackService?.play(.warning)
-            return
-        }
-
-        if timingMode == .countdown, timingDisplay <= 0 {
-            elapsedBeforePause = 0
-            countdownDidComplete = false
-        }
-
-        activeStartDate = Date()
-        hapticFeedbackService?.play(.prominentNavigation)
-    }
-
-    private func resetTiming(playHaptic: Bool = true) {
-        activeStartDate = nil
-        elapsedBeforePause = 0
-        countdownDidComplete = false
-        if playHaptic {
-            hapticFeedbackService?.play(.warning)
-        }
-    }
-
-    private func selectPreset(_ preset: TimeInterval) {
-        countdownDuration = preset
-        resetTiming(playHaptic: false)
-        hapticFeedbackService?.play(.prominentNavigation)
-    }
-
-    private func handleTimingTick() {
-        guard timingMode == .countdown, isTimingRunning else { return }
-
-        if timingDisplay <= 0.05 {
-            activeStartDate = nil
-            elapsedBeforePause = countdownDuration
-            if !countdownDidComplete {
-                countdownDidComplete = true
-                hapticFeedbackService?.play(.success)
-            }
-        }
-    }
-
     private func limitationText(_ text: String) -> some View {
         Text(text)
             .font(.metadataCaption)
@@ -527,29 +401,9 @@ struct SurvivalToolsScreen: View {
             .fixedSize(horizontal: false, vertical: true)
     }
 
-    private func presetTitle(for duration: TimeInterval) -> String {
-        let minutes = Int(duration / 60)
-        return "\(minutes)m"
-    }
-
     private func formattedNumber(_ value: Double) -> String {
         Self.numberFormatter.string(from: NSNumber(value: value)) ?? String(format: "%.2f", value)
     }
-
-    private func formattedDuration(_ duration: TimeInterval) -> String {
-        let totalSeconds = max(Int(duration.rounded(.down)), 0)
-        let hours = totalSeconds / 3_600
-        let minutes = (totalSeconds % 3_600) / 60
-        let seconds = totalSeconds % 60
-
-        if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-        }
-
-        return String(format: "%02d:%02d", minutes, seconds)
-    }
-
-    private static let timerPresets: [TimeInterval] = [60, 300, 900, 1_800]
 
     private static let numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -601,6 +455,247 @@ private extension SurvivalToolsScreen {
                 "Manual screen aid only. Use a real signal mirror when you have one."
             }
         }
+    }
+}
+
+private struct TimerToolCardView: View {
+    @Environment(\.hapticFeedbackService) private var hapticFeedbackService
+
+    @State private var timingMode: SurvivalToolsScreen.TimingMode = .stopwatch
+    @State private var countdownDuration: TimeInterval = 300
+    @State private var elapsedBeforePause: TimeInterval = 0
+    @State private var activeStartDate: Date?
+    @State private var countdownDidComplete = false
+    @State private var countdownCompletionTask: Task<Void, Never>?
+
+    var body: some View {
+        ToolCard(
+            title: "Timer / Stopwatch",
+            subtitle: "Foreground only. No notifications, lock-screen alerts, or background execution are claimed."
+        ) {
+            Picker("Timing mode", selection: $timingMode) {
+                ForEach(SurvivalToolsScreen.TimingMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            TimingReadoutView(
+                timingMode: timingMode,
+                countdownDuration: countdownDuration,
+                elapsedBeforePause: elapsedBeforePause,
+                activeStartDate: activeStartDate
+            )
+
+            if timingMode == .countdown {
+                HStack(spacing: Spacing.sm) {
+                    ForEach(Self.timerPresets, id: \.self) { preset in
+                        PresetButton(
+                            title: presetTitle(for: preset),
+                            isSelected: countdownDuration == preset
+                        ) {
+                            selectPreset(preset)
+                        }
+                    }
+                }
+            }
+
+            HStack(spacing: Spacing.md) {
+                ToolActionButton(
+                    title: isTimingRunning ? "Pause" : timingMode == .countdown ? "Start Timer" : "Start Stopwatch",
+                    systemImage: isTimingRunning ? "pause.fill" : "play.fill",
+                    tint: .osaPrimary,
+                    isProminent: true
+                ) {
+                    toggleTiming()
+                }
+
+                ToolActionButton(
+                    title: "Reset",
+                    systemImage: "arrow.counterclockwise",
+                    tint: .osaBoundary
+                ) {
+                    resetTiming()
+                }
+            }
+        }
+        .onChange(of: timingMode) { _, _ in
+            resetTiming(playHaptic: false)
+        }
+        .onDisappear {
+            cancelCountdownCompletion()
+        }
+    }
+
+    private var isTimingRunning: Bool {
+        activeStartDate != nil
+    }
+
+    private var currentElapsedTime: TimeInterval {
+        elapsedTime(at: Date())
+    }
+
+    private var currentTimingDisplay: TimeInterval {
+        timingDisplay(at: Date())
+    }
+
+    private func elapsedTime(at date: Date) -> TimeInterval {
+        elapsedBeforePause + (activeStartDate.map { date.timeIntervalSince($0) } ?? 0)
+    }
+
+    private func timingDisplay(at date: Date) -> TimeInterval {
+        switch timingMode {
+        case .stopwatch:
+            elapsedTime(at: date)
+        case .countdown:
+            max(countdownDuration - elapsedTime(at: date), 0)
+        }
+    }
+
+    private func toggleTiming() {
+        if isTimingRunning {
+            elapsedBeforePause = currentElapsedTime
+            activeStartDate = nil
+            cancelCountdownCompletion()
+            hapticFeedbackService?.play(.warning)
+            return
+        }
+
+        if timingMode == .countdown, currentTimingDisplay <= 0 {
+            elapsedBeforePause = 0
+            countdownDidComplete = false
+        }
+
+        activeStartDate = Date()
+        scheduleCountdownCompletionIfNeeded()
+        hapticFeedbackService?.play(.prominentNavigation)
+    }
+
+    private func resetTiming(playHaptic: Bool = true) {
+        activeStartDate = nil
+        elapsedBeforePause = 0
+        countdownDidComplete = false
+        cancelCountdownCompletion()
+
+        if playHaptic {
+            hapticFeedbackService?.play(.warning)
+        }
+    }
+
+    private func selectPreset(_ preset: TimeInterval) {
+        countdownDuration = preset
+        resetTiming(playHaptic: false)
+        hapticFeedbackService?.play(.prominentNavigation)
+    }
+
+    private func scheduleCountdownCompletionIfNeeded() {
+        cancelCountdownCompletion()
+
+        guard timingMode == .countdown, activeStartDate != nil else { return }
+
+        let remainingDuration = max(countdownDuration - elapsedBeforePause, 0)
+        guard remainingDuration > 0 else {
+            completeCountdownIfNeeded()
+            return
+        }
+
+        let remainingNanoseconds = UInt64((remainingDuration * 1_000_000_000).rounded())
+        countdownCompletionTask = Task {
+            do {
+                try await Task.sleep(nanoseconds: remainingNanoseconds)
+            } catch {
+                return
+            }
+
+            await MainActor.run {
+                completeCountdownIfNeeded()
+            }
+        }
+    }
+
+    private func completeCountdownIfNeeded() {
+        defer {
+            countdownCompletionTask = nil
+        }
+
+        guard timingMode == .countdown, let activeStartDate else { return }
+        guard elapsedBeforePause + Date().timeIntervalSince(activeStartDate) >= countdownDuration else { return }
+
+        self.activeStartDate = nil
+        elapsedBeforePause = countdownDuration
+
+        guard !countdownDidComplete else { return }
+
+        countdownDidComplete = true
+        hapticFeedbackService?.play(.success)
+    }
+
+    private func cancelCountdownCompletion() {
+        countdownCompletionTask?.cancel()
+        countdownCompletionTask = nil
+    }
+
+    private func presetTitle(for duration: TimeInterval) -> String {
+        "\(Int(duration / 60))m"
+    }
+
+    private static let timerPresets: [TimeInterval] = [60, 300, 900, 1_800]
+}
+
+private struct TimingReadoutView: View {
+    let timingMode: SurvivalToolsScreen.TimingMode
+    let countdownDuration: TimeInterval
+    let elapsedBeforePause: TimeInterval
+    let activeStartDate: Date?
+
+    var body: some View {
+        Group {
+            if let activeStartDate {
+                TimelineView(.periodic(from: activeStartDate, by: 0.2)) { context in
+                    durationLabel(for: context.date)
+                }
+            } else {
+                durationLabel(for: Date())
+            }
+        }
+    }
+
+    private func durationLabel(for date: Date) -> some View {
+        let duration = timingDisplay(at: date)
+
+        return Text(Self.formattedDuration(duration))
+            .font(.system(size: 46, weight: .semibold, design: .rounded))
+            .monospacedDigit()
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, Spacing.sm)
+            .accessibilityLabel("Timing display")
+            .accessibilityValue(Self.formattedDuration(duration))
+    }
+
+    private func timingDisplay(at date: Date) -> TimeInterval {
+        switch timingMode {
+        case .stopwatch:
+            elapsedTime(at: date)
+        case .countdown:
+            max(countdownDuration - elapsedTime(at: date), 0)
+        }
+    }
+
+    private func elapsedTime(at date: Date) -> TimeInterval {
+        elapsedBeforePause + (activeStartDate.map { date.timeIntervalSince($0) } ?? 0)
+    }
+
+    private static func formattedDuration(_ duration: TimeInterval) -> String {
+        let totalSeconds = max(Int(duration.rounded(.down)), 0)
+        let hours = totalSeconds / 3_600
+        let minutes = (totalSeconds % 3_600) / 60
+        let seconds = totalSeconds % 60
+
+        if hours > 0 {
+            return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        }
+
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
