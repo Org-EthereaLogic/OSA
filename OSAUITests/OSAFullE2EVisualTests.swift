@@ -43,7 +43,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testHomeScreenContent() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         // Hero brand card — BrandWordmarkView renders as Image with accessibility label
         let brandImage = app.images["Lantern"]
@@ -62,23 +62,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
         )
 
         // At least one quick card (randomized on each launch)
-        let quickCardLabels = [
-            "Earthquake Drop-Cover-Hold",
-            "First Hour Power Outage Check",
-            "Boil Water Advisory Steps",
-            "Gas Leak Response",
-            "Go-Bag Grab List",
-            "Family Meeting Point Reminder",
-            "Severe Weather Shelter Steps",
-            "Refrigerator Food Safety Timer",
-            "Water Rotation Check",
-            "Home Medication Check",
-            "Smoke And CO Detector Check",
-            "Vehicle Breakdown Safety Steps",
-            "Utility Shutoff Quick Reference",
-            "Winter Storm Home Preparation"
-        ]
-        let anyCardVisible = quickCardLabels.contains { app.staticTexts[$0].exists }
+        let anyCardVisible = SeedContent.quickCardLabels.contains { app.staticTexts[$0].exists }
         XCTAssertTrue(anyCardVisible, "At least one quick card should appear on Home")
 
         // Active Checklists section
@@ -87,49 +71,33 @@ final class OSAFullE2EVisualTests: XCTestCase {
             "Active Checklists section header should appear on Home"
         )
 
-        screenshot("Home-Tab")
+        screenshot("Home-Tab", app: app)
     }
 
     @MainActor
     func testHomeTapQuickCard() {
-        tapTab("Home")
+        app.tapTab("Home")
 
-        // Quick cards are randomized; tap whichever one appears first
-        let quickCardLabels = [
-            "Earthquake Drop-Cover-Hold",
-            "First Hour Power Outage Check",
-            "Boil Water Advisory Steps",
-            "Gas Leak Response",
-            "Go-Bag Grab List",
-            "Family Meeting Point Reminder",
-            "Severe Weather Shelter Steps",
-            "Refrigerator Food Safety Timer",
-            "Water Rotation Check",
-            "Home Medication Check",
-            "Smoke And CO Detector Check",
-            "Vehicle Breakdown Safety Steps",
-            "Utility Shutoff Quick Reference",
-            "Winter Storm Home Preparation"
-        ]
-        guard let cardLabel = quickCardLabels.first(where: {
-            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.waitForExistence(timeout: 1)
-        }) else {
+        guard let cardLabel = app.firstVisibleQuickCardLabel() else {
             XCTFail("No quick card found on Home")
             return
         }
         let card = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", cardLabel)).firstMatch
         card.tap()
-        sleep(1)
 
-        screenshot("Home-QuickCard-Detail")
+        // Wait for detail to load instead of sleeping
+        let detailLoaded = app.navigationBars.firstMatch.waitForExistence(timeout: 3)
+            || app.staticTexts["Stored locally"].waitForExistence(timeout: 3)
+        XCTAssertTrue(detailLoaded, "Quick card detail should load after tap")
 
-        // Navigate back
-        navigateBack()
+        screenshot("Home-QuickCard-Detail", app: app)
+
+        app.navigateBack()
     }
 
     @MainActor
     func testHomeSpotlightFeedTab() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         // Segmented picker should have "Feed" segment
         let feedSegment = app.buttons["Feed"]
@@ -138,11 +106,8 @@ final class OSAFullE2EVisualTests: XCTestCase {
             return
         }
         feedSegment.tap()
-        sleep(3)
 
-        screenshot("Home-Spotlight-Feed")
-
-        // After tapping Feed, we should see either articles or an informational state
+        // Wait for feed content to resolve instead of sleeping 3s
         let anyArticle = app.staticTexts.matching(
             NSPredicate(format: "label CONTAINS[c] 'Read more'")
         ).firstMatch
@@ -150,29 +115,32 @@ final class OSAFullE2EVisualTests: XCTestCase {
         let failedState = app.staticTexts["Feed service unavailable."]
         let loadingState = app.staticTexts["Fetching latest articles..."]
 
-        let feedResolved = anyArticle.exists || emptyState.exists || failedState.exists || loadingState.exists
+        // Give feed time to load — check periodically
+        let feedResolved = anyArticle.waitForExistence(timeout: 5)
+            || emptyState.waitForExistence(timeout: 2)
+            || failedState.waitForExistence(timeout: 2)
+            || loadingState.exists
         XCTAssertTrue(feedResolved, "Feed tab should show articles, empty state, or loading indicator")
+
+        screenshot("Home-Spotlight-Feed", app: app)
 
         // Switch back to Quick Cards to verify toggle works
         let quickCardsSegment = app.buttons["Quick Cards"]
         if quickCardsSegment.exists {
             quickCardsSegment.tap()
-            sleep(1)
-            screenshot("Home-Spotlight-QuickCards")
+            screenshot("Home-Spotlight-QuickCards", app: app)
         }
     }
 
     @MainActor
     func testHomeScrollToBottom() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         app.swipeUp()
-        sleep(1)
-        screenshot("Home-Scrolled-1")
+        screenshot("Home-Scrolled-1", app: app)
 
         app.swipeUp()
-        sleep(1)
-        screenshot("Home-Scrolled-2")
+        screenshot("Home-Scrolled-2", app: app)
 
         // Bottom sections may or may not have data — just verify no crash
     }
@@ -181,7 +149,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testLibraryScreenContent() {
-        tapTab("Library")
+        app.tapTab("Library")
 
         let fieldReferences = app.staticTexts["Field References"]
         XCTAssertTrue(
@@ -191,28 +159,33 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
         let firstChapter = app.staticTexts["Preparedness Foundations"]
         XCTAssertTrue(
-            scrollToElement(firstChapter, maxSwipes: 6),
+            app.scrollToElement(firstChapter, maxSwipes: 6),
             "Preparedness Foundations chapter should remain reachable in Library"
         )
 
         let waterChapter = app.staticTexts["Water"]
         XCTAssertTrue(
-            waterChapter.exists || scrollToElement(waterChapter, maxSwipes: 2),
+            waterChapter.exists || app.scrollToElement(waterChapter, maxSwipes: 2),
             "Water chapter should appear in Library"
         )
 
-        screenshot("Library-Tab")
+        screenshot("Library-Tab", app: app)
     }
 
     @MainActor
     func testLibraryDrillIntoChapter() {
-        guard openLibraryChapter(named: "Preparedness Foundations") else {
+        guard app.openLibraryChapter(named: "Preparedness Foundations") else {
             XCTFail("Preparedness Foundations chapter not found")
             return
         }
-        sleep(1)
 
-        screenshot("Library-Chapter-Detail")
+        // Wait for chapter detail to load
+        XCTAssertTrue(
+            app.navigationBars["Preparedness Foundations"].waitForExistence(timeout: 3),
+            "Chapter detail should show navigation title"
+        )
+
+        screenshot("Library-Chapter-Detail", app: app)
 
         // Should show sections — at least some text content
         let hasSections = app.cells.count > 0 || app.staticTexts.count > 2
@@ -221,33 +194,33 @@ final class OSAFullE2EVisualTests: XCTestCase {
         let section = app.staticTexts["Start With The Risks You Actually Face"]
         if section.waitForExistence(timeout: 2) {
             section.tap()
-            sleep(1)
-            screenshot("Library-Section-Detail")
-            navigateBack()
+
+            // Wait for section detail to load
+            _ = app.navigationBars.firstMatch.waitForExistence(timeout: 3)
+            screenshot("Library-Section-Detail", app: app)
+            app.navigateBack()
         }
 
         if !app.staticTexts["Recently Viewed"].exists {
-            navigateBack()
+            app.navigateBack()
         }
-        scrollLibraryToTop()
+        app.scrollToTop()
 
         XCTAssertTrue(
-            scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
+            app.scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
             "Library should show Recently Viewed after opening a handbook section"
         )
-        screenshot("Library-Recently-Viewed")
+        screenshot("Library-Recently-Viewed", app: app)
     }
 
     @MainActor
     func testLibraryScrollChapterList() {
-        tapTab("Library")
-        sleep(1)
+        app.tapTab("Library")
+        _ = app.staticTexts["Field References"].waitForExistence(timeout: 3)
 
         app.swipeUp()
-        sleep(1)
         app.swipeUp()
-        sleep(1)
-        screenshot("Library-Scrolled")
+        screenshot("Library-Scrolled", app: app)
 
         // Check a chapter further down the list
         let fireChapter = app.staticTexts["Fire And Lighting"]
@@ -255,8 +228,8 @@ final class OSAFullE2EVisualTests: XCTestCase {
         XCTAssertTrue(
             fireChapter.exists
                 || goChapter.exists
-                || scrollToElement(fireChapter, maxSwipes: 4)
-                || scrollToElement(goChapter, maxSwipes: 4),
+                || app.scrollToElement(fireChapter, maxSwipes: 4)
+                || app.scrollToElement(goChapter, maxSwipes: 4),
             "Later chapters should remain reachable after scrolling"
         )
     }
@@ -265,9 +238,9 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testAskScreenContent() {
-        tapTab("Ask")
+        app.tapTab("Ask")
 
-        screenshot("Ask-Tab")
+        screenshot("Ask-Tab", app: app)
 
         // Ask screen should show some form of UI — text field, prompt, or scope controls
         let hasAskUI = app.textFields.count > 0
@@ -283,9 +256,9 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testInventoryScreenContent() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
-        screenshot("Inventory-Tab")
+        screenshot("Inventory-Tab", app: app)
 
         // May show empty state or category-grouped items
         // Just verify the screen loaded without crash
@@ -295,30 +268,31 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testInventoryAddItem() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
         // Look for add button in nav bar or toolbar
-        let addButton = findButton(labelContaining: "Add")
-            ?? findButton(labelContaining: "plus")
-            ?? findButton(labelContaining: "New")
+        let addButton = app.findButton(labelContaining: "Add")
+            ?? app.findButton(labelContaining: "plus")
+            ?? app.findButton(labelContaining: "New")
 
         guard let addButton else { return }  // No add button is OK
 
         addButton.tap()
-        sleep(1)
-        screenshot("Inventory-Add-Item")
 
-        // Dismiss
-        dismissModal()
+        // Wait for form to appear instead of sleeping
+        _ = app.textFields.firstMatch.waitForExistence(timeout: 3)
+        screenshot("Inventory-Add-Item", app: app)
+
+        app.dismissModal()
     }
 
     // MARK: - More Tab > Checklists
 
     @MainActor
     func testChecklistsScreen() {
-        navigateToMoreItem("Checklists")
+        app.navigateToMoreItem("Checklists")
 
-        screenshot("Checklists-Screen")
+        screenshot("Checklists-Screen", app: app)
 
         // Look for a seed checklist template
         let goChecklist = app.staticTexts.matching(
@@ -333,9 +307,11 @@ final class OSAFullE2EVisualTests: XCTestCase {
         // Tap into a template if found
         if anyChecklist.exists {
             anyChecklist.tap()
-            sleep(1)
-            screenshot("Checklist-Template-Detail")
-            navigateBack()
+
+            // Wait for detail to load
+            _ = app.navigationBars.firstMatch.waitForExistence(timeout: 3)
+            screenshot("Checklist-Template-Detail", app: app)
+            app.navigateBack()
         }
     }
 
@@ -343,16 +319,20 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testQuickCardsScreen() {
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
-        screenshot("QuickCards-Screen")
+        screenshot("QuickCards-Screen", app: app)
 
         let searchField = app.searchFields.firstMatch
         if searchField.waitForExistence(timeout: 3) {
             searchField.tap()
             searchField.typeText("water")
-            sleep(1)
-            screenshot("QuickCards-Search")
+
+            // Wait for search results
+            _ = app.buttons.matching(
+                NSPredicate(format: "label CONTAINS[c] 'Water'")
+            ).firstMatch.waitForExistence(timeout: 3)
+            screenshot("QuickCards-Search", app: app)
         }
 
         let firstCard = app.buttons.matching(
@@ -360,9 +340,11 @@ final class OSAFullE2EVisualTests: XCTestCase {
         ).firstMatch
         if firstCard.waitForExistence(timeout: 3) {
             firstCard.tap()
-            sleep(1)
-            screenshot("QuickCard-Detail-FromList")
-            navigateBack()
+
+            // Wait for detail to load
+            _ = app.navigationBars.firstMatch.waitForExistence(timeout: 3)
+            screenshot("QuickCard-Detail-FromList", app: app)
+            app.navigateBack()
         }
     }
 
@@ -370,9 +352,9 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testToolsScreen() {
-        navigateToMoreItem("Tools")
+        app.navigateToMoreItem("Tools")
 
-        screenshot("Tools-Screen")
+        screenshot("Tools-Screen", app: app)
 
         let morseSection = app.staticTexts["Morse Signal"]
         let timerSection = app.staticTexts["Timer / Stopwatch"]
@@ -390,7 +372,6 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
         if !converterSection.exists {
             app.swipeUp()
-            sleep(1)
         }
 
         XCTAssertTrue(
@@ -403,20 +384,22 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testNotesScreen() {
-        navigateToMoreItem("Notes")
+        app.navigateToMoreItem("Notes")
 
-        screenshot("Notes-Screen")
+        screenshot("Notes-Screen", app: app)
 
         // Try add note
-        let addButton = findButton(labelContaining: "Add")
-            ?? findButton(labelContaining: "New")
-            ?? findButton(labelContaining: "plus")
+        let addButton = app.findButton(labelContaining: "Add")
+            ?? app.findButton(labelContaining: "New")
+            ?? app.findButton(labelContaining: "plus")
 
         if let addButton {
             addButton.tap()
-            sleep(1)
-            screenshot("Notes-New-Note")
-            dismissModal()
+
+            // Wait for composer to appear
+            _ = app.textFields.firstMatch.waitForExistence(timeout: 3)
+            screenshot("Notes-New-Note", app: app)
+            app.dismissModal()
         }
     }
 
@@ -424,9 +407,9 @@ final class OSAFullE2EVisualTests: XCTestCase {
 
     @MainActor
     func testSettingsScreen() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
-        screenshot("Settings-Screen")
+        screenshot("Settings-Screen", app: app)
 
         // Look for reorganized setup and status sections plus About/Version fallback
         let emergencyContacts = app.staticTexts["Emergency Contacts"]
@@ -436,7 +419,7 @@ final class OSAFullE2EVisualTests: XCTestCase {
             .firstMatch
         let aboutSection = app.staticTexts["About"]
         let versionLabel = app.staticTexts["Version"]
-        let lanternLabel = app.staticTexts[AppBrand.subtitle]
+        let lanternLabel = app.staticTexts[TestAppBrand.subtitle]
         let anySettingsContent = emergencyContacts.waitForExistence(timeout: 3)
             || accessibilitySection.exists
             || safeShortcutCopy.exists
@@ -446,131 +429,4 @@ final class OSAFullE2EVisualTests: XCTestCase {
             || app.switches.count > 0
         XCTAssertTrue(anySettingsContent, "Settings should show About, Version, or toggle controls")
     }
-
-    // MARK: - Helpers
-
-    @MainActor
-    private func tapTab(_ name: String) {
-        let tabBar = app.tabBars.firstMatch
-        let button = tabBar.buttons[name]
-        if button.waitForExistence(timeout: 3) {
-            button.tap()
-            sleep(1)
-        }
-    }
-
-    @MainActor
-    private func navigateToMoreItem(_ label: String) {
-        tapTab("More")
-
-        // On iPhone with sidebarAdaptable, "More" presents a list
-        let item = app.staticTexts[label]
-        if item.waitForExistence(timeout: 3) {
-            item.tap()
-            sleep(1)
-            return
-        }
-
-        // Fallback — try buttons or cells
-        let button = app.buttons[label]
-        if button.waitForExistence(timeout: 2) {
-            button.tap()
-            sleep(1)
-            return
-        }
-
-        let cell = app.cells.matching(
-            NSPredicate(format: "label CONTAINS[c] %@", label)
-        ).firstMatch
-        if cell.waitForExistence(timeout: 2) {
-            cell.tap()
-            sleep(1)
-        }
-    }
-
-    @MainActor
-    private func openLibraryChapter(named title: String) -> Bool {
-        tapTab("Library")
-
-        let chapter = app.staticTexts[title]
-        guard scrollToElement(chapter, maxSwipes: 6) else {
-            return false
-        }
-
-        chapter.tap()
-        return true
-    }
-
-    @MainActor
-    private func scrollLibraryToTop() {
-        for _ in 0..<3 {
-            app.swipeDown()
-            sleep(1)
-        }
-    }
-
-    @MainActor
-    private func navigateBack() {
-        let backButton = app.navigationBars.buttons.firstMatch
-        if backButton.waitForExistence(timeout: 2) {
-            backButton.tap()
-            sleep(1)
-        }
-    }
-
-    @MainActor
-    private func dismissModal() {
-        let cancel = app.buttons.matching(
-            NSPredicate(format: "label CONTAINS[c] 'Cancel'")
-        ).firstMatch
-        if cancel.exists {
-            cancel.tap()
-            sleep(1)
-        } else {
-            app.swipeDown()
-            sleep(1)
-        }
-    }
-
-    @MainActor
-    private func findButton(labelContaining text: String) -> XCUIElement? {
-        let predicate = NSPredicate(format: "label CONTAINS[c] %@", text)
-        let navButton = app.navigationBars.buttons.matching(predicate).firstMatch
-        if navButton.waitForExistence(timeout: 2) { return navButton }
-
-        let toolbarButton = app.buttons.matching(predicate).firstMatch
-        if toolbarButton.exists { return toolbarButton }
-
-        return nil
-    }
-
-    @MainActor
-    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
-        if element.waitForExistence(timeout: 1) {
-            return true
-        }
-
-        for _ in 0..<maxSwipes {
-            app.swipeUp()
-            sleep(1)
-            if element.waitForExistence(timeout: 1) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    @MainActor
-    private func screenshot(_ name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
-    }
-}
-
-// Mirror AppBrand constants for test assertions
-private enum AppBrand {
-    static let subtitle = "Offline Preparedness Guide"
 }

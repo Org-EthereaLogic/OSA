@@ -28,7 +28,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
     func testLibraryChapterSectionsHaveContent() {
         XCTAssertTrue(
-            openLibraryChapter(named: "Preparedness Foundations"),
+            app.openLibraryChapter(named: "Preparedness Foundations"),
             "Preparedness Foundations chapter missing from Library"
         )
 
@@ -44,7 +44,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
     func testWaterChapterSectionsAreReadable() {
         XCTAssertTrue(
-            openLibraryChapter(named: "Water"),
+            app.openLibraryChapter(named: "Water"),
             "Water chapter missing from Library"
         )
 
@@ -59,49 +59,29 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testQuickCardContentIsReadable() {
-        tapTab("Home")
+        app.tapTab("Home")
 
-        let quickCardLabels = [
-            "Earthquake Drop-Cover-Hold",
-            "First Hour Power Outage Check",
-            "Boil Water Advisory Steps",
-            "Gas Leak Response",
-            "Go-Bag Grab List",
-            "Family Meeting Point Reminder",
-            "Severe Weather Shelter Steps",
-            "Refrigerator Food Safety Timer",
-            "Water Rotation Check",
-            "Home Medication Check",
-            "Smoke And CO Detector Check",
-            "Vehicle Breakdown Safety Steps",
-            "Utility Shutoff Quick Reference",
-            "Winter Storm Home Preparation"
-        ]
-
-        guard let cardLabel = quickCardLabels.first(where: {
-            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.waitForExistence(timeout: 1)
-        }) else {
+        guard let cardLabel = app.firstVisibleQuickCardLabel() else {
             XCTFail("No quick card found on Home")
             return
         }
 
         let card = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", cardLabel)).firstMatch
-        let cardTitle = cardLabel
         card.tap()
 
         XCTAssertTrue(
-            app.navigationBars[cardTitle].waitForExistence(timeout: 3)
+            app.navigationBars[cardLabel].waitForExistence(timeout: 3)
                 || app.staticTexts["Stored locally"].waitForExistence(timeout: 3),
             "Quick card detail should open"
         )
     }
 
     func testSettingsLanguagePickerCanSwitchToSpanish() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
         let languagePicker = app.segmentedControls["settings-app-language-picker"]
         XCTAssertTrue(
-            scrollToElement(languagePicker),
+            app.scrollToElement(languagePicker),
             "Settings should expose the app language picker"
         )
 
@@ -117,29 +97,20 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testQuickCardDetailLoadsWithLargePrintEnabled() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
         let largePrintToggle = app.switches["settings-large-print-toggle"]
         XCTAssertTrue(
-            scrollToElement(largePrintToggle),
+            app.scrollToElement(largePrintToggle),
             "Settings should expose the large print toggle"
         )
         if "\(largePrintToggle.value)" == "0" {
             largePrintToggle.tap()
         }
 
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
-        let quickCardLabels = [
-            "Earthquake Drop-Cover-Hold",
-            "Gas Leak Response",
-            "Boil Water Advisory Steps",
-            "First Hour Power Outage Check"
-        ]
-
-        guard let cardLabel = quickCardLabels.first(where: {
-            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", $0)).firstMatch.waitForExistence(timeout: 1)
-        }) else {
+        guard let cardLabel = app.firstVisibleQuickCardLabel() else {
             XCTFail("Expected seeded quick card missing")
             return
         }
@@ -155,24 +126,24 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testCreateAndViewNote() {
-        navigateToMoreItem("Notes")
+        app.navigateToMoreItem("Notes")
 
-        openNewNoteComposer()
+        app.openNewNoteComposer()
 
         XCTAssertTrue(
             app.textFields["Title"].waitForExistence(timeout: 3) || app.textFields.firstMatch.waitForExistence(timeout: 3),
             "Note composer should show a title field"
         )
 
-        dismissModal()
+        app.dismissModal()
     }
 
     func testCreateInventoryItem() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
-        let addButton = findButton(labelContaining: "Add")
-            ?? findButton(labelContaining: "plus")
-            ?? findButton(labelContaining: "New")
+        let addButton = app.findButton(labelContaining: "Add")
+            ?? app.findButton(labelContaining: "plus")
+            ?? app.findButton(labelContaining: "New")
         XCTAssertNotNil(addButton, "Inventory screen should provide an add button")
 
         addButton?.tap()
@@ -183,15 +154,15 @@ final class OSAContentAndInputTests: XCTestCase {
             "Inventory form should show a name field"
         )
 
-        dismissModal()
+        app.dismissModal()
     }
 
     func testInventoryFormShowsSprint11CaptureAffordances() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
-        let addButton = findButton(labelContaining: "Add")
-            ?? findButton(labelContaining: "plus")
-            ?? findButton(labelContaining: "New")
+        let addButton = app.findButton(labelContaining: "Add")
+            ?? app.findButton(labelContaining: "plus")
+            ?? app.findButton(labelContaining: "New")
         XCTAssertNotNil(addButton, "Inventory screen should provide an add button")
         addButton?.tap()
 
@@ -212,11 +183,11 @@ final class OSAContentAndInputTests: XCTestCase {
             "Inventory form should show a local OCR action"
         )
 
-        dismissModal()
+        app.dismissModal()
     }
 
     func testInventoryScreenShowsExportAction() {
-        tapTab("Inventory")
+        app.tapTab("Inventory")
 
         let exportButton = app.buttons["Export inventory"]
         XCTAssertTrue(
@@ -226,11 +197,10 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testChecklistTemplateAndRunShowExportActions() {
-        navigateToMoreItem("Checklists")
+        app.navigateToMoreItem("Checklists")
 
-        let templateTitle = "72-Hour Emergency Kit Check"
         let template = app.buttons["checklist-template-72-hour-emergency-kit-check"]
-        guard scrollToElement(template, maxSwipes: 10) else {
+        guard app.scrollToElement(template, maxSwipes: 10) else {
             XCTFail("Expected standard checklist template missing")
             return
         }
@@ -249,20 +219,21 @@ final class OSAContentAndInputTests: XCTestCase {
 
         // "Start Checklist" is in the last list section and may be off-screen on first render
         let startButton = app.buttons["Start Checklist"]
-        guard scrollToElement(startButton, maxSwipes: 3) else {
+        guard app.scrollToElement(startButton, maxSwipes: 3) else {
             XCTFail("Checklist template detail should expose a start action")
             return
         }
 
+        let templateTitle = "72-Hour Emergency Kit Check"
         startButton.tap()
 
-        tapTab("Home")
+        app.tapTab("Home")
 
         let activeRunQuery = app.buttons.matching(identifier: "home-checklist-run-\(templateTitle)")
-        var activeRun = firstHittableElement(in: activeRunQuery)
+        var activeRun = app.firstHittableElement(in: activeRunQuery)
         for _ in 0..<6 where activeRun == nil {
             app.swipeUp()
-            activeRun = firstHittableElement(in: activeRunQuery)
+            activeRun = app.firstHittableElement(in: activeRunQuery)
         }
 
         guard let activeRun else {
@@ -280,7 +251,7 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testQuickCardsSearch() {
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
         let searchField = app.searchFields.firstMatch
         XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Quick Cards search field should appear")
@@ -295,11 +266,11 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testHomeWeeklyDrillOpensPracticeReadyQuickCard() {
-        tapTab("Home")
+        app.tapTab("Home")
 
         let weeklyDrill = app.buttons["home-weekly-drill-card"]
         XCTAssertTrue(
-            scrollToElement(weeklyDrill, maxSwipes: 3),
+            app.scrollToElement(weeklyDrill, maxSwipes: 3),
             "Home should expose the weekly drill card"
         )
 
@@ -313,18 +284,18 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testLibraryShowsRopeAndKnotsReferenceQuizEntry() {
-        tapTab("Library")
+        app.tapTab("Library")
 
         let categoryCell = app.cells.containing(.staticText, identifier: "Rope And Knots").firstMatch
         XCTAssertTrue(
-            scrollToElement(categoryCell, maxSwipes: 6),
+            app.scrollToElement(categoryCell, maxSwipes: 6),
             "Library should show the Rope And Knots field reference category"
         )
         categoryCell.tap()
 
         let entryCell = app.cells.containing(.staticText, identifier: "Bowline Reference").firstMatch
         XCTAssertTrue(
-            scrollToElement(entryCell, maxSwipes: 4),
+            app.scrollToElement(entryCell, maxSwipes: 4),
             "Bowline Reference should appear in the Rope And Knots category"
         )
         entryCell.tap()
@@ -337,7 +308,7 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testToolsScreenShowsMorseConverterAndDeclination() {
-        navigateToMoreItem("Tools")
+        app.navigateToMoreItem("Tools")
 
         XCTAssertTrue(
             app.navigationBars["Tools"].waitForExistence(timeout: 3)
@@ -358,19 +329,19 @@ final class OSAContentAndInputTests: XCTestCase {
 
         let converter = app.staticTexts["Unit Converter"]
         XCTAssertTrue(
-            scrollToElement(converter),
+            app.scrollToElement(converter),
             "Tools screen should expose the unit converter"
         )
 
         let declination = app.staticTexts["Declination"]
         XCTAssertTrue(
-            scrollToElement(declination),
+            app.scrollToElement(declination),
             "Tools screen should expose the declination section"
         )
     }
 
     func testLibrarySearch() {
-        tapTab("Library")
+        app.tapTab("Library")
 
         let searchField = app.searchFields.firstMatch
         XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Search field not found in Library")
@@ -386,7 +357,7 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testLibrarySearchShowsContentTypeFiltersAndSelection() {
-        tapTab("Library")
+        app.tapTab("Library")
 
         let searchField = app.searchFields.firstMatch
         XCTAssertTrue(searchField.waitForExistence(timeout: 3), "Search field not found in Library")
@@ -410,7 +381,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
     func testLibraryShowsRecentlyViewedAfterOpeningSection() {
         XCTAssertTrue(
-            openLibraryChapter(named: "Preparedness Foundations"),
+            app.openLibraryChapter(named: "Preparedness Foundations"),
             "Preparedness Foundations chapter missing from Library"
         )
 
@@ -423,20 +394,20 @@ final class OSAContentAndInputTests: XCTestCase {
             "Section detail should allow navigation back"
         )
 
-        navigateBack()
+        app.navigateBack()
         if !app.staticTexts["Recently Viewed"].exists {
-            navigateBack()
+            app.navigateBack()
         }
-        scrollLibraryToTop()
+        app.scrollToTop()
 
         XCTAssertTrue(
-            scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
+            app.scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
             "Library should show Recently Viewed after opening a handbook section"
         )
     }
 
     func testAskInputBarAcceptsQuery() {
-        tapTab("Ask")
+        app.tapTab("Ask")
 
         let textField = app.textFields["Ask a question..."]
         XCTAssertTrue(textField.waitForExistence(timeout: 3), "Ask screen should show a query field")
@@ -451,9 +422,9 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testAskShowsRecentQuestionsAndStudyGuideActionAfterAnswer() {
-        tapTab("Ask")
+        app.tapTab("Ask")
 
-        submitAskQuestion("Boil Water Advisory Steps")
+        app.submitAskQuestion("Boil Water Advisory Steps")
 
         XCTAssertTrue(
             app.staticTexts["Recent Questions"].waitForExistence(timeout: 8),
@@ -466,10 +437,10 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testAskRecentQuestionCanBeTappedToRerun() {
-        tapTab("Ask")
+        app.tapTab("Ask")
 
         let question = "Boil Water Advisory Steps"
-        submitAskQuestion(question)
+        app.submitAskQuestion(question)
 
         let textField = app.textFields["Ask a question..."]
         XCTAssertTrue(textField.waitForExistence(timeout: 3), "Ask screen should keep its input visible")
@@ -495,9 +466,9 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testQuickCardAndHandbookDetailShowShareActions() {
-        navigateToMoreItem("Quick Cards")
+        app.navigateToMoreItem("Quick Cards")
 
-        guard let quickCard = firstQuickCardButton() else {
+        guard let quickCard = app.firstQuickCardButton() else {
             XCTFail("Quick Cards should list at least one seeded card")
             return
         }
@@ -508,9 +479,9 @@ final class OSAContentAndInputTests: XCTestCase {
             "Quick card detail should expose a share action"
         )
 
-        navigateBack()
+        app.navigateBack()
         XCTAssertTrue(
-            openLibraryChapter(named: "Preparedness Foundations"),
+            app.openLibraryChapter(named: "Preparedness Foundations"),
             "Preparedness Foundations chapter missing from Library"
         )
 
@@ -525,7 +496,7 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testNotesFlowShowsFamilyPlanEntryPointAndExportActions() {
-        navigateToMoreItem("Notes")
+        app.navigateToMoreItem("Notes")
         let noteTitle = "Export Test Note \(UUID().uuidString.prefix(6))"
 
         let createNoteButton = app.buttons["Create note"]
@@ -567,7 +538,7 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testSettingsShowsEmergencyContactPurposeAndDiscoveryControls() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
         let extendedSettingsScrollDepth = 12
 
@@ -575,25 +546,25 @@ final class OSAContentAndInputTests: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS[c] %@", "I'm Safe"))
             .firstMatch
         XCTAssertTrue(
-            scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(safeShortcutCopy, maxSwipes: extendedSettingsScrollDepth),
             "Settings should explain how emergency contacts support the I'm Safe shortcut"
         )
 
         let criticalHaptics = app.switches["Critical haptics"]
         XCTAssertTrue(
-            scrollToElement(criticalHaptics, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(criticalHaptics, maxSwipes: extendedSettingsScrollDepth),
             "Settings should surface critical haptics controls"
         )
 
         let discoveryButton = app.buttons["Discover New Content"]
         XCTAssertTrue(
-            scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
+            app.scrollToElement(discoveryButton, maxSwipes: extendedSettingsScrollDepth),
             "Settings should surface the discovery action"
         )
     }
 
     func testDocumentVaultOpensInLockedState() {
-        navigateToMoreItem("Document Vault")
+        app.navigateToMoreItem("Document Vault")
 
         XCTAssertTrue(
             app.staticTexts["Vault Locked"].waitForExistence(timeout: 3)
@@ -603,12 +574,12 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testSettingsExposeKnowledgePackManagement() {
-        navigateToMoreItem("Settings")
+        app.navigateToMoreItem("Settings")
 
         let knowledgePackLink = app.otherElements["settings-knowledge-packs"]
         let knowledgePackText = app.staticTexts["Knowledge Packs"]
         XCTAssertTrue(
-            scrollToElement(knowledgePackLink, maxSwipes: 10) || scrollToElement(knowledgePackText, maxSwipes: 10),
+            app.scrollToElement(knowledgePackLink, maxSwipes: 10) || app.scrollToElement(knowledgePackText, maxSwipes: 10),
             "Settings should expose Knowledge Packs inside the knowledge-discovery area"
         )
 
@@ -626,7 +597,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
         let waterPackAction = app.buttons["knowledge-pack-action-water-readiness"]
         XCTAssertTrue(
-            scrollToElement(waterPackAction, maxSwipes: 4),
+            app.scrollToElement(waterPackAction, maxSwipes: 4),
             "Bundled knowledge packs should be visible in Settings"
         )
         XCTAssertEqual(
@@ -637,8 +608,8 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testMapScreenCanSaveWaypoint() {
-        openMapScreen()
-        handleLocationPermissionIfNeeded()
+        app.openMapScreen()
+        app.handleLocationPermissionIfNeeded()
 
         let saveWaypointControl = mapSaveVisibleWaypointControl()
         XCTAssertTrue(
@@ -659,7 +630,7 @@ final class OSAContentAndInputTests: XCTestCase {
 
         let waypointRow = app.staticTexts[waypointTitle]
         XCTAssertTrue(
-            scrollToElement(waypointRow, maxSwipes: 4),
+            app.scrollToElement(waypointRow, maxSwipes: 4),
             "Saved waypoint should appear in the Map screen waypoint list"
         )
     }

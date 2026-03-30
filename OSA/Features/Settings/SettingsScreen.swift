@@ -33,7 +33,6 @@ struct SettingsScreen: View {
     private var isRSSDiscoveryEnabled = DiscoverySettings.isRSSDiscoveryEnabledDefault
     @AppStorage(DiscoverySettings.lastDiscoveryDateKey)
     private var lastDiscoveryTimestamp = 0.0
-    @State private var connectivity: ConnectivityState = .offline
     @State private var braveSearchAPIKey: String
     @State private var isDiscovering = false
     @State private var lastDiscoveryMessage: String?
@@ -41,8 +40,7 @@ struct SettingsScreen: View {
     @State private var credentialErrorMessage: String?
     @State private var contacts: [EmergencyContact] = []
     @State private var contactEditor: EmergencyContactEditorState?
-    @State private var connectivityNotice: ConnectivityStatusNotice?
-    @State private var connectivityNoticeDismissTask: Task<Void, Never>?
+    @State private var connectivityPresenter = ConnectivityNoticePresenter()
     @State private var inventoryAlertAuthorizationStatus: InventoryNotificationAuthorizationStatus = .notDetermined
     @State private var isUpdatingInventoryAlerts = false
     private let braveSearchCredentialStore: BraveSearchCredentialStore
@@ -74,7 +72,11 @@ struct SettingsScreen: View {
         .task {
             loadContacts()
             await refreshInventoryAlertAuthorizationStatus()
-            await observeConnectivity()
+            connectivityPresenter.updateReduceMotion(accessibilityReduceMotion)
+            guard let service = connectivityService else { return }
+            await connectivityPresenter.observe(service: service) { state, previous in
+                Self.settingsConnectivityNotice(for: state, previousState: previous)
+            }
         }
         .onChange(of: braveSearchAPIKey) { _, newValue in
             persistBraveSearchAPIKey(newValue)
@@ -108,7 +110,7 @@ struct SettingsScreen: View {
             }
         }
         .onDisappear {
-            connectivityNoticeDismissTask?.cancel()
+            connectivityPresenter.cancelDismissTask()
         }
     }
 
@@ -279,12 +281,12 @@ struct SettingsScreen: View {
     @ViewBuilder
     private var connectivitySection: some View {
         Section("Connectivity") {
-            if let connectivityNotice {
-                ConnectivityStatusCallout(notice: connectivityNotice)
+            if let notice = connectivityPresenter.notice {
+                ConnectivityStatusCallout(notice: notice)
             }
 
             LabeledContent("Status") {
-                ConnectivityBadge(state: connectivity)
+                ConnectivityBadge(state: connectivityPresenter.connectivity)
             }
 
             LabeledContent("Last Discovery Run") {
@@ -414,7 +416,7 @@ struct SettingsScreen: View {
             lastDiscoveryMessageColor = .osaCritical
             return
         }
-        guard connectivity == .onlineUsable else {
+        guard connectivityPresenter.connectivity == .onlineUsable else {
             lastDiscoveryMessage = "Connect to the internet to discover new content."
             lastDiscoveryMessageColor = .secondary
             hapticFeedbackService?.play(.warning)
@@ -455,22 +457,6 @@ struct SettingsScreen: View {
         }
     }
 
-    private func observeConnectivity() async {
-        guard let service = connectivityService else { return }
-        var previousState: ConnectivityState?
-        for await state in service.stateStream() {
-            handleConnectivityChange(from: previousState, to: state)
-            previousState = state
-        }
-    }
-
-    private func handleConnectivityChange(from previousState: ConnectivityState?, to newState: ConnectivityState) {
-        guard previousState != newState else { return }
-        withAnimation(connectivityAnimation) {
-            connectivity = newState
-        }
-        presentConnectivityNotice(settingsConnectivityNotice(for: newState, previousState: previousState))
-    }
 
     private func refreshInventoryAlertAuthorizationStatus() async {
         guard let inventoryExpiryNotificationService else {
@@ -539,25 +525,7 @@ struct SettingsScreen: View {
         }
     }
 
-    private func presentConnectivityNotice(_ notice: ConnectivityStatusNotice?) {
-        connectivityNoticeDismissTask?.cancel()
-
-        withAnimation(connectivityAnimation) {
-            connectivityNotice = notice
-        }
-
-        guard let notice, notice.autoDismisses else { return }
-
-        connectivityNoticeDismissTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(4))
-            guard !Task.isCancelled, connectivityNotice == notice else { return }
-            withAnimation(connectivityAnimation) {
-                connectivityNotice = nil
-            }
-        }
-    }
-
-    private func settingsConnectivityNotice(
+    private static func settingsConnectivityNotice(
         for state: ConnectivityState,
         previousState: ConnectivityState?
     ) -> ConnectivityStatusNotice? {
@@ -635,7 +603,7 @@ struct SettingsScreen: View {
     }
 
     private var connectivitySupportText: String {
-        switch connectivity {
+        switch connectivityPresenter.connectivity {
         case .offline:
             "OSA remains fully usable offline. Connectivity only affects optional discovery and refresh."
         case .onlineConstrained:
@@ -648,7 +616,7 @@ struct SettingsScreen: View {
     }
 
     private var discoveryAvailabilityText: String {
-        switch connectivity {
+        switch connectivityPresenter.connectivity {
         case .offline:
             "Discovery is unavailable offline. Your local handbook, quick cards, and notes still work."
         case .onlineConstrained:
@@ -661,7 +629,7 @@ struct SettingsScreen: View {
     }
 
     private var discoveryAvailabilityIcon: String {
-        switch connectivity {
+        switch connectivityPresenter.connectivity {
         case .offline:
             "wifi.slash"
         case .onlineConstrained:
@@ -674,7 +642,7 @@ struct SettingsScreen: View {
     }
 
     private var discoveryAvailabilityTint: Color {
-        switch connectivity {
+        switch connectivityPresenter.connectivity {
         case .offline:
             .osaBoundary
         case .onlineConstrained:
@@ -687,11 +655,11 @@ struct SettingsScreen: View {
     }
 
     private var discoveryActionDisabled: Bool {
-        isDiscovering || discoveryCoordinator == nil || connectivity != .onlineUsable
+        isDiscovering || discoveryCoordinator == nil || connectivityPresenter.connectivity != .onlineUsable
     }
 
     private var discoveryAccessibilityHint: String {
-        switch connectivity {
+        switch connectivityPresenter.connectivity {
         case .offline:
             "Unavailable offline. Reconnect to check approved sources for new content."
         case .onlineConstrained:
@@ -744,12 +712,6 @@ struct SettingsScreen: View {
         default:
             "Unknown"
         }
-    }
-
-    private var connectivityAnimation: Animation {
-        accessibilityReduceMotion
-            ? .easeOut(duration: 0.12)
-            : .easeInOut(duration: 0.2)
     }
 
     private var selectedHazards: Set<HazardScenario> {
