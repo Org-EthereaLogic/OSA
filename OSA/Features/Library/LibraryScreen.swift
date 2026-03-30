@@ -32,6 +32,50 @@ struct LibraryScreen: View {
                 )
             } else {
                 List {
+                    if !recentEntries.isEmpty && !isDiscoveryOverlayVisible {
+                        Section {
+                            LibraryCollectionHeaderRow(
+                                title: "Recently Viewed",
+                                subtitle: "Resume the sections you opened most recently.",
+                                systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90"
+                            )
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+
+                            ForEach(recentEntries) { entry in
+                                NavigationLink {
+                                    HandbookSectionDetailView(sectionID: entry.section.id)
+                                } label: {
+                                    RecentlyViewedRow(entry: entry)
+                                }
+                                .listRowBackground(Color.osaSurface)
+                            }
+                        }
+                    }
+
+                    if !fieldReferenceCategories.isEmpty && !isDiscoveryOverlayVisible {
+                        Section {
+                            LibraryCollectionHeaderRow(
+                                title: "Field References",
+                                subtitle: "Open static quick-reference cards by category.",
+                                systemImage: "square.text.square"
+                            )
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+
+                            ForEach(fieldReferenceCategories) { categorySummary in
+                                NavigationLink {
+                                    FieldReferenceCategoryView(category: categorySummary.category)
+                                } label: {
+                                    FieldReferenceCategoryRow(summary: categorySummary)
+                                }
+                                .listRowBackground(Color.osaSurface)
+                            }
+                        }
+                    }
+
                     Section {
                         scenarioBrowseBar
                             .listRowInsets(EdgeInsets())
@@ -45,32 +89,6 @@ struct LibraryScreen: View {
                                 .listRowInsets(EdgeInsets())
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
-                        }
-                    }
-
-                    if !recentEntries.isEmpty && !isDiscoveryOverlayVisible {
-                        Section("Recently Viewed") {
-                            ForEach(recentEntries) { entry in
-                                NavigationLink {
-                                    HandbookSectionDetailView(sectionID: entry.section.id)
-                                } label: {
-                                    RecentlyViewedRow(entry: entry)
-                                }
-                                .listRowBackground(Color.osaSurface)
-                            }
-                        }
-                    }
-
-                    if !fieldReferenceCategories.isEmpty && !isDiscoveryOverlayVisible {
-                        Section("Field References") {
-                            ForEach(fieldReferenceCategories) { categorySummary in
-                                NavigationLink {
-                                    FieldReferenceCategoryView(category: categorySummary.category)
-                                } label: {
-                                    FieldReferenceCategoryRow(summary: categorySummary)
-                                }
-                                .listRowBackground(Color.osaSurface)
-                            }
                         }
                     }
 
@@ -136,6 +154,9 @@ struct LibraryScreen: View {
             }
         }
         .onChange(of: recentSectionIDsRawValue) { _, _ in
+            refreshRecentEntries()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)) { _ in
             refreshRecentEntries()
         }
     }
@@ -233,7 +254,14 @@ struct LibraryScreen: View {
             return
         }
 
-        let recentIDs = RecentLibraryHistorySettings.ids(from: recentSectionIDsRawValue)
+        let storedRawValue = UserDefaults.standard.string(
+            forKey: RecentLibraryHistorySettings.recentSectionIDsKey
+        ) ?? recentSectionIDsRawValue
+        if storedRawValue != recentSectionIDsRawValue {
+            recentSectionIDsRawValue = storedRawValue
+        }
+
+        let recentIDs = RecentLibraryHistorySettings.ids(from: storedRawValue)
         let resolvedEntries = recentIDs.compactMap { id -> RecentlyViewedEntry? in
             guard let section = (try? repository.section(id: id)) ?? nil else {
                 return nil
@@ -246,10 +274,10 @@ struct LibraryScreen: View {
         recentEntries = Array(resolvedEntries.prefix(RecentLibraryHistorySettings.maxRecentSections))
 
         let prunedRawValue = RecentLibraryHistorySettings.prune(
-            rawValue: recentSectionIDsRawValue,
+            rawValue: storedRawValue,
             keeping: recentEntries.map(\.section.id)
         )
-        if prunedRawValue != recentSectionIDsRawValue {
+        if prunedRawValue != storedRawValue {
             recentSectionIDsRawValue = prunedRawValue
         }
     }
@@ -367,6 +395,38 @@ private struct FieldReferenceCategoryRow: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, Spacing.xs)
+    }
+}
+
+private struct LibraryCollectionHeaderRow: View {
+    let title: String
+    let subtitle: String
+    let systemImage: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Spacing.md) {
+            Image(systemName: systemImage)
+                .font(.headline)
+                .foregroundStyle(.osaPrimary)
+                .frame(width: 28)
+
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
+                Text(title)
+                    .font(.sectionHeader)
+
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, Spacing.md)
+        .padding(.top, Spacing.sm)
+        .padding(.bottom, Spacing.xs)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 

@@ -83,13 +83,18 @@ struct MapActionButton: View {
             .padding(Spacing.md)
             .background(tint.opacity(0.12), in: RoundedRectangle(cornerRadius: CornerRadius.md))
             .foregroundStyle(tint)
+            .contentShape(RoundedRectangle(cornerRadius: CornerRadius.md))
         }
         .disabled(isDisabled)
         .buttonStyle(.plain)
         .opacity(isDisabled ? 0.45 : 1)
-        .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityIdentifier(accessibilityIdentifier)
+        .accessibilityRepresentation {
+            Button(accessibilityLabel, action: action)
+                .disabled(isDisabled)
+                .accessibilityIdentifier(accessibilityIdentifier)
+        }
     }
 }
 

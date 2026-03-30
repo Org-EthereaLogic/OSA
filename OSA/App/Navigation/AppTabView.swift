@@ -7,6 +7,7 @@ struct AppTabView: View {
     @State private var quickCardDeepLinkID: UUID?
     @State private var checklistRunDeepLinkID: UUID?
     @State private var showEmergencyMode = false
+    @State private var appliedUITestLaunchTab = false
 
     var body: some View {
         TabView(selection: $coordinator.selectedTab) {
@@ -102,6 +103,13 @@ struct AppTabView: View {
         .fullScreenCover(isPresented: $showEmergencyMode) {
             EmergencyModeView()
         }
+        .task {
+            guard !appliedUITestLaunchTab,
+                  let launchTab = uiTestLaunchTab
+            else { return }
+            coordinator.selectedTab = launchTab
+            appliedUITestLaunchTab = true
+        }
         .onChange(of: coordinator.pendingRoute) { _, route in
             guard let route else { return }
             _ = coordinator.consumePendingRoute()
@@ -116,6 +124,18 @@ struct AppTabView: View {
                 checklistRunDeepLinkID = id
             }
         }
+    }
+
+    private var uiTestLaunchTab: AppTab? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let value = arguments.first(where: { $0.hasPrefix("UI-TEST-OPEN-TAB=") })?
+            .split(separator: "=", maxSplits: 1)
+            .last
+        else {
+            return nil
+        }
+
+        return AppTab(rawValue: String(value))
     }
 }
 

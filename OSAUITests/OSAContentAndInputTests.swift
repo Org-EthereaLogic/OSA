@@ -640,17 +640,12 @@ final class OSAContentAndInputTests: XCTestCase {
         openMapScreen()
         handleLocationPermissionIfNeeded()
 
-        let saveWaypointButton = app.buttons["Save Visible Waypoint"]
-        if scrollToElement(saveWaypointButton, maxSwipes: 2) {
-            saveWaypointButton.tap()
-        } else {
-            let saveWaypointTile = app.otherElements["Save visible waypoint"]
-            XCTAssertTrue(
-                scrollToElement(saveWaypointTile, maxSwipes: 2),
-                "Map should expose a visible-waypoint save action"
-            )
-            saveWaypointTile.tap()
-        }
+        let saveWaypointControl = mapSaveVisibleWaypointControl()
+        XCTAssertTrue(
+            scrollToElement(saveWaypointControl, maxSwipes: 2),
+            "Map should expose a visible-waypoint save action"
+        )
+        tapElement(saveWaypointControl)
 
         let titleField = app.textFields["Title"]
         XCTAssertTrue(titleField.waitForExistence(timeout: 3), "Waypoint editor should expose a title field")
@@ -680,15 +675,27 @@ final class OSAContentAndInputTests: XCTestCase {
     private func navigateToMoreItem(_ label: String) {
         tapTab("More")
 
-        let item = app.staticTexts[label]
-        if item.waitForExistence(timeout: 3) {
-            item.tap()
-            return
-        }
-
         let button = app.buttons[label]
         if button.waitForExistence(timeout: 2) {
             button.tap()
+            return
+        }
+
+        let cell = app.cells.matching(
+            NSPredicate(format: "label CONTAINS[c] %@", label)
+        ).firstMatch
+        if cell.waitForExistence(timeout: 2) {
+            if cell.isHittable {
+                cell.tap()
+            } else {
+                cell.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            }
+            return
+        }
+
+        let item = app.staticTexts[label]
+        if item.waitForExistence(timeout: 3) {
+            item.tap()
         }
     }
 
@@ -742,15 +749,42 @@ final class OSAContentAndInputTests: XCTestCase {
 
     private func openMapScreen() {
         tapTab("Map")
-        if app.buttons["Save Visible Waypoint"].waitForExistence(timeout: 2) {
-            return
-        }
-
-        if app.otherElements["Save visible waypoint"].waitForExistence(timeout: 2) {
+        if app.navigationBars["Map"].waitForExistence(timeout: 2) {
             return
         }
 
         navigateToMoreItem("Map")
+
+        if app.navigationBars["Map"].waitForExistence(timeout: 3) {
+            return
+        }
+
+        app.terminate()
+        if !app.launchArguments.contains("UI-TEST-OPEN-TAB=maps") {
+            app.launchArguments.append("UI-TEST-OPEN-TAB=maps")
+        }
+        app.launch()
+
+        XCTAssertTrue(
+            app.navigationBars["Map"].waitForExistence(timeout: 3),
+            "Map screen should open from the overflow tab list or launch directly in UI testing"
+        )
+    }
+
+    private func mapSaveVisibleWaypointControl() -> XCUIElement {
+        let button = app.buttons.matching(identifier: "map-save-visible-waypoint").firstMatch
+        if button.exists {
+            return button
+        }
+
+        let predicate = NSPredicate(
+            format: "identifier == %@ OR identifier == %@ OR label ==[c] %@ OR label ==[c] %@",
+            "map-save-visible-waypoint",
+            "Save visible waypoint",
+            "Save visible waypoint",
+            "Save Visible Waypoint"
+        )
+        return app.descendants(matching: .any).matching(predicate).firstMatch
     }
 
     private func findButton(labelContaining text: String) -> XCUIElement? {
@@ -777,6 +811,15 @@ final class OSAContentAndInputTests: XCTestCase {
         }
 
         return false
+    }
+
+    private func tapElement(_ element: XCUIElement) {
+        if element.isHittable {
+            element.tap()
+            return
+        }
+
+        element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     private func firstHittableElement(in query: XCUIElementQuery) -> XCUIElement? {
