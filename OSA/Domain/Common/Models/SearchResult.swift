@@ -3,6 +3,7 @@ import Foundation
 enum SearchResultKind: String, Equatable, Sendable, CaseIterable {
     case handbookSection
     case quickCard
+    case fieldReference
     case inventoryItem
     case checklistTemplate
     case noteRecord

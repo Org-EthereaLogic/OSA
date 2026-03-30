@@ -17,6 +17,14 @@ enum PersistenceValueCoding {
         decodeStrings(from: rawValue).compactMap(UUID.init(uuidString:))
     }
 
+    static func encodeCodable<T: Encodable>(_ value: T) -> String {
+        encodeValue(value)
+    }
+
+    static func decodeCodable<T: Decodable>(_ type: T.Type, from rawValue: String) -> T? {
+        decodeValue(type, from: rawValue)
+    }
+
     private static func encodeValue<T: Encodable>(_ value: T) -> String {
         let encoder = JSONEncoder()
 

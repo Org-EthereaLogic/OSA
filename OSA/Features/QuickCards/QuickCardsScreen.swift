@@ -225,13 +225,24 @@ private struct QuickCardRow: View {
 
                 Spacer()
 
-                if card.lastReviewedAt != nil {
-                    Label("Reviewed", systemImage: "checkmark.seal.fill")
-                        .font(.metadataCaption)
-                        .foregroundStyle(.osaPaperGlow)
-                        .padding(.horizontal, Spacing.sm)
-                        .padding(.vertical, Spacing.xxs)
-                        .background(Color.osaPrimary.opacity(0.18), in: Capsule())
+                HStack(spacing: Spacing.xs) {
+                    if card.largeTypeLayoutVersion >= 2 {
+                        Label("Infographic", systemImage: "rectangle.grid.2x2.fill")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.osaPaperGlow)
+                            .padding(.horizontal, Spacing.sm)
+                            .padding(.vertical, Spacing.xxs)
+                            .background(Color.osaPrimary.opacity(0.18), in: Capsule())
+                    }
+
+                    if card.lastReviewedAt != nil {
+                        Label("Reviewed", systemImage: "checkmark.seal.fill")
+                            .font(.metadataCaption)
+                            .foregroundStyle(.osaPaperGlow)
+                            .padding(.horizontal, Spacing.sm)
+                            .padding(.vertical, Spacing.xxs)
+                            .background(Color.osaPrimary.opacity(0.18), in: Capsule())
+                    }
                 }
             }
 

@@ -176,6 +176,8 @@ private struct SearchResultRow: View {
             AnyView(HandbookSectionDetailView(sectionID: result.id))
         case .quickCard:
             AnyView(QuickCardRouteView(cardID: result.id))
+        case .fieldReference:
+            AnyView(FieldReferenceRouteView(entryID: result.id))
         case .inventoryItem:
             AnyView(InventoryItemDetailView(itemID: result.id))
         case .checklistTemplate:
@@ -203,6 +205,7 @@ extension SearchResultKind {
         switch self {
         case .handbookSection: "Handbook"
         case .quickCard: "Quick Cards"
+        case .fieldReference: "Field References"
         case .inventoryItem: "Inventory"
         case .checklistTemplate: "Checklists"
         case .noteRecord: "Notes"
@@ -214,6 +217,7 @@ extension SearchResultKind {
         switch self {
         case .handbookSection: "book.fill"
         case .quickCard: "bolt.fill"
+        case .fieldReference: "cross.case.fill"
         case .inventoryItem: "archivebox.fill"
         case .checklistTemplate: "checklist"
         case .noteRecord: "note.text"

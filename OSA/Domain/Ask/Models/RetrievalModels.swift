@@ -5,6 +5,7 @@ import Foundation
 enum RetrievalScope: String, CaseIterable, Equatable, Sendable {
     case handbook
     case quickCards
+    case fieldReferences
     case inventory
     case checklists
     case notes
@@ -35,6 +36,7 @@ struct CitationReference: Identifiable, Equatable, Sendable {
         switch kind {
         case .handbookSection: "Handbook: \(title)"
         case .quickCard: "Quick Card: \(title)"
+        case .fieldReference: "Field Reference: \(title)"
         case .inventoryItem: "Inventory: \(title)"
         case .checklistTemplate: "Checklist: \(title)"
         case .noteRecord: "Note: \(title)"
@@ -90,5 +92,6 @@ struct AnswerResult: Equatable, Sendable {
 enum SuggestedAction: Equatable, Sendable {
     case openQuickCard(id: UUID, title: String)
     case openHandbookSection(id: UUID, title: String)
+    case openFieldReference(id: UUID, title: String)
     case searchOnline(query: String)
 }

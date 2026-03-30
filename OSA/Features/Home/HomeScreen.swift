@@ -342,7 +342,7 @@ struct HomeScreen: View {
                 score: score
             )
 
-        case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
+        case .fieldReference, .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
             return nil
         }
     }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LibraryScreen: View {
     @Environment(\.handbookRepository) private var repository
+    @Environment(\.fieldReferenceRepository) private var fieldReferenceRepository
     @Environment(\.searchService) private var searchService
     @AppStorage(RecentLibraryHistorySettings.recentSectionIDsKey)
     private var recentSectionIDsRawValue = RecentLibraryHistorySettings.encode(ids: [])
@@ -13,6 +14,7 @@ struct LibraryScreen: View {
     @State private var selectedScenario: HazardScenario?
     @State private var selectedTopic: String?
     @State private var selectedSearchKind: SearchResultKind?
+    @State private var fieldReferenceCategories: [FieldReferenceCategorySummary] = []
 
     var body: some View {
         Group {
@@ -53,6 +55,19 @@ struct LibraryScreen: View {
                                     HandbookSectionDetailView(sectionID: entry.section.id)
                                 } label: {
                                     RecentlyViewedRow(entry: entry)
+                                }
+                                .listRowBackground(Color.osaSurface)
+                            }
+                        }
+                    }
+
+                    if !fieldReferenceCategories.isEmpty && !isDiscoveryOverlayVisible {
+                        Section("Field References") {
+                            ForEach(fieldReferenceCategories) { categorySummary in
+                                NavigationLink {
+                                    FieldReferenceCategoryView(category: categorySummary.category)
+                                } label: {
+                                    FieldReferenceCategoryRow(summary: categorySummary)
                                 }
                                 .listRowBackground(Color.osaSurface)
                             }
@@ -107,6 +122,7 @@ struct LibraryScreen: View {
         }
         .task {
             loadChapters()
+            loadFieldReferenceCategories()
             refreshRecentEntries()
         }
         .onAppear {
@@ -187,6 +203,27 @@ struct LibraryScreen: View {
             loadFailed = false
         } catch {
             loadFailed = true
+        }
+    }
+
+    private func loadFieldReferenceCategories() {
+        guard let fieldReferenceRepository else {
+            fieldReferenceCategories = []
+            return
+        }
+
+        do {
+            let entries = try fieldReferenceRepository.listEntries()
+            let counts = entries.reduce(into: [FieldReferenceCategory: Int]()) { result, entry in
+                result[entry.category, default: 0] += 1
+            }
+
+            fieldReferenceCategories = FieldReferenceCategory.allCases.compactMap { category in
+                guard let count = counts[category], count > 0 else { return nil }
+                return FieldReferenceCategorySummary(category: category, count: count)
+            }
+        } catch {
+            fieldReferenceCategories = []
         }
     }
 
@@ -293,6 +330,43 @@ struct LibraryScreen: View {
 
     private func formattedSuggestionText(for suggestion: SearchSuggestion) -> String {
         formatTagText(suggestion.text)
+    }
+}
+
+private struct FieldReferenceCategorySummary: Identifiable {
+    let category: FieldReferenceCategory
+    let count: Int
+
+    var id: FieldReferenceCategory { category }
+}
+
+private struct FieldReferenceCategoryRow: View {
+    let summary: FieldReferenceCategorySummary
+
+    var body: some View {
+        HStack(spacing: Spacing.md) {
+            Image(systemName: summary.category.systemImage)
+                .font(.headline)
+                .foregroundStyle(.osaPrimary)
+                .frame(width: 28)
+
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
+                Text(summary.category.displayName)
+                    .font(.headline)
+
+                Text(summary.category.summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+
+            Text("\(summary.count)")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, Spacing.xs)
     }
 }
 

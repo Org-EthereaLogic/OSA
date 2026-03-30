@@ -8,7 +8,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 - The product must be offline-first for critical workflows.
 - The assistant may answer only from approved local content and app data.
 - Optional online capabilities must persist normalized, attributed knowledge locally before it becomes part of the usable offline knowledge base.
-- The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, domain-facing repository contracts for editorial content, SwiftData models for handbook chapters, sections, and quick cards, and bundled seed-import wiring for the first offline content slice.
+- The repository now contains an app shell with tab navigation, explicit `App/Bootstrap` and `App/Navigation` boundaries, a split shared design system, connectivity state modeling, domain-facing repository contracts for editorial content, SwiftData models for handbook chapters, sections, quick cards, and field references, plus bundled seed-import wiring for the offline content corpus through content-pack version `0.5.0`.
 - Milestone 2 user-data domains are implemented: `InventoryRepository`, `ChecklistRepository`, `NoteRepository`, and `SearchService` protocols with SwiftData and SQLite FTS5 implementations. All repositories are injected via SwiftUI `EnvironmentValues`. A sidecar `SearchIndexStore` provides keyword search across all content types using BM25 ranking, bootstrap rebuild coordination, and live note or inventory write-through indexing.
 - Milestone 3 is complete: `RetrievalService`, `SensitivityClassifier`, and `CapabilityDetector` protocols in `OSA/Domain/Ask/`; `LocalRetrievalService` in `OSA/Retrieval/Querying/` wrapping FTS5 search with query normalization, sensitivity enforcement, deterministic re-ranking, citation packaging, bounded follow-up context, and preferred-tag ranking hints; `SensitivityPolicy` in `OSA/Assistant/Policy/` for blocked or sensitive topic classification and prompt injection detection; `DeviceCapabilityDetector` and `FoundationModelAdapter` in `OSA/Assistant/ModelAdapters/` for real runtime capability detection and grounded generation; `GroundedPromptBuilder` in `OSA/Assistant/PromptShaping/` for policy-aware prompt construction; and a retrieval-backed Ask UI with answer, citation, refusal, recent-question, and study-guide states. The M3 polish sprint wired HomeScreen to live repositories, SettingsScreen to real `DeviceCapabilityDetector` output, AskScreen to `navigationDestination` routing (`QuickCardRouteView`, `HandbookSectionDetailView`), and introduced `AskScopeSettings` in `OSA/Domain/Settings/` as the `@AppStorage`-backed scope control for personal notes in Ask. Sprint 6 extends the same path with `RetrievalContext`, `FollowUpContext`, `RecentAskHistorySettings`, `StudyGuideBuilder`, and Home suggestion blending from recent Ask topics and saved study-guide notes without adding persistent transcripts.
 - Sprint 7 system-surface integration is complete: `OSAWidgetsExtension` WidgetKit extension target added via `project.yml`. A bounded snapshot pipeline (`WidgetSnapshotModels`, `WidgetSnapshotStore` via App Group, `WidgetSnapshotCoordinator`) exposes only explicitly approved local data to system surfaces. Four Home Screen widgets (readiness, expiry, rotating tip, emergency quick access) and one Lock Screen Live Activity (`ActiveProtocolLiveActivity`) for active protocol progress are implemented in the extension. `ProtocolLiveActivityCoordinator` drives ActivityKit start/update/end calls in response to `ChecklistRun` updates. Privacy boundary enforced: system surfaces never expose Ask history, notes, or personal content.
@@ -63,15 +63,15 @@ flowchart TD
 ### Presentation Layer
 
 - `Home`: emergency-first dashboard decomposed into HomeScreen (coordinator) and discrete section views (HomeHeaderView, HomeReadinessSectionView, HomePinnedContentSectionView, HomeSpotlightSectionView, HomeSuggestionsSectionView, HomeActiveChecklistsSectionView, HomeInventorySectionView, HomeRecentNotesSectionView) in HomeSectionViews.swift. Spotlight section (segmented picker toggling Quick Cards and Feed tabs), offline state, recent activity. Quick cards are randomized from the full repository set, with 3 shown per load or pull-to-refresh. Feed shows the top 5 RSS-discovered articles sorted by publish date via `RSSDiscoveryService` injected through `RepositoryEnvironment`; rows display source host and publish date when available and open article URLs through the system URL handler. Accessibility: Dynamic Type adaptive layouts (AnyLayout VStack fallback at accessibility sizes), combined accessibility elements for VoiceOver, header traits on section labels.
-- `Library`: handbook chapter browsing, local search entry, topic-browse, recently viewed sections (tracked via `RecentLibraryHistorySettings`), citations into source material.
+- `Library`: handbook chapter browsing, local search entry, topic-browse, field-reference category browsing, recently viewed sections (tracked via `RecentLibraryHistorySettings`), and citations into source material.
 - `Ask`: grounded local assistant with clear scope boundaries, citations, bounded recent-question history, session-only follow-up retrieval, and local study-guide save support.
 - `Tools`: offline utility surface in `Features/Tools/` with screen-based signaling aids, whistle playback, timer or stopwatch controls, and deterministic reference helpers backed by `Shared/Support/Tools/SurvivalToolKit.swift`.
 - `Inventory`, `Checklists`, `Quick Cards`, `Notes`, `Settings`: first-class product areas. Sprint 2 list ergonomics: local `.searchable()` filtering on Quick Cards, Notes, and Checklists; swipe actions (archive/delete) on Inventory and Checklists; context menus on Quick Cards (pin/open) and Inventory (edit); pin/unpin on Quick Cards and Handbook sections via `PinnedContentSettings`; zero-state and no-results-state messaging.
 
 ### Application Services
 
-- `ContentService`: handbook browsing, section expansion, quick card loading.
-- `SearchService`: keyword search, tag filters, ranking, index maintenance, and rebuild coordination for the sidecar FTS5 store.
+- `ContentService`: handbook browsing, section expansion, quick card loading, and field-reference browsing.
+- `SearchService`: keyword search, tag filters, ranking, index maintenance, and rebuild coordination for the sidecar FTS5 store across handbook, quick cards, field references, imported knowledge, and approved user-data domains.
 - `AssistantService`: scoped question intake, bounded retrieval context, policy checks, answer assembly, citation packaging, and study-guide note generation.
 - `InventoryService`, `ChecklistService`, `NotesService`: CRUD and domain logic.
 - `ConnectivityService`: `NWPathMonitor` state, task gating, transition handling.
@@ -79,7 +79,7 @@ flowchart TD
 
 ### Persistence Layer
 
-- SwiftData entities for product state and normalized content.
+- SwiftData entities for product state and normalized content, including dedicated editorial records for handbook chapters, handbook sections, quick cards, and field references.
 - Dedicated local search index store, likely SQLite FTS5 in `Application Support/SearchIndex.sqlite`, not coupled directly to SwiftData internals. `SearchIndexRebuilder` repopulates it from repository truth at bootstrap, and note or inventory writes can update it incrementally through repository decorators.
 - File-backed raw source cache for imported HTML, PDF text extractions, or packaged content snapshots where needed.
 
@@ -108,9 +108,10 @@ The boundary matters more than the literal number of Xcode targets; the `OSAWidg
 The app should treat all answerable knowledge as local records:
 
 - Seed handbook content ships in the bundle and is imported into the local store on first launch.
+- Field references ship as their own bundled editorial pack and are imported, indexed, and cited locally just like handbook and quick-card records.
 - User-authored data such as notes, inventory, and checklist runs live only in the local store.
 - Imported web knowledge is persisted as `SourceRecord`, `ImportedKnowledgeDocument`, and `KnowledgeChunk` records before it can be surfaced by retrieval or cited by the assistant.
-- Quick cards are separate first-class records optimized for fast opening and large-type display.
+- Quick cards are separate first-class records optimized for fast opening and large-type display. Sprint 9 infographic-style cards stay in this model and use `largeTypeLayoutVersion` metadata rather than a second card repository.
 
 This keeps browsing, search, and Ask operating against one normalized on-device corpus.
 
@@ -121,7 +122,7 @@ Recommendation for v1:
 1. Normalize user query.
 2. Apply scope filter based on user intent and safety policy.
 3. Search local index using keyword, title, tag, and metadata ranking, optionally enriched by preferred region tags and bounded follow-up terms from the immediately previous grounded answer.
-4. Pull candidate chunks from handbook sections, quick cards, imported knowledge, checklists, notes, and inventory.
+4. Pull candidate chunks from handbook sections, quick cards, field references, imported knowledge, checklists, notes, and inventory.
 5. Re-rank with deterministic heuristics:
    - exact heading and tag match
    - recent user note relevance
@@ -136,6 +137,7 @@ Recommendation:
 
 - Handbook sections: chunk by semantic subsection, roughly 150 to 400 words with stable headings.
 - Quick cards: store as atomic chunks per card section so they can be cited precisely.
+- Field references: index the entry summary plus each structured section body so category-based reference cards remain searchable and citeable without narrative expansion.
 - Imported knowledge: chunk after normalization by heading and paragraph group, preserving source attribution and content hash.
 - Notes and inventory: index whole record plus key structured fields.
 

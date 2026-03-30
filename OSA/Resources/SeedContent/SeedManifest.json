@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentPackVersion": "0.4.0",
-  "generatedAt": "2026-03-28T00:00:00Z",
+  "contentPackVersion": "0.5.0",
+  "generatedAt": "2026-03-29T00:00:00Z",
   "packs": [
     {
       "identifier": "handbook-foundations",
@@ -12,6 +12,14 @@
       "contentHash": "3fc211fcdae277f4f824e844c843364f25f2b77577276a826498c7d15d1f2c34"
     },
     {
+      "identifier": "handbook-climate",
+      "kind": "handbook-chapters",
+      "version": "2026.03.29.1",
+      "fileName": "handbook-climate-v1.json",
+      "recordCount": 1,
+      "contentHash": "e1c412cac140e6615558930e9b95b5673bd2d83bae55b18d35f8e53ccfb50835"
+    },
+    {
       "identifier": "quick-cards-core",
       "kind": "quick-cards",
       "version": "2026.03.28.1",
@@ -20,12 +28,28 @@
       "contentHash": "cf3d4ced4503863be84d9e97cd88d3e9a5512461630de4dd4e8712efd127fd40"
     },
     {
+      "identifier": "quick-cards-climate",
+      "kind": "quick-cards",
+      "version": "2026.03.29.1",
+      "fileName": "quick-cards-climate-v1.json",
+      "recordCount": 3,
+      "contentHash": "d5bfec34de52d5aec0546adc4d9decbf64b7fa3c5e9f46073efddebf87d9e6b6"
+    },
+    {
       "identifier": "checklist-templates-core",
       "kind": "checklist-templates",
       "version": "2026.03.28.1",
       "fileName": "checklist-templates-core-v1.json",
       "recordCount": 16,
       "contentHash": "27cdbf91ed9322d908bfcf1c6c66b2a0480832219faced2a8518ba658e5a2315"
+    },
+    {
+      "identifier": "field-references-core",
+      "kind": "field-references",
+      "version": "2026.03.29.1",
+      "fileName": "field-references-core-v1.json",
+      "recordCount": 8,
+      "contentHash": "fa1ad6ab458453ce6005ef22c49ec6db779f19ff5cfa2891d47c7c805c933189"
     }
   ]
 }

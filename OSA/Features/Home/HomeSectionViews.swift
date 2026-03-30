@@ -365,6 +365,7 @@ struct HomeActiveChecklistsSectionView: View {
                                 HomeChecklistRow(run: run)
                             }
                             .buttonStyle(.plain)
+                            .accessibilityIdentifier("home-checklist-run-\(run.title)")
                             .accessibilityHint("Opens the active checklist run.")
                         }
                     }

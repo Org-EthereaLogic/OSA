@@ -98,10 +98,10 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         XCTAssertTrue(backButton.waitForExistence(timeout: 2), "Quick card detail should expose a back button")
         backButton.tap()
 
-        tapTab("Library")
-        let chapter = app.staticTexts["Preparedness Foundations"]
-        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
-        chapter.tap()
+        XCTAssertTrue(
+            openLibraryChapter(named: "Preparedness Foundations"),
+            "Preparedness Foundations chapter missing from Library"
+        )
 
         let section = app.staticTexts["Start With The Risks You Actually Face"]
         XCTAssertTrue(section.waitForExistence(timeout: 3), "Expected handbook section missing")
@@ -209,6 +209,33 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         }
     }
 
+    private func openLibraryChapter(named title: String) -> Bool {
+        tapTab("Library")
+
+        let chapter = app.staticTexts[title]
+        guard scrollToElement(chapter, maxSwipes: 6) else {
+            return false
+        }
+
+        chapter.tap()
+        return true
+    }
+
+    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     private func firstQuickCardButton() -> XCUIElement? {
         let quickCardLabels = [
             "Earthquake Drop-Cover-Hold",
@@ -237,18 +264,4 @@ final class OSAAccessibilitySmokeTests: XCTestCase {
         return nil
     }
 
-    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
-        if element.waitForExistence(timeout: 1) {
-            return true
-        }
-
-        for _ in 0..<maxSwipes {
-            app.swipeUp()
-            if element.waitForExistence(timeout: 1) {
-                return true
-            }
-        }
-
-        return false
-    }
 }

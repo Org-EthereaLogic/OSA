@@ -20,6 +20,7 @@ final class SeedContentRepositoryTests: XCTestCase {
         XCTAssertFalse(bundle.chapters.isEmpty)
         XCTAssertFalse(bundle.quickCards.isEmpty)
         XCTAssertFalse(bundle.checklistTemplates.isEmpty)
+        XCTAssertFalse(bundle.fieldReferences.isEmpty)
     }
 
     func testSeedContentLoaderDecodesManifestAndPackFiles() throws {
@@ -30,7 +31,7 @@ final class SeedContentRepositoryTests: XCTestCase {
 
         XCTAssertEqual(bundle.manifest.schemaVersion, 1)
         XCTAssertEqual(bundle.manifest.contentPackVersion, "0.1.0")
-        XCTAssertEqual(bundle.manifest.packs.count, 2)
+        XCTAssertEqual(bundle.manifest.packs.count, 4)
         XCTAssertEqual(bundle.chapters.count, 1)
         XCTAssertEqual(bundle.chapters.first?.slug, "preparedness-foundations")
         XCTAssertEqual(bundle.chapters.first?.sections.map(\.heading), [
@@ -40,6 +41,12 @@ final class SeedContentRepositoryTests: XCTestCase {
         XCTAssertEqual(bundle.quickCards.map(\.slug), [
             "first-hour-power-outage-check",
             "water-rotation-check"
+        ])
+        XCTAssertEqual(bundle.checklistTemplates.map(\.slug), [
+            "test-water-rotation-checklist"
+        ])
+        XCTAssertEqual(bundle.fieldReferences.map(\.slug), [
+            "bleeding-control-basics"
         ])
     }
 
@@ -61,6 +68,8 @@ final class SeedContentRepositoryTests: XCTestCase {
         XCTAssertEqual(outcome.chapterCount, 1)
         XCTAssertEqual(outcome.sectionCount, 2)
         XCTAssertEqual(outcome.quickCardCount, 2)
+        XCTAssertEqual(outcome.checklistTemplateCount, 1)
+        XCTAssertEqual(outcome.fieldReferenceCount, 1)
 
         let chapters = try repository.listChapters()
         XCTAssertEqual(chapters.map(\.slug), ["preparedness-foundations"])
@@ -80,6 +89,12 @@ final class SeedContentRepositoryTests: XCTestCase {
 
         let quickCard = try XCTUnwrap(repository.quickCard(slug: "water-rotation-check"))
         XCTAssertEqual(quickCard.relatedSectionIDs, [
+            UUID(uuidString: "11111111-1111-1111-1111-111111111112")!
+        ])
+
+        let fieldReference = try XCTUnwrap(repository.entry(slug: "bleeding-control-basics"))
+        XCTAssertEqual(fieldReference.category, .firstAid)
+        XCTAssertEqual(fieldReference.relatedSectionIDs, [
             UUID(uuidString: "11111111-1111-1111-1111-111111111112")!
         ])
 
@@ -112,6 +127,7 @@ final class SeedContentRepositoryTests: XCTestCase {
         XCTAssertEqual(secondOutcome.status, .skippedAlreadyCurrent)
         XCTAssertEqual(try repository.listChapters().count, 1)
         XCTAssertEqual(try repository.listQuickCards().count, 2)
+        XCTAssertEqual(try repository.listEntries().count, 1)
         XCTAssertEqual(try repository.chapter(slug: "preparedness-foundations")?.sections.count, 2)
 
         let versionState = try XCTUnwrap(repository.currentSeedVersionState())
@@ -124,7 +140,9 @@ final class SeedContentRepositoryTests: XCTestCase {
 
         try fixtures.overwriteManifest(
             handbookHash: "deadbeef",
-            quickCardHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.quickCardPack)
+            quickCardHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.quickCardPack),
+            checklistHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.checklistTemplatePack),
+            fieldReferenceHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.fieldReferencePack)
         )
 
         XCTAssertThrowsError(
@@ -141,12 +159,42 @@ final class SeedContentRepositoryTests: XCTestCase {
         }
     }
 
+    func testSeedContentLoaderRejectsFieldReferenceWithMissingRelatedSection() throws {
+        let fixtures = try SeedContentFixtures()
+        defer { fixtures.cleanup() }
+
+        try fixtures.overwriteFieldReferencePack(
+            contents: SeedContentFixtures.invalidFieldReferencePack
+        )
+        try fixtures.overwriteManifest(
+            handbookHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.handbookPack),
+            quickCardHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.quickCardPack),
+            checklistHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.checklistTemplatePack),
+            fieldReferenceHash: SeedContentFixtures.sha256Hex(SeedContentFixtures.invalidFieldReferencePack)
+        )
+
+        XCTAssertThrowsError(
+            try SeedContentLoader(directoryURL: fixtures.directoryURL).loadBundle()
+        ) { error in
+            XCTAssertEqual(
+                error as? SeedContentLoaderError,
+                .missingReferencedSectionForFieldReference(
+                    fieldReferenceID: UUID(uuidString: "33333333-3333-3333-3333-333333333331")!,
+                    sectionID: UUID(uuidString: "99999999-9999-9999-9999-999999999999")!
+                )
+            )
+        }
+    }
+
     private func makeInMemoryContainer() throws -> ModelContainer {
         let schema = Schema([
             PersistedHandbookChapter.self,
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
-            PersistedSeedContentState.self
+            PersistedFieldReferenceEntry.self,
+            PersistedSeedContentState.self,
+            PersistedChecklistTemplate.self,
+            PersistedChecklistTemplateItem.self
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         return try ModelContainer(for: schema, configurations: [configuration])
@@ -166,9 +214,13 @@ private struct SeedContentFixtures {
 
         try write("handbook-foundations-v1.json", contents: Self.handbookPack)
         try write("quick-cards-core-v1.json", contents: Self.quickCardPack)
+        try write("checklist-templates-core-v1.json", contents: Self.checklistTemplatePack)
+        try write("field-references-core-v1.json", contents: Self.fieldReferencePack)
         try overwriteManifest(
             handbookHash: Self.sha256Hex(Self.handbookPack),
-            quickCardHash: Self.sha256Hex(Self.quickCardPack)
+            quickCardHash: Self.sha256Hex(Self.quickCardPack),
+            checklistHash: Self.sha256Hex(Self.checklistTemplatePack),
+            fieldReferenceHash: Self.sha256Hex(Self.fieldReferencePack)
         )
     }
 
@@ -184,12 +236,23 @@ private struct SeedContentFixtures {
         )
     }
 
-    func overwriteManifest(handbookHash: String, quickCardHash: String) throws {
+    func overwriteFieldReferencePack(contents: String) throws {
+        try write("field-references-core-v1.json", contents: contents)
+    }
+
+    func overwriteManifest(
+        handbookHash: String,
+        quickCardHash: String,
+        checklistHash: String,
+        fieldReferenceHash: String
+    ) throws {
         try write(
             "SeedManifest.json",
             contents: Self.makeManifest(
                 handbookHash: handbookHash,
-                quickCardHash: quickCardHash
+                quickCardHash: quickCardHash,
+                checklistHash: checklistHash,
+                fieldReferenceHash: fieldReferenceHash
             )
         )
     }
@@ -198,7 +261,12 @@ private struct SeedContentFixtures {
         SHA256.hash(data: Data(contents.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
-    private static func makeManifest(handbookHash: String, quickCardHash: String) -> String {
+    private static func makeManifest(
+        handbookHash: String,
+        quickCardHash: String,
+        checklistHash: String,
+        fieldReferenceHash: String
+    ) -> String {
         """
     {
       "schemaVersion": 1,
@@ -220,6 +288,22 @@ private struct SeedContentFixtures {
           "fileName": "quick-cards-core-v1.json",
           "recordCount": 2,
           "contentHash": "\(quickCardHash)"
+        },
+        {
+          "identifier": "checklist-templates-core",
+          "kind": "checklist-templates",
+          "version": "2026.03.22.1",
+          "fileName": "checklist-templates-core-v1.json",
+          "recordCount": 1,
+          "contentHash": "\(checklistHash)"
+        },
+        {
+          "identifier": "field-references-core",
+          "kind": "field-references",
+          "version": "2026.03.22.1",
+          "fileName": "field-references-core-v1.json",
+          "recordCount": 1,
+          "contentHash": "\(fieldReferenceHash)"
         }
       ]
     }
@@ -307,6 +391,92 @@ private struct SeedContentFixtures {
           "tags": ["water", "storage", "rotation"],
           "lastReviewedAt": "2026-03-22T00:00:00Z",
           "largeTypeLayoutVersion": 1
+        }
+      ]
+    }
+    """
+
+    static let checklistTemplatePack = """
+    {
+      "templates": [
+        {
+          "id": "44444444-4444-4444-4444-444444444401",
+          "title": "Test Water Rotation Checklist",
+          "slug": "test-water-rotation-checklist",
+          "category": "water",
+          "description": "Simple checklist used to verify seed import and checklist upserts.",
+          "estimatedMinutes": 10,
+          "tags": ["water", "rotation"],
+          "sourceType": "seeded",
+          "lastReviewedAt": "2026-03-22T00:00:00Z",
+          "items": [
+            {
+              "id": "44444444-4444-4444-4444-444444444411",
+              "text": "Inspect storage containers",
+              "detail": null,
+              "sortOrder": 100,
+              "isOptional": false,
+              "riskLevel": null
+            }
+          ]
+        }
+      ]
+    }
+    """
+
+    static let fieldReferencePack = """
+    {
+      "entries": [
+        {
+          "id": "33333333-3333-3333-3333-333333333331",
+          "slug": "bleeding-control-basics",
+          "title": "Bleeding Control Basics",
+          "category": "first-aid",
+          "summary": "Static reference fixture for field-reference seed import tests.",
+          "sortOrder": 100,
+          "sections": [
+            {
+              "title": "Immediate Actions",
+              "bodyMarkdown": "- Apply direct pressure.",
+              "plainText": "Apply direct pressure.",
+              "sortOrder": 100
+            }
+          ],
+          "relatedSectionIDs": [
+            "11111111-1111-1111-1111-111111111112"
+          ],
+          "tags": ["first-aid", "bleeding"],
+          "safetyLevel": "sensitive-static-only",
+          "lastReviewedAt": "2026-03-22T00:00:00Z"
+        }
+      ]
+    }
+    """
+
+    static let invalidFieldReferencePack = """
+    {
+      "entries": [
+        {
+          "id": "33333333-3333-3333-3333-333333333331",
+          "slug": "bleeding-control-basics",
+          "title": "Bleeding Control Basics",
+          "category": "first-aid",
+          "summary": "Invalid reference fixture.",
+          "sortOrder": 100,
+          "sections": [
+            {
+              "title": "Immediate Actions",
+              "bodyMarkdown": "- Apply direct pressure.",
+              "plainText": "Apply direct pressure.",
+              "sortOrder": 100
+            }
+          ],
+          "relatedSectionIDs": [
+            "99999999-9999-9999-9999-999999999999"
+          ],
+          "tags": ["first-aid", "bleeding"],
+          "safetyLevel": "sensitive-static-only",
+          "lastReviewedAt": "2026-03-22T00:00:00Z"
         }
       ]
     }

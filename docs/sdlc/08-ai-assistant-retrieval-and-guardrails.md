@@ -12,7 +12,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 
 ## Assumptions
 
-- The assistant will have access to handbook content, quick cards, imported approved knowledge, notes, checklists, and inventory according to scope rules.
+- The assistant will have access to handbook content, quick cards, field references, imported approved knowledge, notes, checklists, and inventory according to scope rules.
 - Some supported devices will have Apple Foundation Models available; others will not.
 - v1 can accept slightly less fluent responses in exchange for stronger grounding and lower implementation risk.
 
@@ -34,6 +34,7 @@ The assistant exists to help the user navigate and synthesize approved local con
 
 - handbook chapters and sections
 - quick cards
+- field references
 - checklist templates and active checklist runs
 - inventory items
 - personal notes, if enabled in settings or explicit query context
@@ -66,7 +67,7 @@ Siri and Spotlight can also resolve named domain objects (M6P2): handbook sectio
 
 1. Classify query intent and sensitivity.
 2. Enforce scope and guardrails before retrieval.
-3. Retrieve relevant local evidence from handbook, quick cards, imported knowledge, and allowed user data, optionally using bounded session follow-up context and preferred profile tags as retrieval hints.
+3. Retrieve relevant local evidence from handbook, quick cards, field references, imported knowledge, and allowed user data, optionally using bounded session follow-up context and preferred profile tags as retrieval hints.
 4. Score evidence for trust, freshness, urgency, and relevance.
 5. If evidence is insufficient, return a grounded "not found locally" response.
 6. If evidence is sufficient:
@@ -80,7 +81,7 @@ Recommended answer structure:
 
 1. Direct answer or "not found locally" statement.
 2. Short supporting bullets or steps.
-3. Citations to local chapter, section, quick card, or imported source records.
+3. Citations to local chapter, section, quick card, field-reference, or imported source records.
 4. Optional follow-up actions such as "Open Quick Card" or "Search trusted web sources" when connected.
 
 Example response shape:
@@ -93,7 +94,7 @@ Example response shape:
 ## Citation Rules
 
 - Every substantive answer must cite at least one local record.
-- Citations must reference local chapter, section, quick card, or imported source records, not live URLs alone.
+- Citations must reference local chapter, section, quick card, field-reference, or imported source records, not live URLs alone.
 - If multiple sources disagree, the answer should surface the safer or more conservative guidance and note the discrepancy.
 - Imported-source citations should include source title and publisher/domain in the UI.
 - Answers without adequate evidence must refuse to answer rather than emit uncited prose.
@@ -121,7 +122,7 @@ System-level constraints should enforce:
 - never use unsupported prior knowledge
 - state uncertainty plainly
 - refuse disallowed categories
-- prefer quick cards and static content for sensitive topics
+- prefer quick cards, field references, and static content for sensitive topics
 - never claim live web access
 
 Prompt inputs should include:
@@ -140,7 +141,7 @@ Prompt inputs should include:
 - `SensitivityClassifier.classify(query: String) -> SensitivityResult` — local heuristic classification of blocked and sensitive-static-only topics.
 - `GroundedAnswerGenerator` protocol — async generation boundary for grounded synthesis from retrieved evidence.
 - `FoundationModelAdapter: GroundedAnswerGenerator` — concrete Foundation Models adapter, compiled only when the SDK includes FoundationModels. Uses `LanguageModelSession` for on-device generation.
-- `LocalRetrievalService` retrieves evidence, packages citations, and routes to the generation adapter on supported devices or extractive assembly on unsupported devices. Falls back to extractive automatically if generation fails.
+- `LocalRetrievalService` retrieves evidence, packages citations, and routes to the generation adapter on supported devices or extractive assembly on unsupported devices. Falls back to extractive automatically if generation fails. Sensitive-static-only retrieval now permits handbook sections, quick cards, and field references only.
 
 **Current implementation (M3P5):**
 

@@ -13,6 +13,13 @@ protocol QuickCardRepository {
     func quickCard(id: UUID) throws -> QuickCard?
 }
 
+protocol FieldReferenceRepository {
+    func listEntries() throws -> [FieldReferenceEntry]
+    func listEntries(category: FieldReferenceCategory) throws -> [FieldReferenceEntry]
+    func entry(slug: String) throws -> FieldReferenceEntry?
+    func entry(id: UUID) throws -> FieldReferenceEntry?
+}
+
 protocol SeedContentRepository {
     func currentSeedVersionState() throws -> SeedContentVersionState?
 

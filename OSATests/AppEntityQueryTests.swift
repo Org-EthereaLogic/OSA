@@ -258,12 +258,14 @@ private func makeTestDependencies(
     chapters: [HandbookChapter] = [],
     sections: [HandbookSection] = [],
     quickCards: [QuickCard] = [],
+    fieldReferences: [FieldReferenceEntry] = [],
     templates: [ChecklistTemplate] = [],
     inventoryItems: [InventoryItem] = [],
     searchResults: [SearchResult] = []
 ) -> AppDependencies {
     let handbookRepo = StubHandbookRepository(chapters: chapters, sections: sections)
     let quickCardRepo = StubQuickCardRepository(cards: quickCards)
+    let fieldReferenceRepo = StubFieldReferenceRepository(entries: fieldReferences)
     let checklistRepo = StubChecklistRepository(templates: templates)
     let inventoryRepo = StubInventoryRepository(items: inventoryItems)
     let searchService = StubSearchService(results: searchResults)
@@ -276,6 +278,7 @@ private func makeTestDependencies(
     return AppDependencies(
         handbookRepository: handbookRepo,
         quickCardRepository: quickCardRepo,
+        fieldReferenceRepository: fieldReferenceRepo,
         seedContentRepository: StubSeedContentRepository(),
         inventoryRepository: inventoryRepo,
         supplyTemplateRepository: StubSupplyTemplateRepository(),
@@ -483,6 +486,17 @@ private final class StubQuickCardRepository: QuickCardRepository, @unchecked Sen
     func listQuickCards() throws -> [QuickCard] { cards }
     func quickCard(slug: String) throws -> QuickCard? { cards.first { $0.slug == slug } }
     func quickCard(id: UUID) throws -> QuickCard? { cards.first { $0.id == id } }
+}
+
+private final class StubFieldReferenceRepository: FieldReferenceRepository, @unchecked Sendable {
+    let entries: [FieldReferenceEntry]
+    init(entries: [FieldReferenceEntry] = []) { self.entries = entries }
+    func listEntries() throws -> [FieldReferenceEntry] { entries }
+    func listEntries(category: FieldReferenceCategory) throws -> [FieldReferenceEntry] {
+        entries.filter { $0.category == category }
+    }
+    func entry(slug: String) throws -> FieldReferenceEntry? { entries.first { $0.slug == slug } }
+    func entry(id: UUID) throws -> FieldReferenceEntry? { entries.first { $0.id == id } }
 }
 
 private final class StubChecklistRepository: ChecklistRepository, @unchecked Sendable {

@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository, SeedContentRepository {
+final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository, FieldReferenceRepository, SeedContentRepository {
     private let modelContext: ModelContext
 
     init(modelContext: ModelContext) {
@@ -78,6 +78,51 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
         return try modelContext.fetch(descriptor).first?.toDomain()
     }
 
+    func listEntries() throws -> [FieldReferenceEntry] {
+        var descriptor = FetchDescriptor<PersistedFieldReferenceEntry>(
+            sortBy: [
+                SortDescriptor(\.categoryRawValue),
+                SortDescriptor(\.sortOrder),
+                SortDescriptor(\.title)
+            ]
+        )
+        descriptor.includePendingChanges = true
+
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
+    }
+
+    func listEntries(category: FieldReferenceCategory) throws -> [FieldReferenceEntry] {
+        let targetCategory = category.rawValue
+        var descriptor = FetchDescriptor<PersistedFieldReferenceEntry>(
+            predicate: #Predicate { $0.categoryRawValue == targetCategory },
+            sortBy: [
+                SortDescriptor(\.sortOrder),
+                SortDescriptor(\.title)
+            ]
+        )
+        descriptor.includePendingChanges = true
+
+        return try modelContext.fetch(descriptor).map { $0.toDomain() }
+    }
+
+    func entry(slug: String) throws -> FieldReferenceEntry? {
+        let targetSlug = slug
+        let descriptor = FetchDescriptor<PersistedFieldReferenceEntry>(
+            predicate: #Predicate { $0.slug == targetSlug }
+        )
+
+        return try modelContext.fetch(descriptor).first?.toDomain()
+    }
+
+    func entry(id: UUID) throws -> FieldReferenceEntry? {
+        let targetID = id
+        let descriptor = FetchDescriptor<PersistedFieldReferenceEntry>(
+            predicate: #Predicate { $0.id == targetID }
+        )
+
+        return try modelContext.fetch(descriptor).first?.toDomain()
+    }
+
     func currentSeedVersionState() throws -> SeedContentVersionState? {
         let states = try modelContext.fetch(FetchDescriptor<PersistedSeedContentState>())
         return states.first(where: { $0.identifier == PersistedSeedContentState.singletonIdentifier })?.toDomain()
@@ -94,19 +139,23 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
                 chapterCount: bundle.chapters.count,
                 sectionCount: bundle.chapters.reduce(into: 0) { $0 += $1.sections.count },
                 quickCardCount: bundle.quickCards.count,
-                checklistTemplateCount: bundle.checklistTemplates.count
+                checklistTemplateCount: bundle.checklistTemplates.count,
+                fieldReferenceCount: bundle.fieldReferences.count
             )
         }
 
         let existingChapters = try modelContext.fetch(FetchDescriptor<PersistedHandbookChapter>())
         let existingQuickCards = try modelContext.fetch(FetchDescriptor<PersistedQuickCard>())
+        let existingFieldReferences = try modelContext.fetch(FetchDescriptor<PersistedFieldReferenceEntry>())
         let existingState = try modelContext.fetch(FetchDescriptor<PersistedSeedContentState>()).first
 
         let existingChaptersByID = Dictionary(uniqueKeysWithValues: existingChapters.map { ($0.id, $0) })
         let existingQuickCardsByID = Dictionary(uniqueKeysWithValues: existingQuickCards.map { ($0.id, $0) })
+        let existingFieldReferencesByID = Dictionary(uniqueKeysWithValues: existingFieldReferences.map { ($0.id, $0) })
 
         var incomingChapterIDs = Set<UUID>()
         var incomingQuickCardIDs = Set<UUID>()
+        var incomingFieldReferenceIDs = Set<UUID>()
 
         for chapter in bundle.chapters.sorted(by: chapterSort) {
             incomingChapterIDs.insert(chapter.id)
@@ -154,6 +203,20 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
 
         for quickCardRecord in existingQuickCards where !incomingQuickCardIDs.contains(quickCardRecord.id) {
             modelContext.delete(quickCardRecord)
+        }
+
+        for fieldReference in bundle.fieldReferences.sorted(by: fieldReferenceSort) {
+            incomingFieldReferenceIDs.insert(fieldReference.id)
+
+            if let existingFieldReference = existingFieldReferencesByID[fieldReference.id] {
+                existingFieldReference.update(from: fieldReference)
+            } else {
+                modelContext.insert(PersistedFieldReferenceEntry(from: fieldReference))
+            }
+        }
+
+        for fieldReferenceRecord in existingFieldReferences where !incomingFieldReferenceIDs.contains(fieldReferenceRecord.id) {
+            modelContext.delete(fieldReferenceRecord)
         }
 
         // Upsert checklist templates
@@ -223,7 +286,8 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
             chapterCount: bundle.chapters.count,
             sectionCount: bundle.chapters.reduce(into: 0) { $0 += $1.sections.count },
             quickCardCount: bundle.quickCards.count,
-            checklistTemplateCount: bundle.checklistTemplates.count
+            checklistTemplateCount: bundle.checklistTemplates.count,
+            fieldReferenceCount: bundle.fieldReferences.count
         )
     }
 
@@ -249,5 +313,17 @@ final class SwiftDataContentRepository: HandbookRepository, QuickCardRepository,
         }
 
         return lhs.priority > rhs.priority
+    }
+
+    private func fieldReferenceSort(lhs: FieldReferenceEntry, rhs: FieldReferenceEntry) -> Bool {
+        if lhs.category == rhs.category {
+            if lhs.sortOrder == rhs.sortOrder {
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+            }
+
+            return lhs.sortOrder < rhs.sortOrder
+        }
+
+        return lhs.category.rawValue.localizedCaseInsensitiveCompare(rhs.category.rawValue) == .orderedAscending
     }
 }

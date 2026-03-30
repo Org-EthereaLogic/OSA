@@ -122,7 +122,7 @@ final class LocalRetrievalService: RetrievalService {
     ) -> Set<SearchResultKind>? {
         // For sensitive-static-only, restrict to handbook and quick cards
         if case .sensitiveStaticOnly = sensitivity {
-            return [.handbookSection, .quickCard]
+            return [.handbookSection, .quickCard, .fieldReference]
         }
 
         guard let scopes else { return nil }
@@ -132,6 +132,7 @@ final class LocalRetrievalService: RetrievalService {
             switch scope {
             case .handbook: kinds.insert(.handbookSection)
             case .quickCards: kinds.insert(.quickCard)
+            case .fieldReferences: kinds.insert(.fieldReference)
             case .inventory: kinds.insert(.inventoryItem)
             case .checklists: kinds.insert(.checklistTemplate)
             case .notes: kinds.insert(.noteRecord)
@@ -145,6 +146,7 @@ final class LocalRetrievalService: RetrievalService {
         switch kind {
         case .handbookSection: "Handbook"
         case .quickCard: "Quick Card"
+        case .fieldReference: "Field Reference"
         case .inventoryItem: "Inventory"
         case .checklistTemplate: "Checklist"
         case .noteRecord: "Note"
@@ -274,7 +276,10 @@ final class LocalRetrievalService: RetrievalService {
 
     private func determineConfidence(evidence: [EvidenceItem]) -> ConfidenceLevel {
         let approvedSourceCount = evidence.filter {
-            $0.kind == .handbookSection || $0.kind == .quickCard || $0.kind == .importedKnowledge
+            $0.kind == .handbookSection
+                || $0.kind == .quickCard
+                || $0.kind == .fieldReference
+                || $0.kind == .importedKnowledge
         }.count
 
         if approvedSourceCount >= 2 {
@@ -358,6 +363,10 @@ final class LocalRetrievalService: RetrievalService {
         // Suggest opening the top handbook section
         if let topSection = evidence.first(where: { $0.kind == .handbookSection }) {
             actions.append(.openHandbookSection(id: topSection.id, title: topSection.title))
+        }
+
+        if let topFieldReference = evidence.first(where: { $0.kind == .fieldReference }) {
+            actions.append(.openFieldReference(id: topFieldReference.id, title: topFieldReference.title))
         }
 
         return actions

@@ -8,9 +8,9 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - Core functionality must work fully offline from locally stored content and user data.
 - Imported web knowledge must become locally available for future offline use.
 - The product requires local handbook content, quick cards, checklists, inventory, notes, citations, bounded Ask-session context, and settings.
-- The first editorial-content persistence slice is now implemented: SwiftData models for `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
+- The editorial-content persistence slice now includes `PersistedHandbookChapter`, `PersistedHandbookSection`, `PersistedQuickCard`, `PersistedFieldReferenceEntry`, and `PersistedSeedContentState`; domain-facing value types and repository protocols (`HandbookRepository`, `QuickCardRepository`, `FieldReferenceRepository`, `SeedContentRepository`); a `SwiftDataContentRepository` implementation; a versioned seed-manifest loader and importer; and focused repository-contract tests.
 - User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
-- A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types. `SearchIndexRebuilder` repopulates the index from repository truth at bootstrap, and note or inventory writes update the index incrementally through repository decorators.
+- A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across handbook sections, quick cards, field references, checklist templates, inventory items, notes, and imported knowledge. `SearchIndexRebuilder` repopulates the index from repository truth at bootstrap, and note or inventory writes update the index incrementally through repository decorators.
 - Imported knowledge persistence is now implemented: `PersistedSourceRecord`, `PersistedImportedKnowledgeDocument`, `PersistedKnowledgeChunk`, and `PersistedPendingOperation` SwiftData models with cascade relationships; domain value types and enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`); `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations; repository-contract tests for both repositories. M4P4 adds `ImportedKnowledgeNormalizer` (HTML/text → `NormalizedDocument` with title, content-hash, publisher domain), `KnowledgeChunker` (heading-aware chunking with paragraph fallback), and `ImportedKnowledgeImportPipeline` (orchestrates normalize → chunk → persist to repository → extend FTS5 index with dedupe and document versioning). `SearchService.indexImportedChunk` extends the FTS5 index for imported knowledge chunks.
 - Maps persistence is now implemented: `PersistedWaypoint` (id, title, note, lat/lon, category, symbolName, createdAt), `PersistedRecordedTrack` (id, title, startedAt, endedAt, totalDistanceMeters) with a cascade one-to-many relationship to `PersistedRecordedTrackPoint` (id, lat/lon, timestamp, horizontalAccuracy), and `MapRecordMappings` domain-value-type converters. `WaypointRepository` and `RecordedTrackRepository` protocols in `OSA/Domain/Maps/Repositories/` with `SwiftDataWaypointRepository` and `SwiftDataRecordedTrackRepository` implementations in `OSA/Persistence/SwiftData/Repositories/`. Repository-contract tests cover waypoint CRUD and full track create/update/delete lifecycle.
 
@@ -48,7 +48,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 
 ### Data Classes
 
-- Immutable or slowly changing editorial content: chapters, sections, quick cards, checklist templates.
+- Immutable or slowly changing editorial content: chapters, sections, quick cards, field references, and checklist templates.
 - Mutable user state: notes, inventory items, checklist runs, settings, AI sessions.
 - Imported knowledge: source metadata, normalized documents, chunks, citations, refresh state.
 
@@ -58,6 +58,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 erDiagram
     HandbookChapter ||--o{ HandbookSection : contains
     HandbookSection ||--o{ QuickCard : summarizes
+    HandbookSection ||--o{ FieldReferenceEntry : referenced_by
     ChecklistTemplate ||--o{ ChecklistTemplateItem : contains
     ChecklistTemplate ||--o{ ChecklistRun : instantiates
     ChecklistRun ||--o{ ChecklistRunItem : tracks
@@ -119,6 +120,22 @@ erDiagram
 - `tags`
 - `lastReviewedAt`
 - `largeTypeLayoutVersion`
+
+`largeTypeLayoutVersion` remains the bounded presentation seam for infographic-style quick cards. Sprint 9 climate quick cards use version `2` instead of introducing a separate `InfographicCard` persistence type.
+
+### FieldReferenceEntry
+
+- `id`
+- `slug`
+- `title`
+- `category` such as first-aid, weather-exposure, water-treatment, signaling, or lookalike-comparison
+- `summary`
+- `sortOrder`
+- `sections` as ordered structured reference blocks with `title`, `bodyMarkdown`, `plainText`, and `sortOrder`
+- `relatedSectionIDs`
+- `tags`
+- `safetyLevel`
+- `lastReviewedAt`
 
 ### InventoryItem
 
@@ -245,6 +262,7 @@ Required metadata for imported knowledge:
 - `chunkID` optional
 - `sectionID` optional
 - `quickCardID` optional
+- `fieldReferenceID` optional
 - `displayLabel`
 - `anchorText`
 - `sourceTitle`
@@ -279,6 +297,7 @@ Lightweight settings layer using `@AppStorage` (not SwiftData). Lives in `OSA/Do
 
 - `includePersonalNotes`: Bool, default `false`, key `settings.ask.includePersonalNotes`
 - Controls the `RetrievalScope` set passed to the retrieval pipeline
+- Default scope set includes handbook, quick cards, field references, inventory, checklists, and imported knowledge; notes remain opt-in through `includePersonalNotes`
 - Surfaced as a toggle in both AskScreen and SettingsScreen
 
 ### PinnedContentSettings _(Sprint 2 — Live)_

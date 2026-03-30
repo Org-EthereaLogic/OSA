@@ -59,6 +59,26 @@ final class SearchIndexRebuilderTests: XCTestCase {
             lastReviewedAt: nil,
             largeTypeLayoutVersion: 1
         )
+        let fieldReference = FieldReferenceEntry(
+            id: UUID(),
+            slug: "bleeding-control-basics",
+            title: "Bleeding Control Basics",
+            category: .firstAid,
+            summary: "tourniquet pressure packing reference",
+            sortOrder: 100,
+            sections: [
+                FieldReferenceSection(
+                    title: "Pressure",
+                    bodyMarkdown: "- Apply pressure",
+                    plainText: "Apply pressure and pack if needed.",
+                    sortOrder: 100
+                )
+            ],
+            relatedSectionIDs: [section.id],
+            tags: ["scenario:earthquake"],
+            safetyLevel: .sensitiveStaticOnly,
+            lastReviewedAt: nil
+        )
         let inventoryItem = InventoryItem(
             id: UUID(),
             name: "N95 Respirator",
@@ -157,6 +177,7 @@ final class SearchIndexRebuilderTests: XCTestCase {
             searchService: searchService,
             handbookRepository: StubHandbookRepository(chapters: [chapter]),
             quickCardRepository: StubQuickCardRepository(cards: [quickCard]),
+            fieldReferenceRepository: StubFieldReferenceRepository(entries: [fieldReference]),
             inventoryRepository: InMemoryInventoryRepository(items: [inventoryItem]),
             checklistRepository: StubChecklistRepository(templates: [checklistTemplate]),
             noteRepository: InMemoryNoteRepository(notes: [note]),
@@ -176,6 +197,10 @@ final class SearchIndexRebuilderTests: XCTestCase {
         XCTAssertEqual(
             try searchService.search(query: "advisory", scopes: [.quickCard], limit: 5).first?.kind,
             .quickCard
+        )
+        XCTAssertEqual(
+            try searchService.search(query: "tourniquet", scopes: [.fieldReference], limit: 5).first?.kind,
+            .fieldReference
         )
         XCTAssertEqual(
             try searchService.search(query: "respirator", scopes: [.inventoryItem], limit: 5).first?.kind,
@@ -315,6 +340,32 @@ private final class StubQuickCardRepository: QuickCardRepository {
 
     func quickCard(id: UUID) throws -> QuickCard? {
         cardsByID[id]
+    }
+}
+
+private final class StubFieldReferenceRepository: FieldReferenceRepository {
+    private let entriesByID: [UUID: FieldReferenceEntry]
+    private let entriesBySlug: [String: FieldReferenceEntry]
+
+    init(entries: [FieldReferenceEntry]) {
+        self.entriesByID = Dictionary(uniqueKeysWithValues: entries.map { ($0.id, $0) })
+        self.entriesBySlug = Dictionary(uniqueKeysWithValues: entries.map { ($0.slug, $0) })
+    }
+
+    func listEntries() throws -> [FieldReferenceEntry] {
+        Array(entriesByID.values)
+    }
+
+    func listEntries(category: FieldReferenceCategory) throws -> [FieldReferenceEntry] {
+        entriesByID.values.filter { $0.category == category }
+    }
+
+    func entry(slug: String) throws -> FieldReferenceEntry? {
+        entriesBySlug[slug]
+    }
+
+    func entry(id: UUID) throws -> FieldReferenceEntry? {
+        entriesByID[id]
     }
 }
 

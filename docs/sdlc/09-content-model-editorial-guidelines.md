@@ -5,7 +5,7 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 
 ## Confirmed Facts
 
-- The app depends on a curated local corpus for handbook browsing, quick cards, and Ask.
+- The app depends on a curated local corpus for handbook browsing, quick cards, field references, and Ask.
 - Sensitive topics must favor reviewed static content and concise reference materials over model improvisation.
 - Archery and longbow content is intentionally limited to safety, maintenance, inspection, storage, inventory, and practice logs or lawful reference notes.
 
@@ -18,8 +18,9 @@ Related docs: [PRD](./02-prd.md), [Data Model](./06-data-model-local-storage.md)
 ## Recommendations
 
 - Author content in small, heading-rich sections that retrieve well and cite cleanly.
-- Use consistent taxonomy across handbook, quick cards, and checklists.
+- Use consistent taxonomy across handbook, quick cards, field references, and checklists.
 - Mark sensitive sections with review cadence and safety level metadata.
+- Reuse shared tag prefixes such as `scenario:*`, `season:*`, and `region:*` across all editorial types so Library browse, local search, and Ask retrieval stay aligned.
 
 ## Open Questions
 
@@ -71,6 +72,24 @@ Each quick card should contain:
 
 Quick cards should be concise, large-type friendly, and action-oriented.
 
+Infographic-style offline cards should remain within the quick-card model when a bounded layout-version change is sufficient. Prefer presentation metadata such as `largeTypeLayoutVersion` over creating a second card taxonomy.
+
+## Field Reference Template
+
+Each field reference should contain:
+
+- `Title`
+- `Category`
+- `One-paragraph summary`
+- `Ordered reference sections`
+- `Cautions / do not do`
+- `Related handbook section IDs`
+- `Tags`
+- `Review date`
+- `Safety level`
+
+Field references should stay concise, highly scannable, and comparison-friendly. They are for quick offline reference, not long-form narrative instruction.
+
 ## Checklist Template
 
 Each checklist template should contain:
@@ -96,6 +115,9 @@ Recommended shared metadata:
 - review date
 - source type such as seed, imported-reviewed, or user-authored
 - trust tier for imported sources
+- scenario tags using `scenario:*`
+- seasonal tags using `season:*`
+- regional tags using `region:*`
 
 ## Writing Style Guide
 
@@ -110,6 +132,7 @@ Recommended shared metadata:
 
 - Handbook citations should use chapter and section titles.
 - Quick cards should cite the card title.
+- Field references should cite the entry title with a clear `Field Reference` label.
 - Imported sources should display title plus publisher/domain and review or fetch date when relevant.
 - Sensitive guidance should show recency or review context prominently.
 
@@ -131,9 +154,10 @@ Recommended v1 workflow:
 
 ## Safety-Review Rules
 
-- Medical-adjacent content: reviewed static guidance only, no diagnostic or dosage invention.
+- Medical-adjacent content: reviewed static guidance only, no diagnostic or dosage invention. Field-reference entries in first-aid categories must remain non-diagnostic and escalation-aware.
 - Fire and lighting: emphasize safe handling, fuel/storage boundaries, and do-not-improvise warnings.
 - Utilities and shelter: avoid dangerous electrical, gas, structural, or heating improvisation unless the guidance is explicitly reviewed and conservative.
+- Lookalike comparisons: write conservative distinction notes only. Do not convert comparison content into identification guarantees or survival-foraging advice.
 - Archery and longbow: limit to safety, maintenance, inspection, storage, inventory, range habits, and practice logs only.
 
 ## Initial Chapter Map
@@ -165,4 +189,3 @@ Recommended v1 workflow:
 1. ~~Author one complete sample chapter, one quick card, and one checklist template to validate the format.~~ **Done:** Seed content files exist for all three — `handbook-foundations-v1.json`, `quick-cards-core-v1.json`, and `checklist-templates-core-v1.json` — in `OSA/Resources/SeedContent/`.
 2. ~~Define trust tiers and review SLAs for imported content before enabling broad source import.~~ **Resolved:** Three-tier trusted-source allowlist defined with 17 PNW-focused sources. Tier 1–2 auto-approve; Tier 3 and user-added flagged for review.
 3. Build content lint checks once the source file format is chosen.
-

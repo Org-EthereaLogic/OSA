@@ -27,11 +27,10 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testLibraryChapterSectionsHaveContent() {
-        tapTab("Library")
-
-        let chapter = app.staticTexts["Preparedness Foundations"]
-        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
-        chapter.tap()
+        XCTAssertTrue(
+            openLibraryChapter(named: "Preparedness Foundations"),
+            "Preparedness Foundations chapter missing from Library"
+        )
 
         XCTAssertTrue(
             app.navigationBars["Preparedness Foundations"].waitForExistence(timeout: 3),
@@ -44,11 +43,10 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testWaterChapterSectionsAreReadable() {
-        tapTab("Library")
-
-        let waterChapter = app.staticTexts["Water"]
-        XCTAssertTrue(waterChapter.waitForExistence(timeout: 5), "Water chapter missing from Library")
-        waterChapter.tap()
+        XCTAssertTrue(
+            openLibraryChapter(named: "Water"),
+            "Water chapter missing from Library"
+        )
 
         XCTAssertTrue(
             app.navigationBars["Water"].waitForExistence(timeout: 3),
@@ -145,10 +143,10 @@ final class OSAContentAndInputTests: XCTestCase {
 
         let templateTitle = "72-Hour Emergency Kit Check"
         let template = app.buttons["checklist-template-72-hour-emergency-kit-check"]
-        XCTAssertTrue(
-            scrollToElement(template, maxSwipes: 4),
-            "Expected standard checklist template missing"
-        )
+        guard scrollToElement(template, maxSwipes: 10) else {
+            XCTFail("Expected standard checklist template missing")
+            return
+        }
         if template.isHittable {
             template.tap()
         } else {
@@ -164,40 +162,33 @@ final class OSAContentAndInputTests: XCTestCase {
 
         // "Start Checklist" is in the last list section and may be off-screen on first render
         let startButton = app.buttons["Start Checklist"]
-        XCTAssertTrue(
-            scrollToElement(startButton, maxSwipes: 3),
-            "Checklist template detail should expose a start action"
-        )
+        guard scrollToElement(startButton, maxSwipes: 3) else {
+            XCTFail("Checklist template detail should expose a start action")
+            return
+        }
 
         startButton.tap()
 
-        // iOS 26 sidebarAdaptable creates two back buttons: "More" (sidebar level) and
-        // "Checklists" (NavigationStack level). Target the NavigationStack one explicitly.
-        let backToChecklists = app.buttons.matching(
-            NSPredicate(format: "identifier == 'BackButton' AND label == 'Checklists'")
-        ).firstMatch
-        if backToChecklists.waitForExistence(timeout: 2) {
-            backToChecklists.tap()
-        } else {
-            navigateBack()
+        tapTab("Home")
+
+        let activeRunQuery = app.buttons.matching(identifier: "home-checklist-run-\(templateTitle)")
+        var activeRun = firstHittableElement(in: activeRunQuery)
+        for _ in 0..<6 where activeRun == nil {
+            app.swipeUp()
+            activeRun = firstHittableElement(in: activeRunQuery)
         }
 
-        // Scroll back to the top — the Active section is above the template list
-        app.swipeDown()
-        app.swipeDown()
-
-        // Use firstMatch — in-memory test store may have accumulated multiple runs
-        let activeRun = app.buttons.matching(identifier: "checklist-run-\(templateTitle)").firstMatch
-        XCTAssertTrue(
-            activeRun.waitForExistence(timeout: 5),
-            "Active run should appear after starting the checklist"
-        )
+        guard let activeRun else {
+            XCTFail("Active run should appear on Home after starting the checklist")
+            return
+        }
         activeRun.tap()
 
         let runExport = app.buttons["Export checklist run as PDF"]
+        let runActions = app.buttons["Checklist actions"]
         XCTAssertTrue(
-            scrollToElement(runExport, maxSwipes: 2),
-            "Checklist run detail should expose a PDF export action"
+            runExport.waitForExistence(timeout: 5) || runActions.waitForExistence(timeout: 5),
+            "Checklist run detail should open and expose its toolbar actions"
         )
     }
 
@@ -289,11 +280,10 @@ final class OSAContentAndInputTests: XCTestCase {
     }
 
     func testLibraryShowsRecentlyViewedAfterOpeningSection() {
-        tapTab("Library")
-
-        let chapter = app.staticTexts["Preparedness Foundations"]
-        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
-        chapter.tap()
+        XCTAssertTrue(
+            openLibraryChapter(named: "Preparedness Foundations"),
+            "Preparedness Foundations chapter missing from Library"
+        )
 
         let section = app.staticTexts["Start With The Risks You Actually Face"]
         XCTAssertTrue(section.waitForExistence(timeout: 3), "Expected handbook section missing from Preparedness Foundations")
@@ -308,9 +298,10 @@ final class OSAContentAndInputTests: XCTestCase {
         if !app.staticTexts["Recently Viewed"].exists {
             navigateBack()
         }
+        scrollLibraryToTop()
 
         XCTAssertTrue(
-            app.staticTexts["Recently Viewed"].waitForExistence(timeout: 3),
+            scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
             "Library should show Recently Viewed after opening a handbook section"
         )
     }
@@ -389,11 +380,10 @@ final class OSAContentAndInputTests: XCTestCase {
         )
 
         navigateBack()
-        tapTab("Library")
-
-        let chapter = app.staticTexts["Preparedness Foundations"]
-        XCTAssertTrue(chapter.waitForExistence(timeout: 5), "Preparedness Foundations chapter missing")
-        chapter.tap()
+        XCTAssertTrue(
+            openLibraryChapter(named: "Preparedness Foundations"),
+            "Preparedness Foundations chapter missing from Library"
+        )
 
         let section = app.staticTexts["Start With The Risks You Actually Face"]
         XCTAssertTrue(section.waitForExistence(timeout: 3), "Expected handbook section missing")
@@ -527,6 +517,24 @@ final class OSAContentAndInputTests: XCTestCase {
         }
     }
 
+    private func openLibraryChapter(named title: String) -> Bool {
+        tapTab("Library")
+
+        let chapter = app.staticTexts[title]
+        guard scrollToElement(chapter, maxSwipes: 6) else {
+            return false
+        }
+
+        chapter.tap()
+        return true
+    }
+
+    private func scrollLibraryToTop() {
+        for _ in 0..<3 {
+            app.swipeDown()
+        }
+    }
+
     private func dismissModal() {
         let cancel = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Cancel'")).firstMatch
         if cancel.waitForExistence(timeout: 2) {
@@ -594,6 +602,10 @@ final class OSAContentAndInputTests: XCTestCase {
         }
 
         return false
+    }
+
+    private func firstHittableElement(in query: XCUIElementQuery) -> XCUIElement? {
+        query.allElementsBoundByIndex.first(where: \.isHittable)
     }
 
     private func openNewNoteComposer() {

@@ -15,6 +15,7 @@ final class SchemaMigrationTests: XCTestCase {
         PersistedHandbookChapter.self,
         PersistedHandbookSection.self,
         PersistedQuickCard.self,
+        PersistedFieldReferenceEntry.self,
         PersistedSeedContentState.self,
         PersistedInventoryItem.self,
         PersistedChecklistTemplate.self,
@@ -38,14 +39,15 @@ final class SchemaMigrationTests: XCTestCase {
         XCTAssertNotNil(container)
     }
 
-    func testAllSeventeenModelTypesAreRegisteredInSchema() throws {
+    func testAllEighteenModelTypesAreRegisteredInSchema() throws {
         let schema = Schema(Self.allModelTypes)
         let entityNames = Set(schema.entities.map(\.name))
 
-        XCTAssertEqual(entityNames.count, 17, "Expected 17 entity types in the V1 schema")
+        XCTAssertEqual(entityNames.count, 18, "Expected 18 entity types in the current schema")
         XCTAssertTrue(entityNames.contains("PersistedHandbookChapter"))
         XCTAssertTrue(entityNames.contains("PersistedHandbookSection"))
         XCTAssertTrue(entityNames.contains("PersistedQuickCard"))
+        XCTAssertTrue(entityNames.contains("PersistedFieldReferenceEntry"))
         XCTAssertTrue(entityNames.contains("PersistedSeedContentState"))
         XCTAssertTrue(entityNames.contains("PersistedInventoryItem"))
         XCTAssertTrue(entityNames.contains("PersistedChecklistTemplate"))

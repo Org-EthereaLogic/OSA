@@ -1,0 +1,323 @@
+{
+  "entries": [
+    {
+      "id": "ccddee11-0001-0000-0000-000000000001",
+      "slug": "bleeding-control-basics",
+      "title": "Bleeding Control Basics",
+      "category": "first-aid",
+      "summary": "Static reference for severe bleeding response before transport or EMS handoff.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Immediate Actions",
+          "bodyMarkdown": "- Put firm direct pressure on the wound.\n- Use clean absorbent material if available.\n- Add more material without repeatedly lifting the first layer.",
+          "plainText": "Put firm direct pressure on the wound. Use clean absorbent material if available. Add more material without repeatedly lifting the first layer.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Escalate Pressure",
+          "bodyMarkdown": "- If direct pressure fails and the wound is on a limb, use a commercial tourniquet only if you already have one and understand its instructions.\n- Note the time and keep the person still and warm.",
+          "plainText": "If direct pressure fails and the wound is on a limb, use a commercial tourniquet only if you already have one and understand its instructions. Note the time and keep the person still and warm.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Get Help Now",
+          "bodyMarkdown": "- Seek urgent care for spurting blood, soaking through dressings, amputation, or signs of shock.\n- Do not remove deeply embedded objects unless current local guidance says to do so.",
+          "plainText": "Seek urgent care for spurting blood, soaking through dressings, amputation, or signs of shock. Do not remove deeply embedded objects unless current local guidance says to do so.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "first-aid",
+        "bleeding",
+        "scenario:earthquake",
+        "scenario:home-fire"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0002-0000-0000-000000000001",
+      "slug": "minor-burn-cooling-reference",
+      "title": "Minor Burn Cooling Reference",
+      "category": "first-aid",
+      "summary": "Static reference for brief cooling, covering, and escalation decisions after a minor burn.",
+      "sortOrder": 200,
+      "sections": [
+        {
+          "title": "Cool",
+          "bodyMarkdown": "- Cool the area with clean running water when available.\n- Remove rings or tight items before swelling starts.",
+          "plainText": "Cool the area with clean running water when available. Remove rings or tight items before swelling starts.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Cover",
+          "bodyMarkdown": "- Cover loosely with a clean, non-stick dressing.\n- Keep the area clean and stop if pain sharply worsens.",
+          "plainText": "Cover loosely with a clean, non-stick dressing. Keep the area clean and stop if pain sharply worsens.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Escalate",
+          "bodyMarkdown": "- Seek urgent care for burns to the face, hands, genitals, large areas, or any burn linked to smoke inhalation.\n- Do not use ice, butter, or ointments you would not already trust on broken skin.",
+          "plainText": "Seek urgent care for burns to the face, hands, genitals, large areas, or any burn linked to smoke inhalation. Do not use ice, butter, or ointments you would not already trust on broken skin.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc07-0001-0000-0000-000000000001",
+        "aabbcc0a-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "first-aid",
+        "burns",
+        "scenario:home-fire",
+        "scenario:power-outage"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0003-0000-0000-000000000001",
+      "slug": "heat-stress-response-reference",
+      "title": "Heat Stress Response Reference",
+      "category": "weather-exposure",
+      "summary": "Reviewed static cues for cooling early and escalating when heat stress stops improving.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Move And Cool",
+          "bodyMarkdown": "- Move into shade or the coolest available room.\n- Loosen excess clothing and cool with damp cloths or airflow if tolerated.",
+          "plainText": "Move into shade or the coolest available room. Loosen excess clothing and cool with damp cloths or airflow if tolerated.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Support",
+          "bodyMarkdown": "- Offer water only if the person is awake, alert, and able to swallow.\n- Reduce exertion immediately even if symptoms seem mild.",
+          "plainText": "Offer water only if the person is awake, alert, and able to swallow. Reduce exertion immediately even if symptoms seem mild.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Escalate Now",
+          "bodyMarkdown": "- Seek urgent care for confusion, fainting, repeated vomiting, or no improvement after cooling begins.\n- Do not keep exercising or use alcohol as a cooling shortcut.",
+          "plainText": "Seek urgent care for confusion, fainting, repeated vomiting, or no improvement after cooling begins. Do not keep exercising or use alcohol as a cooling shortcut.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc0b-0001-0000-0000-000000000001",
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "heat",
+        "first-aid",
+        "scenario:heat-wave",
+        "season:summer",
+        "region:pacific-northwest"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0004-0000-0000-000000000001",
+      "slug": "cold-exposure-rewarming-reference",
+      "title": "Cold Exposure Rewarming Reference",
+      "category": "weather-exposure",
+      "summary": "Static rewarming notes for wet, cold, and low-heat conditions before transport.",
+      "sortOrder": 200,
+      "sections": [
+        {
+          "title": "Dry First",
+          "bodyMarkdown": "- Move out of wind and wet clothing quickly.\n- Replace with dry layers, head covering, and insulation from the ground.",
+          "plainText": "Move out of wind and wet clothing quickly. Replace with dry layers, head covering, and insulation from the ground.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Warm Gradually",
+          "bodyMarkdown": "- Use shared body heat, blankets, and warm non-alcoholic drinks if the person is awake and able to swallow.\n- Handle the person gently if they are severely cold or exhausted.",
+          "plainText": "Use shared body heat, blankets, and warm non-alcoholic drinks if the person is awake and able to swallow. Handle the person gently if they are severely cold or exhausted.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Escalate Now",
+          "bodyMarkdown": "- Seek urgent care for confusion, slurred speech, unusual clumsiness, or shivering that stops.\n- Do not place numb skin against direct intense heat.",
+          "plainText": "Seek urgent care for confusion, slurred speech, unusual clumsiness, or shivering that stops. Do not place numb skin against direct intense heat.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc0b-0002-0000-0000-000000000001",
+        "aabbcc07-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "cold",
+        "rewarming",
+        "scenario:winter-storm",
+        "season:winter",
+        "region:pacific-northwest"
+      ],
+      "safetyLevel": "sensitive-static-only",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0005-0000-0000-000000000001",
+      "slug": "household-water-disinfection-reference",
+      "title": "Household Water Disinfection Reference",
+      "category": "water-treatment",
+      "summary": "Concise reference for clarifying, treating, storing, and separating questionable water.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Clarify First",
+          "bodyMarkdown": "- Let particles settle or strain water through a clean cloth before chemical treatment.\n- Keep untreated and treated containers clearly separate.",
+          "plainText": "Let particles settle or strain water through a clean cloth before chemical treatment. Keep untreated and treated containers clearly separate.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Use Known Methods",
+          "bodyMarkdown": "- Use only products and instructions you already store with the kit.\n- Boil when you have a safe fuel and ventilation plan and the water source is uncertain.",
+          "plainText": "Use only products and instructions you already store with the kit. Boil when you have a safe fuel and ventilation plan and the water source is uncertain.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Avoid Improvisation",
+          "bodyMarkdown": "- Do not mix chemicals or improvise doses.\n- Re-treat or discard water if the container, timing, or product is uncertain.",
+          "plainText": "Do not mix chemicals or improvise doses. Re-treat or discard water if the container, timing, or product is uncertain.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc02-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "water",
+        "treatment",
+        "scenario:water-contamination",
+        "scenario:flood"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0006-0000-0000-000000000001",
+      "slug": "visual-and-radio-signal-reference",
+      "title": "Visual And Radio Signal Reference",
+      "category": "signaling",
+      "summary": "Simple offline signaling cues for panels, lights, whistles, and short radio traffic.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Make It Obvious",
+          "bodyMarkdown": "- Use high-contrast panels, repeated flashes, or simple whistle patterns that can be repeated.\n- Keep the signal visible from likely approach routes.",
+          "plainText": "Use high-contrast panels, repeated flashes, or simple whistle patterns that can be repeated. Keep the signal visible from likely approach routes.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Keep Messages Short",
+          "bodyMarkdown": "- Lead with location, immediate need, and number of people.\n- Repeat the same wording instead of improvising a new description each time.",
+          "plainText": "Lead with location, immediate need, and number of people. Repeat the same wording instead of improvising a new description each time.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Conserve Power",
+          "bodyMarkdown": "- Use scheduled check-in windows for battery-powered signaling.\n- Protect backup batteries, light sources, and radios from rain and impact.",
+          "plainText": "Use scheduled check-in windows for battery-powered signaling. Protect backup batteries, light sources, and radios from rain and impact.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc0a-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "signaling",
+        "communication",
+        "scenario:evacuation",
+        "scenario:power-outage"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0007-0000-0000-000000000001",
+      "slug": "unscented-bleach-vs-splashless-bleach",
+      "title": "Unscented Bleach Vs Splashless Bleach",
+      "category": "lookalike-comparison",
+      "summary": "Comparison notes for bleach products that look similar but should not be treated as interchangeable for water work.",
+      "sortOrder": 100,
+      "sections": [
+        {
+          "title": "Use Only Plain Products",
+          "bodyMarkdown": "- Plain, unscented household bleach may appear in older emergency references.\n- Splashless, scented, or added-cleaner products should not be assumed equivalent.",
+          "plainText": "Plain, unscented household bleach may appear in older emergency references. Splashless, scented, or added-cleaner products should not be assumed equivalent.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Check The Label",
+          "bodyMarkdown": "- Look for fragrance, thickener, color-safe, or cleaner language before you store it with water treatment gear.\n- Keep the original container and expiration information with the product.",
+          "plainText": "Look for fragrance, thickener, color-safe, or cleaner language before you store it with water treatment gear. Keep the original container and expiration information with the product.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Do Not Guess",
+          "bodyMarkdown": "- If the product type is unclear, do not use it for water treatment.\n- Default to boiling or another method you already understand instead of improvising chemistry.",
+          "plainText": "If the product type is unclear, do not use it for water treatment. Default to boiling or another method you already understand instead of improvising chemistry.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc02-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "lookalike",
+        "bleach",
+        "water",
+        "scenario:water-contamination"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    },
+    {
+      "id": "ccddee11-0008-0000-0000-000000000001",
+      "slug": "niosh-respirator-vs-loose-dust-mask",
+      "title": "NIOSH Respirator Vs Loose Dust Mask",
+      "category": "lookalike-comparison",
+      "summary": "Conservative comparison notes for smoke and ash protection gear that is easy to confuse at a glance.",
+      "sortOrder": 200,
+      "sections": [
+        {
+          "title": "What You Are Looking For",
+          "bodyMarkdown": "- A smoke-ready respirator reference should name the standard it meets and fit closely to the face.\n- A loose dust mask or simple face covering may reduce nuisance dust but should not be assumed equivalent.",
+          "plainText": "A smoke-ready respirator reference should name the standard it meets and fit closely to the face. A loose dust mask or simple face covering may reduce nuisance dust but should not be assumed equivalent.",
+          "sortOrder": 100
+        },
+        {
+          "title": "Check Before You Need It",
+          "bodyMarkdown": "- Store labeled respirators with the clean-room kit, not mixed loose with other masks.\n- Practice fit checks before smoke season rather than during an evacuation rush.",
+          "plainText": "Store labeled respirators with the clean-room kit, not mixed loose with other masks. Practice fit checks before smoke season rather than during an evacuation rush.",
+          "sortOrder": 200
+        },
+        {
+          "title": "Use Caution",
+          "bodyMarkdown": "- If the mask will not seal, is wet, or causes distress, move to cleaner air sooner instead of forcing it.\n- Do not promise yourself respirator protection from gear you have not already identified and staged.",
+          "plainText": "If the mask will not seal, is wet, or causes distress, move to cleaner air sooner instead of forcing it. Do not promise yourself respirator protection from gear you have not already identified and staged.",
+          "sortOrder": 300
+        }
+      ],
+      "relatedSectionIDs": [
+        "aabbcc0b-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "lookalike",
+        "smoke",
+        "respirator",
+        "scenario:wildfire",
+        "season:summer",
+        "region:pacific-northwest"
+      ],
+      "safetyLevel": "normal",
+      "lastReviewedAt": "2026-03-29T00:00:00Z"
+    }
+  ]
+}

@@ -196,6 +196,36 @@ final class LocalRetrievalServiceTests: XCTestCase {
         }
     }
 
+    func testFieldReferenceScopeMapsToSearchKindAndSuggestedAction() async throws {
+        let fieldReferenceID = UUID()
+        let results = [
+            SearchResult(
+                id: fieldReferenceID,
+                kind: .fieldReference,
+                title: "Bleeding Control Basics",
+                snippet: "Apply firm direct pressure.",
+                score: 5.0,
+                tags: ["first-aid"]
+            ),
+        ]
+        let service = makeService(searchResults: results)
+        let scopes: Set<RetrievalScope> = [.fieldReferences]
+
+        let outcome = try await service.retrieve(query: "bleeding control", scopes: scopes)
+
+        if case .answered(let result) = outcome {
+            XCTAssertEqual(result.evidence.first?.kind, .fieldReference)
+            XCTAssertEqual(result.evidence.first?.sourceLabel, "Field Reference")
+            XCTAssertEqual(result.citations.first?.displayLabel, "Field Reference: Bleeding Control Basics")
+            XCTAssertEqual(
+                result.suggestedActions.first,
+                .openFieldReference(id: fieldReferenceID, title: "Bleeding Control Basics")
+            )
+        } else {
+            XCTFail("Expected answered outcome")
+        }
+    }
+
     func testImportedKnowledgeIncludedInDefaultScopes() {
         let scopes = AskScopeSettings.retrievalScopes(includePersonalNotes: false)
         XCTAssertTrue(scopes.contains(.importedKnowledge))

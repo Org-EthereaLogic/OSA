@@ -32,6 +32,9 @@ Curated prompts and prompt-derived documents.
 
 - `43-sprint-8-advanced-maps-and-navigation-enhanced-prompt.md` captures the next bounded navigation slice after Sprint 7: explicit offline tile-region management, local waypoints and recorded tracks, GPX export, distance measurement, rescue-oriented coordinate formatting, and compass utilities built on the existing Maps feature without adding background tracking or remote routing.
 
+- `44-sprint-9-content-depth-and-field-references-enhanced-prompt.md` captures the next bounded editorial-content slice after Sprint 8: deeper climate- and season-specific handbook coverage, a structured field-reference model, expanded first-aid reference depth, infographic-style offline content, scenario-linked discovery, and lookalike comparison content implemented through the existing local seed/import/search architecture.
+- `45-sprint-10-multimedia-and-gamification-enhanced-prompt.md` captures the next bounded learning-and-media slice after Sprint 9: bundled SVG illustrations, local short-form videos, knot-reference and illustrated first-aid content, local quiz modes, derived completion badges, and a weekly drill surface built on the existing quick-card, field-reference, Home, and local-progress seams.
+
 ## Rules
 
 - Keep reusable prompt artifacts here after they are cleaned up from draft form.

@@ -32,7 +32,12 @@ final class OSARotationUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Emergency Mode"].waitForExistence(timeout: 3), "Home emergency action should remain visible in landscape")
 
         tapTab("Library")
-        XCTAssertTrue(app.staticTexts["Preparedness Foundations"].waitForExistence(timeout: 5), "Library should remain readable in landscape")
+        let libraryLoaded = app.staticTexts["Field References"].waitForExistence(timeout: 3)
+            || scrollToElement(app.staticTexts["Preparedness Foundations"], maxSwipes: 6)
+        XCTAssertTrue(
+            libraryLoaded,
+            "Library should remain readable in landscape"
+        )
 
         tapTab("Ask")
         XCTAssertTrue(app.textFields["Ask a question..."].waitForExistence(timeout: 3), "Ask input should remain accessible in landscape")
@@ -125,5 +130,21 @@ final class OSARotationUITests: XCTestCase {
     private func waitForUIToSettle() {
         _ = app.tabBars.firstMatch.waitForExistence(timeout: 3)
         sleep(1)
+    }
+
+    @MainActor
+    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
     }
 }

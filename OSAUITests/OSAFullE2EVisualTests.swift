@@ -183,30 +183,33 @@ final class OSAFullE2EVisualTests: XCTestCase {
     func testLibraryScreenContent() {
         tapTab("Library")
 
-        // Actual seed chapter titles from handbook-foundations-v1.json
-        let firstChapter = app.staticTexts["Preparedness Foundations"]
+        let fieldReferences = app.staticTexts["Field References"]
         XCTAssertTrue(
-            firstChapter.waitForExistence(timeout: 5),
-            "Preparedness Foundations chapter should appear in Library"
+            fieldReferences.waitForExistence(timeout: 5),
+            "Field References should appear in Library"
         )
 
-        // Check a few more chapters are visible
+        let firstChapter = app.staticTexts["Preparedness Foundations"]
+        XCTAssertTrue(
+            scrollToElement(firstChapter, maxSwipes: 6),
+            "Preparedness Foundations chapter should remain reachable in Library"
+        )
+
         let waterChapter = app.staticTexts["Water"]
-        XCTAssertTrue(waterChapter.exists, "Water chapter should appear in Library")
+        XCTAssertTrue(
+            waterChapter.exists || scrollToElement(waterChapter, maxSwipes: 2),
+            "Water chapter should appear in Library"
+        )
 
         screenshot("Library-Tab")
     }
 
     @MainActor
     func testLibraryDrillIntoChapter() {
-        tapTab("Library")
-
-        let chapter = app.staticTexts["Preparedness Foundations"]
-        guard chapter.waitForExistence(timeout: 5) else {
+        guard openLibraryChapter(named: "Preparedness Foundations") else {
             XCTFail("Preparedness Foundations chapter not found")
             return
         }
-        chapter.tap()
         sleep(1)
 
         screenshot("Library-Chapter-Detail")
@@ -226,9 +229,10 @@ final class OSAFullE2EVisualTests: XCTestCase {
         if !app.staticTexts["Recently Viewed"].exists {
             navigateBack()
         }
+        scrollLibraryToTop()
 
         XCTAssertTrue(
-            app.staticTexts["Recently Viewed"].waitForExistence(timeout: 3),
+            scrollToElement(app.staticTexts["Recently Viewed"], maxSwipes: 2),
             "Library should show Recently Viewed after opening a handbook section"
         )
         screenshot("Library-Recently-Viewed")
@@ -249,8 +253,11 @@ final class OSAFullE2EVisualTests: XCTestCase {
         let fireChapter = app.staticTexts["Fire And Lighting"]
         let goChapter = app.staticTexts["Go-Bags"]
         XCTAssertTrue(
-            fireChapter.exists || goChapter.exists,
-            "Later chapters should be visible after scrolling"
+            fireChapter.exists
+                || goChapter.exists
+                || scrollToElement(fireChapter, maxSwipes: 4)
+                || scrollToElement(goChapter, maxSwipes: 4),
+            "Later chapters should remain reachable after scrolling"
         )
     }
 
@@ -482,6 +489,27 @@ final class OSAFullE2EVisualTests: XCTestCase {
     }
 
     @MainActor
+    private func openLibraryChapter(named title: String) -> Bool {
+        tapTab("Library")
+
+        let chapter = app.staticTexts[title]
+        guard scrollToElement(chapter, maxSwipes: 6) else {
+            return false
+        }
+
+        chapter.tap()
+        return true
+    }
+
+    @MainActor
+    private func scrollLibraryToTop() {
+        for _ in 0..<3 {
+            app.swipeDown()
+            sleep(1)
+        }
+    }
+
+    @MainActor
     private func navigateBack() {
         let backButton = app.navigationBars.buttons.firstMatch
         if backButton.waitForExistence(timeout: 2) {
@@ -514,6 +542,23 @@ final class OSAFullE2EVisualTests: XCTestCase {
         if toolbarButton.exists { return toolbarButton }
 
         return nil
+    }
+
+    @MainActor
+    private func scrollToElement(_ element: XCUIElement, maxSwipes: Int = 6) -> Bool {
+        if element.waitForExistence(timeout: 1) {
+            return true
+        }
+
+        for _ in 0..<maxSwipes {
+            app.swipeUp()
+            sleep(1)
+            if element.waitForExistence(timeout: 1) {
+                return true
+            }
+        }
+
+        return false
     }
 
     @MainActor

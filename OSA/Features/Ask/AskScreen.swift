@@ -91,6 +91,8 @@ struct AskScreen: View {
                 QuickCardRouteView(cardID: id)
             case .handbookSection(let id):
                 HandbookSectionDetailView(sectionID: id)
+            case .fieldReference(let id):
+                FieldReferenceRouteView(entryID: id)
             }
         }
     }
@@ -140,10 +142,10 @@ struct AskScreen: View {
 
     private var scopeSummary: String {
         if includePersonalNotes {
-            return "Searching handbook, quick cards, inventory, checklists, and your notes for \(currentRegion.displayName)."
+            return "Searching handbook, field references, quick cards, inventory, checklists, and your notes for \(currentRegion.displayName)."
         }
 
-        return "Searching handbook, quick cards, inventory, and checklists for \(currentRegion.displayName)."
+        return "Searching handbook, field references, quick cards, inventory, and checklists for \(currentRegion.displayName)."
     }
 
     private var currentRegion: PreparednessRegion {
@@ -355,6 +357,8 @@ struct AskScreen: View {
             return .quickCard(citation.id)
         case .handbookSection:
             return .handbookSection(citation.id)
+        case .fieldReference:
+            return .fieldReference(citation.id)
         case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
             return nil
         }
@@ -366,6 +370,8 @@ struct AskScreen: View {
             return .quickCard(id)
         case .openHandbookSection(let id, _):
             return .handbookSection(id)
+        case .openFieldReference(let id, _):
+            return .fieldReference(id)
         case .searchOnline:
             return nil
         }
@@ -386,6 +392,7 @@ private enum AskViewState {
 private enum AskDestination: Hashable {
     case quickCard(UUID)
     case handbookSection(UUID)
+    case fieldReference(UUID)
 }
 
 private struct AnswerView: View {
@@ -608,7 +615,7 @@ private struct CitationRow: View {
 
     private var isNavigable: Bool {
         switch citation.kind {
-        case .handbookSection, .quickCard:
+        case .handbookSection, .quickCard, .fieldReference:
             return true
         case .inventoryItem, .checklistTemplate, .noteRecord, .importedKnowledge:
             return false
@@ -619,6 +626,7 @@ private struct CitationRow: View {
         switch kind {
         case .handbookSection: "book.closed.fill"
         case .quickCard: "bolt.fill"
+        case .fieldReference: "cross.case.fill"
         case .inventoryItem: "archivebox.fill"
         case .checklistTemplate: "checklist"
         case .noteRecord: "note.text"
@@ -771,6 +779,8 @@ private struct SuggestedActionButton: View {
             "bolt.fill"
         case .openHandbookSection:
             "book.closed.fill"
+        case .openFieldReference:
+            "cross.case.fill"
         case .searchOnline:
             "globe"
         }
@@ -782,6 +792,8 @@ private struct SuggestedActionButton: View {
             "Open Quick Card: \(title)"
         case .openHandbookSection(_, let title):
             "Read: \(title)"
+        case .openFieldReference(_, let title):
+            "Open Reference: \(title)"
         case .searchOnline(let query):
             "Search online: \(query)"
         }

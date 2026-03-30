@@ -15,6 +15,7 @@ protocol SearchService {
     func indexNote(_ note: NoteRecord) throws
     func indexHandbookSection(_ section: HandbookSection, chapterTitle: String) throws
     func indexQuickCard(_ card: QuickCard) throws
+    func indexFieldReference(_ entry: FieldReferenceEntry) throws
     func indexImportedChunk(_ chunk: KnowledgeChunk, sourceTitle: String, publisherDomain: String) throws
     func removeFromIndex(id: UUID) throws
 }
@@ -28,4 +29,6 @@ extension SearchService {
             limit: limit
         )
     }
+
+    func indexFieldReference(_ entry: FieldReferenceEntry) throws {}
 }

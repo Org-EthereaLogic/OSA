@@ -4,6 +4,7 @@ import SwiftData
 struct AppDependencies {
     let handbookRepository: any HandbookRepository
     let quickCardRepository: any QuickCardRepository
+    let fieldReferenceRepository: any FieldReferenceRepository
     let seedContentRepository: any SeedContentRepository
     let inventoryRepository: any InventoryRepository
     let supplyTemplateRepository: any SupplyTemplateRepository
@@ -63,6 +64,7 @@ struct AppDependencies {
                 searchService: searchService,
                 handbookRepository: contentRepository,
                 quickCardRepository: contentRepository,
+                fieldReferenceRepository: contentRepository,
                 inventoryRepository: inventoryReadRepository,
                 checklistRepository: baseChecklistRepository,
                 noteRepository: noteRepository,
@@ -164,6 +166,7 @@ struct AppDependencies {
         return AppDependencies(
             handbookRepository: contentRepository,
             quickCardRepository: contentRepository,
+            fieldReferenceRepository: contentRepository,
             seedContentRepository: contentRepository,
             inventoryRepository: inventoryRepository,
             supplyTemplateRepository: supplyTemplateRepository,

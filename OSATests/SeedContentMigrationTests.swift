@@ -21,6 +21,7 @@ final class SeedContentMigrationTests: XCTestCase {
         XCTAssertEqual(outcome.sectionCount, 1)
         XCTAssertEqual(outcome.quickCardCount, 1)
         XCTAssertEqual(outcome.checklistTemplateCount, 1)
+        XCTAssertEqual(outcome.fieldReferenceCount, 1)
     }
 
     func testSameManifestVersionOnSecondImportReturnsSkipped() throws {
@@ -153,6 +154,7 @@ final class SeedContentMigrationTests: XCTestCase {
             PersistedHandbookChapter.self,
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
+            PersistedFieldReferenceEntry.self,
             PersistedSeedContentState.self,
             PersistedInventoryItem.self,
             PersistedChecklistTemplate.self,
@@ -195,6 +197,7 @@ private struct M5SeedFixtures {
         try write("handbook-m5-v1.json", contents: Self.handbookPack)
         try write("quick-cards-m5-v1.json", contents: Self.quickCardPack)
         try write("checklist-templates-m5-v1.json", contents: Self.checklistTemplatePack)
+        try write("field-references-m5-v1.json", contents: Self.fieldReferencePack)
         try writeManifest(contentPackVersion: contentPackVersion)
     }
 
@@ -214,6 +217,7 @@ private struct M5SeedFixtures {
         let handbookHash = Self.sha256Hex(Self.handbookPack)
         let quickCardHash = Self.sha256Hex(Self.quickCardPack)
         let checklistHash = Self.sha256Hex(Self.checklistTemplatePack)
+        let fieldReferenceHash = Self.sha256Hex(Self.fieldReferencePack)
 
         let manifest = """
         {
@@ -244,6 +248,14 @@ private struct M5SeedFixtures {
               "fileName": "checklist-templates-m5-v1.json",
               "recordCount": 1,
               "contentHash": "\(checklistHash)"
+            },
+            {
+              "identifier": "field-references-m5",
+              "kind": "field-references",
+              "version": "2026.03.22.1",
+              "fileName": "field-references-m5-v1.json",
+              "recordCount": 1,
+              "contentHash": "\(fieldReferenceHash)"
             }
           ]
         }
@@ -260,6 +272,7 @@ private struct M5SeedFixtures {
     private static let chapterID = "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"
     private static let templateID = "CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC"
     private static let templateItemID = "DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD"
+    private static let fieldReferenceID = "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
 
     static let handbookPack = """
     {
@@ -338,6 +351,33 @@ private struct M5SeedFixtures {
               "riskLevel": null
             }
           ]
+        }
+      ]
+    }
+    """
+
+    static let fieldReferencePack = """
+    {
+      "entries": [
+        {
+          "id": "\(fieldReferenceID)",
+          "slug": "m5-field-reference",
+          "title": "M5 Field Reference",
+          "category": "first-aid",
+          "summary": "Field reference for M5 migration tests.",
+          "sortOrder": 100,
+          "sections": [
+            {
+              "title": "Immediate",
+              "bodyMarkdown": "- Keep pressure on the wound.",
+              "plainText": "Keep pressure on the wound.",
+              "sortOrder": 100
+            }
+          ],
+          "relatedSectionIDs": ["\(sectionID)"],
+          "tags": ["m5", "first-aid"],
+          "safetyLevel": "sensitive-static-only",
+          "lastReviewedAt": "2026-03-22T00:00:00Z"
         }
       ]
     }

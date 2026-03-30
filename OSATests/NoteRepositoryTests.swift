@@ -10,6 +10,7 @@ final class NoteRepositoryTests: XCTestCase {
             PersistedHandbookChapter.self,
             PersistedHandbookSection.self,
             PersistedQuickCard.self,
+            PersistedFieldReferenceEntry.self,
             PersistedSeedContentState.self,
             PersistedInventoryItem.self,
             PersistedChecklistTemplate.self,

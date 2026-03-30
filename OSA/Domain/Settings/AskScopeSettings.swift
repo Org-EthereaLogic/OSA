@@ -8,6 +8,7 @@ enum AskScopeSettings {
         var scopes: Set<RetrievalScope> = [
             .handbook,
             .quickCards,
+            .fieldReferences,
             .inventory,
             .checklists,
             .importedKnowledge

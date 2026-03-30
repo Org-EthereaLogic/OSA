@@ -9,6 +9,7 @@ enum SeedContentLoaderError: Error, Equatable {
     case contentHashMismatch(expected: String, actual: String, fileName: String)
     case recordCountMismatch(expected: Int, actual: Int, fileName: String)
     case missingReferencedSection(quickCardID: UUID, sectionID: UUID)
+    case missingReferencedSectionForFieldReference(fieldReferenceID: UUID, sectionID: UUID)
 }
 
 struct SeedContentLoader {
@@ -35,6 +36,7 @@ struct SeedContentLoader {
         var chapters: [HandbookChapter] = []
         var quickCards: [QuickCard] = []
         var checklistTemplates: [ChecklistTemplate] = []
+        var fieldReferences: [FieldReferenceEntry] = []
 
         for pack in manifest.packs {
             let packData = try loadPackData(named: pack.fileName)
@@ -69,6 +71,14 @@ struct SeedContentLoader {
                     fileName: pack.fileName
                 )
                 checklistTemplates.append(contentsOf: packTemplates)
+            case .fieldReferences:
+                let packFieldReferences = try decodeFieldReferencePack(from: packData)
+                try validateRecordCount(
+                    expected: pack.recordCount,
+                    actual: packFieldReferences.count,
+                    fileName: pack.fileName
+                )
+                fieldReferences.append(contentsOf: packFieldReferences)
             }
         }
 
@@ -82,11 +92,21 @@ struct SeedContentLoader {
             }
         }
 
+        for fieldReference in fieldReferences {
+            for sectionID in fieldReference.relatedSectionIDs where !sectionIDs.contains(sectionID) {
+                throw SeedContentLoaderError.missingReferencedSectionForFieldReference(
+                    fieldReferenceID: fieldReference.id,
+                    sectionID: sectionID
+                )
+            }
+        }
+
         return SeedContentBundle(
             manifest: manifest,
             chapters: chapters.sorted(by: chapterSort),
             quickCards: quickCards.sorted(by: quickCardSort),
-            checklistTemplates: checklistTemplates.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+            checklistTemplates: checklistTemplates.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending },
+            fieldReferences: fieldReferences.sorted(by: fieldReferenceSort)
         )
     }
 
@@ -123,6 +143,11 @@ struct SeedContentLoader {
     private func decodeChecklistTemplatePack(from data: Data) throws -> [ChecklistTemplate] {
         let pack = try decoder.decode(ChecklistTemplateSeedPackFile.self, from: data)
         return pack.templates.map(\.toDomain)
+    }
+
+    private func decodeFieldReferencePack(from data: Data) throws -> [FieldReferenceEntry] {
+        let pack = try decoder.decode(FieldReferenceSeedPackFile.self, from: data)
+        return pack.entries.map(\.toDomain)
     }
 
     private func validateContentHash(expected: String?, data: Data, fileName: String) throws {
@@ -174,6 +199,18 @@ struct SeedContentLoader {
         }
 
         return lhs.priority > rhs.priority
+    }
+
+    private func fieldReferenceSort(lhs: FieldReferenceEntry, rhs: FieldReferenceEntry) -> Bool {
+        if lhs.category == rhs.category {
+            if lhs.sortOrder == rhs.sortOrder {
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+            }
+
+            return lhs.sortOrder < rhs.sortOrder
+        }
+
+        return lhs.category.rawValue.localizedCaseInsensitiveCompare(rhs.category.rawValue) == .orderedAscending
     }
 }
 
@@ -372,6 +409,56 @@ private struct QuickCardFile: Decodable {
             tags: tags,
             lastReviewedAt: lastReviewedAt,
             largeTypeLayoutVersion: largeTypeLayoutVersion
+        )
+    }
+}
+
+private struct FieldReferenceSeedPackFile: Decodable {
+    let entries: [FieldReferenceEntryFile]
+}
+
+private struct FieldReferenceEntryFile: Decodable {
+    let id: UUID
+    let slug: String
+    let title: String
+    let category: FieldReferenceCategory
+    let summary: String
+    let sortOrder: Int
+    let sections: [FieldReferenceSectionFile]
+    let relatedSectionIDs: [UUID]
+    let tags: [String]
+    let safetyLevel: HandbookSafetyLevel
+    let lastReviewedAt: Date?
+
+    var toDomain: FieldReferenceEntry {
+        FieldReferenceEntry(
+            id: id,
+            slug: slug,
+            title: title,
+            category: category,
+            summary: summary,
+            sortOrder: sortOrder,
+            sections: sections.map(\.toDomain),
+            relatedSectionIDs: relatedSectionIDs,
+            tags: tags,
+            safetyLevel: safetyLevel,
+            lastReviewedAt: lastReviewedAt
+        )
+    }
+}
+
+private struct FieldReferenceSectionFile: Decodable {
+    let title: String
+    let bodyMarkdown: String
+    let plainText: String
+    let sortOrder: Int
+
+    var toDomain: FieldReferenceSection {
+        FieldReferenceSection(
+            title: title,
+            bodyMarkdown: bodyMarkdown,
+            plainText: plainText,
+            sortOrder: sortOrder
         )
     }
 }

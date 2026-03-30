@@ -8,6 +8,10 @@ private struct QuickCardRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any QuickCardRepository)? = nil
 }
 
+private struct FieldReferenceRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any FieldReferenceRepository)? = nil
+}
+
 private struct InventoryRepositoryKey: EnvironmentKey {
     nonisolated(unsafe) static let defaultValue: (any InventoryRepository)? = nil
 }
@@ -129,6 +133,11 @@ extension EnvironmentValues {
     var quickCardRepository: (any QuickCardRepository)? {
         get { self[QuickCardRepositoryKey.self] }
         set { self[QuickCardRepositoryKey.self] = newValue }
+    }
+
+    var fieldReferenceRepository: (any FieldReferenceRepository)? {
+        get { self[FieldReferenceRepositoryKey.self] }
+        set { self[FieldReferenceRepositoryKey.self] = newValue }
     }
 
     var inventoryRepository: (any InventoryRepository)? {

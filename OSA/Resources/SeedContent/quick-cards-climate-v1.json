@@ -1,0 +1,67 @@
+{
+  "quickCards": [
+    {
+      "id": "bbccddee-1001-0000-0000-000000000001",
+      "title": "Heat Wave Cool-Room Loop",
+      "slug": "heat-wave-cool-room-loop",
+      "category": "Heat",
+      "summary": "Cycle shade, airflow, hydration, and room checks before the house gets dangerous.",
+      "bodyMarkdown": "## First 10 Minutes\n- Close blinds on sun-facing windows.\n- Stage water, medications, and chargers in one cool room.\n\n## Keep Doing\n- Rotate people and pets through the cool room.\n- Limit oven, dryer, and heavy appliance use until evening.\n\n## Leave Early If\n- Indoor heat keeps climbing.\n- Anyone becomes confused, stops sweating, or cannot cool down.\n\n## Do Not\n- Trap everyone in the hottest room.\n- Wait until the house feels dangerous before planning transport.",
+      "priority": 92,
+      "relatedSectionIDs": [
+        "aabbcc0b-0001-0000-0000-000000000001"
+      ],
+      "tags": [
+        "heat",
+        "cooling",
+        "scenario:heat-wave",
+        "season:summer",
+        "region:pacific-northwest"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 2
+    },
+    {
+      "id": "bbccddee-1002-0000-0000-000000000001",
+      "title": "Wildfire Smoke Clean-Room Setup",
+      "slug": "wildfire-smoke-clean-room-setup",
+      "category": "Air Quality",
+      "summary": "Build one lower-smoke room quickly and keep it clean enough to rest in.",
+      "bodyMarkdown": "## Seal\n- Shut windows and exterior doors.\n- Block obvious drafts with materials you can remove fast.\n\n## Filter\n- Run the best filter setup you already know how to use.\n- Keep doors closed once the room is staged.\n\n## Protect\n- Leave smoky jackets, shoes, and cleanup tools outside the room.\n- Keep medications, water, and chargers inside.\n\n## Move If Needed\n- Indoor air keeps worsening.\n- Anyone struggles to breathe or cannot recover after getting inside.",
+      "priority": 94,
+      "relatedSectionIDs": [
+        "aabbcc0b-0003-0000-0000-000000000001"
+      ],
+      "tags": [
+        "smoke",
+        "air-quality",
+        "scenario:wildfire",
+        "season:summer",
+        "region:pacific-northwest"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 2
+    },
+    {
+      "id": "bbccddee-1003-0000-0000-000000000001",
+      "title": "Flood Water Entry Stop-Check",
+      "slug": "flood-water-entry-stop-check",
+      "category": "Flood",
+      "summary": "Use a stop-check-move sequence when water is rising or entering the home.",
+      "bodyMarkdown": "## Stop\n- Pause before troubleshooting.\n- Check footing, exits, and who still needs to move.\n\n## Check\n- Note where water is entering and what outlets or appliances are nearby.\n- Lift documents, lights, and medications above the expected water line.\n\n## Move\n- Shift go-bags, chargers, and dry layers toward the safest exit.\n- Leave before stairs, doors, or roads are cut off.\n\n## Do Not\n- Keep wading once you lose dry footing.\n- Reset gear while water and electricity risks are still unclear.",
+      "priority": 93,
+      "relatedSectionIDs": [
+        "aabbcc0b-0004-0000-0000-000000000001"
+      ],
+      "tags": [
+        "flood",
+        "rain",
+        "scenario:flood",
+        "season:spring",
+        "region:pacific-northwest"
+      ],
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "largeTypeLayoutVersion": 2
+    }
+  ]
+}

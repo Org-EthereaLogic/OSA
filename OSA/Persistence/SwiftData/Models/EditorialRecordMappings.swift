@@ -152,6 +152,54 @@ extension PersistedQuickCard {
     }
 }
 
+extension PersistedFieldReferenceEntry {
+    convenience init(from entry: FieldReferenceEntry) {
+        self.init(
+            id: entry.id,
+            slug: entry.slug,
+            title: entry.title,
+            categoryRawValue: entry.category.rawValue,
+            summary: entry.summary,
+            sortOrder: entry.sortOrder,
+            sectionsJSON: PersistenceValueCoding.encodeCodable(entry.sections),
+            relatedSectionIDsJSON: PersistenceValueCoding.encode(entry.relatedSectionIDs),
+            tagsJSON: PersistenceValueCoding.encode(entry.tags),
+            safetyLevelRawValue: entry.safetyLevel.rawValue,
+            lastReviewedAt: entry.lastReviewedAt
+        )
+    }
+
+    func update(from entry: FieldReferenceEntry) {
+        id = entry.id
+        slug = entry.slug
+        title = entry.title
+        categoryRawValue = entry.category.rawValue
+        summary = entry.summary
+        sortOrder = entry.sortOrder
+        sectionsJSON = PersistenceValueCoding.encodeCodable(entry.sections)
+        relatedSectionIDsJSON = PersistenceValueCoding.encode(entry.relatedSectionIDs)
+        tagsJSON = PersistenceValueCoding.encode(entry.tags)
+        safetyLevelRawValue = entry.safetyLevel.rawValue
+        lastReviewedAt = entry.lastReviewedAt
+    }
+
+    func toDomain() -> FieldReferenceEntry {
+        FieldReferenceEntry(
+            id: id,
+            slug: slug,
+            title: title,
+            category: FieldReferenceCategory(rawValue: categoryRawValue) ?? .firstAid,
+            summary: summary,
+            sortOrder: sortOrder,
+            sections: PersistenceValueCoding.decodeCodable([FieldReferenceSection].self, from: sectionsJSON) ?? [],
+            relatedSectionIDs: PersistenceValueCoding.decodeUUIDs(from: relatedSectionIDsJSON),
+            tags: PersistenceValueCoding.decodeStrings(from: tagsJSON),
+            safetyLevel: HandbookSafetyLevel(rawValue: safetyLevelRawValue) ?? .normal,
+            lastReviewedAt: lastReviewedAt
+        )
+    }
+}
+
 extension PersistedSeedContentState {
     func toDomain() -> SeedContentVersionState {
         SeedContentVersionState(

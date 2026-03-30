@@ -67,7 +67,12 @@ struct QuickCardDetailView: View {
                 }
 
                 VStack(alignment: .leading, spacing: Spacing.lg) {
-                    if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(card.bodyMarkdown)) {
+                    if card.largeTypeLayoutVersion >= 2 {
+                        QuickCardInfographicLayout(
+                            card: card,
+                            largePrintReadingMode: largePrintReadingMode
+                        )
+                    } else if let attributed = try? AttributedString(markdown: MarkdownPreprocessor.prepare(card.bodyMarkdown)) {
                         Text(attributed)
                             .font(largePrintReadingMode ? .system(size: 24, weight: .medium, design: .rounded) : .cardBody)
                     } else {
@@ -174,6 +179,125 @@ struct QuickCardDetailView: View {
             try? handbookRepository.section(id: id)
         }
     }
+}
+
+private struct QuickCardInfographicLayout: View {
+    let card: QuickCard
+    let largePrintReadingMode: Bool
+
+    private var columns: [GridItem] {
+        if largePrintReadingMode {
+            [GridItem(.flexible())]
+        } else {
+            [
+                GridItem(.flexible(), spacing: Spacing.md),
+                GridItem(.flexible(), spacing: Spacing.md)
+            ]
+        }
+    }
+
+    private var panels: [QuickCardInfographicPanel] {
+        quickCardInfographicPanels(from: card.bodyMarkdown)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.md) {
+            Label("Infographic Layout", systemImage: "rectangle.grid.2x2.fill")
+                .font(.metadataCaption)
+                .foregroundStyle(.osaPrimary)
+
+            LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
+                ForEach(panels) { panel in
+                    VStack(alignment: .leading, spacing: Spacing.sm) {
+                        Text(panel.title)
+                            .font(.categoryLabel)
+                            .foregroundStyle(.osaPrimary)
+
+                        if let attributed = try? AttributedString(markdown: panel.bodyMarkdown) {
+                            Text(attributed)
+                                .font(
+                                    largePrintReadingMode
+                                        ? .system(size: 22, weight: .medium, design: .rounded)
+                                        : .body.weight(.medium)
+                                )
+                        } else {
+                            Text(panel.bodyMarkdown)
+                                .font(
+                                    largePrintReadingMode
+                                        ? .system(size: 22, weight: .medium, design: .rounded)
+                                        : .body.weight(.medium)
+                                )
+                        }
+                    }
+                    .padding(Spacing.md)
+                    .frame(maxWidth: .infinity, minHeight: 144, alignment: .topLeading)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.osaBackground, Color.osaPrimary.opacity(0.08)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: RoundedRectangle(cornerRadius: CornerRadius.md)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: CornerRadius.md)
+                            .stroke(Color.osaPrimary.opacity(0.18), lineWidth: 1)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct QuickCardInfographicPanel: Identifiable {
+    let title: String
+    let bodyMarkdown: String
+
+    var id: String { title }
+}
+
+private func quickCardInfographicPanels(from markdown: String) -> [QuickCardInfographicPanel] {
+    let prepared = MarkdownPreprocessor.prepare(markdown)
+    let lines = prepared.components(separatedBy: .newlines)
+    var panels: [QuickCardInfographicPanel] = []
+    var currentTitle: String?
+    var currentLines: [String] = []
+
+    func flushPanel() {
+        guard let currentTitle, !currentLines.isEmpty else { return }
+        panels.append(
+            QuickCardInfographicPanel(
+                title: currentTitle,
+                bodyMarkdown: currentLines.joined(separator: "\n")
+            )
+        )
+    }
+
+    for line in lines {
+        let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { continue }
+
+        if trimmed.hasPrefix("## ") {
+            flushPanel()
+            currentTitle = String(trimmed.dropFirst(3))
+            currentLines = []
+        } else {
+            currentLines.append(trimmed)
+        }
+    }
+
+    flushPanel()
+
+    if panels.isEmpty {
+        return [
+            QuickCardInfographicPanel(
+                title: "Key Actions",
+                bodyMarkdown: prepared
+            )
+        ]
+    }
+
+    return panels
 }
 
 #Preview {

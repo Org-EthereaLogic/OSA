@@ -130,6 +130,20 @@ final class LocalSearchService: SearchService {
         )
     }
 
+    func indexFieldReference(_ entry: FieldReferenceEntry) throws {
+        let sectionText = entry.sortedSections
+            .map { "\($0.title) \($0.plainText)" }
+            .joined(separator: " ")
+
+        try store.upsert(
+            id: entry.id,
+            kind: .fieldReference,
+            title: entry.title,
+            body: [entry.summary, entry.category.displayName, sectionText].joined(separator: " "),
+            tags: entry.tags.joined(separator: " ")
+        )
+    }
+
     func indexImportedChunk(_ chunk: KnowledgeChunk, sourceTitle: String, publisherDomain: String) throws {
         let title = chunk.headingPath.isEmpty ? sourceTitle : "\(sourceTitle) — \(chunk.headingPath)"
         try store.upsert(

@@ -34,6 +34,7 @@ struct OSAApp: App {
             AppTabView(coordinator: navigationCoordinator)
                 .environment(\.handbookRepository, dependencies.handbookRepository)
                 .environment(\.quickCardRepository, dependencies.quickCardRepository)
+                .environment(\.fieldReferenceRepository, dependencies.fieldReferenceRepository)
                 .environment(\.inventoryRepository, dependencies.inventoryRepository)
                 .environment(\.supplyTemplateRepository, dependencies.supplyTemplateRepository)
                 .environment(\.checklistRepository, dependencies.checklistRepository)

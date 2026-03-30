@@ -1,0 +1,135 @@
+{
+  "chapters": [
+    {
+      "id": "aabbcc0b-0000-0000-0000-000000000001",
+      "slug": "climate-and-seasonal-readiness",
+      "title": "Climate And Seasonal Household Readiness",
+      "summary": "Practical household routines for heat, smoke, flood, winter storm, and seasonal rotation planning.",
+      "sortOrder": 750,
+      "tags": [
+        "climate",
+        "seasonal",
+        "household",
+        "scenario:heat-wave",
+        "scenario:winter-storm",
+        "scenario:wildfire",
+        "scenario:flood",
+        "season:summer",
+        "season:winter",
+        "season:spring",
+        "region:pacific-northwest"
+      ],
+      "version": 1,
+      "isSeeded": true,
+      "lastReviewedAt": "2026-03-29T00:00:00Z",
+      "sections": [
+        {
+          "id": "aabbcc0b-0001-0000-0000-000000000001",
+          "chapterID": "aabbcc0b-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Heat Wave Household Cooling Plan",
+          "bodyMarkdown": "Plan for the coolest room before the house is hot. Close sun-facing blinds early, stage water, and move high-output tasks to morning or late evening.\n\n- Pick one room that shades best and can be closed off.\n- Run fans only when they move cooler air or support evaporation.\n- Rotate people, pets, chargers, and lighting into that room.\n- If indoor heat keeps climbing and cooling stops working, leave early for a safer public space.\n\nDo not wait until symptoms start before you change rooms, reduce appliance use, and stage transport.",
+          "plainText": "Plan for the coolest room before the house is hot. Close sun-facing blinds early, stage water, and move high-output tasks to morning or late evening. Pick one room that shades best and can be closed off. Run fans only when they move cooler air or support evaporation. Rotate people, pets, chargers, and lighting into that room. If indoor heat keeps climbing and cooling stops working, leave early for a safer public space. Do not wait until symptoms start before you change rooms, reduce appliance use, and stage transport.",
+          "sortOrder": 100,
+          "tags": [
+            "heat",
+            "cooling",
+            "scenario:heat-wave",
+            "season:summer",
+            "region:pacific-northwest"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "climate-seasonal-heat-wave-household-plan",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "aabbcc0b-0002-0000-0000-000000000001",
+          "chapterID": "aabbcc0b-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Winter Storm Cold-Outage Routine",
+          "bodyMarkdown": "Treat cold outages as a room-management problem first. Keep heat, bedding, light, and charging concentrated instead of spreading effort through the whole home.\n\n- Choose the smallest safe room you can keep warm.\n- Layer clothing, bedding, and floor insulation before people feel chilled.\n- Keep vehicle keys, boots, and a leave-fast bag near the exit in case conditions worsen.\n- Check on neighbors and household members who may lose heat awareness sooner.\n\nDo not run unfamiliar combustion gear indoors or keep opening exterior doors for repeated comfort checks.",
+          "plainText": "Treat cold outages as a room-management problem first. Keep heat, bedding, light, and charging concentrated instead of spreading effort through the whole home. Choose the smallest safe room you can keep warm. Layer clothing, bedding, and floor insulation before people feel chilled. Keep vehicle keys, boots, and a leave-fast bag near the exit in case conditions worsen. Check on neighbors and household members who may lose heat awareness sooner. Do not run unfamiliar combustion gear indoors or keep opening exterior doors for repeated comfort checks.",
+          "sortOrder": 200,
+          "tags": [
+            "cold",
+            "warmth",
+            "scenario:winter-storm",
+            "scenario:power-outage",
+            "season:winter",
+            "region:pacific-northwest"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "climate-seasonal-winter-storm-routine",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "aabbcc0b-0003-0000-0000-000000000001",
+          "chapterID": "aabbcc0b-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Wildfire Smoke Clean-Room Setup",
+          "bodyMarkdown": "Choose one cleaner-air room early. Shut windows and exterior doors, seal obvious drafts, and keep room traffic low once it is staged.\n\n- Put the clean-room on the lowest-traffic side of the home.\n- Run HEPA or high-quality filters you already understand how to use.\n- Keep smoky outer layers, ash-cleanup tools, and shoes outside the room.\n- If indoor air worsens or anyone struggles to breathe, relocate sooner rather than later.\n\nDo not vacuum ash into the room or run settings that intentionally pull outside air unless you understand the tradeoff.",
+          "plainText": "Choose one cleaner-air room early. Shut windows and exterior doors, seal obvious drafts, and keep room traffic low once it is staged. Put the clean-room on the lowest-traffic side of the home. Run HEPA or high-quality filters you already understand how to use. Keep smoky outer layers, ash-cleanup tools, and shoes outside the room. If indoor air worsens or anyone struggles to breathe, relocate sooner rather than later. Do not vacuum ash into the room or run settings that intentionally pull outside air unless you understand the tradeoff.",
+          "sortOrder": 300,
+          "tags": [
+            "smoke",
+            "air-quality",
+            "scenario:wildfire",
+            "season:summer",
+            "region:pacific-northwest"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "climate-seasonal-wildfire-smoke-clean-room",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "aabbcc0b-0004-0000-0000-000000000001",
+          "chapterID": "aabbcc0b-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Heavy Rain And Flood Water Entry Plan",
+          "bodyMarkdown": "Move valuables and power devices before water arrives. Use a stop-check-move routine so you do not get trapped by rising water while troubleshooting the house.\n\n- Track where water is entering, what circuits or appliances are nearby, and which exits stay dry.\n- Move medications, documents, lights, and chargers above the expected water line.\n- Keep footwear, gloves, and a dry go-bag near the exit you plan to use.\n- Leave before roads, stairs, or doors are cut off.\n\nDo not keep wading, probing, or resetting equipment once you lose dry footing or clear egress.",
+          "plainText": "Move valuables and power devices before water arrives. Use a stop-check-move routine so you do not get trapped by rising water while troubleshooting the house. Track where water is entering, what circuits or appliances are nearby, and which exits stay dry. Move medications, documents, lights, and chargers above the expected water line. Keep footwear, gloves, and a dry go-bag near the exit you plan to use. Leave before roads, stairs, or doors are cut off. Do not keep wading, probing, or resetting equipment once you lose dry footing or clear egress.",
+          "sortOrder": 400,
+          "tags": [
+            "flood",
+            "rain",
+            "scenario:flood",
+            "season:spring",
+            "region:pacific-northwest"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "climate-seasonal-flood-water-entry-plan",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        },
+        {
+          "id": "aabbcc0b-0005-0000-0000-000000000001",
+          "chapterID": "aabbcc0b-0000-0000-0000-000000000001",
+          "parentSectionID": null,
+          "heading": "Seasonal Rotation And Household Reset",
+          "bodyMarkdown": "Seasonal readiness works better as a calendar than a one-time build. Tie home checks to weather shifts and routine transitions so supplies stay usable.\n\n- Spring: clear drains, review flood paths, and restock respirators.\n- Summer: shade rooms, rotate water, and confirm cooling plans.\n- Fall: test lights, recharge batteries, and stage storm gear.\n- Winter: reset bedding, vehicle kits, and outage warmth layers.\n\nReview one room and one kit per month instead of trying to rebuild everything at once.",
+          "plainText": "Seasonal readiness works better as a calendar than a one-time build. Tie home checks to weather shifts and routine transitions so supplies stay usable. Spring: clear drains, review flood paths, and restock respirators. Summer: shade rooms, rotate water, and confirm cooling plans. Fall: test lights, recharge batteries, and stage storm gear. Winter: reset bedding, vehicle kits, and outage warmth layers. Review one room and one kit per month instead of trying to rebuild everything at once.",
+          "sortOrder": 500,
+          "tags": [
+            "rotation",
+            "maintenance",
+            "season:spring",
+            "season:summer",
+            "season:fall",
+            "season:winter",
+            "scenario:power-outage",
+            "scenario:winter-storm",
+            "scenario:heat-wave",
+            "region:pacific-northwest"
+          ],
+          "safetyLevel": "normal",
+          "chunkGroupID": "climate-seasonal-rotation-reset",
+          "version": 1,
+          "lastReviewedAt": "2026-03-29T00:00:00Z"
+        }
+      ]
+    }
+  ]
+}

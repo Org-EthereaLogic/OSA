@@ -4,6 +4,7 @@ struct SearchIndexRebuilder {
     let searchService: any SearchService
     let handbookRepository: any HandbookRepository
     let quickCardRepository: any QuickCardRepository
+    let fieldReferenceRepository: any FieldReferenceRepository
     let inventoryRepository: any InventoryRepository
     let checklistRepository: any ChecklistRepository
     let noteRepository: any NoteRepository
@@ -13,6 +14,7 @@ struct SearchIndexRebuilder {
         try searchService.indexAllContent()
         try indexHandbookSections()
         try indexQuickCards()
+        try indexFieldReferences()
         try indexInventoryItems()
         try indexChecklistTemplates()
         try indexNotes()
@@ -34,6 +36,12 @@ struct SearchIndexRebuilder {
     private func indexQuickCards() throws {
         for card in try quickCardRepository.listQuickCards() {
             try searchService.indexQuickCard(card)
+        }
+    }
+
+    private func indexFieldReferences() throws {
+        for entry in try fieldReferenceRepository.listEntries() {
+            try searchService.indexFieldReference(entry)
         }
     }
 
