@@ -146,7 +146,7 @@ final class OSAContentAndInputTests: XCTestCase {
         let templateTitle = "72-Hour Emergency Kit Check"
         let template = app.buttons["checklist-template-72-hour-emergency-kit-check"]
         XCTAssertTrue(
-            scrollToElement(template, maxSwipes: 2),
+            scrollToElement(template, maxSwipes: 4),
             "Expected standard checklist template missing"
         )
         if template.isHittable {
@@ -155,33 +155,48 @@ final class OSAContentAndInputTests: XCTestCase {
             template.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         }
 
-        let startButton = app.buttons["Start Checklist"]
-        XCTAssertTrue(
-            startButton.waitForExistence(timeout: 3),
-            "Checklist template detail should open and expose a start action"
-        )
-
+        // Confirm navigation succeeded — toolbar export button appears before the list scrolls
         let templateExport = app.buttons["Export checklist template as PDF"]
         XCTAssertTrue(
-            templateExport.waitForExistence(timeout: 3),
-            "Checklist template detail should expose a PDF export action"
+            templateExport.waitForExistence(timeout: 5),
+            "Checklist template detail should open and expose a PDF export action"
+        )
+
+        // "Start Checklist" is in the last list section and may be off-screen on first render
+        let startButton = app.buttons["Start Checklist"]
+        XCTAssertTrue(
+            scrollToElement(startButton, maxSwipes: 3),
+            "Checklist template detail should expose a start action"
         )
 
         startButton.tap()
 
-        navigateBack()
-
-        let activeRun = app.buttons["checklist-run-\(templateTitle)"]
-        XCTAssertTrue(activeRun.waitForExistence(timeout: 3), "Active run should appear after starting the checklist")
-        if activeRun.isHittable {
-            activeRun.tap()
+        // iOS 26 sidebarAdaptable creates two back buttons: "More" (sidebar level) and
+        // "Checklists" (NavigationStack level). Target the NavigationStack one explicitly.
+        let backToChecklists = app.buttons.matching(
+            NSPredicate(format: "identifier == 'BackButton' AND label == 'Checklists'")
+        ).firstMatch
+        if backToChecklists.waitForExistence(timeout: 2) {
+            backToChecklists.tap()
         } else {
-            activeRun.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            navigateBack()
         }
+
+        // Scroll back to the top — the Active section is above the template list
+        app.swipeDown()
+        app.swipeDown()
+
+        // Use firstMatch — in-memory test store may have accumulated multiple runs
+        let activeRun = app.buttons.matching(identifier: "checklist-run-\(templateTitle)").firstMatch
+        XCTAssertTrue(
+            activeRun.waitForExistence(timeout: 5),
+            "Active run should appear after starting the checklist"
+        )
+        activeRun.tap()
 
         let runExport = app.buttons["Export checklist run as PDF"]
         XCTAssertTrue(
-            runExport.waitForExistence(timeout: 3),
+            scrollToElement(runExport, maxSwipes: 2),
             "Checklist run detail should expose a PDF export action"
         )
     }
@@ -456,6 +471,39 @@ final class OSAContentAndInputTests: XCTestCase {
         )
     }
 
+    func testMapScreenCanSaveWaypoint() {
+        openMapScreen()
+        handleLocationPermissionIfNeeded()
+
+        let saveWaypointButton = app.buttons["Save Visible Waypoint"]
+        if scrollToElement(saveWaypointButton, maxSwipes: 2) {
+            saveWaypointButton.tap()
+        } else {
+            let saveWaypointTile = app.otherElements["Save visible waypoint"]
+            XCTAssertTrue(
+                scrollToElement(saveWaypointTile, maxSwipes: 2),
+                "Map should expose a visible-waypoint save action"
+            )
+            saveWaypointTile.tap()
+        }
+
+        let titleField = app.textFields["Title"]
+        XCTAssertTrue(titleField.waitForExistence(timeout: 3), "Waypoint editor should expose a title field")
+        titleField.tap()
+        let waypointTitle = "Test Waypoint \(UUID().uuidString.prefix(4))"
+        titleField.typeText(waypointTitle)
+
+        let saveButton = app.buttons["Save"]
+        XCTAssertTrue(saveButton.waitForExistence(timeout: 2), "Waypoint editor should expose Save")
+        saveButton.tap()
+
+        let waypointRow = app.staticTexts[waypointTitle]
+        XCTAssertTrue(
+            scrollToElement(waypointRow, maxSwipes: 4),
+            "Saved waypoint should appear in the Map screen waypoint list"
+        )
+    }
+
     private func tapTab(_ name: String) {
         let tabBar = app.tabBars.firstMatch
         let button = tabBar.buttons[name]
@@ -494,6 +542,32 @@ final class OSAContentAndInputTests: XCTestCase {
         if backButton.waitForExistence(timeout: 2) {
             backButton.tap()
         }
+    }
+
+    private func handleLocationPermissionIfNeeded() {
+        let allowWhileUsing = app.buttons["Allow While Using App"]
+        if allowWhileUsing.waitForExistence(timeout: 2) {
+            allowWhileUsing.tap()
+            return
+        }
+
+        let allowOnce = app.buttons["Allow Once"]
+        if allowOnce.waitForExistence(timeout: 2) {
+            allowOnce.tap()
+        }
+    }
+
+    private func openMapScreen() {
+        tapTab("Map")
+        if app.buttons["Save Visible Waypoint"].waitForExistence(timeout: 2) {
+            return
+        }
+
+        if app.otherElements["Save visible waypoint"].waitForExistence(timeout: 2) {
+            return
+        }
+
+        navigateToMoreItem("Map")
     }
 
     private func findButton(labelContaining text: String) -> XCUIElement? {

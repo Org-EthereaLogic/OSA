@@ -10,6 +10,9 @@ struct ChecklistsScreen: View {
     @State private var searchText = ""
     @State private var showingCreateAdhoc = false
     @State private var runPendingDeletion: ChecklistRun?
+    @State private var selectedTemplateSlug: String?
+    @State private var selectedRunID: UUID?
+    @State private var showingHistory = false
 
     var body: some View {
         Group {
@@ -57,6 +60,15 @@ struct ChecklistsScreen: View {
                 }
             }
         }
+        .navigationDestination(item: $selectedTemplateSlug) { slug in
+            ChecklistTemplateDetailView(slug: slug)
+        }
+        .navigationDestination(item: $selectedRunID) { id in
+            ChecklistRunView(runID: id)
+        }
+        .navigationDestination(isPresented: $showingHistory) {
+            ChecklistRunHistoryView()
+        }
         .task { loadContent() }
     }
 
@@ -65,8 +77,8 @@ struct ChecklistsScreen: View {
             if !filteredRuns.isEmpty {
                 Section {
                     ForEach(filteredRuns) { run in
-                        NavigationLink {
-                            ChecklistRunView(runID: run.id)
+                        Button {
+                            selectedRunID = run.id
                         } label: {
                             ActiveRunRow(run: run)
                         }
@@ -95,8 +107,8 @@ struct ChecklistsScreen: View {
                 if !protocolTemplates.isEmpty {
                     Section {
                         ForEach(protocolTemplates) { template in
-                            NavigationLink {
-                                ChecklistTemplateDetailView(slug: template.slug)
+                            Button {
+                                selectedTemplateSlug = template.slug
                             } label: {
                                 TemplateRow(template: template)
                             }
@@ -117,8 +129,8 @@ struct ChecklistsScreen: View {
                 ForEach(sortedCategories, id: \.self) { category in
                     Section {
                         ForEach(grouped[category] ?? []) { template in
-                            NavigationLink {
-                                ChecklistTemplateDetailView(slug: template.slug)
+                            Button {
+                                selectedTemplateSlug = template.slug
                             } label: {
                                 TemplateRow(template: template)
                             }
@@ -143,8 +155,8 @@ struct ChecklistsScreen: View {
             }
 
             if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                NavigationLink {
-                    ChecklistRunHistoryView()
+                Button {
+                    showingHistory = true
                 } label: {
                     Label("Run History", systemImage: "clock.arrow.circlepath")
                         .foregroundStyle(.secondary)

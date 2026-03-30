@@ -30,6 +30,8 @@ Curated prompts and prompt-derived documents.
 - `41-sprint-6-assistant-intelligence-and-conversation-enhanced-prompt.md` captures the next bounded Ask enhancement slice: session-scoped follow-up context, local recent-question history, notes-backed study guide generation, region-aware retrieval preferences, and context-aware Home suggestions without turning Ask into a general chatbot.
 - `42-sprint-7-widgets-and-system-integration-enhanced-prompt.md` captures the next bounded system-surface slice after Sprint 6: one WidgetKit extension target, a minimal app-group snapshot for widget-safe local data, Home and Lock Screen widgets for readiness, expiry, rotating tips, and emergency quick access, plus an ActivityKit Live Activity for active emergency protocol progress.
 
+- `43-sprint-8-advanced-maps-and-navigation-enhanced-prompt.md` captures the next bounded navigation slice after Sprint 7: explicit offline tile-region management, local waypoints and recorded tracks, GPX export, distance measurement, rescue-oriented coordinate formatting, and compass utilities built on the existing Maps feature without adding background tracking or remote routing.
+
 ## Rules
 
 - Keep reusable prompt artifacts here after they are cleaned up from draft form.

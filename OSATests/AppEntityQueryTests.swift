@@ -327,6 +327,8 @@ private func makeTestDependencies(
         weatherAlertService: StubWeatherAlertService(),
         locationService: StubLocationService(),
         mapAnnotationProvider: StubMapAnnotationProvider(),
+        waypointRepository: StubWaypointRepository(),
+        recordedTrackRepository: StubRecordedTrackRepository(),
         tileCacheService: StubTileCacheService()
     )
 }
@@ -377,9 +379,23 @@ private struct StubWeatherAlertService: WeatherAlertService {
 private final class StubLocationService: LocationService, @unchecked Sendable {
     @MainActor var currentLocation: CoreLocation.CLLocationCoordinate2D? { nil }
     @MainActor var authorizationStatus: CoreLocation.CLAuthorizationStatus { .notDetermined }
+    @MainActor var currentHeading: HeadingReading? { nil }
+    @MainActor var isHeadingAvailable: Bool { false }
     func requestWhenInUseAuthorization() {}
     @MainActor func locationStream() -> AsyncStream<CoreLocation.CLLocationCoordinate2D> {
         AsyncStream { $0.finish() }
+    }
+    @MainActor func locationUpdateStream() -> AsyncStream<CoreLocation.CLLocation> {
+        AsyncStream { $0.finish() }
+    }
+    @MainActor func headingStream() -> AsyncStream<HeadingReading> {
+        AsyncStream { $0.finish() }
+    }
+    @MainActor func authorizationStatusStream() -> AsyncStream<CoreLocation.CLAuthorizationStatus> {
+        AsyncStream { continuation in
+            continuation.yield(.notDetermined)
+            continuation.finish()
+        }
     }
 }
 
@@ -389,9 +405,53 @@ private struct StubMapAnnotationProvider: MapAnnotationProvider {
 }
 
 private struct StubTileCacheService: TileCacheService {
+    let regionBudget = TileRegionBudget.standard
     func hasCachedTiles(for region: CachedTileRegion) -> Bool { false }
     func cachedRegions() -> [CachedTileRegion] { [] }
+    func totalCacheSizeBytes() -> Int64 { 0 }
+    func planRegionSave(name: String, region: MapRegion, zoomRange: ClosedRange<Int>) throws -> TileRegionSavePlan {
+        TileRegionSavePlan(
+            id: UUID(),
+            name: name,
+            region: region,
+            zoomRange: zoomRange,
+            tileCount: 0,
+            newTileCount: 0,
+            estimatedSizeBytes: 0,
+            projectedCacheSizeBytes: 0,
+            tileCoordinates: []
+        )
+    }
+    func saveRegion(using plan: TileRegionSavePlan) async throws -> CachedTileRegion {
+        CachedTileRegion(
+            id: plan.id,
+            name: plan.name,
+            centerLatitude: plan.region.centerLatitude,
+            centerLongitude: plan.region.centerLongitude,
+            zoomRange: plan.zoomRange,
+            tileCount: 0,
+            downloadedAt: Date(),
+            sizeBytes: 0
+        )
+    }
+    func deleteCachedRegion(id: UUID) throws {}
     func tileData(x: Int, y: Int, z: Int) -> Data? { nil }
+}
+
+private struct StubWaypointRepository: WaypointRepository {
+    func listWaypoints() throws -> [UserWaypoint] { [] }
+    func waypoint(id: UUID) throws -> UserWaypoint? { nil }
+    func createWaypoint(_ waypoint: UserWaypoint) throws {}
+    func updateWaypoint(_ waypoint: UserWaypoint) throws {}
+    func deleteWaypoint(id: UUID) throws {}
+}
+
+private struct StubRecordedTrackRepository: RecordedTrackRepository {
+    func listTracks() throws -> [RecordedTrack] { [] }
+    func track(id: UUID) throws -> RecordedTrack? { nil }
+    func createTrack(_ track: RecordedTrack) throws {}
+    func updateTrack(_ track: RecordedTrack) throws {}
+    func deleteTrack(id: UUID) throws {}
 }
 
 // MARK: - Focused Stubs (reuses StubSearchService and StubCapabilityDetector from LocalRetrievalServiceTests)

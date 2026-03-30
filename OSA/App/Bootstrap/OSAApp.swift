@@ -59,6 +59,8 @@ struct OSAApp: App {
                 .environment(\.weatherAlertService, dependencies.weatherAlertService)
                 .environment(\.locationService, dependencies.locationService)
                 .environment(\.mapAnnotationProvider, dependencies.mapAnnotationProvider)
+                .environment(\.waypointRepository, dependencies.waypointRepository)
+                .environment(\.recordedTrackRepository, dependencies.recordedTrackRepository)
                 .environment(\.tileCacheService, dependencies.tileCacheService)
                 .task {
                     SharedRuntime.installNavigationCoordinator(navigationCoordinator)

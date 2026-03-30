@@ -108,6 +108,14 @@ private struct MapAnnotationProviderKey: EnvironmentKey {
     static let defaultValue: (any MapAnnotationProvider)? = nil
 }
 
+private struct WaypointRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any WaypointRepository)? = nil
+}
+
+private struct RecordedTrackRepositoryKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: (any RecordedTrackRepository)? = nil
+}
+
 private struct TileCacheServiceKey: EnvironmentKey {
     static let defaultValue: (any TileCacheService)? = nil
 }
@@ -246,6 +254,16 @@ extension EnvironmentValues {
     var mapAnnotationProvider: (any MapAnnotationProvider)? {
         get { self[MapAnnotationProviderKey.self] }
         set { self[MapAnnotationProviderKey.self] = newValue }
+    }
+
+    var waypointRepository: (any WaypointRepository)? {
+        get { self[WaypointRepositoryKey.self] }
+        set { self[WaypointRepositoryKey.self] = newValue }
+    }
+
+    var recordedTrackRepository: (any RecordedTrackRepository)? {
+        get { self[RecordedTrackRepositoryKey.self] }
+        set { self[RecordedTrackRepositoryKey.self] = newValue }
     }
 
     var tileCacheService: (any TileCacheService)? {

@@ -12,6 +12,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 - User-data persistence is now implemented: `PersistedInventoryItem`, `PersistedChecklistTemplate`, `PersistedChecklistTemplateItem`, `PersistedChecklistRun`, `PersistedChecklistRunItem`, and `PersistedNoteRecord` SwiftData models with record mappings; `SwiftDataInventoryRepository`, `SwiftDataChecklistRepository`, and `SwiftDataNoteRepository` implementations; and repository-contract tests for each domain.
 - A sidecar SQLite FTS5 search index (`SearchIndexStore`) is implemented in `OSA/Persistence/SearchIndex/` with BM25 ranking, porter-stemmed tokenization, and prefix search. `LocalSearchService` wires index maintenance and query across all five content types. `SearchIndexRebuilder` repopulates the index from repository truth at bootstrap, and note or inventory writes update the index incrementally through repository decorators.
 - Imported knowledge persistence is now implemented: `PersistedSourceRecord`, `PersistedImportedKnowledgeDocument`, `PersistedKnowledgeChunk`, and `PersistedPendingOperation` SwiftData models with cascade relationships; domain value types and enums (`TrustLevel`, `ReviewStatus`, `DocumentType`, `OperationType`, `OperationStatus`); `ImportedKnowledgeRepository` and `PendingOperationRepository` protocols with SwiftData implementations; repository-contract tests for both repositories. M4P4 adds `ImportedKnowledgeNormalizer` (HTML/text → `NormalizedDocument` with title, content-hash, publisher domain), `KnowledgeChunker` (heading-aware chunking with paragraph fallback), and `ImportedKnowledgeImportPipeline` (orchestrates normalize → chunk → persist to repository → extend FTS5 index with dedupe and document versioning). `SearchService.indexImportedChunk` extends the FTS5 index for imported knowledge chunks.
+- Maps persistence is now implemented: `PersistedWaypoint` (id, title, note, lat/lon, category, symbolName, createdAt), `PersistedRecordedTrack` (id, title, startedAt, endedAt, totalDistanceMeters) with a cascade one-to-many relationship to `PersistedRecordedTrackPoint` (id, lat/lon, timestamp, horizontalAccuracy), and `MapRecordMappings` domain-value-type converters. `WaypointRepository` and `RecordedTrackRepository` protocols in `OSA/Domain/Maps/Repositories/` with `SwiftDataWaypointRepository` and `SwiftDataRecordedTrackRepository` implementations in `OSA/Persistence/SwiftData/Repositories/`. Repository-contract tests cover waypoint CRUD and full track create/update/delete lifecycle.
 
 ## Assumptions
 
@@ -28,7 +29,7 @@ Related docs: [Technical Architecture](./05-technical-architecture.md), [Sync An
 ## Open Questions
 
 - Should attachments such as photos or scanned documents be in scope for inventory or notes in v1?
-- Should local map assets be records in the same store or a future file-backed feature?
+- ~~Should local map assets be records in the same store or a future file-backed feature?~~ **Resolved:** Waypoints and tracks are SwiftData records. OSM tile cache is file-backed (disk-based tile store managed by `OSMTileCacheService`). The two stores are independent.
 - Is user export needed before any migration strategy is considered production-ready?
 
 ## Storage Strategy
@@ -69,9 +70,11 @@ erDiagram
     WeatherAlert }|--|| WeatherCache : cached_in
     EmergencyContact }|--|| UserData : belongs_to
     SupplyTemplate ||--o{ SupplyTemplateItem : contains
+    RecordedTrack ||--o{ RecordedTrackPoint : contains
     %% Note: AISession, AIMessage, AppSetting, and PendingOperation are planned but not yet implemented.
     %% DailyForecast and WeatherAlert are standalone cached entities (no relationships to other domain models).
     %% EmergencyContact is a standalone user-entered entity. SupplyTemplate is bundled seed data for hazard-scenario supply kits.
+    %% UserWaypoint and RecordedTrack are standalone user-created location entities.
 ```
 
 ## Entity Schemas
@@ -377,6 +380,37 @@ Persisted via `PersistedDailyForecast` SwiftData model. Entire forecast cache is
 
 Persisted via `PersistedWeatherAlert` SwiftData model. Active alerts filtered by `expiresDate > now`. Surfaced in both the Weather screen and the Home feed via `HomeFeedItem` union type.
 
+### UserWaypoint _(Maps — Complete)_
+
+- `id`: UUID
+- `title`: String
+- `note`: String?
+- `latitude`: Double
+- `longitude`: Double
+- `createdAt`: Date
+- `category`: UserWaypointCategory (general, shelter, water, medical, regroup)
+- `symbolName`: String?
+
+Persisted via `PersistedWaypoint` SwiftData model. CRUD exposed through `MapScreen` waypoint UI. Repository: `WaypointRepository` protocol with `SwiftDataWaypointRepository` implementation.
+
+### RecordedTrack _(Maps — Complete)_
+
+- `id`: UUID
+- `title`: String
+- `startedAt`: Date
+- `endedAt`: Date?
+- `totalDistanceMeters`: Double
+- `points`: [RecordedTrackPoint] (cascade-deleted with track)
+
+Each `RecordedTrackPoint`:
+- `id`: UUID
+- `latitude`: Double
+- `longitude`: Double
+- `timestamp`: Date
+- `horizontalAccuracy`: Double
+
+Persisted via `PersistedRecordedTrack` + `PersistedRecordedTrackPoint` SwiftData models with cascade relationship. Repository: `RecordedTrackRepository` protocol with `SwiftDataRecordedTrackRepository` implementation. GPX 1.1 export via `GPXExporter`.
+
 ## Local File And Storage Layout
 
 Recommended layout under app container:
@@ -396,6 +430,10 @@ Application Support/
     quickcards-v1.json
   Imports/
     <document-id>.json
+  OSMTileCache/
+    regions.json
+    tiles/
+      <z>/<x>/<y>.png
 Caches/
   RefreshTemp/
   RenderedSearchSnippets/
@@ -434,4 +472,4 @@ Caches/
 
 1. ~~Convert this model into SwiftData schemas and repository protocols before feature UI.~~ **Done:** All core entity schemas are implemented — editorial content (chapters, sections, quick cards) and user data (inventory, checklists, notes) — with SwiftData models, domain value types, repository protocols, and environment-key DI. Feature UI layers read from these models through protocol injection.
 2. ~~Create versioned seed content manifests alongside the future Xcode project.~~ **Done:** `SeedManifest.json` with content-pack versioning, record counts, and content hashes is in `OSA/Resources/SeedContent/`, extended to include checklist template seed data.
-3. Decide whether attachments and map assets belong in v1 before freezing the first schema version.
+3. ~~Decide whether attachments and map assets belong in v1 before freezing the first schema version.~~ **Resolved:** Map assets resolved (see Open Questions). Attachments (photos, scanned documents) remain deferred to a post-v1 iteration.

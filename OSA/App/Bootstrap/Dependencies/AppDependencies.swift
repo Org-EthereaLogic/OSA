@@ -31,6 +31,8 @@ struct AppDependencies {
     let weatherAlertService: any WeatherAlertService
     let locationService: any LocationService
     let mapAnnotationProvider: any MapAnnotationProvider
+    let waypointRepository: any WaypointRepository
+    let recordedTrackRepository: any RecordedTrackRepository
     let tileCacheService: any TileCacheService
 
     @MainActor
@@ -139,6 +141,8 @@ struct AppDependencies {
         let weatherAlertService = LiveWeatherAlertService()
         let locationService = CLLocationManagerService()
         let mapAnnotationProvider = BundledMapAnnotationProvider()
+        let waypointRepository = SwiftDataWaypointRepository(modelContext: modelContainer.mainContext)
+        let recordedTrackRepository = SwiftDataRecordedTrackRepository(modelContext: modelContainer.mainContext)
         let tileCacheService = OSMTileCacheService()
 
         let rssDiscoveryService = LiveRSSDiscoveryService()
@@ -187,6 +191,8 @@ struct AppDependencies {
             weatherAlertService: weatherAlertService,
             locationService: locationService,
             mapAnnotationProvider: mapAnnotationProvider,
+            waypointRepository: waypointRepository,
+            recordedTrackRepository: recordedTrackRepository,
             tileCacheService: tileCacheService
         )
     }
