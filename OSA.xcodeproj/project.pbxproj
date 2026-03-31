@@ -124,6 +124,7 @@
 		5CAFFE92C140EB69CB73A79D /* ImportedKnowledgeDocumentMappings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC05E5EF5CD44188E68E65E /* ImportedKnowledgeDocumentMappings.swift */; };
 		5CFF02E0BE6289C725E134D4 /* InventoryExpiryNotificationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C34117E94FF309246B2651 /* InventoryExpiryNotificationServiceTests.swift */; };
 		5F143D25534BDFD331AB8B8D /* AskLanternIntentExecutorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8208C17873A575FD9E7967C /* AskLanternIntentExecutorTests.swift */; };
+		5F2C139128A635C1D2578F03 /* OpenMeteoForecastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FC7A9E95814860F4699067 /* OpenMeteoForecastService.swift */; };
 		5FF3E1DDEA061F0867DB5287 /* ProtocolLiveActivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2979889B4899633514382FC /* ProtocolLiveActivityCoordinator.swift */; };
 		6002BDC0AE94C3B1D4004F4F /* PracticeProgressRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3A4225B86320E4FF52D2B /* PracticeProgressRepository.swift */; };
 		60ED2026F0DA57100D02A42B /* ConnectivityState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BC3D3E8C7984D2DE617E19 /* ConnectivityState.swift */; };
@@ -253,6 +254,7 @@
 		AED59EC5E3942248AFFBC2A5 /* PersistedHandbookSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C46B712A7A9CA9D8AE710 /* PersistedHandbookSection.swift */; };
 		B06568EE4D7653E335FEA587 /* ChecklistRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00166C23B71FBE908EC7899 /* ChecklistRunView.swift */; };
 		B084D24B8B6C72F2A968E907 /* EmergencyModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CB3D75FD836C817CC43327 /* EmergencyModeView.swift */; };
+		B21BB16EC95A34EC42B9D66A /* FallbackWeatherForecastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EDEC979F4A5964D679D87B /* FallbackWeatherForecastService.swift */; };
 		B28261588294442EF8EF4FA8 /* ConnectivityBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D650FBD447A0C1F4CCB846 /* ConnectivityBadge.swift */; };
 		B36070D41FD744017D237A26 /* LocalSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD85B6654E7773A34474CEA /* LocalSearchService.swift */; };
 		B4299B25E873D6A825612759 /* DocumentVaultCryptoServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C57EB3256D81F6C34A8356 /* DocumentVaultCryptoServiceTests.swift */; };
@@ -478,6 +480,7 @@
 		306FE173F0CAA08F6D18E6F6 /* PersistenceValueCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceValueCoding.swift; sourceTree = "<group>"; };
 		307628CC7713751EA3503E57 /* FieldReferenceRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldReferenceRouteView.swift; sourceTree = "<group>"; };
 		315AD31383732DF6144CFD15 /* InventoryCompletionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryCompletionService.swift; sourceTree = "<group>"; };
+		31EDEC979F4A5964D679D87B /* FallbackWeatherForecastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallbackWeatherForecastService.swift; sourceTree = "<group>"; };
 		325C6891F0C8A4D712B91349 /* SeedContentRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedContentRepositoryTests.swift; sourceTree = "<group>"; };
 		32D44F10CD60030464CC2F15 /* DocumentVaultKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentVaultKeyStore.swift; sourceTree = "<group>"; };
 		32FDCF1D280DA7713143F665 /* ImportedKnowledgeNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedKnowledgeNormalizer.swift; sourceTree = "<group>"; };
@@ -752,6 +755,7 @@
 		F4E0800B309187BC32849506 /* SearchRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRepositories.swift; sourceTree = "<group>"; };
 		F588D204D4F516CAE1EC45C3 /* QueryNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryNormalizer.swift; sourceTree = "<group>"; };
 		F61E4006C81A63656E061EFB /* AskScopeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskScopeSettings.swift; sourceTree = "<group>"; };
+		F6FC7A9E95814860F4699067 /* OpenMeteoForecastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMeteoForecastService.swift; sourceTree = "<group>"; };
 		F7749A787B8DFAA402840D46 /* GroundedPromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundedPromptBuilder.swift; sourceTree = "<group>"; };
 		F82709069ABDB36DE80A9B90 /* LocalSVGIllustrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSVGIllustrationView.swift; sourceTree = "<group>"; };
 		FACB4768D546A1C391433CA9 /* TrustedSourceAllowlistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedSourceAllowlistTests.swift; sourceTree = "<group>"; };
@@ -1328,7 +1332,9 @@
 		75FA60209A5607B2DBA71CD3 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				31EDEC979F4A5964D679D87B /* FallbackWeatherForecastService.swift */,
 				2952BA2C73521086DF843DA6 /* NWSAlertParser.swift */,
+				F6FC7A9E95814860F4699067 /* OpenMeteoForecastService.swift */,
 				49C32F24BFE1E7D6B9445D42 /* WeatherAlertService.swift */,
 				F0C97E66FE9C3CF8AEC89EE2 /* WeatherKitForecastService.swift */,
 			);
@@ -2312,6 +2318,7 @@
 				BA5CC7502DD09DF07F1DE882 /* EncryptedDocumentVaultStore.swift in Sources */,
 				E88C548C9C2480BB983FBB54 /* EntityQueryResolver.swift in Sources */,
 				9657AB95BDAF7AE8450E85F6 /* EvidenceRanker.swift in Sources */,
+				B21BB16EC95A34EC42B9D66A /* FallbackWeatherForecastService.swift in Sources */,
 				AA15D02F6528E9D72C74BCBF /* FamilyEmergencyPlanTemplate.swift in Sources */,
 				D8BB1E2EB773555AF52E2E11 /* FieldReference.swift in Sources */,
 				D5AD9104A6D7FAE6C1547CE6 /* FieldReferenceCategoryView.swift in Sources */,
@@ -2396,6 +2403,7 @@
 				6A51BFDD7817D33177B2C5C8 /* OnscreenContentManager.swift in Sources */,
 				A508AD830BB25B4D0C8C7161 /* OpenEmergencyModeIntent.swift in Sources */,
 				8BBCB5EC75B4CB57C2C41989 /* OpenHandbookSectionIntent.swift in Sources */,
+				5F2C139128A635C1D2578F03 /* OpenMeteoForecastService.swift in Sources */,
 				3EC102CBE63D2EBD1A11535D /* OpenQuickCardIntent.swift in Sources */,
 				5925081874355BD1FEF2BD83 /* OperationStatus.swift in Sources */,
 				14F415B47E00F2957712B853 /* OperationType.swift in Sources */,

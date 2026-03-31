@@ -235,7 +235,10 @@ struct AppDependencies {
                 nowProvider: nowProvider
             )
         } else {
-            weatherForecastService = LiveWeatherKitForecastService()
+            weatherForecastService = FallbackWeatherForecastService(
+                primary: LiveWeatherKitForecastService(),
+                fallback: OpenMeteoForecastService()
+            )
             weatherAlertService = LiveWeatherAlertService()
         }
         let locationService = CLLocationManagerService()
