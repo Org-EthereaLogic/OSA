@@ -121,8 +121,53 @@ enum WeekSimulationPersona {
         makeDate("2026-04-02T08:00:00.000-07:00"),
         makeDate("2026-04-03T08:00:00.000-07:00"),
         makeDate("2026-04-04T08:00:00.000-07:00"),
-        makeDate("2026-04-05T08:00:00.000-07:00")
+        makeDate("2026-04-05T08:00:00.000-07:00"),
+        makeDate("2026-04-06T08:00:00.000-07:00"),
+        makeDate("2026-04-07T08:00:00.000-07:00"),
+        makeDate("2026-04-08T08:00:00.000-07:00"),
+        makeDate("2026-04-09T08:00:00.000-07:00"),
+        makeDate("2026-04-10T08:00:00.000-07:00"),
+        makeDate("2026-04-11T08:00:00.000-07:00"),
+        makeDate("2026-04-12T08:00:00.000-07:00")
     ]
+
+    // MARK: - Week 2 Persona Data
+
+    static let week2InventoryItems: [InventoryFixture] = [
+        InventoryFixture(
+            name: "Emergency Radio",
+            unit: "units",
+            location: "Hall closet",
+            notes: "NOAA weather band receiver. Check batteries monthly.",
+            tracksExpiry: false,
+            enablesLowStockReminder: false
+        ),
+        InventoryFixture(
+            name: "Canned Soup Rotation",
+            unit: "cans",
+            location: "Pantry lower shelf",
+            notes: "Rotate before summer, FIFO order.",
+            tracksExpiry: true,
+            enablesLowStockReminder: true
+        )
+    ]
+
+    static let personalNoteTitle = "Power Outage Lessons Learned"
+    static let personalNoteBody = "Last outage lasted 6 hours. Generator ran fine but need extension cord for fridge."
+    static let localReferenceNoteTitle = "Neighborhood Water Source"
+    static let localReferenceNoteBody = "Community well at Maple Park. Needs boil-water treatment."
+
+    static let shelterWaypointTitle = "Lincoln Elementary Shelter"
+    static let shelterWaypointNote = "Red Cross designated shelter during regional events."
+    static let waterWaypointTitle = "Maple Park Community Well"
+    static let waterWaypointNote = "Municipal backup water source. Requires treatment."
+
+    static let week2AskQuery = "How should I prepare for a wildfire evacuation?"
+    static let week2StudyGuideTitle = "Study Guide: How should I prepare for a wildfire evacuation?"
+    static let kitBuildingQuestion = "What should I pack in a 72-hour emergency kit?"
+
+    static let week2ChecklistSlug = "home-power-outage-preparation"
+    static let week2ChecklistTitle = "Home Power Outage Preparation"
 
     private static func makeDate(_ value: String) -> Date {
         let formatter = ISO8601DateFormatter()
@@ -297,9 +342,11 @@ final class WeekSimulationReporter {
         let blockers = steps.filter { $0.severity == .releaseBlocker }
         let risks = steps.filter { $0.severity == .releaseRisk }
         let unverified = steps.filter { $0.severity == .unverified }
+        let maxDay = steps.map(\.day).max() ?? 0
+        let summaryTitle = maxDay > 7 ? "Two-Week Simulation Summary" : "Week Simulation Summary"
 
         var lines: [String] = [
-            "# Week Simulation Summary",
+            "# \(summaryTitle)",
             "",
             "- Run ID: `\(runID)`",
             "- Scenario: `\(WeekSimulationPersona.scenarioID)`",
