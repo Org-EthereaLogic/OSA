@@ -3,9 +3,14 @@ import SwiftData
 
 final class SwiftDataInventoryRepository: InventoryRepository {
     private let modelContext: ModelContext
+    private let nowProvider: @Sendable () -> Date
 
-    init(modelContext: ModelContext) {
+    init(
+        modelContext: ModelContext,
+        nowProvider: @escaping @Sendable () -> Date = AppClock.now
+    ) {
         self.modelContext = modelContext
+        self.nowProvider = nowProvider
     }
 
     func listItems(includeArchived: Bool) throws -> [InventoryItem] {
@@ -71,7 +76,7 @@ final class SwiftDataInventoryRepository: InventoryRepository {
         }
 
         existing.isArchived = true
-        existing.updatedAt = Date()
+        existing.updatedAt = nowProvider()
         try modelContext.save()
     }
 
@@ -90,7 +95,8 @@ final class SwiftDataInventoryRepository: InventoryRepository {
     }
 
     func itemsExpiringSoon(within days: Int) throws -> [InventoryItem] {
-        let cutoff = Calendar.current.date(byAdding: .day, value: days, to: Date()) ?? Date()
+        let now = nowProvider()
+        let cutoff = Calendar.current.date(byAdding: .day, value: days, to: now) ?? now
 
         var descriptor = FetchDescriptor<PersistedInventoryItem>(
             predicate: #Predicate {

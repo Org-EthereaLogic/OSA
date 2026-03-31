@@ -241,7 +241,7 @@ struct DocumentVaultCaptureView: View {
                 data: selectedDocumentData,
                 preferredFileExtension: fileExtension
             )
-            let now = Date()
+            let now = AppClock.now()
             let effectiveTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
             let entry = DocumentVaultEntry(
                 id: UUID(),

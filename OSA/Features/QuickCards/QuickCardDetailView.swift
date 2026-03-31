@@ -486,7 +486,7 @@ private struct QuickCardPracticePanelView: View {
                 priority: 10,
                 relatedSectionIDs: [],
                 tags: ["first-aid"],
-                lastReviewedAt: Date(),
+                lastReviewedAt: AppClock.now(),
                 largeTypeLayoutVersion: 1
             )
         )

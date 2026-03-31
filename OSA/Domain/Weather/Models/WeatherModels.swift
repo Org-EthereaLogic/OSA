@@ -45,6 +45,6 @@ struct ForecastCacheInfo: Equatable, Sendable {
     var stalenessDescription: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
-        return "Updated \(formatter.localizedString(for: fetchedAt, relativeTo: Date()))"
+        return "Updated \(formatter.localizedString(for: fetchedAt, relativeTo: AppClock.now()))"
     }
 }

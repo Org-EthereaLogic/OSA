@@ -14,6 +14,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 - Sprint 8 advanced-maps tests: `CoordinateFormatterTests` (2 tests) cover DDM and decimal-degrees formatting for rescue coordinates. `GPXExporterTests` (2 tests) cover GPX string structure and file write/read round-trip. `OSMTileCacheServiceTests` (2 tests) cover oversized-region planning rejection and full save → list → tile-read → delete cycle. `SunCompassCalculatorTests` (2 tests) cover azimuth movement direction over a summer day and compass reading with guidance text. `TrackRepositoryTests` (1 test) covers track create, update (title + append point), and delete via in-memory SwiftData container. `WaypointRepositoryTests` (1 test) covers waypoint create, update (title, note, category), and delete. `OSAContentAndInputTests` adds `testMapScreenCanSaveWaypoint` UI test. Total new: 10 unit tests + 1 UI test.
 - Sprint 12 internationalization and accessibility tests: `AccessibilitySettingsTests` (2 tests) cover `AppLanguage` unknown-value default to English and Spanish round-trip. `SeedContentRepositoryTests` expanded with Spanish editorial field (`titleEs`, `bodyEs`) decoding and translated media accessibility metadata (`mediaAccessibilityLabelEs`) validation. `SeedContentMigrationTests` expanded with localized seed-pack migration coverage. `OSAAccessibilitySmokeTests` expanded with language picker, high-contrast toggle, and translated accessibility label assertions. `OSAContentAndInputTests` expanded with localized UI chrome verification and high-contrast reading-surface stability. Updated test count: 575 total tests (448 XCTest unit + 54 XCTest UI + 73 Swift Testing).
 - Sprint 9 content-depth and field-reference tests: a focused 12-test verification run across `SeedContentRepositoryTests` and `SeedContentMigrationTests` passed on 2026-03-29 for the new climate handbook, infographic quick-card, and field-reference seed packs. The full 2026-03-29 suite also covered field-reference search and retrieval routing (`LocalRetrievalServiceTests`, `SearchIndexRebuilderTests`, `AppEntityQueryTests`) plus Library/UI visibility and stability for the new mixed Library root (`OSAContentAndInputTests`, `OSAFullE2EVisualTests`, `OSARotationUITests`).
+- A deterministic week-in-the-life regression now exists in `OSAUITests/OSAWeekInLifeSimulationTests.swift`. It runs one ordered seven-day persona simulation, terminates and relaunches the app between days, uses launch-argument scenario state and fixed dates, writes `timeline.json` plus `summary.md` under `build/week-sim/<run-id>/`, and mirrors the device-only checks in [Week Simulation Device Runbook](./11a-week-simulation-device-runbook.md).
 - The app must behave correctly across offline, degraded, and online transition states.
 
 ## Assumptions
@@ -61,6 +62,7 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 - checklist completion
 - Ask answer and refusal rendering
 - online refresh state transitions
+- week-in-the-life seven-day persona simulation with relaunches, artifact logging, and fixture-backed online flows
 
 ### Manual QA
 
@@ -69,6 +71,26 @@ Related docs: [PRD](./02-prd.md), [Technical Architecture](./05-technical-archit
 - citation clarity
 - unsupported-device Ask behavior
 - privacy and disclosure review
+
+## Week Simulation Regression
+
+The week simulation is a standing regression layer, not an ad hoc exploratory pass.
+
+- Simulator lane: run `scripts/run-week-simulation.sh` or the equivalent `xcodebuild -project OSA.xcodeproj -scheme OSA -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:OSAUITests/OSAWeekInLifeSimulationTests -resultBundlePath build/week-sim/<run-id>/OSAWeekInLifeSimulation.xcresult test`.
+- Simulator expectations: use `UI-TEST-SCENARIO-ID`, `UI-TEST-RESET-STATE`, `UI-TEST-NOW`, `UI-TEST-CONNECTIVITY`, and `UI-TEST-FIXTURE-MODE=week-sim` to keep persistence, time, discovery, trusted-source fetch, and weather deterministic across relaunches.
+- Artifact set: each run must emit `timeline.json`, `summary.md`, screenshots, the `xcodebuild` log, and the `.xcresult` bundle under `build/week-sim/<run-id>/`.
+- Device lane: execute the mirrored seven-day matrix in [Week Simulation Device Runbook](./11a-week-simulation-device-runbook.md) to validate biometrics, real camera/photo import, location permission, live weather, live trusted-source import, and true offline recovery.
+- Severity mapping: uncited Ask output, persistence loss across relaunch, corrupted import state, privacy leakage, or crash is a `Release Blocker`; permission or live-service discrepancies are `Release Risk` until reproduced and classified; skipped device-only checks remain `Unverified`.
+
+## Week Simulation Matrix
+
+1. Day 1: setup and personalization. Create an emergency contact, write a family-plan note, add 4 to 6 inventory items, pin a quick card, relaunch, and verify Home reflects the new local state.
+2. Day 2: research and Ask. Search `water`, open a handbook section and a field reference, ask supported, not-found, and out-of-scope questions, save a study guide, and verify citations plus recent-question history.
+3. Day 3: organizer workflows. Edit inventory, archive one item, start the 72-hour checklist, complete part of it, finish the weekly drill quiz, relaunch, and verify checklist or practice persistence plus Ask note-scope boundaries.
+4. Day 4: field tools and state changes. Use Morse, timer, converter, and declination, save a waypoint, load Weather, rotate once, toggle high-contrast and large print, and verify the app remains usable.
+5. Day 5: online knowledge and packs. Run manual discovery or trusted-source import against approved sources, verify imported knowledge only becomes searchable and citeable after local commit, relaunch offline, and confirm bundled packs remain installed.
+6. Day 6: sensitive storage and export. Validate the Document Vault locked state, verify capture affordances, open note, inventory, checklist, quick-card, and handbook share or export flows, and track device-only vault or camera checks as verified or unverified.
+7. Day 7: stress and recovery. Cold-start offline, enter Emergency Mode, jump to Quick Cards and Survival Tools, resume the active checklist, relaunch again, and verify no state loss before filing the final triage summary.
 
 ## Acceptance Criteria
 
@@ -174,6 +196,7 @@ Implemented in `OSATests/SafetyRegressionTests.swift`:
 3. Import a trusted source, go offline, and verify the new material remains searchable and citeable.
 4. Simulate stale imported knowledge and verify stale cues appear where required.
 5. Force unsupported-model capability and verify Ask still behaves predictably.
+6. Run the mirrored physical-device week simulation in [Week Simulation Device Runbook](./11a-week-simulation-device-runbook.md) and attach the resulting evidence to release review.
 
 ## Device Coverage Assumptions
 

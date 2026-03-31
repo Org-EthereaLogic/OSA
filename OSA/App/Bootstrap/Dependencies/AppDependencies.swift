@@ -44,21 +44,39 @@ struct AppDependencies {
     let tileCacheService: any TileCacheService
 
     @MainActor
-    static func live(modelContainer: ModelContainer) -> AppDependencies {
+    static func live(
+        modelContainer: ModelContainer,
+        runtime: AppRuntimeConfiguration = .current()
+    ) -> AppDependencies {
+        let userDefaults = runtime.userDefaults
+        let nowProvider = runtime.nowProvider
         let contentRepository = SwiftDataContentRepository(modelContext: modelContainer.mainContext)
         let practiceProgressRepository = SwiftDataPracticeProgressRepository(modelContext: modelContainer.mainContext)
-        let baseInventoryRepository = SwiftDataInventoryRepository(modelContext: modelContainer.mainContext)
-        let inventoryPhotoStore = FileBackedInventoryPhotoStore()
+        let baseInventoryRepository = SwiftDataInventoryRepository(
+            modelContext: modelContainer.mainContext,
+            nowProvider: nowProvider
+        )
+        let inventoryPhotoStore = FileBackedInventoryPhotoStore(
+            baseDirectory: runtime.fileStorageBaseDirectoryURL
+        )
         let documentVaultRepository = SwiftDataDocumentVaultRepository(modelContext: modelContainer.mainContext)
-        let documentVaultFileStore = EncryptedDocumentVaultStore()
+        let documentVaultFileStore = EncryptedDocumentVaultStore(
+            baseDirectory: runtime.fileStorageBaseDirectoryURL
+        )
         let knowledgePackInstallStateRepository = SwiftDataKnowledgePackInstallStateRepository(modelContext: modelContainer.mainContext)
         let supplyTemplateRepository = BundledSupplyTemplateRepository()
-        let baseChecklistRepository = SwiftDataChecklistRepository(modelContext: modelContainer.mainContext)
+        let baseChecklistRepository = SwiftDataChecklistRepository(
+            modelContext: modelContainer.mainContext,
+            nowProvider: nowProvider
+        )
         let emergencyContactRepository = SwiftDataEmergencyContactRepository(modelContext: modelContainer.mainContext)
         let baseNoteRepository = SwiftDataNoteRepository(modelContext: modelContainer.mainContext)
         let importedKnowledgeRepository = SwiftDataImportedKnowledgeRepository(modelContext: modelContainer.mainContext)
         let pendingOperationRepository = SwiftDataPendingOperationRepository(modelContext: modelContainer.mainContext)
-        let searchService = try? LocalSearchService.makeDefault()
+        let searchService = try? LocalSearchService.makeDefault(
+            directoryURL: runtime.searchIndexDirectoryURL,
+            userDefaults: userDefaults
+        )
         let inventoryReadRepository: any InventoryRepository
         let noteRepository: any NoteRepository
 
@@ -91,7 +109,9 @@ struct AppDependencies {
         let widgetSnapshotCoordinator = WidgetSnapshotCoordinator(
             quickCardRepository: contentRepository,
             inventoryRepository: inventoryReadRepository,
-            supplyTemplateRepository: supplyTemplateRepository
+            supplyTemplateRepository: supplyTemplateRepository,
+            userDefaults: userDefaults,
+            nowProvider: nowProvider
         )
         let liveActivityCoordinator = ProtocolLiveActivityCoordinator(
             checklistRepository: baseChecklistRepository
@@ -120,15 +140,32 @@ struct AppDependencies {
         }
 
         let inventoryExpiryNotificationService = InventoryExpiryNotificationService(
-            inventoryRepository: inventoryRepository
+            inventoryRepository: inventoryRepository,
+            userDefaults: userDefaults,
+            nowProvider: nowProvider
         )
 
-        let connectivityService = NWPathMonitorConnectivityService()
+        let connectivityService: any ConnectivityService
+        if let override = runtime.connectivityOverride {
+            connectivityService = PreviewConnectivityService(state: override)
+        } else if runtime.shouldUseWeekSimulationFixtures {
+            connectivityService = PreviewConnectivityService(state: .offline)
+        } else {
+            connectivityService = NWPathMonitorConnectivityService()
+        }
         connectivityService.start()
 
-        let trustedSourceHTTPClient = URLSessionTrustedSourceHTTPClient(
-            connectivityService: connectivityService
-        )
+        let trustedSourceHTTPClient: any TrustedSourceHTTPClient
+        if runtime.shouldUseWeekSimulationFixtures {
+            trustedSourceHTTPClient = WeekSimulationTrustedSourceHTTPClient(
+                connectivityService: connectivityService,
+                nowProvider: nowProvider
+            )
+        } else {
+            trustedSourceHTTPClient = URLSessionTrustedSourceHTTPClient(
+                connectivityService: connectivityService
+            )
+        }
 
         let importPipeline = ImportedKnowledgeImportPipeline(
             repository: importedKnowledgeRepository,
@@ -140,7 +177,8 @@ struct AppDependencies {
             pendingOperationRepository: pendingOperationRepository,
             connectivityService: connectivityService,
             httpClient: trustedSourceHTTPClient,
-            importPipeline: importPipeline
+            importPipeline: importPipeline,
+            now: nowProvider
         )
 
         let rebuildSearchIndex = {
@@ -148,7 +186,10 @@ struct AppDependencies {
             if let searchService {
                 rebuildSearchService = searchService
             } else {
-                rebuildSearchService = try LocalSearchService.makeDefault()
+                rebuildSearchService = try LocalSearchService.makeDefault(
+                    directoryURL: runtime.searchIndexDirectoryURL,
+                    userDefaults: userDefaults
+                )
             }
 
             try SearchIndexRebuilder(
@@ -178,20 +219,37 @@ struct AppDependencies {
         let inventoryCompletionService = LocalInventoryCompletionService(
             capabilityDetector: capabilityDetector
         )
-        let hapticFeedbackService = LiveHapticFeedbackService()
+        let hapticFeedbackService = LiveHapticFeedbackService(userDefaults: userDefaults)
 
         let weatherForecastRepository = SwiftDataWeatherForecastRepository(
-            modelContext: modelContainer.mainContext
+            modelContext: modelContainer.mainContext,
+            nowProvider: nowProvider
         )
-        let weatherForecastService = LiveWeatherKitForecastService()
-        let weatherAlertService = LiveWeatherAlertService()
+        let weatherForecastService: any WeatherForecastService
+        let weatherAlertService: any WeatherAlertService
+        if runtime.shouldUseWeekSimulationFixtures {
+            weatherForecastService = WeekSimulationWeatherForecastService(
+                nowProvider: nowProvider
+            )
+            weatherAlertService = WeekSimulationWeatherAlertService(
+                nowProvider: nowProvider
+            )
+        } else {
+            weatherForecastService = LiveWeatherKitForecastService()
+            weatherAlertService = LiveWeatherAlertService()
+        }
         let locationService = CLLocationManagerService()
         let mapAnnotationProvider = BundledMapAnnotationProvider()
         let waypointRepository = SwiftDataWaypointRepository(modelContext: modelContainer.mainContext)
         let recordedTrackRepository = SwiftDataRecordedTrackRepository(modelContext: modelContainer.mainContext)
         let tileCacheService = OSMTileCacheService()
 
-        let rssDiscoveryService = LiveRSSDiscoveryService()
+        let rssDiscoveryService: any RSSDiscoveryService
+        if runtime.shouldUseWeekSimulationFixtures {
+            rssDiscoveryService = WeekSimulationRSSDiscoveryService(nowProvider: nowProvider)
+        } else {
+            rssDiscoveryService = LiveRSSDiscoveryService()
+        }
         let braveSearchCredentialStore = BraveSearchCredentialStore()
 
         let discoveryCoordinator = KnowledgeDiscoveryCoordinator(
@@ -204,7 +262,9 @@ struct AppDependencies {
             httpClient: trustedSourceHTTPClient,
             importPipeline: importPipeline,
             importedKnowledgeRepository: importedKnowledgeRepository,
-            connectivityService: connectivityService
+            connectivityService: connectivityService,
+            defaults: userDefaults,
+            now: nowProvider
         )
 
         return AppDependencies(

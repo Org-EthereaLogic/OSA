@@ -272,6 +272,12 @@ Named asset catalog colors (`AccentColor`, `LanternEmber`, `LanternSlate`) provi
 
 `MarkdownPreprocessor` in `OSA/Shared/Support/` preprocesses markdown body content before passing it to `AttributedString(markdown:)`. SwiftUI's `Text(AttributedString)` does not render block-level list elements — bullet and numbered list items collapse into a single paragraph. The preprocessor converts list items to paragraph-separated bullet points, applied across `ChapterDetailView`, `HandbookSectionDetailView`, `QuickCardDetailView`, and `NoteDetailView`.
 
+## UI Test Infrastructure
+
+`AppRuntimeConfiguration` parses launch arguments (`UI-TEST-SCENARIO-ID`, `UI-TEST-NOW`, `UI-TEST-CONNECTIVITY`, `UI-TEST-FIXTURE-MODE`) to create isolated per-scenario storage directories and override time, connectivity, and fixture mode without modifying normal runtime behaviour. `AppClock` (`OSA/Shared/Support/Time/AppClock.swift`) is a thread-safe injectable clock used across feature views and repositories so tests can freeze or advance time deterministically.
+
+When fixture mode is `week-sim`, `AppDependencies` substitutes `WeekSimulationTrustedSourceHTTPClient`, `WeekSimulationWeatherForecastService`, `WeekSimulationWeatherAlertService`, and `WeekSimulationRSSDiscoveryService` — all backed by canned responses in `UITestWeekSimulationFixtures`. The week-simulation regression test (`OSAWeekInLifeSimulationTests`) exercises a seven-day persona through all major features with artifact collection (`timeline.json`, `summary.md`, screenshots). `scripts/run-week-simulation.sh` orchestrates the simulator lane.
+
 ## CI And Quality Automation
 
 - **GitHub Actions CI** (`.github/workflows/ci.yml`): build, test, and Codecov and Codacy coverage upload on push/PR to `main`.

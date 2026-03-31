@@ -3,9 +3,14 @@ import SwiftData
 
 final class SwiftDataChecklistRepository: ChecklistRepository {
     private let modelContext: ModelContext
+    private let nowProvider: @Sendable () -> Date
 
-    init(modelContext: ModelContext) {
+    init(
+        modelContext: ModelContext,
+        nowProvider: @escaping @Sendable () -> Date = AppClock.now
+    ) {
         self.modelContext = modelContext
+        self.nowProvider = nowProvider
     }
 
     // MARK: - Template Queries
@@ -111,7 +116,7 @@ final class SwiftDataChecklistRepository: ChecklistRepository {
         }
 
         let runID = UUID()
-        let now = Date()
+        let now = nowProvider()
 
         let runItems = template.items.map { templateItem in
             ChecklistRunItem(

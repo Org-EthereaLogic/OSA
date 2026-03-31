@@ -28,7 +28,7 @@ struct InventoryItemFormView: View {
     @State private var location: String = ""
     @State private var notes: String = ""
     @State private var hasExpiry: Bool = false
-    @State private var expiryDate: Date = Calendar.current.date(byAdding: .month, value: 6, to: Date()) ?? Date()
+    @State private var expiryDate: Date = Calendar.current.date(byAdding: .month, value: 6, to: AppClock.now()) ?? AppClock.now()
     @State private var hasReorderThreshold: Bool = false
     @State private var reorderThreshold: Int = 1
     @State private var barcodeScan: InventoryBarcodeScan?
@@ -170,17 +170,21 @@ struct InventoryItemFormView: View {
 
             Section("Expiration") {
                 Toggle("Track Expiry Date", isOn: $hasExpiry)
+                    .accessibilityIdentifier("inventory-form-track-expiry-toggle")
                 if hasExpiry {
                     DatePicker("Expires", selection: $expiryDate, displayedComponents: .date)
+                        .accessibilityIdentifier("inventory-form-expiry-picker")
                 }
             }
 
             Section("Reorder Alert") {
                 Toggle("Alert When Low", isOn: $hasReorderThreshold)
+                    .accessibilityIdentifier("inventory-form-reorder-toggle")
                 if hasReorderThreshold {
                     Stepper("Threshold: \(reorderThreshold)", value: $reorderThreshold, in: 1...9999)
                         .accessibilityLabel("Reorder threshold")
                         .accessibilityValue("\(reorderThreshold)")
+                        .accessibilityIdentifier("inventory-form-reorder-stepper")
                 }
             }
 
@@ -469,7 +473,7 @@ struct InventoryItemFormView: View {
                 data: data,
                 preferredFileExtension: InventoryCaptureSupport.preferredImageExtension(for: data),
                 source: source,
-                capturedAt: Date()
+                capturedAt: AppClock.now()
             )
             photoAttachments.append(attachment)
             captureMessage = "\(photoAttachments.count) local \(photoAttachments.count == 1 ? "photo is" : "photos are") ready to save."
@@ -498,7 +502,7 @@ struct InventoryItemFormView: View {
     }
 
     private func saveItem() {
-        let now = Date()
+        let now = AppClock.now()
         let item = InventoryItem(
             id: existingItem?.id ?? UUID(),
             name: name.trimmingCharacters(in: .whitespaces),

@@ -130,8 +130,9 @@ enum SharedRuntime {
     @MainActor
     static var dependencies: AppDependencies {
         if let existing = _dependencies { return existing }
-        let container = AppModelContainer.makeShared()
-        let deps = AppDependencies.live(modelContainer: container)
+        let runtime = AppRuntimeConfiguration.current()
+        let container = AppModelContainer.makeShared(runtime: runtime)
+        let deps = AppDependencies.live(modelContainer: container, runtime: runtime)
         _dependencies = deps
         return deps
     }
@@ -172,7 +173,10 @@ enum SharedRuntime {
 
 enum AppModelContainer {
     @MainActor
-    static func makeShared(bundle: Bundle = .main) -> ModelContainer {
+    static func makeShared(
+        bundle: Bundle = .main,
+        runtime: AppRuntimeConfiguration = .current()
+    ) -> ModelContainer {
         let schema = Schema([
             PersistedHandbookChapter.self,
             PersistedHandbookSection.self,
@@ -209,14 +213,19 @@ enum AppModelContainer {
                     isStoredInMemoryOnly: true
                 )
             } else if processInfo.isRunningUITests {
-                let storeDirectory = FileManager.default.temporaryDirectory
-                    .appendingPathComponent("OSA-UITests", isDirectory: true)
-                try FileManager.default.createDirectory(
-                    at: storeDirectory,
-                    withIntermediateDirectories: true
-                )
-                let storeURL = storeDirectory
-                    .appendingPathComponent("store-\(processInfo.processIdentifier).sqlite")
+                let storeURL: URL
+                if let runtimeStoreURL = runtime.modelStoreURL {
+                    storeURL = runtimeStoreURL
+                } else {
+                    let storeDirectory = FileManager.default.temporaryDirectory
+                        .appendingPathComponent("OSA-UITests", isDirectory: true)
+                    try FileManager.default.createDirectory(
+                        at: storeDirectory,
+                        withIntermediateDirectories: true
+                    )
+                    storeURL = storeDirectory
+                        .appendingPathComponent("store-\(processInfo.processIdentifier).sqlite")
+                }
                 modelConfiguration = ModelConfiguration(schema: schema, url: storeURL)
             } else {
                 modelConfiguration = ModelConfiguration(
@@ -249,7 +258,8 @@ enum AppModelContainer {
                 contentRepository: contentRepository,
                 installStateRepository: SwiftDataKnowledgePackInstallStateRepository(
                     modelContext: modelContainer.mainContext
-                )
+                ),
+                now: runtime.nowProvider
             )
             .installBundledPacksIfNeeded()
 

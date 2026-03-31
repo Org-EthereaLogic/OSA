@@ -10,13 +10,21 @@ final class LocalSearchService: SearchService {
         self.userDefaults = userDefaults
     }
 
-    static func makeDefault() throws -> LocalSearchService {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let directoryURL = appSupport.appendingPathComponent("OSA", isDirectory: true)
-        try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
-        let dbPath = directoryURL.appendingPathComponent("SearchIndex.sqlite").path
+    static func makeDefault(
+        directoryURL: URL? = nil,
+        userDefaults: UserDefaults = .standard
+    ) throws -> LocalSearchService {
+        let resolvedDirectoryURL: URL
+        if let directoryURL {
+            resolvedDirectoryURL = directoryURL
+        } else {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            resolvedDirectoryURL = appSupport.appendingPathComponent("OSA", isDirectory: true)
+        }
+        try FileManager.default.createDirectory(at: resolvedDirectoryURL, withIntermediateDirectories: true)
+        let dbPath = resolvedDirectoryURL.appendingPathComponent("SearchIndex.sqlite").path
         let store = try SearchIndexStore(path: dbPath)
-        return LocalSearchService(store: store)
+        return LocalSearchService(store: store, userDefaults: userDefaults)
     }
 
     func search(

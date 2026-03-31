@@ -159,7 +159,7 @@ struct ChecklistRunView: View {
     }
 
     private func toggleItem(_ item: ChecklistRunItem, in run: ChecklistRun) {
-        let now = Date()
+        let now = AppClock.now()
         let updatedItems = run.items.map { existing -> ChecklistRunItem in
             guard existing.id == item.id else { return existing }
             return ChecklistRunItem(
@@ -208,7 +208,7 @@ struct ChecklistRunView: View {
     private func completeRun() {
         guard var current = run else { return }
         current.status = .completed
-        current.completedAt = Date()
+        current.completedAt = AppClock.now()
 
         let completedRun = ChecklistRun(
             id: current.id,
@@ -239,7 +239,7 @@ struct ChecklistRunView: View {
             templateID: current.templateID,
             title: current.title,
             startedAt: current.startedAt,
-            completedAt: Date(),
+            completedAt: AppClock.now(),
             status: .abandoned,
             contextNote: current.contextNote,
             items: current.items

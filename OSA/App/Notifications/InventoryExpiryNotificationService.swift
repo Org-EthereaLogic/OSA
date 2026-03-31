@@ -122,17 +122,20 @@ final class InventoryExpiryNotificationService: InventoryExpiryNotificationServi
     private let inventoryRepository: any InventoryRepository
     private let userDefaults: UserDefaults
     private let calendar: Calendar
+    private let nowProvider: @Sendable () -> Date
 
     init(
         notificationCenterClient: any InventoryNotificationCenterClient = UserNotificationCenterClient(),
         inventoryRepository: any InventoryRepository,
         userDefaults: UserDefaults = .standard,
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        nowProvider: @escaping @Sendable () -> Date = AppClock.now
     ) {
         self.notificationCenterClient = notificationCenterClient
         self.inventoryRepository = inventoryRepository
         self.userDefaults = userDefaults
         self.calendar = calendar
+        self.nowProvider = nowProvider
     }
 
     func authorizationStatus() async -> InventoryNotificationAuthorizationStatus {
@@ -157,7 +160,7 @@ final class InventoryExpiryNotificationService: InventoryExpiryNotificationServi
             from: userDefaults.object(forKey: InventoryAlertSettings.leadTimeKey) as? Int ?? InventoryAlertSettings.leadTimeDefault.rawValue
         )
 
-        let now = Date()
+        let now = nowProvider()
         let items = try inventoryRepository.itemsExpiringSoon(within: leadTime.days)
 
         for item in items {

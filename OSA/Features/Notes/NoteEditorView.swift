@@ -82,7 +82,7 @@ struct NoteEditorView: View {
     }
 
     private func saveNote() {
-        let now = Date()
+        let now = AppClock.now()
         let trimmedTitle = title.trimmingCharacters(in: .whitespaces)
         let trimmedBody = bodyMarkdown.trimmingCharacters(in: .whitespacesAndNewlines)
         let plainText = NoteExportFormatter.storedPlainText(fromMarkdown: trimmedBody)

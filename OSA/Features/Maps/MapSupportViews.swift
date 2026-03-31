@@ -162,7 +162,7 @@ struct WaypointEditorSheet: View {
 
     private func makeWaypoint() -> UserWaypoint {
         let existingID = initialWaypoint?.id ?? UUID()
-        let createdAt = initialWaypoint?.createdAt ?? Date()
+        let createdAt = initialWaypoint?.createdAt ?? AppClock.now()
 
         return UserWaypoint(
             id: existingID,

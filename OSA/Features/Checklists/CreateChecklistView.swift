@@ -65,7 +65,7 @@ struct CreateChecklistView: View {
     }
 
     private func saveChecklist() {
-        let now = Date()
+        let now = AppClock.now()
         let runID = UUID()
         let items = validItemTexts.enumerated().map { index, text in
             ChecklistRunItem(

@@ -218,7 +218,7 @@ struct WeatherScreen: View {
             try? forecastRepository?.replaceAlerts(alerts)
             let active = alerts.filter { alert in
                 guard let expires = alert.expiresDate else { return true }
-                return expires > Date()
+                return expires > AppClock.now()
             }
             alertsState = active.isEmpty ? .empty : .loaded(active)
         }

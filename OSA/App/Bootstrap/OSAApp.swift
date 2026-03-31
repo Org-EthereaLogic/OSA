@@ -6,127 +6,31 @@ struct OSAApp: App {
     private let sharedModelContainer: ModelContainer
     private let dependencies: AppDependencies
     private let isUITesting: Bool
-    @State private var navigationCoordinator = AppNavigationCoordinator()
-    @State private var onscreenContentManager = OnscreenContentManager()
-    @AppStorage(UserProfileSettings.onboardingCompletedKey)
-    private var onboardingCompleted = UserProfileSettings.onboardingCompletedDefault
-    @AppStorage(AccessibilitySettings.appLanguageKey)
-    private var appLanguageRawValue = AccessibilitySettings.appLanguageDefault.rawValue
+    private let userDefaults: UserDefaults
 
     init() {
-        let processInfo = ProcessInfo.processInfo
-        let isUITesting = processInfo.arguments.contains("UI-TESTING")
-        self.isUITesting = isUITesting
+        let runtime = AppRuntimeConfiguration.current()
+        runtime.prepareForLaunch()
+        AppClock.install(runtime.nowProvider)
 
-        if isUITesting {
-            UserDefaults.standard.set(true, forKey: UserProfileSettings.onboardingCompletedKey)
-            UserDefaults.standard.removeObject(forKey: RecentLibraryHistorySettings.recentSectionIDsKey)
-            UserDefaults.standard.removeObject(forKey: RecentAskHistorySettings.recentQuestionsKey)
-            UserDefaults.standard.set(
-                AccessibilitySettings.appLanguageDefault.rawValue,
-                forKey: AccessibilitySettings.appLanguageKey
-            )
-            UserDefaults.standard.set(
-                AccessibilitySettings.highContrastModeDefault,
-                forKey: AccessibilitySettings.highContrastModeKey
-            )
-            UserDefaults.standard.set(
-                AccessibilitySettings.largePrintReadingModeDefault,
-                forKey: AccessibilitySettings.largePrintReadingModeKey
-            )
-        }
+        self.isUITesting = runtime.isUITesting
+        self.userDefaults = runtime.userDefaults
 
-        let container = AppModelContainer.makeShared()
+        let container = AppModelContainer.makeShared(runtime: runtime)
         self.sharedModelContainer = container
-        let deps = AppDependencies.live(modelContainer: container)
+        let deps = AppDependencies.live(modelContainer: container, runtime: runtime)
         self.dependencies = deps
         SharedRuntime.install(deps)
     }
 
     var body: some Scene {
         WindowGroup {
-            AppTabView(coordinator: navigationCoordinator)
-                .environment(
-                    \.locale,
-                    AccessibilitySettings.appLanguage(from: appLanguageRawValue).locale
-                )
-                .environment(\.handbookRepository, dependencies.handbookRepository)
-                .environment(\.quickCardRepository, dependencies.quickCardRepository)
-                .environment(\.fieldReferenceRepository, dependencies.fieldReferenceRepository)
-                .environment(\.practiceProgressRepository, dependencies.practiceProgressRepository)
-                .environment(\.inventoryRepository, dependencies.inventoryRepository)
-                .environment(\.inventoryPhotoStore, dependencies.inventoryPhotoStore)
-                .environment(\.documentVaultRepository, dependencies.documentVaultRepository)
-                .environment(\.documentVaultFileStore, dependencies.documentVaultFileStore)
-                .environment(\.knowledgePackInstallStateRepository, dependencies.knowledgePackInstallStateRepository)
-                .environment(\.knowledgePackCatalogClient, dependencies.knowledgePackCatalogClient)
-                .environment(\.knowledgePackDownloadCoordinator, dependencies.knowledgePackDownloadCoordinator)
-                .environment(\.supplyTemplateRepository, dependencies.supplyTemplateRepository)
-                .environment(\.checklistRepository, dependencies.checklistRepository)
-                .environment(\.emergencyContactRepository, dependencies.emergencyContactRepository)
-                .environment(\.noteRepository, dependencies.noteRepository)
-                .environment(\.importedKnowledgeRepository, dependencies.importedKnowledgeRepository)
-                .environment(\.pendingOperationRepository, dependencies.pendingOperationRepository)
-                .environment(\.searchService, dependencies.searchService)
-                .environment(\.capabilityDetector, dependencies.capabilityDetector)
-                .environment(\.retrievalService, dependencies.retrievalService)
-                .environment(\.inventoryExpiryNotificationService, dependencies.inventoryExpiryNotificationService)
-                .environment(\.widgetSnapshotCoordinator, dependencies.widgetSnapshotCoordinator)
-                .environment(\.connectivityService, dependencies.connectivityService)
-                .environment(\.trustedSourceHTTPClient, dependencies.trustedSourceHTTPClient)
-                .environment(\.importPipeline, dependencies.importPipeline)
-                .environment(\.inventoryCompletionService, dependencies.inventoryCompletionService)
-                .environment(\.hapticFeedbackService, dependencies.hapticFeedbackService)
-                .environment(\.onscreenContentManager, onscreenContentManager)
-                .environment(\.rssDiscoveryService, dependencies.rssDiscoveryService)
-                .environment(\.discoveryCoordinator, dependencies.discoveryCoordinator)
-                .environment(\.weatherForecastRepository, dependencies.weatherForecastRepository)
-                .environment(\.weatherForecastService, dependencies.weatherForecastService)
-                .environment(\.weatherAlertService, dependencies.weatherAlertService)
-                .environment(\.locationService, dependencies.locationService)
-                .environment(\.mapAnnotationProvider, dependencies.mapAnnotationProvider)
-                .environment(\.waypointRepository, dependencies.waypointRepository)
-                .environment(\.recordedTrackRepository, dependencies.recordedTrackRepository)
-                .environment(\.tileCacheService, dependencies.tileCacheService)
-                .task {
-                    SharedRuntime.installNavigationCoordinator(navigationCoordinator)
-                    SharedRuntime.installOnscreenContentManager(onscreenContentManager)
-
-                    guard !isUITesting else {
-                        return
-                    }
-
-                    await dependencies.widgetSnapshotCoordinator.refreshSnapshot()
-                    await dependencies.protocolLiveActivityCoordinator.syncActiveProtocol()
-                    try? await dependencies.inventoryExpiryNotificationService.rescheduleNotifications()
-                    await dependencies.refreshCoordinator.start()
-                    await dependencies.discoveryCoordinator.startIfDue()
-                }
-                .onOpenURL { url in
-                    guard let deepLink = SystemSurfaceDeepLink(url: url) else { return }
-                    navigationCoordinator.handle(deepLink)
-                }
-                .fullScreenCover(isPresented: onboardingBinding) {
-                    OnboardingFlowView {
-                        onboardingCompleted = true
-                    }
-                }
+            OSARootView(
+                dependencies: dependencies,
+                isUITesting: isUITesting,
+                userDefaults: userDefaults
+            )
         }
         .modelContainer(sharedModelContainer)
-    }
-
-    private var onboardingBinding: Binding<Bool> {
-        if isUITesting {
-            return .constant(false)
-        }
-
-        return Binding(
-            get: { !onboardingCompleted },
-            set: { shouldPresent in
-                if !shouldPresent {
-                    onboardingCompleted = true
-                }
-            }
-        )
     }
 }

@@ -72,7 +72,7 @@ struct EmergencyContactFormView: View {
     }
 
     private func saveContact() {
-        let now = Date()
+        let now = AppClock.now()
         let contact = EmergencyContact(
             id: existingContact?.id ?? UUID(),
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),

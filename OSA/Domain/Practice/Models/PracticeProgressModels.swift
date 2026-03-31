@@ -93,14 +93,14 @@ enum PracticeSchedule {
         return calendar
     }
 
-    static func weekToken(for date: Date = Date()) -> String {
+    static func weekToken(for date: Date = AppClock.now()) -> String {
         let calendar = isoCalendar
         let year = calendar.component(.yearForWeekOfYear, from: date)
         let week = calendar.component(.weekOfYear, from: date)
         return String(format: "%04d-W%02d", year, week)
     }
 
-    static func currentWeeklyDrill(from cards: [QuickCard], date: Date = Date()) -> QuickCard? {
+    static func currentWeeklyDrill(from cards: [QuickCard], date: Date = AppClock.now()) -> QuickCard? {
         let eligibleCards = cards
             .filter { $0.weeklyDrillMetadata != nil }
             .sorted { $0.slug.localizedCaseInsensitiveCompare($1.slug) == .orderedAscending }

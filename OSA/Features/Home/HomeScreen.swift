@@ -204,7 +204,7 @@ struct HomeScreen: View {
             let alerts = await alertService.fetchAlerts()
             let active = alerts.filter { alert in
                 guard let expires = alert.expiresDate else { return true }
-                return expires > Date()
+                return expires > AppClock.now()
             }
             items.append(contentsOf: active.map { .weatherAlert($0) })
         }

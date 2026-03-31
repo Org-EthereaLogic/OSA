@@ -254,13 +254,7 @@ struct LibraryScreen: View {
             return
         }
 
-        let storedRawValue = UserDefaults.standard.string(
-            forKey: RecentLibraryHistorySettings.recentSectionIDsKey
-        ) ?? recentSectionIDsRawValue
-        if storedRawValue != recentSectionIDsRawValue {
-            recentSectionIDsRawValue = storedRawValue
-        }
-
+        let storedRawValue = recentSectionIDsRawValue
         let recentIDs = RecentLibraryHistorySettings.ids(from: storedRawValue)
         let resolvedEntries = recentIDs.compactMap { id -> RecentlyViewedEntry? in
             guard let section = (try? repository.section(id: id)) ?? nil else {

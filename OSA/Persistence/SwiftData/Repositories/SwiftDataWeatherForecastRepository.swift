@@ -3,9 +3,14 @@ import SwiftData
 
 final class SwiftDataWeatherForecastRepository: WeatherForecastRepository, @unchecked Sendable {
     private let modelContext: ModelContext
+    private let nowProvider: @Sendable () -> Date
 
-    init(modelContext: ModelContext) {
+    init(
+        modelContext: ModelContext,
+        nowProvider: @escaping @Sendable () -> Date = AppClock.now
+    ) {
         self.modelContext = modelContext
+        self.nowProvider = nowProvider
     }
 
     func cachedForecasts() throws -> [DailyForecast] {
@@ -32,7 +37,7 @@ final class SwiftDataWeatherForecastRepository: WeatherForecastRepository, @unch
         descriptor.fetchLimit = 1
         descriptor.includePendingChanges = true
         guard let latest = try modelContext.fetch(descriptor).first else { return nil }
-        let isStale = Date().timeIntervalSince(latest.fetchedAt) > 3600
+        let isStale = nowProvider().timeIntervalSince(latest.fetchedAt) > 3600
         return ForecastCacheInfo(fetchedAt: latest.fetchedAt, isStale: isStale)
     }
 
@@ -54,7 +59,7 @@ final class SwiftDataWeatherForecastRepository: WeatherForecastRepository, @unch
     }
 
     func activeAlerts() throws -> [WeatherAlert] {
-        let now = Date()
+        let now = nowProvider()
         return try cachedAlerts().filter { alert in
             guard let expires = alert.expiresDate else { return true }
             return expires > now

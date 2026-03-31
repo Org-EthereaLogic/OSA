@@ -2,9 +2,9 @@ import Foundation
 
 func buildHomeInventoryReminders(
     expiring: [InventoryItem],
-    lowStock: [InventoryItem]
+    lowStock: [InventoryItem],
+    now: Date = AppClock.now()
 ) -> [HomeInventoryReminder] {
-    let now = Date()
     var reminders: [UUID: HomeInventoryReminder] = [:]
 
     for item in expiring {
@@ -55,14 +55,15 @@ func buildHomeInventoryReminders(
 func evaluateSupplyReadiness(
     template: SupplyTemplate,
     inventory: [InventoryItem],
-    householdSize: Int
+    householdSize: Int,
+    now: Date = AppClock.now()
 ) -> SupplyReadinessSnapshot {
     var completedScore = 0.0
     var missingCriticalCount = 0
     var nearExpiryCount = 0
 
     // Pre-compute the expiry threshold once instead of per-item.
-    let nearExpiryThreshold = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? .distantFuture
+    let nearExpiryThreshold = Calendar.current.date(byAdding: .day, value: 30, to: now) ?? .distantFuture
 
     // Group inventory by category for O(1) lookup instead of scanning the
     // full list for every template item.
@@ -104,7 +105,7 @@ func evaluateSupplyReadiness(
     )
 }
 
-func homeCurrentSeasonTag(for date: Date = Date(), calendar: Calendar = .current) -> String {
+func homeCurrentSeasonTag(for date: Date = AppClock.now(), calendar: Calendar = .current) -> String {
     let month = calendar.component(.month, from: date)
     switch month {
     case 3...5:

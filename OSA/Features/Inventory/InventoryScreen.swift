@@ -181,7 +181,7 @@ struct InventoryScreen: View {
             if item.isArchived {
                 var unarchived = item
                 unarchived.isArchived = false
-                unarchived.updatedAt = Date()
+                unarchived.updatedAt = AppClock.now()
                 try repository?.updateItem(unarchived)
             } else {
                 try repository?.archiveItem(id: item.id)
@@ -284,11 +284,11 @@ private struct ExpiryLabel: View {
     let date: Date
 
     private var isExpired: Bool {
-        date < Date()
+        date < AppClock.now()
     }
 
     private var isExpiringSoon: Bool {
-        guard let cutoff = Calendar.current.date(byAdding: .day, value: 30, to: Date()) else {
+        guard let cutoff = Calendar.current.date(byAdding: .day, value: 30, to: AppClock.now()) else {
             return false
         }
         return date <= cutoff && !isExpired
