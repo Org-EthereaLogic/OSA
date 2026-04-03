@@ -22,6 +22,7 @@ Canonical SDLC suite and risk tracking for OSA.
 - `09-content-model-editorial-guidelines.md`
 - `10-security-privacy-and-safety.md`
 - `11-quality-strategy-test-plan-and-acceptance.md`
+- `11a-week-simulation-device-runbook.md`
 - `12-release-readiness-and-app-store-plan.md`
 - `risk-register.md`
 

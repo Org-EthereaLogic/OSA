@@ -2,7 +2,7 @@ name: OSA
 options:
   bundleIdPrefix: com.etherealogic
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "18.6"
   xcodeVersion: "16.0"
   generateEmptyDirectories: true
   groupSortPosition: top
@@ -49,6 +49,7 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_CFBundleDisplayName: Lantern
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.lifestyle
         INFOPLIST_KEY_CFBundleURLTypes:
           - CFBundleURLName: com.etherealogic.osa
             CFBundleURLSchemes:

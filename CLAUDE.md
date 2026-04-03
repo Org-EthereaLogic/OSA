@@ -30,7 +30,7 @@ OSA is an offline-first iPhone preparedness app with a grounded local assistant,
 ## Current Platform Baseline
 
 - App target: `OSA`
-- Deployment target: iOS 18.0
+- Deployment target: iOS 18.6
 - Swift version: 6.0
 - Persistence recommendation: SwiftData in `OSA/Persistence` behind repository protocols in `OSA/Domain`
 - Architecture shape: main `OSA` app target plus one `OSAWidgetsExtension` WidgetKit extension target, both with disciplined folder boundaries; extension shares bounded snapshot models via App Group

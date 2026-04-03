@@ -97,6 +97,8 @@ Related docs: [PRD](./02-prd.md), [Information Architecture And UX Flows](./04-i
 11. ~~Editorial content depth and field references.~~ **Done:** Sprint 9 complete — structured field references, infographic quick cards, deeper climate content, lookalike comparison content, and Library routing or search integration all ship from bundled seed content and existing editorial seams.
 12. ~~Multimedia and gamification.~~ **Done:** Sprint 10 complete — bundled SVG illustrations, short local MP4 clips, knot-reference and illustrated first-aid entries, local quiz flow, derived completion badges, and a weekly drill surface now extend Home, Quick Cards, Library, and local persistence without adding streaming, sync, or social gamification.
 13. ~~Knowledge packs, document vault, and inventory capture.~~ **Done:** Sprint 11 complete — knowledge pack management with bundled/remote catalog, encrypted document vault with Keychain-backed keys, and inventory photo capture with file-backed storage.
+14. ~~Internationalization and accessibility depth.~~ **Done:** Sprint 12 complete — runtime language switching (English/Spanish), high-contrast color tokens, localized seed content, and accessibility-focused UI test coverage.
+15. ~~Post-Sprint-12 hardening.~~ **Done:** Open-Meteo graceful fallback for WeatherKit forecast service, 14-day user simulation test (`OSATwoWeekSimulationTests`), shared simulation test infrastructure (`SimulationTestSupport`, `WeekSimulationSupport`), and `AppClock` deterministic time injection.
 
 ## Milestone-Based Roadmap
 
